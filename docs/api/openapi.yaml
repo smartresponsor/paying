@@ -1,0 +1,52 @@
+openapi: 3.0.3
+info:
+  title: Payment API
+  version: 0.1.0
+paths:
+  /payment/start:
+    post:
+      summary: Start payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount: { type: string }
+                currency: { type: string }
+                provider: { type: string }
+      responses:
+        '200':
+          description: OK
+  /payment/finalize/{id}:
+    post:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /payment/webhook/{provider}:
+    post:
+      parameters:
+        - in: path
+          name: provider
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+  /payment/dlq:
+    get: { responses: { '200': { description: OK } } }
+  /payment/dlq/replay/{id}:
+    post:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer } 
+      responses:
+        '200': { description: OK }
+  /metrics:
+    get: { responses: { '200': { description: OK } } }

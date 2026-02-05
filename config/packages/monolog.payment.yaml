@@ -1,0 +1,8 @@
+monolog:
+  channels: ['payment_audit']
+  handlers:
+    payment_audit:
+      type: stream
+      path: 'var/log/payment_audit.log'
+      level: info
+      channels: ['payment_audit']

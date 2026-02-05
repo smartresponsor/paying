@@ -1,0 +1,10 @@
+services:
+  OrderComponent\Payment\Service\Order\NullOrderStatusPort:
+    arguments:
+      $logger: '@logger'
+    autoconfigure: true
+    autowire: true
+
+  OrderComponent\Payment\Message\Handler\Payment\PaymentEventConsumer:
+    autoconfigure: true
+    autowire: true

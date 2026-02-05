@@ -1,0 +1,35 @@
+
+payment_start:
+  path: /payment/start
+  controller: App\Controller\Payment\StartController::start
+  methods: [POST]
+
+payment_finalize:
+  path: /payment/finalize/{id}
+  controller: App\Controller\Payment\FinalizeController::finalize
+  methods: [POST]
+
+payment_webhook:
+  path: /payment/webhook/{provider}
+  controller: App\Controller\Payment\WebhookController::webhook
+  methods: [POST]
+
+metrics:
+  path: /metrics
+  controller: App\Controller\Payment\MetricController::metrics
+  methods: [GET]
+
+payment_dlq_list:
+  path: /payment/dlq
+  controller: App\Controller\Payment\DlqController::list
+  methods: [GET]
+
+payment_dlq_replay:
+  path: /payment/dlq/replay/{id}
+  controller: App\Controller\Payment\DlqController::replay
+  methods: [POST]
+
+status:
+  path: /status
+  controller: App\Controller\Payment\StatusController::status
+  methods: [GET]

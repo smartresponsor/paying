@@ -1,0 +1,14 @@
+framework:
+  messenger:
+    transports:
+      payment_events_in:
+        dsn: '%env(resolve:RABBITMQ_DSN)%'
+        options:
+          exchange:
+            name: 'payment.events'
+            type: 'topic'
+          queues:
+            payment_events_in:
+              binding_keys: ['payment.*']
+    routing:
+      'stdClass': payment_events_in

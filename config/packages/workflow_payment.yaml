@@ -1,0 +1,18 @@
+framework:
+  workflows:
+    payment:
+      type: 'state_machine'
+      audit_trail: true
+      marking_store:
+        type: 'method'
+        property: 'status'
+      supports:
+        - App\\Entity\\Payment\\Payment
+      initial_marking: new
+      places: [new, processing, completed, failed, canceled, refunded]
+      transitions:
+        start: { from: new, to: processing }
+        complete: { from: processing, to: completed }
+        fail: { from: processing, to: failed }
+        cancel: { from: [new, processing], to: canceled }
+        refund: { from: completed, to: refunded }

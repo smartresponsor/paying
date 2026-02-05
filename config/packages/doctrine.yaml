@@ -1,0 +1,25 @@
+
+doctrine:
+  dbal:
+    default_connection: data
+    connections:
+      data:
+        url: '%env(resolve:DATABASE_URL)%'
+      infra:
+        url: '%env(resolve:INFRA_URL)%'
+  orm:
+    auto_generate_proxy_classes: true
+    enable_lazy_ghost_objects: true
+    report_fields_where_declared: true
+    controller_resolver:
+      auto_mapping: true
+    entity_managers:
+      default:
+        connection: data
+        mappings:
+          App:
+            is_bundle: false
+            type: attribute
+            dir: '%kernel.project_dir%/src/Entity'
+            prefix: 'App\Entity'
+            alias: App

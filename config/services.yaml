@@ -1,0 +1,107 @@
+
+# Payment E5 wiring
+services:
+    App\Service\Payment\ProjectionSync: ~
+    App\Infrastructure\Payment\Console\ProjectionSyncCommand: ~
+
+# Payment E6–E8 wiring
+services:
+    App\Service\Payment\ProviderRouter:
+        arguments:
+            $adapters:
+                internal: '@App\Service\Payment\Adapter\InternalAdapter'
+    App\Service\Payment\Adapter\InternalAdapter: ~
+    App\Service\Payment\WebhookVerifier: ~
+    App\Service\Payment\IdempotencyService: ~
+
+    App\Infrastructure\Payment\OutboxPublisher: ~
+    App\Infrastructure\Payment\Console\DlqReplayCommand: ~
+
+# Payment E9–E12 wiring
+services:
+    App\Domain\Payment\TransitionHandler: ~
+
+    App\Service\Payment\ReconciliationService: ~
+    App\Service\Payment\RefundService: ~
+
+    App\Service\Payment\Metric: ~
+    App\Infrastructure\Payment\MetricSubscriber:
+        tags: ['kernel.event_subscriber']
+
+    App\Controller\Payment\MetricController: ~
+
+# Payment E14 providers & mappers
+services:
+    App\Service\Payment\Adapter\StripeAdapter: ~
+    App\Service\Payment\Adapter\AdyenAdapter: ~
+
+    App\Service\Payment\Mapper\StripeEventMapper: ~
+    App\Service\Payment\Mapper\AdyenEventMapper: ~
+
+    App\Service\Payment\ProviderRouter:
+        arguments:
+            $adapters:
+                internal: '@App\Service\Payment\Adapter\InternalAdapter'
+                stripe: '@App\Service\Payment\Adapter\StripeAdapter'
+                adyen: '@App\Service\Payment\Adapter\AdyenAdapter'
+
+# Payment E15 outbox & dlq & transport
+services:
+    App\Infrastructure\Payment\PublisherTransportLog: ~
+    App\Infrastructure\Payment\OutboxWorker: ~
+    App\Infrastructure\Payment\Console\OutboxRunCommand: ~
+    App\Controller\Payment\DlqController: ~
+
+# Payment E16 security & audit
+services:
+    App\Service\Payment\OidcJwksCache: ~
+    App\Infrastructure\Payment\ResponseHeaderSubscriber:
+        tags: ['kernel.event_subscriber']
+    App\Infrastructure\Payment\AuditLogger: ~
+
+# Payment rate limiter subscriber
+services:
+    App\Infrastructure\Payment\RateLimitSubscriber:
+        arguments:
+            $paymentApiLimiter: '@limiter.payment_api'
+        tags: ['kernel.event_subscriber']
+
+# Payment E18–E20 wiring
+services:
+    App\Infrastructure\Payment\Console\ReconcileRunCommand: ~
+    App\Service\Payment\SlaReporter: ~
+    App\Infrastructure\Payment\Console\SlaReportCommand: ~
+
+    App\Service\Payment\RetryExecutor: ~
+    App\Service\Payment\CircuitBreaker: ~
+    App\Service\Payment\ProviderGuard: ~
+
+# Payment E21 projection & status
+services:
+    App\Infrastructure\Payment\PaymentProjectionRepository:
+        arguments:
+            $infra: '@doctrine.dbal.infra_connection'
+
+    App\Service\Payment\ProjectionSync: ~
+    App\Infrastructure\Payment\Console\ProjectionSyncCommand: ~
+    App\Infrastructure\Payment\Console\ProjectionRebuildCommand: ~
+
+    App\Controller\Payment\StatusController: ~
+
+# Payment E22 idempotency hardening & gate
+services:
+    App\Service\Payment\IdempotencyStoreFactory: ~
+    App\ServiceInterface\Payment\IdempotencyStoreInterface:
+        factory: ['@App\Service\Payment\IdempotencyStoreFactory', 'create']
+
+    App\Service\Payment\IdempotencyService:
+        arguments:
+            $ttlSec: '%env(int:IDEM_TTL)%'
+
+    App\Infrastructure\Payment\Console\IdemPurgeCommand: ~
+
+# Payment E23 security scopes
+services:
+    App\Service\Payment\TokenVerifier: ~
+    App\Infrastructure\Payment\ScopeGuardSubscriber:
+        tags: ['kernel.event_subscriber']

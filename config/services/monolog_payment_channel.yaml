@@ -1,0 +1,13 @@
+services:
+  payment_audit.logger:
+    class: Psr\Log\LoggerInterface
+    factory: ['@monolog.logger', 'get']
+    arguments: ['payment_audit']
+
+  OrderComponent\Payment\Controller\Webhook\StripeWebhookController:
+    arguments:
+      $paymentAuditLogger: '@payment_audit.logger'
+
+  OrderComponent\Payment\Controller\Webhook\PayPalWebhookController:
+    arguments:
+      $paymentAuditLogger: '@payment_audit.logger'

@@ -1,0 +1,21 @@
+framework:
+  messenger:
+    transports:
+      payment_outbox:
+        dsn: '%env(resolve:RABBITMQ_DSN)%'
+        options:
+          exchange:
+            name: 'payment.events'
+            type: 'topic'
+          queues:
+            payment_outbox:
+              binding_keys: ['payment.*']
+      payment_outbox_failed:
+        dsn: '%env(resolve:RABBITMQ_DSN)%'
+        options:
+          exchange:
+            name: 'payment.events.dlq'
+            type: 'fanout'
+          queues: { payment_outbox_failed: ~ }
+
+    failure_transport: payment_outbox_failed

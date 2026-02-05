@@ -1,0 +1,8 @@
+doctrine:
+  orm:
+    mappings:
+      PaymentComponent:
+        is_bundle: false
+        type: attribute
+        dir: '%kernel.project_dir%/vendor/order/component-payment/src/Entity/Payment'
+        prefix: 'OrderComponent\Payment\Entity\Payment'

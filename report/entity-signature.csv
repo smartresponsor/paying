@@ -1,0 +1,2 @@
+path;id;status;amount;currency;providerRef;createdAt;updatedAt
+src/Entity/Payment/Payment.php;Ulid;PaymentStatus;decimal(14,2);char(3);string(128)|null;datetime;datetime

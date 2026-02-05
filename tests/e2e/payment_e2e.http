@@ -1,0 +1,6 @@
+### Payment E2E
+POST http://localhost:8000/payment/start
+Content-Type: application/json
+Idempotency-Key: e2e-1
+
+{"amount":"1.23","currency":"USD","provider":"internal"}
