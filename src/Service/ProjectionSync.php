@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 use App\ServiceInterface\ProjectionSyncInterface;
-use App\Infrastructure\PaymentProjectionRepositoryInterface;
+use App\InfrastructureInterface\PaymentProjectionRepositoryInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 

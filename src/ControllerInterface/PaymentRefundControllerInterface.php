@@ -3,12 +3,12 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\ControllerInterface;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-interface FinalizeControllerInterface
+interface PaymentRefundControllerInterface
 {
-    public function finalize(string $id, Request $request): JsonResponse;
+    public function refund(string $id, Request $request): JsonResponse;
 }

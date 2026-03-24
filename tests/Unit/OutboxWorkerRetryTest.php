@@ -5,9 +5,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit;
 
-use App\Infrastructure\OutboxPublisherInterface;
+use App\InfrastructureInterface\OutboxPublisherInterface;
 use App\Infrastructure\OutboxWorker;
-use App\Infrastructure\PublisherTransportInterface;
+use App\InfrastructureInterface\PublisherTransportInterface;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 

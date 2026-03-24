@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Message\Handler;
 use App\Message\Command\PaymentRefundCommand;
-use App\Repository\PaymentRepositoryInterface;
+use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\Gateway\PaymentGatewayInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 

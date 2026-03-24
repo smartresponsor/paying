@@ -11,7 +11,7 @@ use App\Entity\PaymentOutboxMessage;
 use App\Entity\PaymentWebhookLog;
 use App\Message\Event\PaymentTransportMessage;
 use App\Message\Handler\PaymentEventConsumer;
-use App\Repository\PaymentRepositoryInterface;
+use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\Order\OrderPaymentSyncInterface;
 use App\Service\Outbox\PaymentOutboxProcessor;
 use App\Service\Reconciliation\PaymentReconciliationService;

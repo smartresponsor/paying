@@ -18,8 +18,8 @@ services:
             - '../src/**/Resources/'
             - '../src/**/Tests/'
 
-    App\Repository\PaymentRepositoryInterface: '@App\Repository\PaymentRepository'
-    App\Infrastructure\PaymentProjectionRepositoryInterface: '@App\Infrastructure\PaymentProjectionRepository'
+    App\RepositoryInterface\PaymentRepositoryInterface: '@App\Repository\PaymentRepository'
+    App\InfrastructureInterface\PaymentProjectionRepositoryInterface: '@App\Infrastructure\PaymentProjectionRepository'
     App\ServiceInterface\ProviderRouterInterface: '@App\Service\ProviderRouter'
     App\ServiceInterface\ProviderGuardInterface: '@App\Service\ProviderGuard'
     App\ServiceInterface\PaymentServiceInterface: "@App\Service\PaymentService"
@@ -63,7 +63,7 @@ services:
     App\ServiceInterface\ProjectionSyncInterface: '@App\Service\ProjectionSync'
     App\ServiceInterface\RefundServiceInterface: '@App\Service\RefundService'
     App\ServiceInterface\ReconciliationServiceInterface: '@App\Service\ReconciliationService'
-    App\Infrastructure\OutboxPublisherInterface: '@App\Infrastructure\OutboxPublisher'
+    App\InfrastructureInterface\OutboxPublisherInterface: '@App\Infrastructure\OutboxPublisher'
 
     App\Controller\WebhookController:
         arguments:

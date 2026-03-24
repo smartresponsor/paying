@@ -3,12 +3,12 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\ControllerInterface;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-interface PaymentCreateControllerInterface
+interface StartControllerInterface
 {
-    public function create(Request $request): JsonResponse;
+    public function start(Request $request): JsonResponse;
 }

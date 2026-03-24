@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\ControllerInterface;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

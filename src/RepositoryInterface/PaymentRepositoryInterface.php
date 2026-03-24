@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\RepositoryInterface;
 
 use App\Entity\Payment;
 

@@ -8,7 +8,7 @@ use App\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface;
 use App\Entity\Payment;
 use App\Entity\PaymentRefund;
 use App\Entity\PaymentTransaction;
-use App\Repository\PaymentRepositoryInterface;
+use App\RepositoryInterface\PaymentRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;
 

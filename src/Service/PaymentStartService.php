@@ -7,7 +7,7 @@ namespace App\Service;
 use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ServiceInterface\ProviderGuardInterface;
 use App\Entity\Payment;
-use App\Repository\PaymentRepositoryInterface;
+use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ValueObject\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 

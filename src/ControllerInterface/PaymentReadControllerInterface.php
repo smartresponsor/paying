@@ -3,11 +3,11 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\ControllerInterface;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-interface StatusControllerInterface
+interface PaymentReadControllerInterface
 {
-    public function status(): JsonResponse;
+    public function read(string $id): JsonResponse;
 }

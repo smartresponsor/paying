@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit;
 
-use App\Infrastructure\PaymentProjectionRepositoryInterface;
+use App\InfrastructureInterface\PaymentProjectionRepositoryInterface;
 use App\Service\ProjectionLagService;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
