@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Reconciliation;
 
 use App\Entity\Payment;
-use App\Repository\PaymentRepositoryInterface;
+use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\Service\Reconciliation\PaymentReconciliationService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;

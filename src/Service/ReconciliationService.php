@@ -7,7 +7,7 @@ namespace App\Service;
 use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\ReconciliationServiceInterface;
 use App\Entity\Payment;
-use App\Repository\PaymentRepositoryInterface;
+use App\RepositoryInterface\PaymentRepositoryInterface;
 use Symfony\Component\Uid\Ulid;
 
 class ReconciliationService implements ReconciliationServiceInterface

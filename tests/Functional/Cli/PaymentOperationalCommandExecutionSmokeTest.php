@@ -7,7 +7,7 @@ namespace App\Tests\Functional\Cli;
 use App\Infrastructure\Console\DlqReplayCommand;
 use App\Infrastructure\Console\IdemPurgeCommand;
 use App\Infrastructure\Console\SlaReportCommand;
-use App\Infrastructure\OutboxPublisherInterface;
+use App\InfrastructureInterface\OutboxPublisherInterface;
 use App\ServiceInterface\IdempotencyStoreInterface;
 use App\Service\SlaReporter;
 use Doctrine\DBAL\Connection;

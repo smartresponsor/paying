@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit;
 use App\Entity\Payment;
-use App\Repository\PaymentRepositoryInterface;
+use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\Service\PaymentStartService;
 use App\ServiceInterface\ProviderGuardInterface;
 use PHPUnit\Framework\TestCase;

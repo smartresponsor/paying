@@ -13,7 +13,7 @@ use App\Form\PaymentConsoleFinalizeType;
 use App\Form\PaymentConsoleRefundType;
 use App\Form\PaymentCreateType;
 use App\Form\PaymentStartType;
-use App\Repository\PaymentRepositoryInterface;
+use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\Service\PaymentService;
 use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ServiceInterface\ProviderGuardInterface;

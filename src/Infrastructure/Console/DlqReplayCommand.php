@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Console;
 
-use App\Infrastructure\OutboxPublisherInterface;
+use App\InfrastructureInterface\OutboxPublisherInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Symfony\Component\Console\Attribute\AsCommand;

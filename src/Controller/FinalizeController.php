@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace App\Controller;
 use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentFinalizeRequestDto;
-use App\Repository\PaymentRepositoryInterface;
+use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\ProviderGuardInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;

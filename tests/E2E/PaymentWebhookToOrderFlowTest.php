@@ -9,7 +9,7 @@ use App\Entity\Payment;
 use App\Entity\PaymentOutboxMessage;
 use App\Message\Event\PaymentTransportMessage;
 use App\Message\Handler\PaymentEventConsumer;
-use App\Repository\PaymentRepositoryInterface;
+use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\Service\Order\NullOrderPaymentSync;
 use App\Service\Outbox\PaymentOutboxProcessor;
 use App\Service\Reconciliation\PaymentReconciliationService;

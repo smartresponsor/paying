@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 use App\ServiceInterface\ProjectionLagServiceInterface;
-use App\Infrastructure\PaymentProjectionRepositoryInterface;
+use App\InfrastructureInterface\PaymentProjectionRepositoryInterface;
 use Doctrine\DBAL\Connection;
 
 final class ProjectionLagService implements ProjectionLagServiceInterface

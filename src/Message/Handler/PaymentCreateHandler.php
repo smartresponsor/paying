@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace App\Message\Handler;
 use App\Entity\Payment;
 use App\Message\Command\PaymentCreateCommand;
-use App\Repository\PaymentRepositoryInterface;
+use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\Gateway\PaymentGatewayInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Uid\Ulid;
