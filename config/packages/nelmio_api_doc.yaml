@@ -1,0 +1,13 @@
+nelmio_api_doc:
+  documentation:
+    info:
+      title: Payment API
+      description: Symfony-owned OpenAPI surface for the Payment component.
+      version: '1.0.0'
+  areas:
+    default:
+      path_patterns:
+        - ^/payment
+        - ^/webhook
+        - ^/metrics$
+        - ^/status$

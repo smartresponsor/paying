@@ -1,43 +1,63 @@
 <?php
+
 declare(strict_types=1);
 
-/*
- * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
- */
+// Marketing America Corp. Oleksandr Tishchenko
 
 namespace App\Controller\Payment;
 
-use App\ControllerInterface\Payment\DlqControllerInterface;
+use App\Attribute\Payment\RequireScope;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
-use App\Domain\Payment\RequireScope;
+use Symfony\Component\Uid\Ulid;
 
 final class DlqController implements DlqControllerInterface
 {
-    public function __construct(private readonly Connection $data) {}
-
-    #[Route(path: '/payment/dlq', name: 'payment_dlq_list', methods: ['GET'])]
-    #[RequireScope(['payment:admin'])]
-    public function list(): JsonResponse
+    public function __construct(private readonly Connection $data)
     {
-        $rows = $this->data->fetchAllAssociative('SELECT id, outbox_id, topic, reason, created_at FROM payment_dlq ORDER BY id DESC LIMIT 200');
-        return new JsonResponse(['items' => $rows], 200);
     }
 
-    #[Route(path: '/payment/dlq/replay/{id}', name: 'payment_dlq_replay', methods: ['POST'])]
+    #[RequireScope(['payment:admin'])]
+    #[RequireScope(['payment:read'])]
+    public function list(): JsonResponse
+    {
+        $rows = $this->data->fetchAllAssociative(
+            'SELECT id, outbox_id, topic, reason, created_at FROM payment_dlq ORDER BY id DESC LIMIT 200',
+        );
+
+        return new JsonResponse(['items' => $rows], JsonResponse::HTTP_OK);
+    }
+
     #[RequireScope(['payment:admin'])]
     public function replay(int $id): JsonResponse
     {
-        $row = $this->data->fetchAssociative('SELECT * FROM payment_dlq WHERE id = :id', ['id'=>$id]);
-        if (!$row) return new JsonResponse(['ok'=>false], 404);
-        $this->data->insert('payment_outbox', [
-            'topic' => $row['topic'],
-            'payload' => $row['payload'],
+        $row = $this->data->fetchAssociative(
+            'SELECT * FROM payment_dlq WHERE id = :id',
+            ['id' => $id],
+            ['id' => ParameterType::INTEGER],
+        );
+
+        if (false === $row) {
+            return new JsonResponse(['ok' => false], JsonResponse::HTTP_NOT_FOUND);
+        }
+
+        $this->data->insert('payment_outbox_message', [
+            'id' => (new Ulid())->toRfc4122(),
+            'type' => (string) $row['topic'],
+            'payload' => (string) $row['payload'],
+            'occurred_at' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
             'status' => 'pending',
-            'created_at' => (new \DateTimeImmutable())->format('Y-m-d H:i:s')
+            'attempts' => 0,
+            'last_error' => null,
+            'routing_key' => (string) $row['topic'],
         ]);
-        $this->data->executeStatement('DELETE FROM payment_dlq WHERE id = :id', ['id'=>$id]);
-        return new JsonResponse(['ok'=>true], 200);
+        $this->data->executeStatement(
+            'DELETE FROM payment_dlq WHERE id = :id',
+            ['id' => $id],
+            ['id' => ParameterType::INTEGER],
+        );
+
+        return new JsonResponse(['ok' => true], JsonResponse::HTTP_OK);
     }
 }

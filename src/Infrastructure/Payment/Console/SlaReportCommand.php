@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -17,7 +20,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'payment:sla:report', description: 'Print SLA stats for window')]
 class SlaReportCommand extends Command
 {
-    public function __construct(private readonly SlaReporter $sla) { parent::__construct(); }
+    public function __construct(private readonly SlaReporter $sla)
+    {
+        parent::__construct();
+    }
 
     protected function configure(): void
     {
@@ -26,9 +32,10 @@ class SlaReportCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $win = (string)$input->getArgument('window');
+        $win = (string) $input->getArgument('window');
         $data = $this->sla->since($win);
         $output->writeln(json_encode($data));
+
         return Command::SUCCESS;
     }
 }

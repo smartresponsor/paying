@@ -3,7 +3,7 @@
   "type": "project",
   "license": "proprietary",
   "require": {
-    "php": ">=8.2",
+    "php": "^8.4",
     "ext-json": "*",
     "symfony/runtime": "^7.1 || ^8.0",
     "symfony/framework-bundle": "^7.1 || ^8.0",
@@ -19,12 +19,26 @@
     "doctrine/doctrine-bundle": "^2.10",
     "doctrine/doctrine-migrations-bundle": "^3.6",
     "symfony/rate-limiter": "^7.1 || ^8.0",
-    "ext-openssl": "*"
+    "ext-openssl": "*",
+    "symfony/messenger": "^7.1 || ^8.0",
+    "symfony/serializer": "^7.1 || ^8.0",
+    "symfony/validator": "^7.1 || ^8.0",
+    "symfony/monolog-bundle": "^3.10",
+    "symfony/twig-bundle": "^7.1 || ^8.0",
+    "twig/twig": "^3.0",
+    "symfony/form": "^7.1 || ^8.0",
+    "symfony/security-bundle": "^7.1 || ^8.0",
+    "symfony/asset": "^7.1 || ^8.0",
+    "nelmio/api-doc-bundle": "^5.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^10.5",
     "rector/rector": "^1.2",
-    "phpstan/phpstan": "^1.11"
+    "phpstan/phpstan": "^1.11",
+    "symfony/browser-kit": "^7.1 || ^8.0",
+    "symfony/css-selector": "^7.1 || ^8.0",
+    "doctrine/doctrine-fixtures-bundle": "^3.6",
+    "friendsofphp/php-cs-fixer": "^3.66"
   },
   "autoload": {
     "psr-4": {
@@ -33,11 +47,49 @@
   },
   "config": {
     "platform": {
-      "php": "8.5.0"
+      "php": "8.4.0"
     },
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "symfony/runtime": true
+    }
   },
   "scripts": {
-    "test": "vendor/bin/phpunit"
+    "test": "vendor/bin/phpunit --configuration phpunit.xml.dist",
+    "test:unit": "vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
+    "test:functional": "vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional",
+    "test:e2e": "vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite e2e",
+    "stan": "vendor/bin/phpstan analyse --memory-limit=1G",
+    "cs": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+    "cs:fix": "vendor/bin/php-cs-fixer fix",
+    "rector": "vendor/bin/rector process",
+    "lint:yaml": "bin/console lint:yaml config",
+    "lint:container": "bin/console lint:container",
+    "smoke:payment:sh": "bash tools/smoke/payment_smoke.sh",
+    "smoke:payment:ps1": "pwsh -NoProfile -File tools/smoke/payment_smoke.ps1",
+    "fixtures:payment:load": "bin/console doctrine:fixtures:load --group=payment --no-interaction",
+    "fixtures:payment:append": "bin/console doctrine:fixtures:load --group=payment --append --no-interaction",
+    "qa": [
+      "@lint:yaml",
+      "@lint:container",
+      "@stan",
+      "@cs",
+      "@test"
+    ],
+    "docs:phpdoc": "php tools/runtime/phpDocumentor.phar -c phpdoc.dist.xml",
+    "docs:phpdoc:check": "php -r \"if (!file_exists('tools/runtime/phpDocumentor.phar')) { fwrite(STDERR, 'tools/runtime/phpDocumentor.phar missing\n'); exit(1);} echo 'phpDocumentor PHAR present\n';\"",
+    "docs:openapi:lint": "php -r \"if (!file_exists('docs/api/openapi.yaml')) { fwrite(STDERR, 'docs/api/openapi.yaml not found\\n'); exit(1);} echo 'OpenAPI document present: docs/api/openapi.yaml\\n';\"",
+    "test:bootstrap:reset": "php -r \"foreach (['var/payment.test.data.sqlite','var/payment.test.infra.sqlite'] as $f) { if (file_exists($f)) unlink($f); } echo 'Test sqlite files reset'.PHP_EOL;\"",
+    "test:bootstrap:migrate": "bin/console doctrine:migrations:migrate --env=test --no-interaction",
+    "test:bootstrap:fixtures": "bin/console doctrine:fixtures:load --env=test --group=payment --no-interaction",
+    "test:bootstrap": [
+      "@test:bootstrap:reset",
+      "@test:bootstrap:migrate",
+      "@test:bootstrap:fixtures"
+    ],
+    "install:preflight": "php -r \"foreach (['composer.json','.env.example','.env.test','phpunit.xml.dist'] as $f) { if (!file_exists($f)) { fwrite(STDERR, $f . \" missing\\n\"); exit(1);} } echo \"Install preflight files present\\n\";\"",
+    "install:proof:checklist": "php -r \"foreach (['composer.lock','tools/runtime/payment_install_preflight.sh','tools/runtime/payment_install_preflight.ps1','docs/architecture/payment-install-preflight-proof.md'] as $f) { echo (file_exists($f) ? \"OK   \" : \"MISS \" ) . $f . PHP_EOL; }\"",
+    "runtime:preflight:sh": "bash tools/runtime/payment_install_preflight.sh",
+    "runtime:preflight:ps1": "pwsh -NoProfile -File tools/runtime/payment_install_preflight.ps1"
   }
 }

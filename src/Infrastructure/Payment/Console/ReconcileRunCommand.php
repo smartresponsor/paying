@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -7,7 +10,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Payment\Console;
 
-use App\Service\Payment\ReconciliationService;
+use App\Service\Payment\ReconciliationServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,7 +20,10 @@ use Symfony\Component\Uid\Ulid;
 #[AsCommand(name: 'payment:reconcile:run', description: 'Reconcile all processing payments')]
 class ReconcileRunCommand extends Command
 {
-    public function __construct(private readonly ReconciliationService $svc) { parent::__construct(); }
+    public function __construct(private readonly ReconciliationServiceInterface $svc)
+    {
+        parent::__construct();
+    }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -25,9 +31,10 @@ class ReconcileRunCommand extends Command
         $n = 0;
         foreach ($ids as $id) {
             $this->svc->reconcile(new Ulid($id));
-            $n++;
+            ++$n;
         }
         $output->writeln("Reconciled: {$n}");
+
         return Command::SUCCESS;
     }
 }

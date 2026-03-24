@@ -1,42 +1,60 @@
 <?php
-namespace OrderComponent\Payment\Message\Handler\Payment;
 
-use Doctrine\ORM\EntityManagerInterface;
-use OrderComponent\Payment\Contract\RepositoryInterface\Payment\PaymentRepositoryInterface;
-use OrderComponent\Payment\Contract\ServiceInterface\Payment\PaymentGatewayInterface;
-use OrderComponent\Payment\Message\Command\Payment\PaymentRefundCommand;
+declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
+
+namespace App\Message\Handler\Payment;
+
+use App\Message\Command\Payment\PaymentRefundCommand;
+use App\Repository\Payment\PaymentRepositoryInterface;
+use App\Service\Payment\Gateway\PaymentGatewayInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 final class PaymentRefundHandler
 {
     public function __construct(
-        private PaymentRepositoryInterface $repo,
-        private EntityManagerInterface $em,
+        private readonly PaymentRepositoryInterface $repo,
         /** @var iterable<PaymentGatewayInterface> */
-        private iterable $gateways
-    ) {}
-
-    public function __invoke(PaymentRefundCommand $c): void
-    {
-        $payment = $this->repo->find($c->paymentId);
-        if (!$payment) {
-            throw new \RuntimeException('Payment not found');
-        }
-        $gateway = $this->selectGatewayByPayment($payment);
-        $gateway->refund($payment->id(), $c->amountMinor, $c->currency, $c->reason);
-        $this->em->flush();
+        private readonly iterable $gateways,
+    ) {
     }
 
-    private function selectGatewayByPayment(object $payment): PaymentGatewayInterface
+    public function __invoke(PaymentRefundCommand $command): void
     {
-        // naive mapping by method; in real impl persist gateway code on Payment
-        $code = 'stripe';
-        foreach ($this->gateways as $g) {
-            if (method_exists($g, 'code') and $g->code() === $code) {
-                return $g;
+        $payment = $this->repo->find($command->paymentId);
+        if (null === $payment) {
+            throw new \RuntimeException('Payment not found');
+        }
+
+        $gateway = $this->selectGatewayByPayment($payment->providerRef());
+        $refundRef = $gateway->refund((string) $payment->id(), $command->amountMinor, $command->currency, $command->reason);
+
+        $payment->markRefunded($refundRef);
+
+        $this->repo->save($payment);
+    }
+
+    private function selectGatewayByPayment(?string $providerRef): PaymentGatewayInterface
+    {
+        $code = $this->resolveGatewayCode($providerRef);
+
+        foreach ($this->gateways as $gateway) {
+            if ($gateway->code() === $code) {
+                return $gateway;
             }
         }
-        throw new \RuntimeException('Gateway for payment not found');
+
+        throw new \RuntimeException('Gateway for payment not found: '.$code);
+    }
+
+    private function resolveGatewayCode(?string $providerRef): string
+    {
+        if (is_string($providerRef) && str_starts_with($providerRef, 'paypal_')) {
+            return 'paypal';
+        }
+
+        return 'stripe';
     }
 }

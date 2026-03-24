@@ -1,0 +1,6 @@
+framework:
+  messenger:
+    transports:
+      payment_outbox: 'in-memory://'
+      payment_outbox_failed: 'in-memory://'
+      payment_events_in: 'in-memory://'

@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -20,6 +23,10 @@ class Kernel extends BaseKernel
     {
         $container->import('../config/{packages}/*.yaml');
         $container->import('../config/{services}.yaml');
+
+        if (is_dir(__DIR__.'/../config/services')) {
+            $container->import('../config/services/*.yaml');
+        }
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void

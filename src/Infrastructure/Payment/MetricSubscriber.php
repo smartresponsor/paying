@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -7,13 +10,15 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Payment;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use App\Event\Payment\PaymentEvent;
 use App\Service\Payment\Metric;
-use App\Domain\Payment\Event\PaymentEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class MetricSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly Metric $metrics) {}
+    public function __construct(private readonly Metric $metrics)
+    {
+    }
 
     public static function getSubscribedEvents(): array
     {
@@ -23,6 +28,13 @@ class MetricSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onSuccess(PaymentEvent $e): void { $this->metrics->incSuccess(); }
-    public function onFailure(PaymentEvent $e): void { $this->metrics->incFailure(); }
+    public function onSuccess(PaymentEvent $e): void
+    {
+        $this->metrics->incSuccess();
+    }
+
+    public function onFailure(PaymentEvent $e): void
+    {
+        $this->metrics->incFailure();
+    }
 }

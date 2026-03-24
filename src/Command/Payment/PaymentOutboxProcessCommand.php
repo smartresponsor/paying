@@ -1,7 +1,12 @@
 <?php
-namespace OrderComponent\Payment\Command\Payment;
 
-use OrderComponent\Payment\Service\Payment\Outbox\PaymentOutboxProcessor;
+declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
+
+namespace App\Command\Payment;
+
+use App\Service\Payment\Outbox\PaymentOutboxProcessor;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -25,10 +30,11 @@ class PaymentOutboxProcessCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $limit = (int)$input->getOption('limit');
-        $retry = (bool)$input->getOption('retry');
+        $limit = (int) $input->getOption('limit');
+        $retry = (bool) $input->getOption('retry');
         $n = $this->processor->process($limit, $retry);
         $output->writeln(sprintf('<info>Published %d message(s)</info>', $n));
+
         return Command::SUCCESS;
     }
 }

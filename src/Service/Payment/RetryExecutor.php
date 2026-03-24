@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -7,13 +10,13 @@ declare(strict_types=1);
 
 namespace App\Service\Payment;
 
-use App\ServiceInterface\Payment\RetryExecutorInterface;
-
 class RetryExecutor implements RetryExecutorInterface
 {
-    public function __construct(private readonly int $max = 3, private readonly int $baseMs = 50) {}
+    public function __construct(private readonly int $max = 3, private readonly int $baseMs = 50)
+    {
+    }
 
-    public function execute(callable $callable)
+    public function execute(callable $callable): mixed
     {
         $attempt = 0;
         $sleep = $this->baseMs;
@@ -26,7 +29,7 @@ class RetryExecutor implements RetryExecutorInterface
             }
             usleep($sleep * 1000);
             $sleep *= 2;
-            $attempt++;
+            ++$attempt;
             goto beginning;
         }
     }

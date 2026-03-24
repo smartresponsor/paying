@@ -1,0 +1,8 @@
+doctrine:
+  dbal:
+    default_connection: data
+    connections:
+      data:
+        url: 'sqlite:///%kernel.project_dir%/var/payment.test.data.sqlite'
+      infra:
+        url: 'sqlite:///%kernel.project_dir%/var/payment.test.infra.sqlite'

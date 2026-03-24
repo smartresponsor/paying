@@ -1,9 +1,0 @@
-services:
-  OrderComponent\Payment\Service\Payment\Outbox\PaymentOutboxProcessor:
-    arguments:
-      - '@doctrine.orm.entity_manager'
-      - '@messenger.transport.payment_outbox'
-      - '@logger'
-
-  OrderComponent\Payment\Command\Payment\PaymentOutboxProcessCommand:
-    tags: ['console.command']

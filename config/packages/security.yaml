@@ -1,0 +1,19 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+
+    providers:
+        payment_memory:
+            memory: null
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            lazy: true
+            provider: payment_memory
+
+    access_control:
+        - { path: ^/api/docs(\.json)?$, roles: PUBLIC_ACCESS }

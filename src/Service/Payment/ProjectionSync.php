@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -7,76 +10,72 @@ declare(strict_types=1);
 
 namespace App\Service\Payment;
 
-use App\ServiceInterface\Payment\ProjectionSyncInterface;
-use App\InfrastructureInterface\Payment\PaymentProjectionRepositoryInterface;
+use App\Infrastructure\Payment\PaymentProjectionRepositoryInterface;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 
 class ProjectionSync implements ProjectionSyncInterface
 {
     public function __construct(
         private readonly Connection $data,
-        private readonly PaymentProjectionRepositoryInterface $infra
-    ) {}
+        private readonly PaymentProjectionRepositoryInterface $infra,
+    ) {
+    }
 
     public function sync(int $limit = 500): int
     {
-        $wm = $this->watermark();
+        $wm = $this->infra->watermark() ?? '1970-01-01 00:00:00';
         $sql = 'SELECT id, amount, currency, status, updated_at FROM payment WHERE updated_at > :wm ORDER BY updated_at ASC LIMIT :lim';
-        $rows = $this->data->fetchAllAssociative($sql, ['wm'=>$wm, 'lim'=>$limit]);
+        $rows = $this->data->fetchAllAssociative(
+            $sql,
+            ['wm' => $wm, 'lim' => $limit],
+            ['wm' => ParameterType::STRING, 'lim' => ParameterType::INTEGER],
+        );
         $n = 0;
         foreach ($rows as $r) {
             $this->infra->upsert([
-                'id' => (string)$r['id'],
-                'amount' => (string)$r['amount'],
-                'currency' => (string)$r['currency'],
-                'status' => (string)$r['status'],
-                'updated_at' => (string)$r['updated_at'],
+                'id' => (string) $r['id'],
+                'amount' => (string) $r['amount'],
+                'currency' => (string) $r['currency'],
+                'status' => (string) $r['status'],
+                'updated_at' => (string) $r['updated_at'],
             ]);
-            $n++;
+            ++$n;
         }
         if ($n > 0) {
-            $this->saveWatermark((string)end($rows)['updated_at']);
+            $this->infra->saveWatermark((string) end($rows)['updated_at']);
         }
+
         return $n;
     }
 
     public function rebuild(int $batch = 1000): int
     {
-        $off = 0; $n=0;
+        $off = 0;
+        $n = 0;
         while (true) {
             $rows = $this->data->fetchAllAssociative(
                 'SELECT id, amount, currency, status, updated_at FROM payment ORDER BY updated_at ASC LIMIT :lim OFFSET :off',
-                ['lim'=>$batch, 'off'=>$off]
+                ['lim' => $batch, 'off' => $off],
+                ['lim' => ParameterType::INTEGER, 'off' => ParameterType::INTEGER],
             );
-            if (!$rows) break;
+            if (!$rows) {
+                break;
+            }
             foreach ($rows as $r) {
                 $this->infra->upsert([
-                    'id' => (string)$r['id'],
-                    'amount' => (string)$r['amount'],
-                    'currency' => (string)$r['currency'],
-                    'status' => (string)$r['status'],
-                    'updated_at' => (string)$r['updated_at'],
+                    'id' => (string) $r['id'],
+                    'amount' => (string) $r['amount'],
+                    'currency' => (string) $r['currency'],
+                    'status' => (string) $r['status'],
+                    'updated_at' => (string) $r['updated_at'],
                 ]);
-                $n++;
+                ++$n;
             }
             $off += $batch;
-            $this->saveWatermark((string)end($rows)['updated_at']);
+            $this->infra->saveWatermark((string) end($rows)['updated_at']);
         }
+
         return $n;
-    }
-
-    private function watermark(): string
-    {
-        $row = $this->data->fetchOne("SELECT value FROM payment_projection_meta WHERE name = 'watermark'");
-        return $row ? (string)$row : '1970-01-01 00:00:00';
-    }
-
-    private function saveWatermark(string $ts): void
-    {
-        $this->data->executeStatement(
-            "INSERT INTO payment_projection_meta(name, value) VALUES('watermark', :v)
-             ON CONFLICT (name) DO UPDATE SET value=EXCLUDED.value",
-            ['v'=>$ts]
-        );
     }
 }

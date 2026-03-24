@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -21,7 +24,7 @@ class ResponseHeaderSubscriber implements EventSubscriberInterface
     public function onResponse(ResponseEvent $event): void
     {
         $resp = $event->getResponse();
-        $csp = (string)($_ENV['CSP_HEADER'] ?? "default-src 'self'");
+        $csp = (string) ($_ENV['CSP_HEADER'] ?? "default-src 'self'");
         $resp->headers->set('Content-Security-Policy', $csp);
         $resp->headers->set('X-Content-Type-Options', 'nosniff');
         $resp->headers->set('X-Frame-Options', 'DENY');

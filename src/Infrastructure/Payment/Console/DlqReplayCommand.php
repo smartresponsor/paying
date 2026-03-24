@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -7,8 +10,9 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Payment\Console;
 
-use App\Infrastructure\Payment\OutboxPublisher;
+use App\Infrastructure\Payment\OutboxPublisherInterface;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -20,7 +24,7 @@ class DlqReplayCommand extends Command
 {
     public function __construct(
         private readonly Connection $data,
-        private readonly OutboxPublisher $outbox
+        private readonly OutboxPublisherInterface $outbox,
     ) {
         parent::__construct();
     }
@@ -32,13 +36,20 @@ class DlqReplayCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $limit = (int)$input->getArgument('limit');
-        $rows = $this->data->fetchAllAssociative('SELECT * FROM payment_dlq ORDER BY id ASC LIMIT :lim', ['lim'=>$limit]);
-        foreach ($rows as $r) {
-            $this->outbox->enqueue((string)$r['topic'], json_decode((string)$r['payload'], true) ?? []);
-            $this->data->executeStatement('DELETE FROM payment_dlq WHERE id = :id', ['id'=>$r['id']]);
+        $limit = max(1, (int) $input->getArgument('limit'));
+        $rows = $this->data->fetchAllAssociative(sprintf('SELECT * FROM payment_dlq ORDER BY id ASC LIMIT %d', $limit));
+
+        foreach ($rows as $row) {
+            $this->outbox->enqueue((string) $row['topic'], json_decode((string) $row['payload'], true) ?? []);
+            $this->data->executeStatement(
+                'DELETE FROM payment_dlq WHERE id = :id',
+                ['id' => (int) $row['id']],
+                ['id' => ParameterType::INTEGER],
+            );
         }
-        $output->writeln("Replayed: ".count($rows));
+
+        $output->writeln('Replayed: '.count($rows));
+
         return Command::SUCCESS;
     }
 }

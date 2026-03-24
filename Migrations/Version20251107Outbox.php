@@ -1,4 +1,5 @@
 <?php
+// Marketing America Corp. Oleksandr Tishchenko
 declare(strict_types=1);
 
 /*
@@ -14,13 +15,20 @@ final class Version20251107Outbox extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return 'Create payment_outbox and payment_dlq tables (Postgres)';
+        return 'Create payment_dlq table for unified payment_outbox_message retry and replay lifecycle';
     }
 
     public function up(Schema $schema): void
     {
-        $this->addSql('CREATE TABLE IF NOT EXISTS payment_outbox (id SERIAL PRIMARY KEY, topic VARCHAR(120) NOT NULL, payload JSON NOT NULL, status VARCHAR(16) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL)');
-        $this->addSql('CREATE TABLE IF NOT EXISTS payment_dlq (id SERIAL PRIMARY KEY, outbox_id INT NOT NULL, topic VARCHAR(120) NOT NULL, payload JSON NOT NULL, reason VARCHAR(255) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL)');
+        $this->addSql("CREATE TABLE IF NOT EXISTS payment_dlq (
+            id SERIAL PRIMARY KEY,
+            outbox_id VARCHAR(36) NOT NULL,
+            topic VARCHAR(120) NOT NULL,
+            payload JSON NOT NULL,
+            reason VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
+        )");
+        $this->addSql('CREATE INDEX IF NOT EXISTS idx_payment_dlq_outbox_id ON payment_dlq (outbox_id)');
     }
 
     public function down(Schema $schema): void

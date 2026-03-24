@@ -1,5 +1,10 @@
 <?php
-namespace OrderComponent\Payment\Service\Payment\Webhook;
+
+declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
+
+namespace App\Service\Payment\Webhook;
 
 final class JsonSchemaValidator
 {
@@ -11,6 +16,7 @@ final class JsonSchemaValidator
                 return false;
             }
         }
+
         return true;
     }
 }

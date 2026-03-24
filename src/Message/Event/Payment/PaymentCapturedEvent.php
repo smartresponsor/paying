@@ -1,5 +1,10 @@
 <?php
-namespace OrderComponent\Payment\Message\Event\Payment;
+
+declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
+
+namespace App\Message\Event\Payment;
 
 final class PaymentCapturedEvent
 {
@@ -7,6 +12,7 @@ final class PaymentCapturedEvent
         public string $paymentId,
         public int $amountMinor,
         public string $currency,
-        public ?string $gatewayTransactionId = null
-    ) {}
+        public ?string $gatewayTransactionId = null,
+    ) {
+    }
 }

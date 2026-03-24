@@ -1,9 +1,14 @@
 <?php
-namespace OrderComponent\Payment\Tests\Unit;
 
-use OrderComponent\Payment\Service\Payment\PaymentService;
-use OrderComponent\Payment\Entity\Payment\Payment;
-use OrderComponent\Payment\Contract\RepositoryInterface\Payment\PaymentRepositoryInterface;
+declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
+
+namespace App\Tests\Payment\Unit;
+
+use App\Entity\Payment\Payment;
+use App\Repository\Payment\PaymentRepositoryInterface;
+use App\Service\Payment\PaymentService;
 use PHPUnit\Framework\TestCase;
 
 final class PaymentServiceTest extends TestCase
@@ -12,14 +17,34 @@ final class PaymentServiceTest extends TestCase
     {
         $repo = new class implements PaymentRepositoryInterface {
             public ?Payment $saved = null;
-            public function save(Payment $payment): void { $this->saved = $payment; }
-            public function find(string $id): ?Payment { return null; }
+
+            public function save(Payment $payment): void
+            {
+                $this->saved = $payment;
+            }
+
+            public function find(string $id): ?Payment
+            {
+                return null;
+            }
+
+            public function listRecent(int $limit = 10): array
+            {
+                return [];
+            }
+
+            public function listIdsByStatuses(array $statuses, int $limit = 100): array
+            {
+                return [];
+            }
         };
 
-        $svc = new PaymentService($repo);
-        $p = $svc->create('00000000-0000-0000-0000-000000000001', 1000, 'USD');
-        $this->assertInstanceOf(Payment::class, $p);
-        $this->assertSame(1000, $p->amountMinor());
-        $this->assertSame('USD', $p->currency());
+        $service = new PaymentService($repo);
+        $payment = $service->create('00000000-0000-0000-0000-000000000001', 1000, 'USD');
+
+        self::assertInstanceOf(Payment::class, $payment);
+        self::assertSame($payment, $repo->saved);
+        self::assertSame('10.00', $payment->amount());
+        self::assertSame('USD', $payment->currency());
     }
 }

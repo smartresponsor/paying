@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -7,22 +10,29 @@ declare(strict_types=1);
 
 namespace App\Service\Payment;
 
-use App\ServiceInterface\Payment\RefundServiceInterface;
-use App\Service\Payment\ProviderGuard;
-use App\InfrastructureInterface\Payment\PaymentRepositoryInterface;
+use App\Entity\Payment\Payment;
+use App\Repository\Payment\PaymentRepositoryInterface;
 use Symfony\Component\Uid\Ulid;
 
 class RefundService implements RefundServiceInterface
 {
     public function __construct(
-        private readonly ProviderGuard $guard,
-        private readonly PaymentRepositoryInterface $repo
-    ) {}
+        private readonly ProviderGuardInterface $guard,
+        private readonly PaymentRepositoryInterface $repo,
+    ) {
+    }
 
-    public function refund(Ulid $id, string $amount, string $provider = 'internal')
+    public function refund(Ulid $id, string $amount, string $provider = 'internal'): Payment
     {
-        $p = $this->guard->refund($provider, $id, $amount);
-        $this->repo->save($p);
-        return $p;
+        $existing = $this->repo->find((string) $id);
+        if (null === $existing) {
+            throw new \RuntimeException('Payment not found: '.(string) $id);
+        }
+
+        $resolved = $this->guard->refund($provider, $id, $amount);
+        $existing->syncFrom($resolved);
+        $this->repo->save($existing);
+
+        return $existing;
     }
 }

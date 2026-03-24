@@ -1,107 +1,114 @@
-
-# Payment E5 wiring
 services:
-    App\Service\Payment\ProjectionSync: ~
-    App\Infrastructure\Payment\Console\ProjectionSyncCommand: ~
+    _defaults:
+        autowire: true
+        autoconfigure: true
 
-# Payment E6–E8 wiring
-services:
-    App\Service\Payment\ProviderRouter:
-        arguments:
-            $adapters:
-                internal: '@App\Service\Payment\Adapter\InternalAdapter'
-    App\Service\Payment\Adapter\InternalAdapter: ~
-    App\Service\Payment\WebhookVerifier: ~
-    App\Service\Payment\IdempotencyService: ~
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+            - '../src/**/Resources/'
+            - '../src/**/Tests/'
 
-    App\Infrastructure\Payment\OutboxPublisher: ~
-    App\Infrastructure\Payment\Console\DlqReplayCommand: ~
-
-# Payment E9–E12 wiring
-services:
-    App\Domain\Payment\TransitionHandler: ~
-
-    App\Service\Payment\ReconciliationService: ~
-    App\Service\Payment\RefundService: ~
-
-    App\Service\Payment\Metric: ~
-    App\Infrastructure\Payment\MetricSubscriber:
-        tags: ['kernel.event_subscriber']
-
-    App\Controller\Payment\MetricController: ~
-
-# Payment E14 providers & mappers
-services:
-    App\Service\Payment\Adapter\StripeAdapter: ~
-    App\Service\Payment\Adapter\AdyenAdapter: ~
-
-    App\Service\Payment\Mapper\StripeEventMapper: ~
-    App\Service\Payment\Mapper\AdyenEventMapper: ~
+    App\Repository\Payment\PaymentRepositoryInterface: '@App\Repository\Payment\PaymentRepository'
+    App\Infrastructure\Payment\PaymentProjectionRepositoryInterface: '@App\Infrastructure\Payment\PaymentProjectionRepository'
+    App\Service\Payment\ProviderRouterInterface: '@App\Service\Payment\ProviderRouter'
+    App\Service\Payment\ProviderGuardInterface: '@App\Service\Payment\ProviderGuard'
+    App\Service\Payment\PaymentService: ~
+    App\Service\Payment\IdempotencyStoreInterface:
+        factory: ['@App\Service\Payment\IdempotencyStoreFactory', 'create']
 
     App\Service\Payment\ProviderRouter:
         arguments:
-            $adapters:
-                internal: '@App\Service\Payment\Adapter\InternalAdapter'
-                stripe: '@App\Service\Payment\Adapter\StripeAdapter'
-                adyen: '@App\Service\Payment\Adapter\AdyenAdapter'
+            $providers:
+                internal: '@App\Service\Payment\InternalPaymentProvider'
+                stripe: '@App\Service\Payment\StripePaymentProvider'
 
-# Payment E15 outbox & dlq & transport
-services:
-    App\Infrastructure\Payment\PublisherTransportLog: ~
-    App\Infrastructure\Payment\OutboxWorker: ~
-    App\Infrastructure\Payment\Console\OutboxRunCommand: ~
-    App\Controller\Payment\DlqController: ~
-
-# Payment E16 security & audit
-services:
-    App\Service\Payment\OidcJwksCache: ~
-    App\Infrastructure\Payment\ResponseHeaderSubscriber:
-        tags: ['kernel.event_subscriber']
-    App\Infrastructure\Payment\AuditLogger: ~
-
-# Payment rate limiter subscriber
-services:
-    App\Infrastructure\Payment\RateLimitSubscriber:
+    App\Service\Payment\StripePaymentProvider:
         arguments:
-            $paymentApiLimiter: '@limiter.payment_api'
-        tags: ['kernel.event_subscriber']
+            $secretKey: '%env(default::STRIPE_SECRET_KEY)%'
+            $webhookSecret: '%env(default::STRIPE_WEBHOOK_SECRET)%'
 
-# Payment E18–E20 wiring
-services:
-    App\Infrastructure\Payment\Console\ReconcileRunCommand: ~
-    App\Service\Payment\SlaReporter: ~
-    App\Infrastructure\Payment\Console\SlaReportCommand: ~
+    App\Service\Payment\IdempotencyService:
+        arguments:
+            $ttlSec: '%env(int:default:86400:IDEM_TTL)%'
 
-    App\Service\Payment\RetryExecutor: ~
-    App\Service\Payment\CircuitBreaker: ~
-    App\Service\Payment\ProviderGuard: ~
-
-# Payment E21 projection & status
-services:
     App\Infrastructure\Payment\PaymentProjectionRepository:
         arguments:
             $infra: '@doctrine.dbal.infra_connection'
 
-    App\Service\Payment\ProjectionSync: ~
-    App\Infrastructure\Payment\Console\ProjectionSyncCommand: ~
-    App\Infrastructure\Payment\Console\ProjectionRebuildCommand: ~
-
-    App\Controller\Payment\StatusController: ~
-
-# Payment E22 idempotency hardening & gate
-services:
-    App\Service\Payment\IdempotencyStoreFactory: ~
-    App\ServiceInterface\Payment\IdempotencyStoreInterface:
-        factory: ['@App\Service\Payment\IdempotencyStoreFactory', 'create']
-
-    App\Service\Payment\IdempotencyService:
+    App\Infrastructure\Payment\RateLimitSubscriber:
         arguments:
-            $ttlSec: '%env(int:IDEM_TTL)%'
+            $paymentApiLimiter: '@limiter.payment_api'
 
-    App\Infrastructure\Payment\Console\IdemPurgeCommand: ~
+    App\Service\Payment\WebhookVerifierInterface: '@App\Service\Payment\WebhookVerifier'
+    App\Service\Payment\TokenVerifierInterface: '@App\Service\Payment\TokenVerifier'
 
-# Payment E23 security scopes
-services:
-    App\Service\Payment\TokenVerifier: ~
-    App\Infrastructure\Payment\ScopeGuardSubscriber:
-        tags: ['kernel.event_subscriber']
+    App\Service\Payment\ProjectionSyncInterface: '@App\Service\Payment\ProjectionSync'
+    App\Service\Payment\RefundServiceInterface: '@App\Service\Payment\RefundService'
+    App\Service\Payment\ReconciliationServiceInterface: '@App\Service\Payment\ReconciliationService'
+    App\Infrastructure\Payment\OutboxPublisherInterface: '@App\Infrastructure\Payment\OutboxPublisher'
+
+    App\Service\Payment\Mapper\StripeEventMapper:
+        tags: ['payment.event_mapper']
+
+    App\Service\Payment\Mapper\AdyenEventMapper:
+        tags: ['payment.event_mapper']
+
+    App\Controller\Payment\WebhookController:
+        arguments:
+            $mappers: !tagged_iterator payment.event_mapper
+
+    payment_audit.logger:
+        class: Psr\Log\LoggerInterface
+        factory: ['@monolog.logger', 'get']
+        arguments: ['payment_audit']
+
+    App\Controller\Webhook\StripeWebhookController:
+        arguments:
+            $paymentAuditLogger: '@payment_audit.logger'
+
+    App\Controller\Webhook\PayPalWebhookController:
+        arguments:
+            $paymentAuditLogger: '@payment_audit.logger'
+
+
+    App\Service\Payment\Outbox\PaymentOutboxProcessor:
+        arguments:
+            $em: '@doctrine.orm.entity_manager'
+            $transport: '@messenger.transport.payment_outbox'
+            $logger: '@logger'
+
+    App\Command\Payment\PaymentOutboxProcessCommand:
+        tags: ['console.command']
+
+    App\Message\Handler\Payment\PaymentCreateHandler:
+        arguments:
+            $gateways: !tagged_iterator payment.gateway
+        tags: ['messenger.message_handler']
+
+    App\Message\Handler\Payment\PaymentRefundHandler:
+        arguments:
+            $gateways: !tagged_iterator payment.gateway
+        tags: ['messenger.message_handler']
+
+
+    App\Service\Payment\Gateway\StripeGateway:
+        tags: ['payment.gateway']
+
+    App\Service\Payment\Gateway\PayPalGateway:
+        tags: ['payment.gateway']
+
+    App\Service\Order\NullOrderPaymentSync:
+        arguments:
+            $logger: '@logger'
+        autoconfigure: true
+        autowire: true
+
+    App\Service\Order\OrderPaymentSyncInterface: '@App\Service\Order\NullOrderPaymentSync'
+
+    App\Message\Handler\Payment\PaymentEventConsumer:
+        autoconfigure: true
+        autowire: true

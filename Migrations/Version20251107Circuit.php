@@ -1,4 +1,5 @@
 <?php
+// Marketing America Corp. Oleksandr Tishchenko
 declare(strict_types=1);
 
 /*

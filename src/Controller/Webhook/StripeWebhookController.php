@@ -1,16 +1,21 @@
 <?php
-namespace OrderComponent\Payment\Controller\Webhook;
 
+declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
+
+namespace App\Controller\Webhook;
+
+use App\Entity\Payment\PaymentOutboxMessage;
+use App\Entity\Payment\PaymentWebhookLog;
+use App\Service\Payment\Webhook\JsonSchemaValidator;
+use App\Service\Payment\Webhook\StripeEventNormalizer;
+use App\Service\Payment\Webhook\StripeSignatureValidator;
 use Doctrine\ORM\EntityManagerInterface;
-use OrderComponent\Payment\Entity\Payment\PaymentOutboxMessage;
-use OrderComponent\Payment\Entity\Payment\PaymentWebhookLog;
-use OrderComponent\Payment\Service\Payment\Webhook\StripeSignatureValidator;
-use OrderComponent\Payment\Service\Payment\Webhook\StripeEventNormalizer;
-use OrderComponent\Payment\Service\Payment\Webhook\JsonSchemaValidator;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Uid\Ulid;
 
 final class StripeWebhookController
 {
@@ -19,47 +24,53 @@ final class StripeWebhookController
         private StripeSignatureValidator $validator,
         private StripeEventNormalizer $normalizer,
         private JsonSchemaValidator $schema,
-        private LoggerInterface $paymentAuditLogger
-    ) {}
+        private LoggerInterface $paymentAuditLogger,
+    ) {
+    }
 
-    #[Route(path: '/webhook/stripe', name: 'payment_webhook_stripe', methods: ['POST'])]
     public function __invoke(Request $request): JsonResponse
     {
         $sig = $request->headers->get('Stripe-Signature');
         $payload = $request->getContent();
         if (!$this->validator->isValid($payload, $sig)) {
-            return new JsonResponse(['error' => 'invalid-signature'], 400);
+            return new JsonResponse(['error' => 'invalid-signature'], JsonResponse::HTTP_BAD_REQUEST);
         }
         $data = json_decode($payload, true) ?? [];
-        if (!$this->schema->validate($data, ['id','type'])) {
-            return new JsonResponse(['error' => 'invalid-payload'], 400);
+        if (!$this->schema->validate($data, ['id', 'type'])) {
+            return new JsonResponse(['error' => 'invalid-payload'], JsonResponse::HTTP_BAD_REQUEST);
         }
-        $externalId = (string)($data['id'] ?? '');
-        if ($externalId === '') {
-            return new JsonResponse(['error' => 'invalid-id'], 400);
+        $externalId = (string) ($data['id'] ?? '');
+        if ('' === $externalId) {
+            return new JsonResponse(['error' => 'invalid-id'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
-        // Idempotency check
         $repo = $this->em->getRepository(PaymentWebhookLog::class);
         $existing = $repo->findOneBy(['provider' => 'stripe', 'externalEventId' => $externalId]);
         if ($existing) {
             $existing->markDuplicate();
             $this->em->flush();
-            return new JsonResponse(['status' => 'duplicate']);
+
+            return new JsonResponse(['status' => 'duplicate'], JsonResponse::HTTP_OK);
         }
 
-        $log = new PaymentWebhookLog('stripe', $externalId, $data);
+        $normalized = $this->normalizer->normalize($data);
+        $routingKey = $this->normalizer->routingKey($data);
+        $log = new PaymentWebhookLog('stripe', $externalId, $normalized);
         $this->em->persist($log);
 
-        $routingKey = $this->normalizer->routingKey($data);
-        // In real impl, convert to normalized payload with paymentId, orderId, etc.
-        $outbox = new PaymentOutboxMessage(\Ramsey\Uuid\Uuid::uuid4()->toString(), $routingKey, $data, $routingKey);
+        $outbox = new PaymentOutboxMessage((new Ulid())->toRfc4122(), $routingKey, $normalized, $routingKey);
         $this->em->persist($outbox);
 
         $log->markProcessed();
         $this->em->flush();
 
-        $this->paymentAuditLogger->info('Stripe webhook accepted', ['id' => $externalId, 'type' => $data['type'] ?? '']);
-        return new JsonResponse(['status' => 'queued', 'outbox_id' => $outbox->id()]);
+        $this->paymentAuditLogger->info('Stripe webhook accepted', [
+            'id' => $externalId,
+            'type' => $data['type'] ?? '',
+            'paymentId' => $normalized['paymentId'] ?? null,
+            'routingKey' => $routingKey,
+        ]);
+
+        return new JsonResponse(['status' => 'queued', 'outbox_id' => $outbox->id()], JsonResponse::HTTP_OK);
     }
 }

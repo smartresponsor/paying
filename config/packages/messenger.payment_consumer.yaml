@@ -10,5 +10,3 @@ framework:
           queues:
             payment_events_in:
               binding_keys: ['payment.*']
-    routing:
-      'stdClass': payment_events_in

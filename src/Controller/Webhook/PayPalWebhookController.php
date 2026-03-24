@@ -1,16 +1,21 @@
 <?php
-namespace OrderComponent\Payment\Controller\Webhook;
 
+declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
+
+namespace App\Controller\Webhook;
+
+use App\Entity\Payment\PaymentOutboxMessage;
+use App\Entity\Payment\PaymentWebhookLog;
+use App\Service\Payment\Webhook\JsonSchemaValidator;
+use App\Service\Payment\Webhook\PayPalEventNormalizer;
+use App\Service\Payment\Webhook\PayPalSignatureValidator;
 use Doctrine\ORM\EntityManagerInterface;
-use OrderComponent\Payment\Entity\Payment\PaymentOutboxMessage;
-use OrderComponent\Payment\Entity\Payment\PaymentWebhookLog;
-use OrderComponent\Payment\Service\Payment\Webhook\PayPalSignatureValidator;
-use OrderComponent\Payment\Service\Payment\Webhook\PayPalEventNormalizer;
-use OrderComponent\Payment\Service\Payment\Webhook\JsonSchemaValidator;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Uid\Ulid;
 
 final class PayPalWebhookController
 {
@@ -19,24 +24,24 @@ final class PayPalWebhookController
         private PayPalSignatureValidator $validator,
         private PayPalEventNormalizer $normalizer,
         private JsonSchemaValidator $schema,
-        private LoggerInterface $paymentAuditLogger
-    ) {}
+        private LoggerInterface $paymentAuditLogger,
+    ) {
+    }
 
-    #[Route(path: '/webhook/paypal', name: 'payment_webhook_paypal', methods: ['POST'])]
     public function __invoke(Request $request): JsonResponse
     {
         $payload = $request->getContent();
         $headers = array_change_key_case($request->headers->all(), CASE_LOWER);
         if (!$this->validator->isValid($payload, $headers)) {
-            return new JsonResponse(['error' => 'invalid-signature'], 400);
+            return new JsonResponse(['error' => 'invalid-signature'], JsonResponse::HTTP_BAD_REQUEST);
         }
         $data = json_decode($payload, true) ?? [];
-        if (!$this->schema->validate($data, ['id','event_type'])) {
-            return new JsonResponse(['error' => 'invalid-payload'], 400);
+        if (!$this->schema->validate($data, ['id', 'event_type'])) {
+            return new JsonResponse(['error' => 'invalid-payload'], JsonResponse::HTTP_BAD_REQUEST);
         }
-        $externalId = (string)($data['id'] ?? '');
-        if ($externalId === '') {
-            return new JsonResponse(['error' => 'invalid-id'], 400);
+        $externalId = (string) ($data['id'] ?? '');
+        if ('' === $externalId) {
+            return new JsonResponse(['error' => 'invalid-id'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
         $repo = $this->em->getRepository(PaymentWebhookLog::class);
@@ -44,20 +49,28 @@ final class PayPalWebhookController
         if ($existing) {
             $existing->markDuplicate();
             $this->em->flush();
-            return new JsonResponse(['status' => 'duplicate']);
+
+            return new JsonResponse(['status' => 'duplicate'], JsonResponse::HTTP_OK);
         }
 
-        $log = new PaymentWebhookLog('paypal', $externalId, $data);
+        $normalized = $this->normalizer->normalize($data);
+        $routingKey = $this->normalizer->routingKey($data);
+        $log = new PaymentWebhookLog('paypal', $externalId, $normalized);
         $this->em->persist($log);
 
-        $routingKey = $this->normalizer->routingKey($data);
-        $outbox = new PaymentOutboxMessage(\Ramsey\Uuid\Uuid::uuid4()->toString(), $routingKey, $data, $routingKey);
+        $outbox = new PaymentOutboxMessage((new Ulid())->toRfc4122(), $routingKey, $normalized, $routingKey);
         $this->em->persist($outbox);
 
         $log->markProcessed();
         $this->em->flush();
 
-        $this->paymentAuditLogger->info('PayPal webhook accepted', ['id' => $externalId, 'type' => $data['event_type'] ?? '']);
-        return new JsonResponse(['status' => 'queued', 'outbox_id' => $outbox->id()]);
+        $this->paymentAuditLogger->info('PayPal webhook accepted', [
+            'id' => $externalId,
+            'type' => $data['event_type'] ?? '',
+            'paymentId' => $normalized['paymentId'] ?? null,
+            'routingKey' => $routingKey,
+        ]);
+
+        return new JsonResponse(['status' => 'queued', 'outbox_id' => $outbox->id()], JsonResponse::HTTP_OK);
     }
 }

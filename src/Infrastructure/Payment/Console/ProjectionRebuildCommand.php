@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -7,17 +10,20 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Payment\Console;
 
-use App\Service\Payment\ProjectionSync;
+use App\Service\Payment\ProjectionSyncInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'payment:projection:rebuild', description: 'Rebuild full projection to MySQL')]
+#[AsCommand(name: 'payment:projection:rebuild', description: 'Rebuild full payment projection')]
 class ProjectionRebuildCommand extends Command
 {
-    public function __construct(private readonly ProjectionSync $sync) { parent::__construct(); }
+    public function __construct(private readonly ProjectionSyncInterface $sync)
+    {
+        parent::__construct();
+    }
 
     protected function configure(): void
     {
@@ -26,8 +32,9 @@ class ProjectionRebuildCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $n = $this->sync->rebuild((int)$input->getArgument('batch'));
+        $n = $this->sync->rebuild((int) $input->getArgument('batch'));
         $output->writeln("Rebuilt: {$n}");
+
         return Command::SUCCESS;
     }
 }

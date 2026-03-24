@@ -1,34 +1,45 @@
 <?php
+
 declare(strict_types=1);
 
-/*
- * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
- */
+// Marketing America Corp. Oleksandr Tishchenko
 
 namespace App\Controller\Payment;
 
-use App\ControllerInterface\Payment\MetricControllerInterface;
+use App\Attribute\Payment\RequireScope;
+use App\Infrastructure\Payment\PaymentProjectionRepositoryInterface;
 use App\Service\Payment\Metric;
 use Doctrine\DBAL\Connection;
-use App\InfrastructureInterface\Payment\PaymentProjectionRepositoryInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
 final class MetricController implements MetricControllerInterface
 {
-    public function __construct(private readonly Metric $metrics, private readonly Connection $data, private readonly PaymentProjectionRepositoryInterface $infra) {}
+    public function __construct(
+        private readonly Metric $metrics,
+        private readonly Connection $data,
+        private readonly PaymentProjectionRepositoryInterface $infra,
+        private readonly LoggerInterface $logger,
+    ) {
+    }
 
-    #[Route(path: '/metrics', name: 'metrics', methods: ['GET'])]
+    #[RequireScope(['payment:read'])]
     public function metrics(): Response
     {
         $text = $this->metrics->export();
+
         try {
-            $d = (string)($this->data->fetchOne('SELECT MAX(updated_at) FROM payment') ?: '');
-            $i = (string)($this->infra->maxUpdatedAt() ?: '');
+            $dataUpdatedAt = (string) ($this->data->fetchOne('SELECT MAX(updated_at) FROM payment') ?: '');
+            $infraUpdatedAt = (string) ($this->infra->maxUpdatedAt() ?: '');
             $lagMs = 0;
-            if ($d && $i) { $lagMs = max(0, (strtotime($d) - strtotime($i)) * 1000); }
+            if ('' !== $dataUpdatedAt && '' !== $infraUpdatedAt) {
+                $lagMs = max(0, (strtotime($dataUpdatedAt) - strtotime($infraUpdatedAt)) * 1000);
+            }
             $text .= "payment_projection_lag_ms {$lagMs}\n";
-        } catch (\Throwable $e) {}
-        return new Response($text, 200, ['Content-Type' => 'text/plain; version=0.0.4']);
+        } catch (\Throwable $e) {
+            $this->logger->warning('Unable to calculate payment projection lag metrics.', ['exception' => $e]);
+        }
+
+        return new Response($text, Response::HTTP_OK, ['Content-Type' => 'text/plain; version=0.0.4']);
     }
 }

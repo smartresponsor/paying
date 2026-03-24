@@ -1,27 +1,43 @@
 <?php
-namespace OrderComponent\Payment\Service\Payment\Reconciliation;
 
+declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
+
+namespace App\Service\Payment\Reconciliation;
+
+use App\Entity\Payment\Payment;
+use App\Entity\Payment\PaymentRefund;
+use App\Entity\Payment\PaymentTransaction;
+use App\Repository\Payment\PaymentRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
-use OrderComponent\Payment\Contract\RepositoryInterface\Payment\PaymentRepositoryInterface;
-use OrderComponent\Payment\Entity\Payment\Payment;
-use OrderComponent\Payment\Entity\Payment\PaymentTransaction;
-use OrderComponent\Payment\Entity\Payment\PaymentRefund;
+use Symfony\Component\Uid\Ulid;
 
 final class PaymentReconciliationService
 {
     public function __construct(
         private PaymentRepositoryInterface $payments,
-        private EntityManagerInterface $em
-    ) {}
+        private EntityManagerInterface $em,
+    ) {
+    }
 
     /** @return Payment */
     public function onCaptured(string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null)
     {
         $p = $this->requirePayment($paymentId);
-        $p->markCaptured();
-        $tx = new PaymentTransaction(\Ramsey\Uuid\Uuid::uuid4()->toString(), $p->id(), $gatewayTxId ?? 'captured', 'capture', $amountMinor);
+        $p->markCompleted($gatewayTxId);
+
+        $tx = new PaymentTransaction(
+            (new Ulid())->toRfc4122(),
+            (string) $p->id(),
+            $gatewayTxId ?? 'captured',
+            'capture',
+            $amountMinor,
+        );
+
         $this->em->persist($tx);
         $this->payments->save($p);
+
         return $p;
     }
 
@@ -29,9 +45,20 @@ final class PaymentReconciliationService
     public function onRefunded(string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null, ?string $reason = null)
     {
         $p = $this->requirePayment($paymentId);
-        $refund = new PaymentRefund(\Ramsey\Uuid\Uuid::uuid4()->toString(), $p->id(), $amountMinor, $currency, $reason);
+        $p->markRefunded($gatewayTxId);
+
+        $refund = new PaymentRefund(
+            (new Ulid())->toRfc4122(),
+            (string) $p->id(),
+            $amountMinor,
+            $currency,
+            $reason,
+        );
+
         $this->em->persist($refund);
+        $this->payments->save($p);
         $this->em->flush();
+
         return $refund;
     }
 
@@ -39,7 +66,7 @@ final class PaymentReconciliationService
     {
         $p = $this->payments->find($paymentId);
         if ($p) {
-            $p->markFailed();
+            $p->markFailed('' !== $errorCode ? $errorCode : null);
             $this->payments->save($p);
         }
     }
@@ -48,8 +75,9 @@ final class PaymentReconciliationService
     {
         $p = $this->payments->find($id);
         if (!$p) {
-            throw new \RuntimeException('Payment not found: ' . $id);
+            throw new \RuntimeException('Payment not found: '.$id);
         }
+
         return $p;
     }
 }

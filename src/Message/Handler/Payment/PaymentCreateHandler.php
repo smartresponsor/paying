@@ -1,42 +1,53 @@
 <?php
-namespace OrderComponent\Payment\Message\Handler\Payment;
 
-use Doctrine\ORM\EntityManagerInterface;
-use OrderComponent\Payment\Contract\RepositoryInterface\Payment\PaymentRepositoryInterface;
-use OrderComponent\Payment\Contract\ServiceInterface\Payment\PaymentGatewayInterface;
-use OrderComponent\Payment\Entity\Payment\Payment;
-use OrderComponent\Payment\Message\Command\Payment\PaymentCreateCommand;
+declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
+
+namespace App\Message\Handler\Payment;
+
+use App\Entity\Payment\Payment;
+use App\Message\Command\Payment\PaymentCreateCommand;
+use App\Repository\Payment\PaymentRepositoryInterface;
+use App\Service\Payment\Gateway\PaymentGatewayInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Component\Uid\Ulid;
 
 #[AsMessageHandler]
 final class PaymentCreateHandler
 {
     public function __construct(
-        private PaymentRepositoryInterface $repo,
-        private EntityManagerInterface $em,
+        private readonly PaymentRepositoryInterface $repo,
         /** @var iterable<PaymentGatewayInterface> */
-        private iterable $gateways
-    ) {}
+        private readonly iterable $gateways,
+    ) {
+    }
 
-    public function __invoke(PaymentCreateCommand $c): void
+    public function __invoke(PaymentCreateCommand $command): void
     {
-        $payment = new Payment(\Ramsey\Uuid\Uuid::uuid4()->toString(), $c->orderId, $c->amountMinor, $c->currency);
+        $payment = new Payment(
+            new Ulid(),
+            PaymentStatus::new,
+            number_format($command->amountMinor / 100, 2, '.', ''),
+            $command->currency,
+        );
 
-        $gateway = $this->selectGateway($c->gatewayCode);
-        $txId = $gateway->authorize($payment->id(), $c->amountMinor, $c->currency);
+        $gateway = $this->selectGateway($command->gatewayCode);
+        $providerRef = $gateway->authorize((string) $payment->id(), $command->amountMinor, $command->currency);
+
+        $payment->markProcessing($providerRef);
 
         $this->repo->save($payment);
-        // TODO: persist PaymentTransaction(auth) with $txId
-        $this->em->flush();
     }
 
     private function selectGateway(string $code): PaymentGatewayInterface
     {
-        foreach ($this->gateways as $g) {
-            if (method_exists($g, 'code') && $g->code() === $code) {
-                return $g;
+        foreach ($this->gateways as $gateway) {
+            if ($gateway->code() === $code) {
+                return $gateway;
             }
         }
-        throw new \RuntimeException('Payment gateway not found: ' . $code);
+
+        throw new \RuntimeException('Payment gateway not found: '.$code);
     }
 }

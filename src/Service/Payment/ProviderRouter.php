@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -7,30 +10,27 @@ declare(strict_types=1);
 
 namespace App\Service\Payment;
 
-use App\ServiceInterface\Payment\ProviderRouterInterface;
-use App\ServiceInterface\Payment\GatewayPortInterface;
-use InvalidArgumentException;
-
-class ProviderRouter implements ProviderRouterInterface
+final class ProviderRouter implements ProviderRouterInterface
 {
-    /** @var array<string,GatewayPortInterface> */
-    private array $map;
+    /** @var array<string, PaymentProviderInterface> */
+    private array $map = [];
 
-    public function __construct(iterable $adapters)
+    /** @param iterable<string, PaymentProviderInterface> $providers */
+    public function __construct(iterable $providers)
     {
-        $this->map = [];
-        foreach ($adapters as $name => $adapter) {
-            if ($adapter instanceof GatewayPortInterface) {
-                $this->map[(string)$name] = $adapter;
+        foreach ($providers as $name => $provider) {
+            if ($provider instanceof PaymentProviderInterface) {
+                $this->map[(string) $name] = $provider;
             }
         }
     }
 
-    public function for(string $provider): GatewayPortInterface
+    public function for(string $provider): PaymentProviderInterface
     {
         if (!isset($this->map[$provider])) {
-            throw new InvalidArgumentException("Unknown provider: {$provider}");
+            throw new \InvalidArgumentException(sprintf('Unknown payment provider "%s".', $provider));
         }
+
         return $this->map[$provider];
     }
 }

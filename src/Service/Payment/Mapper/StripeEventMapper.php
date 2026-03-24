@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -7,27 +10,32 @@ declare(strict_types=1);
 
 namespace App\Service\Payment\Mapper;
 
-use App\ServiceInterface\Payment\EventMapperInterface;
+use App\Service\Payment\EventMapperInterface;
 
 class StripeEventMapper implements EventMapperInterface
 {
-    public function provider(): string { return 'stripe'; }
+    public function provider(): string
+    {
+        return 'stripe';
+    }
 
     public function extractPaymentId(array $payload): ?string
     {
         $obj = $payload['data']['object'] ?? null;
         if (is_array($obj) && isset($obj['metadata']['payment'])) {
-            return (string)$obj['metadata']['payment'];
+            return (string) $obj['metadata']['payment'];
         }
         if (is_array($obj) && isset($obj['id'])) {
-            return (string)$obj['id'];
+            return (string) $obj['id'];
         }
+
         return null;
     }
 
     public function mapStatus(array $payload): ?string
     {
-        $type = (string)($payload['type'] ?? '');
+        $type = (string) ($payload['type'] ?? '');
+
         return match ($type) {
             'payment_intent.succeeded' => 'completed',
             'payment_intent.payment_failed' => 'failed',

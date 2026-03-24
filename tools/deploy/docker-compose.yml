@@ -1,23 +1,21 @@
 version: '3.8'
 services:
   app:
-    image: php:8.2-cli
+    image: php:8.4-cli
     working_dir: /app
-    volumes: [".:/app"]
+    volumes:
+      - .:/app
+      - payment_infra:/app/var
     command: php -S 0.0.0.0:8000 -t public
-    ports: ["8000:8000"]
+    ports:
+      - '8000:8000'
   pg:
     image: postgres:15
     environment:
-      POSTGRES_PASSWORD: pass
-      POSTGRES_USER: user
-      POSTGRES_DB: app
-    ports: ["5432:5432"]
-  mysql:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: pass
-      MYSQL_DATABASE: infra
-      MYSQL_USER: user
-      MYSQL_PASSWORD: pass
-    ports: ["3306:3306"]
+      POSTGRES_PASSWORD: app
+      POSTGRES_USER: app
+      POSTGRES_DB: payment
+    ports:
+      - '5432:5432'
+volumes:
+  payment_infra:

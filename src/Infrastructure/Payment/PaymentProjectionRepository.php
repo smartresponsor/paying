@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -7,40 +10,75 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Payment;
 
-use App\InfrastructureInterface\Payment\PaymentProjectionRepositoryInterface;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 
 class PaymentProjectionRepository implements PaymentProjectionRepositoryInterface
 {
-    public function __construct(private readonly Connection $infra) {}
+    public function __construct(private readonly Connection $infra)
+    {
+    }
 
     public function findById(string $id): ?array
     {
-        $row = $this->infra->fetchAssociative('SELECT id, amount, currency, status, updated_at FROM payment_projection WHERE id = :id', ['id'=>$id]);
+        $row = $this->infra->fetchAssociative(
+            'SELECT id, amount, currency, status, updated_at FROM payment_projection WHERE id = :id',
+            ['id' => $id],
+        );
+
         return $row ?: null;
     }
 
     public function listByStatus(string $status, int $limit = 100): array
     {
-        return $this->infra->fetchAllAssociative('SELECT id, amount, currency, status, updated_at FROM payment_projection WHERE status = :st ORDER BY updated_at DESC LIMIT :lim', ['st'=>$status, 'lim'=>$limit]);
+        return $this->infra->fetchAllAssociative(
+            'SELECT id, amount, currency, status, updated_at FROM payment_projection WHERE status = :st ORDER BY updated_at DESC LIMIT :lim',
+            ['st' => $status, 'lim' => $limit],
+            ['st' => ParameterType::STRING, 'lim' => ParameterType::INTEGER],
+        );
     }
 
     public function upsert(array $row): void
     {
-        $sql = 'INSERT INTO payment_projection (id, amount, currency, status, updated_at) VALUES (:id,:amount,:currency,:status,:updated_at)
-                ON DUPLICATE KEY UPDATE amount=VALUES(amount), currency=VALUES(currency), status=VALUES(status), updated_at=VALUES(updated_at)';
-        $this->infra->executeStatement($sql, [
-            'id'=>$row['id'],
-            'amount'=>$row['amount'],
-            'currency'=>$row['currency'],
-            'status'=>$row['status'],
-            'updated_at'=>$row['updated_at'],
-        ]);
+        $this->infra->transactional(function (Connection $connection) use ($row): void {
+            $id = (string) ($row['id'] ?? '');
+            if ('' === $id) {
+                throw new \InvalidArgumentException('Projection row id is required.');
+            }
+
+            $payload = [
+                'amount' => (string) ($row['amount'] ?? '0.00'),
+                'currency' => (string) ($row['currency'] ?? ''),
+                'status' => (string) ($row['status'] ?? ''),
+                'updated_at' => (string) ($row['updated_at'] ?? ''),
+            ];
+
+            $updated = $connection->update('payment_projection', $payload, ['id' => $id]);
+            if (0 === $updated) {
+                $connection->insert('payment_projection', ['id' => $id] + $payload);
+            }
+        });
     }
 
     public function maxUpdatedAt(): ?string
     {
         $row = $this->infra->fetchOne('SELECT MAX(updated_at) FROM payment_projection');
-        return $row ? (string)$row : null;
+
+        return $row ? (string) $row : null;
+    }
+
+    public function watermark(): ?string
+    {
+        $row = $this->infra->fetchOne("SELECT value FROM payment_projection_meta WHERE name = 'watermark'");
+
+        return $row ? (string) $row : null;
+    }
+
+    public function saveWatermark(string $ts): void
+    {
+        $updated = $this->infra->update('payment_projection_meta', ['value' => $ts], ['name' => 'watermark']);
+        if (0 === $updated) {
+            $this->infra->insert('payment_projection_meta', ['name' => 'watermark', 'value' => $ts]);
+        }
     }
 }

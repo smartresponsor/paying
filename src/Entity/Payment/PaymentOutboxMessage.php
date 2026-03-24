@@ -1,5 +1,10 @@
 <?php
-namespace OrderComponent\Payment\Entity\Payment;
+
+declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
+
+namespace App\Entity\Payment;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -41,14 +46,49 @@ class PaymentOutboxMessage
         $this->routingKey = $routingKey;
     }
 
-    public function id(): string { return $this->id; }
-    public function type(): string { return $this->type; }
-    public function payload(): array { return $this->payload; }
-    public function routingKey(): ?string { return $this->routingKey; }
+    public function id(): string
+    {
+        return $this->id;
+    }
 
-    public function markPublished(): void { $this->status = 'published'; }
-    public function markFailed(string $error): void { $this->status = 'failed'; $this->lastError = $error; }
-    public function incrementAttempts(): void { $this->attempts++; }
-    public function status(): string { return $this->status; }
-    public function attempts(): int { return $this->attempts; }
+    public function type(): string
+    {
+        return $this->type;
+    }
+
+    public function payload(): array
+    {
+        return $this->payload;
+    }
+
+    public function routingKey(): ?string
+    {
+        return $this->routingKey;
+    }
+
+    public function markPublished(): void
+    {
+        $this->status = 'published';
+    }
+
+    public function markFailed(string $error): void
+    {
+        $this->status = 'failed';
+        $this->lastError = $error;
+    }
+
+    public function incrementAttempts(): void
+    {
+        ++$this->attempts;
+    }
+
+    public function status(): string
+    {
+        return $this->status;
+    }
+
+    public function attempts(): int
+    {
+        return $this->attempts;
+    }
 }

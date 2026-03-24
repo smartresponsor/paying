@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -7,17 +10,20 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Payment\Console;
 
-use App\Service\Payment\ProjectionSync;
+use App\Service\Payment\ProjectionSyncInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'payment:projection:sync', description: 'Sync payment projection to MySQL')]
+#[AsCommand(name: 'payment:projection:sync', description: 'Sync payment projection')]
 class ProjectionSyncCommand extends Command
 {
-    public function __construct(private readonly ProjectionSync $sync) { parent::__construct(); }
+    public function __construct(private readonly ProjectionSyncInterface $sync)
+    {
+        parent::__construct();
+    }
 
     protected function configure(): void
     {
@@ -26,8 +32,9 @@ class ProjectionSyncCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $n = $this->sync->sync((int)$input->getArgument('limit'));
+        $n = $this->sync->sync((int) $input->getArgument('limit'));
         $output->writeln("Synced: {$n}");
+
         return Command::SUCCESS;
     }
 }

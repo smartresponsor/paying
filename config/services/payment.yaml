@@ -1,5 +1,0 @@
-services:
-  OrderComponent\Payment\Repository\Payment\PaymentRepository:
-    arguments: ['@doctrine.orm.entity_manager']
-  OrderComponent\Payment\Service\Payment\PaymentService: ~
-  OrderComponent\Payment\Service\Payment\RefundService: ~

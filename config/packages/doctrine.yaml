@@ -4,13 +4,13 @@ doctrine:
     default_connection: data
     connections:
       data:
+        # User data storage; expected to be PostgreSQL.
         url: '%env(resolve:DATABASE_URL)%'
       infra:
+        # Application/infrastructure data storage; expected to be SQLite.
         url: '%env(resolve:INFRA_URL)%'
   orm:
     auto_generate_proxy_classes: true
-    enable_lazy_ghost_objects: true
-    report_fields_where_declared: true
     controller_resolver:
       auto_mapping: true
     entity_managers:

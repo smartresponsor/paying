@@ -1,50 +1,51 @@
 <?php
+
 declare(strict_types=1);
 
-/*
- * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
- */
+// Marketing America Corp. Oleksandr Tishchenko
 
 namespace App\Controller\Payment;
 
-use App\ControllerInterface\Payment\WebhookControllerInterface;
-use App\Service\Payment\WebhookVerifier;
-use App\ServiceInterface\Payment\EventMapperInterface;
-use App\Service\Payment\ProviderGuard;
+use App\Service\Payment\EventMapperInterface;
+use App\Service\Payment\ProviderGuardInterface;
+use App\Service\Payment\WebhookVerifierInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Uid\Ulid;
 
 final class WebhookController implements WebhookControllerInterface
 {
     public function __construct(
-        private readonly WebhookVerifier $verifier,
-        private readonly ProviderGuard $guard,
-        /** @var iterable<EventMapperInterface> */ private readonly iterable $mappers
-    ) {}
+        private readonly WebhookVerifierInterface $verifier,
+        private readonly ProviderGuardInterface $guard,
+        /** @var iterable<EventMapperInterface> */ private readonly iterable $mappers,
+    ) {
+    }
 
-    #[Route(path: '/payment/webhook/{provider}', name: 'payment_webhook', methods: ['POST'])]
     public function webhook(string $provider, Request $request): Response
     {
         $raw = $request->getContent();
-        if (!$this->verifier->verify($provider, $raw, $request->headers->all())) {
-            return new Response('', 400);
+        $headers = array_change_key_case($request->headers->all(), CASE_LOWER);
+
+        if (!$this->verifier->verify($provider, $raw, $headers)) {
+            return new Response('', Response::HTTP_BAD_REQUEST);
         }
-        // Optionally parse event to locate payment id
-                $data = json_decode($raw, true) ?? [];
-        $id = isset($data['payment']) ? (string)$data['payment'] : null;
-        if (!$id) {
+
+        $data = json_decode($raw, true) ?? [];
+        $paymentId = isset($data['payment']) ? (string) $data['payment'] : null;
+        if (!$paymentId) {
             foreach ($this->mappers as $mapper) {
                 if ($mapper->provider() === strtolower($provider)) {
-                    $id = $mapper->extractPaymentId($data);
+                    $paymentId = $mapper->extractPaymentId($data);
                     break;
                 }
             }
         }
-        if ($id) {
-            $this->guard->reconcile($provider, new Ulid($id));
+
+        if (null !== $paymentId && Ulid::isValid($paymentId)) {
+            $this->guard->reconcile($provider, new Ulid($paymentId));
         }
-        return new Response('', 200);
+
+        return new Response('', Response::HTTP_OK);
     }
 }

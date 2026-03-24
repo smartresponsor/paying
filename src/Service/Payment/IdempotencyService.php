@@ -1,5 +1,8 @@
 <?php
+
 declare(strict_types=1);
+
+// Marketing America Corp. Oleksandr Tishchenko
 
 /*
  * Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
@@ -7,34 +10,44 @@ declare(strict_types=1);
 
 namespace App\Service\Payment;
 
-use App\ServiceInterface\Payment\IdempotencyStoreInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class IdempotencyService
 {
-    public function __construct(private readonly IdempotencyStoreInterface $store, private readonly int $ttlSec = 86400) {}
+    public function __construct(private readonly IdempotencyStoreInterface $store, private readonly int $ttlSec = 86400)
+    {
+    }
 
     public function keyFor(Request $req): string
     {
-        $h = (string)$req->headers->get('Idempotency-Key', '');
-        $path = (string)$req->getPathInfo();
-        $body = (string)$req->getContent();
+        $h = (string) $req->headers->get('Idempotency-Key', '');
+        $path = (string) $req->getPathInfo();
+        $body = (string) $req->getContent();
         $hash = hash('sha256', $path.'|'.$h.'|'.$body);
-        return 'payment:idem:api:' . $hash;
+
+        return 'payment:idem:api:'.$hash;
     }
 
+    /** @return array<string, mixed> */
     public function once(Request $req, callable $producer): array
     {
-        $key = $this->keyFor($req);
-        $cached = $this->store->get($key);
-        if ($cached !== null) {
-            /** @var array $arr */
-            $arr = json_decode($cached, true) ?? [];
-            return $arr;
+        return $this->execute($this->keyFor($req), hash('sha256', (string) $req->getContent()), $producer);
+    }
+
+    /** @return array<string, mixed> */
+    public function execute(string $key, string $payloadHash, callable $producer): array
+    {
+        $cacheKey = 'payment:idem:direct:'.$key.':'.$payloadHash;
+        $cached = $this->store->get($cacheKey);
+        if (null !== $cached) {
+            $decoded = json_decode($cached, true);
+
+            return is_array($decoded) ? $decoded : [];
         }
-        /** @var array $result */
+
         $result = $producer();
-        $this->store->put($key, json_encode($result), $this->ttlSec);
+        $this->store->put($cacheKey, json_encode($result, JSON_THROW_ON_ERROR), $this->ttlSec);
+
         return $result;
     }
 }
