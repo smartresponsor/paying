@@ -15,7 +15,7 @@ The current slice already has an app-owned Symfony contour:
 - dedicated provider webhook controllers under `src/Controller/Webhook`
 - payment aggregate and supporting entities under `src/Entity/Payment`
 - repository, service, infrastructure and message layers under `src/*/Payment`
-- Nelmio/OpenAPI foundation under `config/packages/nelmio_api_doc.yaml`
+- Nelmio/OpenAPI foundation under `config/packages/payment_nelmio_api_doc.yaml`
 - fixture classes under `src/Infrastructure/Payment/Fixture`
 - Twig/Form internal console under `templates/payment/console.html.twig`
 - owned operational CLI layer under `src/Infrastructure/Payment/Console`
