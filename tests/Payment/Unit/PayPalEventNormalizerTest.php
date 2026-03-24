@@ -1,6 +1,6 @@
 <?php
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
-// Marketing America Corp. Oleksandr Tishchenko
 declare(strict_types=1);
 
 namespace App\Tests\Payment\Unit;

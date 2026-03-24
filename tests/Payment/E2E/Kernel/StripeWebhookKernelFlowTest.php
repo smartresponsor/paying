@@ -1,7 +1,7 @@
 <?php
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
-// Marketing America Corp. Oleksandr Tishchenko
 
 namespace App\Tests\Payment\E2E\Kernel;
 
