@@ -7,6 +7,7 @@ namespace App\Infrastructure\Payment;
 
 use App\Attribute\Payment\RequireScope;
 use App\Service\Payment\TokenVerifierInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -14,7 +15,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class ScopeGuardSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly TokenVerifierInterface $verifier)
+    public function __construct(
+        private readonly TokenVerifierInterface $verifier,
+        private readonly LoggerInterface $logger,
+    )
     {
     }
 
@@ -70,6 +74,7 @@ class ScopeGuardSubscriber implements EventSubscriberInterface
                 }
             }
         } catch (\Throwable $e) {
+            $this->logger->warning('Scope guard rejected bearer token due to verification failure.', ['exception' => $e]);
             $event->setResponse(new JsonResponse(['error' => 'unauthorized'], 401));
         }
     }
