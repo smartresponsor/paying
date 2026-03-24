@@ -1,30 +1,26 @@
 <?php
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
-// Marketing America Corp. Oleksandr Tishchenko
-
 namespace App\Controller\Webhook;
 
-use App\Entity\Payment\PaymentOutboxMessage;
-use App\Entity\Payment\PaymentWebhookLog;
 use App\Service\Payment\Webhook\JsonSchemaValidator;
 use App\Service\Payment\Webhook\StripeEventNormalizer;
 use App\Service\Payment\Webhook\StripeSignatureValidator;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\Payment\WebhookIngestServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Uid\Ulid;
 
 final class StripeWebhookController
 {
     public function __construct(
-        private EntityManagerInterface $em,
-        private StripeSignatureValidator $validator,
-        private StripeEventNormalizer $normalizer,
-        private JsonSchemaValidator $schema,
-        private LoggerInterface $paymentAuditLogger,
+        private readonly StripeSignatureValidator $validator,
+        private readonly StripeEventNormalizer $normalizer,
+        private readonly JsonSchemaValidator $schema,
+        private readonly WebhookIngestServiceInterface $webhookIngestService,
+        private readonly LoggerInterface $paymentAuditLogger,
     ) {
     }
 
@@ -44,25 +40,13 @@ final class StripeWebhookController
             return new JsonResponse(['error' => 'invalid-id'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
-        $repo = $this->em->getRepository(PaymentWebhookLog::class);
-        $existing = $repo->findOneBy(['provider' => 'stripe', 'externalEventId' => $externalId]);
-        if ($existing) {
-            $existing->markDuplicate();
-            $this->em->flush();
-
-            return new JsonResponse(['status' => 'duplicate'], JsonResponse::HTTP_OK);
-        }
-
         $normalized = $this->normalizer->normalize($data);
         $routingKey = $this->normalizer->routingKey($data);
-        $log = new PaymentWebhookLog('stripe', $externalId, $normalized);
-        $this->em->persist($log);
+        $ingested = $this->webhookIngestService->ingest('stripe', $externalId, $normalized, $routingKey);
 
-        $outbox = new PaymentOutboxMessage((new Ulid())->toRfc4122(), $routingKey, $normalized, $routingKey);
-        $this->em->persist($outbox);
-
-        $log->markProcessed();
-        $this->em->flush();
+        if ('duplicate' === $ingested['status']) {
+            return new JsonResponse(['status' => 'duplicate'], JsonResponse::HTTP_OK);
+        }
 
         $this->paymentAuditLogger->info('Stripe webhook accepted', [
             'id' => $externalId,
@@ -71,6 +55,6 @@ final class StripeWebhookController
             'routingKey' => $routingKey,
         ]);
 
-        return new JsonResponse(['status' => 'queued', 'outbox_id' => $outbox->id()], JsonResponse::HTTP_OK);
+        return new JsonResponse(['status' => 'queued', 'outbox_id' => $ingested['outboxId']], JsonResponse::HTTP_OK);
     }
 }

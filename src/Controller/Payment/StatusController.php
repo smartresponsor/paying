@@ -1,14 +1,12 @@
 <?php
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
-
-// Marketing America Corp. Oleksandr Tishchenko
 
 namespace App\Controller\Payment;
 
 use App\Attribute\Payment\RequireScope;
-use App\Infrastructure\Payment\PaymentProjectionRepositoryInterface;
-use Doctrine\DBAL\Connection;
+use App\Service\Payment\ProjectionLagServiceInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
@@ -17,8 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 final class StatusController implements StatusControllerInterface
 {
     public function __construct(
-        private readonly Connection $data,
-        private readonly PaymentProjectionRepositoryInterface $infra,
+        private readonly ProjectionLagServiceInterface $projectionLag,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -37,22 +34,16 @@ final class StatusController implements StatusControllerInterface
     #[Security(name: 'Bearer')]
     public function status(): JsonResponse
     {
-        $dataUpdatedAt = (string) ($this->data->fetchOne('SELECT MAX(updated_at) FROM payment') ?: '');
-        $infraUpdatedAt = (string) ($this->infra->maxUpdatedAt() ?: '');
-        $lagMs = 0;
-
         try {
-            if ('' !== $dataUpdatedAt && '' !== $infraUpdatedAt) {
-                $lagMs = max(0, (strtotime($dataUpdatedAt) - strtotime($infraUpdatedAt)) * 1000);
-            }
+            return new JsonResponse($this->projectionLag->snapshot(), JsonResponse::HTTP_OK);
         } catch (\Throwable $e) {
             $this->logger->warning('Unable to calculate payment status projection lag.', ['exception' => $e]);
-        }
 
-        return new JsonResponse([
-            'updatedAtData' => $dataUpdatedAt,
-            'updatedAtInfra' => $infraUpdatedAt,
-            'projectionLagMs' => $lagMs,
-        ], JsonResponse::HTTP_OK);
+            return new JsonResponse([
+                'updatedAtData' => '',
+                'updatedAtInfra' => '',
+                'projectionLagMs' => 0,
+            ], JsonResponse::HTTP_OK);
+        }
     }
 }
