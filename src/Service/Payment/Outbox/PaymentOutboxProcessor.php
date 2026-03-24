@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 namespace App\Service\Payment\Outbox;
 
+use App\ServiceInterface\Payment\Outbox\PaymentOutboxProcessorInterface;
+
 use App\Entity\Payment\PaymentOutboxMessage;
 use App\Message\Event\Payment\PaymentTransportMessage;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,7 +15,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\TransportNamesStamp;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
-final class PaymentOutboxProcessor
+final class PaymentOutboxProcessor implements PaymentOutboxProcessorInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $em,

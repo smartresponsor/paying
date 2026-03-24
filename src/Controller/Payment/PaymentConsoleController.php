@@ -16,7 +16,7 @@ use App\Form\Payment\PaymentConsoleRefundType;
 use App\Form\Payment\PaymentCreateType;
 use App\Form\Payment\PaymentStartType;
 use App\Repository\Payment\PaymentRepositoryInterface;
-use App\Service\Payment\PaymentService;
+use App\ServiceInterface\Payment\PaymentServiceInterface;
 use App\Service\Payment\ProviderGuardInterface;
 use App\Service\Payment\RefundServiceInterface;
 use App\ValueObject\Payment\PaymentStatus;
@@ -30,7 +30,7 @@ use Symfony\Component\Uid\Ulid;
 final class PaymentConsoleController extends AbstractController
 {
     public function __construct(
-        private readonly PaymentService $paymentService,
+        private readonly PaymentServiceInterface $paymentService,
         private readonly ProviderGuardInterface $guard,
         private readonly RefundServiceInterface $refundService,
         private readonly PaymentRepositoryInterface $repo,

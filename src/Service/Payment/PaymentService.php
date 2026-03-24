@@ -5,12 +5,14 @@ declare(strict_types=1);
 
 namespace App\Service\Payment;
 
+use App\ServiceInterface\Payment\PaymentServiceInterface;
+
 use App\Entity\Payment\Payment;
 use App\Repository\Payment\PaymentRepositoryInterface;
 use App\ValueObject\Payment\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 
-final class PaymentService
+final class PaymentService implements PaymentServiceInterface
 {
     public function __construct(private PaymentRepositoryInterface $repo)
     {

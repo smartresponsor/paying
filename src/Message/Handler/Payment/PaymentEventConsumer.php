@@ -7,14 +7,14 @@ namespace App\Message\Handler\Payment;
 
 use App\Message\Event\Payment\PaymentTransportMessage;
 use App\Service\Order\OrderPaymentSyncInterface;
-use App\Service\Payment\Reconciliation\PaymentReconciliationService;
+use App\ServiceInterface\Payment\Reconciliation\PaymentReconciliationServiceInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler(fromTransport: 'payment_events_in')]
 final class PaymentEventConsumer
 {
     public function __construct(
-        private readonly PaymentReconciliationService $svc,
+        private readonly PaymentReconciliationServiceInterface $svc,
         private readonly ?OrderPaymentSyncInterface $orderPaymentSync = null,
     ) {
     }

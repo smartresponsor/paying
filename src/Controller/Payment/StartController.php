@@ -9,7 +9,7 @@ use App\Attribute\Payment\RequireScope;
 use App\Controller\Payment\Dto\PaymentStartRequestDto;
 use App\Entity\Payment\Payment;
 use App\Repository\Payment\PaymentRepositoryInterface;
-use App\Service\Payment\IdempotencyService;
+use App\ServiceInterface\Payment\IdempotencyServiceInterface;
 use App\Service\Payment\ProviderGuardInterface;
 use App\ValueObject\Payment\PaymentStatus;
 use Nelmio\ApiDocBundle\Attribute\Security;
@@ -24,7 +24,7 @@ final class StartController implements StartControllerInterface
     public function __construct(
         private readonly ProviderGuardInterface $guard,
         private readonly PaymentRepositoryInterface $repo,
-        private readonly IdempotencyService $idem,
+        private readonly IdempotencyServiceInterface $idem,
         private readonly ValidatorInterface $validator,
     ) {
     }
