@@ -6,9 +6,8 @@ declare(strict_types=1);
 namespace App\Controller\Payment;
 
 use App\Attribute\Payment\RequireScope;
-use App\Infrastructure\Payment\PaymentProjectionRepositoryInterface;
 use App\Service\Payment\Metric;
-use Doctrine\DBAL\Connection;
+use App\Service\Payment\ProjectionLagServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -16,8 +15,7 @@ final class MetricController implements MetricControllerInterface
 {
     public function __construct(
         private readonly Metric $metrics,
-        private readonly Connection $data,
-        private readonly PaymentProjectionRepositoryInterface $infra,
+        private readonly ProjectionLagServiceInterface $projectionLag,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -28,13 +26,8 @@ final class MetricController implements MetricControllerInterface
         $text = $this->metrics->export();
 
         try {
-            $dataUpdatedAt = (string) ($this->data->fetchOne('SELECT MAX(updated_at) FROM payment') ?: '');
-            $infraUpdatedAt = (string) ($this->infra->maxUpdatedAt() ?: '');
-            $lagMs = 0;
-            if ('' !== $dataUpdatedAt && '' !== $infraUpdatedAt) {
-                $lagMs = max(0, (strtotime($dataUpdatedAt) - strtotime($infraUpdatedAt)) * 1000);
-            }
-            $text .= "payment_projection_lag_ms {$lagMs}\n";
+            $snapshot = $this->projectionLag->snapshot();
+            $text .= sprintf("payment_projection_lag_ms %d\n", $snapshot['projectionLagMs']);
         } catch (\Throwable $e) {
             $this->logger->warning('Unable to calculate payment projection lag metrics.', ['exception' => $e]);
         }

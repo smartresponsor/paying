@@ -10,16 +10,15 @@ use App\Controller\Payment\Dto\PaymentConsoleFinalizeRequestDto;
 use App\Controller\Payment\Dto\PaymentConsoleRefundRequestDto;
 use App\Controller\Payment\Dto\PaymentCreateRequestDto;
 use App\Controller\Payment\Dto\PaymentStartRequestDto;
-use App\Entity\Payment\Payment;
 use App\Form\Payment\PaymentConsoleFinalizeType;
 use App\Form\Payment\PaymentConsoleRefundType;
 use App\Form\Payment\PaymentCreateType;
 use App\Form\Payment\PaymentStartType;
 use App\Repository\Payment\PaymentRepositoryInterface;
 use App\Service\Payment\PaymentService;
+use App\Service\Payment\PaymentStartServiceInterface;
 use App\Service\Payment\ProviderGuardInterface;
 use App\Service\Payment\RefundServiceInterface;
-use App\ValueObject\Payment\PaymentStatus;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +30,7 @@ final class PaymentConsoleController extends AbstractController
 {
     public function __construct(
         private readonly PaymentService $paymentService,
+        private readonly PaymentStartServiceInterface $paymentStartService,
         private readonly ProviderGuardInterface $guard,
         private readonly RefundServiceInterface $refundService,
         private readonly PaymentRepositoryInterface $repo,
@@ -94,17 +94,8 @@ final class PaymentConsoleController extends AbstractController
             return $this->redirectToRoute('payment_console');
         }
 
-        $payment = new Payment(new Ulid(), PaymentStatus::new, $dto->amount, $dto->currency);
-        $this->repo->save($payment);
-
-        $providerResult = $this->guard->start($dto->provider, $payment, [
-            'projectId' => (string) $payment->id(),
-            'origin' => 'payment-console',
-        ]);
-
-        $providerRef = isset($providerResult['providerRef']) ? (string) $providerResult['providerRef'] : null;
-        $payment->markProcessing($providerRef);
-        $this->repo->save($payment);
+        $started = $this->paymentStartService->start($dto->provider, $dto->amount, $dto->currency, '', 'payment-console');
+        $payment = $started['payment'];
 
         $this->addFlash('success', sprintf('Started payment %s via %s.', (string) $payment->id(), $dto->provider));
 

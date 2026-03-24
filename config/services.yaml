@@ -43,6 +43,12 @@ services:
         arguments:
             $paymentApiLimiter: '@limiter.payment_api'
 
+
+    App\Service\Payment\DlqServiceInterface: '@App\Service\Payment\DlqService'
+    App\Service\Payment\ProjectionLagServiceInterface: '@App\Service\Payment\ProjectionLagService'
+    App\Service\Payment\PaymentStartServiceInterface: '@App\Service\Payment\PaymentStartService'
+    App\Service\Payment\WebhookIngestServiceInterface: '@App\Service\Payment\WebhookIngestService'
+
     App\Service\Payment\WebhookVerifierInterface: '@App\Service\Payment\WebhookVerifier'
     App\Service\Payment\TokenVerifierInterface: '@App\Service\Payment\TokenVerifier'
 

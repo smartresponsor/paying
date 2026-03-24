@@ -7,23 +7,18 @@ namespace App\Controller\Payment;
 
 use App\Attribute\Payment\RequireScope;
 use App\Controller\Payment\Dto\PaymentStartRequestDto;
-use App\Entity\Payment\Payment;
-use App\Repository\Payment\PaymentRepositoryInterface;
 use App\Service\Payment\IdempotencyService;
-use App\Service\Payment\ProviderGuardInterface;
-use App\ValueObject\Payment\PaymentStatus;
+use App\Service\Payment\PaymentStartServiceInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class StartController implements StartControllerInterface
 {
     public function __construct(
-        private readonly ProviderGuardInterface $guard,
-        private readonly PaymentRepositoryInterface $repo,
+        private readonly PaymentStartServiceInterface $paymentStartService,
         private readonly IdempotencyService $idem,
         private readonly ValidatorInterface $validator,
     ) {
@@ -83,24 +78,15 @@ final class StartController implements StartControllerInterface
         $payloadHash = hash('sha256', $request->getContent());
 
         $result = $this->idem->execute($key, $payloadHash, function () use ($dto, $key): array {
-            $payment = new Payment(new Ulid(), PaymentStatus::new, $dto->amount, $dto->currency);
-            $this->repo->save($payment);
-
-            $providerResult = $this->guard->start($dto->provider, $payment, [
-                'idempotencyKey' => '' !== $key ? $key : (string) $payment->id(),
-                'projectId' => (string) $payment->id(),
-            ]);
-
-            $providerRef = isset($providerResult['providerRef']) ? (string) $providerResult['providerRef'] : null;
-            $payment->markProcessing($providerRef);
-            $this->repo->save($payment);
+            $started = $this->paymentStartService->start($dto->provider, $dto->amount, $dto->currency, $key, 'api');
+            $payment = $started['payment'];
 
             return [
                 'payment' => (string) $payment->id(),
                 'provider' => $dto->provider,
                 'status' => $payment->status()->value,
-                'providerRef' => $providerRef,
-                'result' => $providerResult,
+                'providerRef' => $started['providerRef'],
+                'result' => $started['result'],
             ];
         });
 
