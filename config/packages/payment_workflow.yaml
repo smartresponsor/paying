@@ -7,7 +7,7 @@ framework:
         type: 'method'
         property: 'status'
       supports:
-        - App\Entity\Payment\Payment
+        - App\Entity\Payment
       initial_marking: new
       places: [new, processing, completed, failed, canceled, refunded]
       transitions:

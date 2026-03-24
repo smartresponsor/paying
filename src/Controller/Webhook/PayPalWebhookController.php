@@ -4,10 +4,10 @@
 declare(strict_types=1);
 
 namespace App\Controller\Webhook;
-use App\Service\Payment\Webhook\JsonSchemaValidator;
-use App\Service\Payment\Webhook\PayPalEventNormalizer;
-use App\Service\Payment\Webhook\PayPalSignatureValidator;
-use App\ServiceInterface\Payment\WebhookIngestServiceInterface;
+use App\Service\Webhook\JsonSchemaValidator;
+use App\Service\Webhook\PayPalEventNormalizer;
+use App\Service\Webhook\PayPalSignatureValidator;
+use App\ServiceInterface\WebhookIngestServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
