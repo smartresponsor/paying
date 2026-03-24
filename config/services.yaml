@@ -16,7 +16,7 @@ services:
     App\Infrastructure\Payment\PaymentProjectionRepositoryInterface: '@App\Infrastructure\Payment\PaymentProjectionRepository'
     App\Service\Payment\ProviderRouterInterface: '@App\Service\Payment\ProviderRouter'
     App\Service\Payment\ProviderGuardInterface: '@App\Service\Payment\ProviderGuard'
-    App\Service\Payment\PaymentService: ~
+    App\ServiceInterface\Payment\PaymentServiceInterface: "@App\Service\Payment\PaymentService"
     App\Service\Payment\IdempotencyStoreInterface:
         factory: ['@App\Service\Payment\IdempotencyStoreFactory', 'create']
 
@@ -30,6 +30,8 @@ services:
         arguments:
             $secretKey: '%env(default::STRIPE_SECRET_KEY)%'
             $webhookSecret: '%env(default::STRIPE_WEBHOOK_SECRET)%'
+
+    App\ServiceInterface\Payment\IdempotencyServiceInterface: '@App\Service\Payment\IdempotencyService'
 
     App\Service\Payment\IdempotencyService:
         arguments:
@@ -81,6 +83,8 @@ services:
             $paymentAuditLogger: '@payment_audit.logger'
 
 
+    App\ServiceInterface\Payment\Outbox\PaymentOutboxProcessorInterface: '@App\Service\Payment\Outbox\PaymentOutboxProcessor'
+
     App\Service\Payment\Outbox\PaymentOutboxProcessor:
         arguments:
             $em: '@doctrine.orm.entity_manager'
@@ -114,6 +118,8 @@ services:
         autowire: true
 
     App\Service\Order\OrderPaymentSyncInterface: '@App\Service\Order\NullOrderPaymentSync'
+
+    App\ServiceInterface\Payment\Reconciliation\PaymentReconciliationServiceInterface: '@App\Service\Payment\Reconciliation\PaymentReconciliationService'
 
     App\Message\Handler\Payment\PaymentEventConsumer:
         autoconfigure: true

@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Command\Payment;
 
-use App\Service\Payment\Outbox\PaymentOutboxProcessor;
+use App\ServiceInterface\Payment\Outbox\PaymentOutboxProcessorInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'payment:outbox:process', description: 'Publish payment outbox messages to RabbitMQ')]
 class PaymentOutboxProcessCommand extends Command
 {
-    public function __construct(private PaymentOutboxProcessor $processor)
+    public function __construct(private PaymentOutboxProcessorInterface $processor)
     {
         parent::__construct();
     }

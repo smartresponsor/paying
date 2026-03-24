@@ -7,7 +7,7 @@ namespace App\Controller\Payment;
 
 use App\Attribute\Payment\RequireScope;
 use App\Controller\Payment\Dto\PaymentCreateRequestDto;
-use App\Service\Payment\PaymentService;
+use App\ServiceInterface\Payment\PaymentServiceInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final class PaymentCreateController implements PaymentCreateControllerInterface
 {
     public function __construct(
-        private readonly PaymentService $paymentService,
+        private readonly PaymentServiceInterface $paymentService,
         private readonly ValidatorInterface $validator,
     ) {
     }

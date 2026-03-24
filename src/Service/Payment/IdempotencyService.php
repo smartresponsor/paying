@@ -5,9 +5,11 @@ declare(strict_types=1);
 
 namespace App\Service\Payment;
 
+use App\ServiceInterface\Payment\IdempotencyServiceInterface;
+
 use Symfony\Component\HttpFoundation\Request;
 
-class IdempotencyService
+class IdempotencyService implements IdempotencyServiceInterface
 {
     public function __construct(private readonly IdempotencyStoreInterface $store, private readonly int $ttlSec = 86400)
     {

@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 namespace App\Service\Payment\Reconciliation;
 
+use App\ServiceInterface\Payment\Reconciliation\PaymentReconciliationServiceInterface;
+
 use App\Entity\Payment\Payment;
 use App\Entity\Payment\PaymentRefund;
 use App\Entity\Payment\PaymentTransaction;
@@ -12,7 +14,7 @@ use App\Repository\Payment\PaymentRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;
 
-final class PaymentReconciliationService
+final class PaymentReconciliationService implements PaymentReconciliationServiceInterface
 {
     public function __construct(
         private PaymentRepositoryInterface $payments,
@@ -20,8 +22,7 @@ final class PaymentReconciliationService
     ) {
     }
 
-    /** @return Payment */
-    public function onCaptured(string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null)
+    public function onCaptured(string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null): Payment
     {
         $p = $this->requirePayment($paymentId);
         $p->markCompleted($gatewayTxId);
@@ -40,8 +41,7 @@ final class PaymentReconciliationService
         return $p;
     }
 
-    /** @return PaymentRefund */
-    public function onRefunded(string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null, ?string $reason = null)
+    public function onRefunded(string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null, ?string $reason = null): PaymentRefund
     {
         $p = $this->requirePayment($paymentId);
         $p->markRefunded($gatewayTxId);
