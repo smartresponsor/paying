@@ -4,9 +4,9 @@ services:
         autoconfigure: true
 
     _instanceof:
-        App\ServiceInterface\Payment\EventMapperInterface:
+        App\ServiceInterface\EventMapperInterface:
             tags: ['payment.event_mapper']
-        App\ServiceInterface\Payment\Gateway\PaymentGatewayInterface:
+        App\ServiceInterface\Gateway\PaymentGatewayInterface:
             tags: ['payment.gateway']
 
     App\:
@@ -18,54 +18,54 @@ services:
             - '../src/**/Resources/'
             - '../src/**/Tests/'
 
-    App\Repository\Payment\PaymentRepositoryInterface: '@App\Repository\Payment\PaymentRepository'
-    App\Infrastructure\Payment\PaymentProjectionRepositoryInterface: '@App\Infrastructure\Payment\PaymentProjectionRepository'
-    App\ServiceInterface\Payment\ProviderRouterInterface: '@App\Service\Payment\ProviderRouter'
-    App\ServiceInterface\Payment\ProviderGuardInterface: '@App\Service\Payment\ProviderGuard'
-    App\ServiceInterface\Payment\PaymentServiceInterface: "@App\Service\Payment\PaymentService"
-    App\ServiceInterface\Payment\IdempotencyStoreInterface:
-        factory: ['@App\Service\Payment\IdempotencyStoreFactory', 'create']
+    App\Repository\PaymentRepositoryInterface: '@App\Repository\PaymentRepository'
+    App\Infrastructure\PaymentProjectionRepositoryInterface: '@App\Infrastructure\PaymentProjectionRepository'
+    App\ServiceInterface\ProviderRouterInterface: '@App\Service\ProviderRouter'
+    App\ServiceInterface\ProviderGuardInterface: '@App\Service\ProviderGuard'
+    App\ServiceInterface\PaymentServiceInterface: "@App\Service\PaymentService"
+    App\ServiceInterface\IdempotencyStoreInterface:
+        factory: ['@App\Service\IdempotencyStoreFactory', 'create']
 
-    App\Service\Payment\ProviderRouter:
+    App\Service\ProviderRouter:
         arguments:
             $providers:
-                internal: '@App\Service\Payment\InternalPaymentProvider'
-                stripe: '@App\Service\Payment\StripePaymentProvider'
+                internal: '@App\Service\InternalPaymentProvider'
+                stripe: '@App\Service\StripePaymentProvider'
 
-    App\Service\Payment\StripePaymentProvider:
+    App\Service\StripePaymentProvider:
         arguments:
             $secretKey: '%env(default::STRIPE_SECRET_KEY)%'
             $webhookSecret: '%env(default::STRIPE_WEBHOOK_SECRET)%'
 
-    App\ServiceInterface\Payment\IdempotencyServiceInterface: '@App\Service\Payment\IdempotencyService'
+    App\ServiceInterface\IdempotencyServiceInterface: '@App\Service\IdempotencyService'
 
-    App\Service\Payment\IdempotencyService:
+    App\Service\IdempotencyService:
         arguments:
             $ttlSec: '%env(int:default:86400:IDEM_TTL)%'
 
-    App\Infrastructure\Payment\PaymentProjectionRepository:
+    App\Infrastructure\PaymentProjectionRepository:
         arguments:
             $infra: '@doctrine.dbal.infra_connection'
 
-    App\Infrastructure\Payment\RateLimitSubscriber:
+    App\Infrastructure\RateLimitSubscriber:
         arguments:
             $paymentApiLimiter: '@limiter.payment_api'
 
 
-    App\ServiceInterface\Payment\DlqServiceInterface: '@App\Service\Payment\DlqService'
-    App\ServiceInterface\Payment\ProjectionLagServiceInterface: '@App\Service\Payment\ProjectionLagService'
-    App\ServiceInterface\Payment\PaymentStartServiceInterface: '@App\Service\Payment\PaymentStartService'
-    App\ServiceInterface\Payment\WebhookIngestServiceInterface: '@App\Service\Payment\WebhookIngestService'
+    App\ServiceInterface\DlqServiceInterface: '@App\Service\DlqService'
+    App\ServiceInterface\ProjectionLagServiceInterface: '@App\Service\ProjectionLagService'
+    App\ServiceInterface\PaymentStartServiceInterface: '@App\Service\PaymentStartService'
+    App\ServiceInterface\WebhookIngestServiceInterface: '@App\Service\WebhookIngestService'
 
-    App\ServiceInterface\Payment\WebhookVerifierInterface: '@App\Service\Payment\WebhookVerifier'
-    App\ServiceInterface\Payment\TokenVerifierInterface: '@App\Service\Payment\TokenVerifier'
+    App\ServiceInterface\WebhookVerifierInterface: '@App\Service\WebhookVerifier'
+    App\ServiceInterface\TokenVerifierInterface: '@App\Service\TokenVerifier'
 
-    App\ServiceInterface\Payment\ProjectionSyncInterface: '@App\Service\Payment\ProjectionSync'
-    App\ServiceInterface\Payment\RefundServiceInterface: '@App\Service\Payment\RefundService'
-    App\ServiceInterface\Payment\ReconciliationServiceInterface: '@App\Service\Payment\ReconciliationService'
-    App\Infrastructure\Payment\OutboxPublisherInterface: '@App\Infrastructure\Payment\OutboxPublisher'
+    App\ServiceInterface\ProjectionSyncInterface: '@App\Service\ProjectionSync'
+    App\ServiceInterface\RefundServiceInterface: '@App\Service\RefundService'
+    App\ServiceInterface\ReconciliationServiceInterface: '@App\Service\ReconciliationService'
+    App\Infrastructure\OutboxPublisherInterface: '@App\Infrastructure\OutboxPublisher'
 
-    App\Controller\Payment\WebhookController:
+    App\Controller\WebhookController:
         arguments:
             $mappers: !tagged_iterator payment.event_mapper
 
@@ -83,19 +83,19 @@ services:
             $paymentAuditLogger: '@payment_audit.logger'
 
 
-    App\ServiceInterface\Payment\Outbox\PaymentOutboxProcessorInterface: '@App\Service\Payment\Outbox\PaymentOutboxProcessor'
+    App\ServiceInterface\Outbox\PaymentOutboxProcessorInterface: '@App\Service\Outbox\PaymentOutboxProcessor'
 
-    App\Service\Payment\Outbox\PaymentOutboxProcessor:
+    App\Service\Outbox\PaymentOutboxProcessor:
         arguments:
             $em: '@doctrine.orm.entity_manager'
             $transport: '@messenger.transport.payment_outbox'
             $logger: '@logger'
 
-    App\Message\Handler\Payment\PaymentCreateHandler:
+    App\Message\Handler\PaymentCreateHandler:
         arguments:
             $gateways: !tagged_iterator payment.gateway
 
-    App\Message\Handler\Payment\PaymentRefundHandler:
+    App\Message\Handler\PaymentRefundHandler:
         arguments:
             $gateways: !tagged_iterator payment.gateway
 
@@ -107,4 +107,4 @@ services:
 
     App\ServiceInterface\Order\OrderPaymentSyncInterface: '@App\Service\Order\NullOrderPaymentSync'
 
-    App\ServiceInterface\Payment\Reconciliation\PaymentReconciliationServiceInterface: '@App\Service\Payment\Reconciliation\PaymentReconciliationService'
+    App\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface: '@App\Service\Reconciliation\PaymentReconciliationService'
