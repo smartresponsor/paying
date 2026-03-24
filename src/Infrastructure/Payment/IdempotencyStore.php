@@ -12,7 +12,7 @@ use Doctrine\DBAL\Connection;
  *
  * This class remains in the repository because parts of the infrastructure
  * contour still reference the legacy response-store shape. The active runtime
- * path uses App\Service\Payment\IdempotencyStoreInterface via
+ * path uses App\ServiceInterface\Payment\IdempotencyStoreInterface via
  * DbalIdempotencyStore/RedisIdempotencyStore, but this class must still remain
  * signature-compatible with its own infrastructure interface so Symfony can
  * compile the container under Symfony 8 / PHP 8.4.

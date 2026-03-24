@@ -4,8 +4,7 @@
 declare(strict_types=1);
 
 namespace App\Service\Payment\Mapper;
-
-use App\Service\Payment\EventMapperInterface;
+use App\ServiceInterface\Payment\EventMapperInterface;
 
 class StripeEventMapper implements EventMapperInterface
 {

@@ -4,9 +4,8 @@
 declare(strict_types=1);
 
 namespace App\Controller\Payment;
-
 use App\Attribute\Payment\RequireScope;
-use App\Service\Payment\ProjectionLagServiceInterface;
+use App\ServiceInterface\Payment\ProjectionLagServiceInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;

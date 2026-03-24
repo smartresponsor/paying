@@ -4,7 +4,7 @@
 declare(strict_types=1);
 
 namespace App\Service\Payment;
-
+use App\ServiceInterface\Payment\WebhookIngestServiceInterface;
 use App\Entity\Payment\PaymentOutboxMessage;
 use App\Entity\Payment\PaymentWebhookLog;
 use Doctrine\ORM\EntityManagerInterface;

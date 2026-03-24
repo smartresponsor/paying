@@ -4,9 +4,8 @@
 declare(strict_types=1);
 
 namespace App\Infrastructure\Payment;
-
 use App\Attribute\Payment\RequireScope;
-use App\Service\Payment\TokenVerifierInterface;
+use App\ServiceInterface\Payment\TokenVerifierInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

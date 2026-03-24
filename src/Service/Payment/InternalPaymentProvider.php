@@ -4,7 +4,7 @@
 declare(strict_types=1);
 
 namespace App\Service\Payment;
-
+use App\ServiceInterface\Payment\PaymentProviderInterface;
 use App\Entity\Payment\Payment;
 use App\ValueObject\Payment\PaymentStatus;
 use Symfony\Component\Uid\Ulid;

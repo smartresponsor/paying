@@ -14,10 +14,10 @@ services:
 
     App\Repository\Payment\PaymentRepositoryInterface: '@App\Repository\Payment\PaymentRepository'
     App\Infrastructure\Payment\PaymentProjectionRepositoryInterface: '@App\Infrastructure\Payment\PaymentProjectionRepository'
-    App\Service\Payment\ProviderRouterInterface: '@App\Service\Payment\ProviderRouter'
-    App\Service\Payment\ProviderGuardInterface: '@App\Service\Payment\ProviderGuard'
+    App\ServiceInterface\Payment\ProviderRouterInterface: '@App\Service\Payment\ProviderRouter'
+    App\ServiceInterface\Payment\ProviderGuardInterface: '@App\Service\Payment\ProviderGuard'
     App\ServiceInterface\Payment\PaymentServiceInterface: "@App\Service\Payment\PaymentService"
-    App\Service\Payment\IdempotencyStoreInterface:
+    App\ServiceInterface\Payment\IdempotencyStoreInterface:
         factory: ['@App\Service\Payment\IdempotencyStoreFactory', 'create']
 
     App\Service\Payment\ProviderRouter:
@@ -46,17 +46,17 @@ services:
             $paymentApiLimiter: '@limiter.payment_api'
 
 
-    App\Service\Payment\DlqServiceInterface: '@App\Service\Payment\DlqService'
-    App\Service\Payment\ProjectionLagServiceInterface: '@App\Service\Payment\ProjectionLagService'
-    App\Service\Payment\PaymentStartServiceInterface: '@App\Service\Payment\PaymentStartService'
-    App\Service\Payment\WebhookIngestServiceInterface: '@App\Service\Payment\WebhookIngestService'
+    App\ServiceInterface\Payment\DlqServiceInterface: '@App\Service\Payment\DlqService'
+    App\ServiceInterface\Payment\ProjectionLagServiceInterface: '@App\Service\Payment\ProjectionLagService'
+    App\ServiceInterface\Payment\PaymentStartServiceInterface: '@App\Service\Payment\PaymentStartService'
+    App\ServiceInterface\Payment\WebhookIngestServiceInterface: '@App\Service\Payment\WebhookIngestService'
 
-    App\Service\Payment\WebhookVerifierInterface: '@App\Service\Payment\WebhookVerifier'
-    App\Service\Payment\TokenVerifierInterface: '@App\Service\Payment\TokenVerifier'
+    App\ServiceInterface\Payment\WebhookVerifierInterface: '@App\Service\Payment\WebhookVerifier'
+    App\ServiceInterface\Payment\TokenVerifierInterface: '@App\Service\Payment\TokenVerifier'
 
-    App\Service\Payment\ProjectionSyncInterface: '@App\Service\Payment\ProjectionSync'
-    App\Service\Payment\RefundServiceInterface: '@App\Service\Payment\RefundService'
-    App\Service\Payment\ReconciliationServiceInterface: '@App\Service\Payment\ReconciliationService'
+    App\ServiceInterface\Payment\ProjectionSyncInterface: '@App\Service\Payment\ProjectionSync'
+    App\ServiceInterface\Payment\RefundServiceInterface: '@App\Service\Payment\RefundService'
+    App\ServiceInterface\Payment\ReconciliationServiceInterface: '@App\Service\Payment\ReconciliationService'
     App\Infrastructure\Payment\OutboxPublisherInterface: '@App\Infrastructure\Payment\OutboxPublisher'
 
     App\Service\Payment\Mapper\StripeEventMapper:
@@ -117,7 +117,7 @@ services:
         autoconfigure: true
         autowire: true
 
-    App\Service\Order\OrderPaymentSyncInterface: '@App\Service\Order\NullOrderPaymentSync'
+    App\ServiceInterface\Order\OrderPaymentSyncInterface: '@App\Service\Order\NullOrderPaymentSync'
 
     App\ServiceInterface\Payment\Reconciliation\PaymentReconciliationServiceInterface: '@App\Service\Payment\Reconciliation\PaymentReconciliationService'
 

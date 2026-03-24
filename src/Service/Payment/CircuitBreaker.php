@@ -4,6 +4,7 @@
 declare(strict_types=1);
 
 namespace App\Service\Payment;
+use App\ServiceInterface\Payment\CircuitBreakerInterface;
 
 use Doctrine\DBAL\Connection;
 

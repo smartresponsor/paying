@@ -4,7 +4,7 @@
 declare(strict_types=1);
 
 namespace App\Service\Payment;
-
+use App\ServiceInterface\Payment\IdempotencyStoreInterface;
 use App\ServiceInterface\Payment\IdempotencyServiceInterface;
 
 use Symfony\Component\HttpFoundation\Request;

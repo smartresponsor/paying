@@ -4,11 +4,10 @@
 declare(strict_types=1);
 
 namespace App\Controller\Payment;
-
 use App\Attribute\Payment\RequireScope;
 use App\Controller\Payment\Dto\PaymentFinalizeRequestDto;
 use App\Repository\Payment\PaymentRepositoryInterface;
-use App\Service\Payment\ProviderGuardInterface;
+use App\ServiceInterface\Payment\ProviderGuardInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;

@@ -4,7 +4,6 @@
 declare(strict_types=1);
 
 namespace App\Controller\Payment;
-
 use App\Attribute\Payment\RequireScope;
 use App\Controller\Payment\Dto\PaymentConsoleFinalizeRequestDto;
 use App\Controller\Payment\Dto\PaymentConsoleRefundRequestDto;
@@ -16,9 +15,9 @@ use App\Form\Payment\PaymentCreateType;
 use App\Form\Payment\PaymentStartType;
 use App\Repository\Payment\PaymentRepositoryInterface;
 use App\Service\Payment\PaymentService;
-use App\Service\Payment\PaymentStartServiceInterface;
-use App\Service\Payment\ProviderGuardInterface;
-use App\Service\Payment\RefundServiceInterface;
+use App\ServiceInterface\Payment\PaymentStartServiceInterface;
+use App\ServiceInterface\Payment\ProviderGuardInterface;
+use App\ServiceInterface\Payment\RefundServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

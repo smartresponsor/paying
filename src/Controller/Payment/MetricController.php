@@ -4,10 +4,9 @@
 declare(strict_types=1);
 
 namespace App\Controller\Payment;
-
 use App\Attribute\Payment\RequireScope;
 use App\Service\Payment\Metric;
-use App\Service\Payment\ProjectionLagServiceInterface;
+use App\ServiceInterface\Payment\ProjectionLagServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 

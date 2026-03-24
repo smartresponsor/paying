@@ -4,9 +4,8 @@
 declare(strict_types=1);
 
 namespace App\Controller\Payment;
-
 use App\Attribute\Payment\RequireScope;
-use App\Service\Payment\DlqServiceInterface;
+use App\ServiceInterface\Payment\DlqServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 final class DlqController implements DlqControllerInterface

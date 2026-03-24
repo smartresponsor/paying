@@ -4,7 +4,6 @@
 declare(strict_types=1);
 
 namespace App\Controller\Payment;
-
 use App\Attribute\Payment\RequireScope;
 use App\Controller\Payment\Dto\PaymentCreateRequestDto;
 use App\ServiceInterface\Payment\PaymentServiceInterface;

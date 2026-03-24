@@ -4,8 +4,7 @@
 declare(strict_types=1);
 
 namespace App\Infrastructure\Payment;
-
-use App\Service\Payment\IdempotencyStoreInterface;
+use App\ServiceInterface\Payment\IdempotencyStoreInterface;
 use Doctrine\DBAL\Connection;
 
 class DbalIdempotencyStore implements IdempotencyStoreInterface

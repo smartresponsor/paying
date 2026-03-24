@@ -4,6 +4,7 @@
 declare(strict_types=1);
 
 namespace App\Service\Payment\Gateway;
+use App\ServiceInterface\Payment\Gateway\PaymentGatewayInterface;
 
 final class StripeGateway implements PaymentGatewayInterface
 {

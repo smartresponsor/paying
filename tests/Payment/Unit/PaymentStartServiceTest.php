@@ -4,11 +4,10 @@
 declare(strict_types=1);
 
 namespace App\Tests\Payment\Unit;
-
 use App\Entity\Payment\Payment;
 use App\Repository\Payment\PaymentRepositoryInterface;
 use App\Service\Payment\PaymentStartService;
-use App\Service\Payment\ProviderGuardInterface;
+use App\ServiceInterface\Payment\ProviderGuardInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 

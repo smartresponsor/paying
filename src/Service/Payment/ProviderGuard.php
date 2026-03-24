@@ -4,7 +4,9 @@
 declare(strict_types=1);
 
 namespace App\Service\Payment;
-
+use App\ServiceInterface\Payment\CircuitBreakerInterface;
+use App\ServiceInterface\Payment\ProviderGuardInterface;
+use App\ServiceInterface\Payment\RetryExecutorInterface;
 use App\Entity\Payment\Payment;
 use Symfony\Component\Uid\Ulid;
 
