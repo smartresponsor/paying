@@ -4,9 +4,8 @@
 declare(strict_types=1);
 
 namespace App\Message\Handler\Payment;
-
 use App\Message\Event\Payment\PaymentTransportMessage;
-use App\Service\Order\OrderPaymentSyncInterface;
+use App\ServiceInterface\Order\OrderPaymentSyncInterface;
 use App\ServiceInterface\Payment\Reconciliation\PaymentReconciliationServiceInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 

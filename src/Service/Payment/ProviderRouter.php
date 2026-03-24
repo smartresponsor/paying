@@ -4,6 +4,8 @@
 declare(strict_types=1);
 
 namespace App\Service\Payment;
+use App\ServiceInterface\Payment\PaymentProviderInterface;
+use App\ServiceInterface\Payment\ProviderRouterInterface;
 
 final class ProviderRouter implements ProviderRouterInterface
 {

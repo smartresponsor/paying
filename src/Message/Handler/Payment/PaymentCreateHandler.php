@@ -4,11 +4,10 @@
 declare(strict_types=1);
 
 namespace App\Message\Handler\Payment;
-
 use App\Entity\Payment\Payment;
 use App\Message\Command\Payment\PaymentCreateCommand;
 use App\Repository\Payment\PaymentRepositoryInterface;
-use App\Service\Payment\Gateway\PaymentGatewayInterface;
+use App\ServiceInterface\Payment\Gateway\PaymentGatewayInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Uid\Ulid;
 

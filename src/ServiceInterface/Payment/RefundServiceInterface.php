@@ -3,8 +3,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Payment;
-
+namespace App\ServiceInterface\Payment;
 use App\Entity\Payment\Payment;
 use Symfony\Component\Uid\Ulid;
 

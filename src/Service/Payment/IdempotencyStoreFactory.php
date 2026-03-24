@@ -4,7 +4,7 @@
 declare(strict_types=1);
 
 namespace App\Service\Payment;
-
+use App\ServiceInterface\Payment\IdempotencyStoreInterface;
 use App\Infrastructure\Payment\DbalIdempotencyStore;
 use App\Infrastructure\Payment\RedisIdempotencyStore;
 use Doctrine\DBAL\Connection;

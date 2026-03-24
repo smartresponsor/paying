@@ -4,12 +4,11 @@
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Cli;
-
 use App\Infrastructure\Payment\Console\DlqReplayCommand;
 use App\Infrastructure\Payment\Console\IdemPurgeCommand;
 use App\Infrastructure\Payment\Console\SlaReportCommand;
 use App\Infrastructure\Payment\OutboxPublisherInterface;
-use App\Service\Payment\IdempotencyStoreInterface;
+use App\ServiceInterface\Payment\IdempotencyStoreInterface;
 use App\Service\Payment\SlaReporter;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;

@@ -4,10 +4,9 @@
 declare(strict_types=1);
 
 namespace App\Controller\Payment;
-
-use App\Service\Payment\EventMapperInterface;
-use App\Service\Payment\ProviderGuardInterface;
-use App\Service\Payment\WebhookVerifierInterface;
+use App\ServiceInterface\Payment\EventMapperInterface;
+use App\ServiceInterface\Payment\ProviderGuardInterface;
+use App\ServiceInterface\Payment\WebhookVerifierInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;

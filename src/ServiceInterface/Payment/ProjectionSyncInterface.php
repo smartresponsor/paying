@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Payment;
+namespace App\ServiceInterface\Payment;
 
 interface ProjectionSyncInterface
 {

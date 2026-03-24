@@ -4,15 +4,14 @@
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Cli;
-
 use App\Entity\Payment\Payment;
 use App\Infrastructure\Payment\Console\OutboxRunCommand;
 use App\Infrastructure\Payment\Console\ProjectionRebuildCommand;
 use App\Infrastructure\Payment\Console\ProjectionSyncCommand;
 use App\Infrastructure\Payment\Console\ReconcileRunCommand;
 use App\Infrastructure\Payment\OutboxWorker;
-use App\Service\Payment\ProjectionSyncInterface;
-use App\Service\Payment\ReconciliationServiceInterface;
+use App\ServiceInterface\Payment\ProjectionSyncInterface;
+use App\ServiceInterface\Payment\ReconciliationServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;

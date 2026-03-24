@@ -4,10 +4,9 @@
 declare(strict_types=1);
 
 namespace App\Tests\Payment\Unit;
-
 use App\Attribute\Payment\RequireScope;
 use App\Infrastructure\Payment\ScopeGuardSubscriber;
-use App\Service\Payment\TokenVerifierInterface;
+use App\ServiceInterface\Payment\TokenVerifierInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;

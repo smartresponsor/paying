@@ -4,7 +4,6 @@
 declare(strict_types=1);
 
 namespace App\ServiceInterface\Payment;
-
 use App\Entity\Payment\Payment;
 
 interface PaymentServiceInterface

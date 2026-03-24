@@ -4,8 +4,7 @@
 declare(strict_types=1);
 
 namespace App\Service\Payment\Webhook;
-
-use App\Service\Payment\WebhookVerifierInterface;
+use App\ServiceInterface\Payment\WebhookVerifierInterface;
 
 final class PayPalSignatureValidator
 {

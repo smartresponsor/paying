@@ -4,7 +4,6 @@
 declare(strict_types=1);
 
 namespace App\Tests\Payment\Functional\Webhook;
-
 use App\Controller\Webhook\PayPalWebhookController;
 use App\Controller\Webhook\StripeWebhookController;
 use App\Entity\Payment\Payment;
@@ -13,7 +12,7 @@ use App\Entity\Payment\PaymentWebhookLog;
 use App\Message\Event\Payment\PaymentTransportMessage;
 use App\Message\Handler\Payment\PaymentEventConsumer;
 use App\Repository\Payment\PaymentRepositoryInterface;
-use App\Service\Order\OrderPaymentSyncInterface;
+use App\ServiceInterface\Order\OrderPaymentSyncInterface;
 use App\Service\Payment\Outbox\PaymentOutboxProcessor;
 use App\Service\Payment\Reconciliation\PaymentReconciliationService;
 use App\Service\Payment\Webhook\JsonSchemaValidator;
@@ -21,7 +20,7 @@ use App\Service\Payment\Webhook\PayPalEventNormalizer;
 use App\Service\Payment\Webhook\PayPalSignatureValidator;
 use App\Service\Payment\Webhook\StripeEventNormalizer;
 use App\Service\Payment\Webhook\StripeSignatureValidator;
-use App\Service\Payment\WebhookVerifierInterface;
+use App\ServiceInterface\Payment\WebhookVerifierInterface;
 use App\ValueObject\Payment\PaymentStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
