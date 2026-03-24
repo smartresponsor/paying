@@ -3,6 +3,12 @@ services:
         autowire: true
         autoconfigure: true
 
+    _instanceof:
+        App\ServiceInterface\Payment\EventMapperInterface:
+            tags: ['payment.event_mapper']
+        App\ServiceInterface\Payment\Gateway\PaymentGatewayInterface:
+            tags: ['payment.gateway']
+
     App\:
         resource: '../src/'
         exclude:
@@ -59,12 +65,6 @@ services:
     App\ServiceInterface\Payment\ReconciliationServiceInterface: '@App\Service\Payment\ReconciliationService'
     App\Infrastructure\Payment\OutboxPublisherInterface: '@App\Infrastructure\Payment\OutboxPublisher'
 
-    App\Service\Payment\Mapper\StripeEventMapper:
-        tags: ['payment.event_mapper']
-
-    App\Service\Payment\Mapper\AdyenEventMapper:
-        tags: ['payment.event_mapper']
-
     App\Controller\Payment\WebhookController:
         arguments:
             $mappers: !tagged_iterator payment.event_mapper
@@ -91,25 +91,13 @@ services:
             $transport: '@messenger.transport.payment_outbox'
             $logger: '@logger'
 
-    App\Command\Payment\PaymentOutboxProcessCommand:
-        tags: ['console.command']
-
     App\Message\Handler\Payment\PaymentCreateHandler:
         arguments:
             $gateways: !tagged_iterator payment.gateway
-        tags: ['messenger.message_handler']
 
     App\Message\Handler\Payment\PaymentRefundHandler:
         arguments:
             $gateways: !tagged_iterator payment.gateway
-        tags: ['messenger.message_handler']
-
-
-    App\Service\Payment\Gateway\StripeGateway:
-        tags: ['payment.gateway']
-
-    App\Service\Payment\Gateway\PayPalGateway:
-        tags: ['payment.gateway']
 
     App\Service\Order\NullOrderPaymentSync:
         arguments:
@@ -120,7 +108,3 @@ services:
     App\ServiceInterface\Order\OrderPaymentSyncInterface: '@App\Service\Order\NullOrderPaymentSync'
 
     App\ServiceInterface\Payment\Reconciliation\PaymentReconciliationServiceInterface: '@App\Service\Payment\Reconciliation\PaymentReconciliationService'
-
-    App\Message\Handler\Payment\PaymentEventConsumer:
-        autoconfigure: true
-        autowire: true
