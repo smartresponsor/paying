@@ -1,8 +1,7 @@
 <?php
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
-
-// Marketing America Corp. Oleksandr Tishchenko
 
 namespace App\Controller\Payment;
 
@@ -80,7 +79,9 @@ final class PaymentRefundController implements PaymentRefundControllerInterface
 
         try {
             $payment = $this->refundService->refund(new Ulid($id), $dto->amount, $dto->provider);
-        } catch (\RuntimeException) {
+        } catch (\RuntimeException $exception) {
+            error_log(sprintf('[payment-refund] unable to refund payment %s: %s', $id, $exception->getMessage()));
+
             return new JsonResponse(['error' => 'payment-not-found'], JsonResponse::HTTP_NOT_FOUND);
         }
 

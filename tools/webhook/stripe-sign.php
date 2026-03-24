@@ -1,4 +1,6 @@
 <?php
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
 declare(strict_types=1);
 
 $secret = $_ENV['STRIPE_WEBHOOK_SECRET'] ?? ($argv[1] ?? '');

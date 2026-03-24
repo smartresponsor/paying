@@ -1,8 +1,7 @@
 <?php
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
-
-// Marketing America Corp. Oleksandr Tishchenko
 
 namespace App\Controller\Payment;
 
@@ -162,7 +161,8 @@ final class PaymentConsoleController extends AbstractController
 
         try {
             $payment = $this->refundService->refund(new Ulid($dto->paymentId), $dto->amount, $dto->provider);
-        } catch (\RuntimeException) {
+        } catch (\RuntimeException $exception) {
+            error_log(sprintf('[payment-console-refund] unable to refund payment %s: %s', $dto->paymentId, $exception->getMessage()));
             $this->addFlash('danger', sprintf('Payment %s was not found.', $dto->paymentId));
 
             return $this->redirectToRoute('payment_console');
