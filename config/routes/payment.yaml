@@ -47,12 +47,6 @@ payment_finalize:
   path: /payment/finalize/{id}
   controller: App\Controller\Payment\FinalizeController::finalize
   methods: [POST]
-
-payment_webhook:
-  path: /payment/webhook/{provider}
-  controller: App\Controller\Payment\WebhookController::webhook
-  methods: [POST]
-
 payment_metrics:
   path: /metrics
   controller: App\Controller\Payment\MetricController::metrics

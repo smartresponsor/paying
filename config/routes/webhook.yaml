@@ -1,3 +1,8 @@
+payment_webhook:
+  path: /payment/webhook/{provider}
+  controller: App\Controller\Payment\WebhookController::webhook
+  methods: [POST]
+
 payment_webhook_stripe:
   path: /webhook/stripe
   controller: App\Controller\Webhook\StripeWebhookController::__invoke
