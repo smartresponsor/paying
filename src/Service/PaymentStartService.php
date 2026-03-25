@@ -1,13 +1,15 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Service;
-use App\ServiceInterface\PaymentStartServiceInterface;
-use App\ServiceInterface\ProviderGuardInterface;
+
 use App\Entity\Payment;
 use App\RepositoryInterface\PaymentRepositoryInterface;
+use App\ServiceInterface\PaymentStartServiceInterface;
+use App\ServiceInterface\ProviderGuardInterface;
 use App\ValueObject\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 
@@ -37,7 +39,7 @@ final class PaymentStartService implements PaymentStartServiceInterface
         return [
             'payment' => $payment,
             'providerRef' => $providerRef,
-            'result' => is_array($providerResult) ? $providerResult : [],
+            'result' => $providerResult,
         ];
     }
 }

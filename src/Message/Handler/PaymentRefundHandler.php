@@ -1,9 +1,11 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Message\Handler;
+
 use App\Message\Command\PaymentRefundCommand;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\Gateway\PaymentGatewayInterface;

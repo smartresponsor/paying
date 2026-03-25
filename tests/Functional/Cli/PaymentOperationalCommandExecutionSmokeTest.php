@@ -1,15 +1,17 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Cli;
+
 use App\Infrastructure\Console\DlqReplayCommand;
 use App\Infrastructure\Console\IdemPurgeCommand;
 use App\Infrastructure\Console\SlaReportCommand;
 use App\InfrastructureInterface\OutboxPublisherInterface;
-use App\ServiceInterface\IdempotencyStoreInterface;
 use App\Service\SlaReporter;
+use App\ServiceInterface\IdempotencyStoreInterface;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

@@ -1,13 +1,15 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Service;
-use App\ServiceInterface\ProviderGuardInterface;
-use App\ServiceInterface\ReconciliationServiceInterface;
+
 use App\Entity\Payment;
 use App\RepositoryInterface\PaymentRepositoryInterface;
+use App\ServiceInterface\ProviderGuardInterface;
+use App\ServiceInterface\ReconciliationServiceInterface;
 use Symfony\Component\Uid\Ulid;
 
 class ReconciliationService implements ReconciliationServiceInterface

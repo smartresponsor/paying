@@ -1,11 +1,12 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Service;
-use App\ServiceInterface\SlaReporterInterface;
 
+use App\ServiceInterface\SlaReporterInterface;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 
@@ -15,6 +16,7 @@ class SlaReporter implements SlaReporterInterface
     {
     }
 
+    /** @return array{window: string, total: int, completed: int, failed: int, canceled: int, refunded: int, successRate: float} */
     public function since(string $isoInterval): array
     {
         $interval = $isoInterval;

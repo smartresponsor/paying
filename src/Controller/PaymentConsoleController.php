@@ -1,9 +1,11 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Controller;
+
 use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentConsoleFinalizeRequestDto;
 use App\Controller\Dto\PaymentConsoleRefundRequestDto;

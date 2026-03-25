@@ -1,9 +1,11 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Cli;
+
 use App\Entity\Payment;
 use App\Infrastructure\Console\OutboxRunCommand;
 use App\Infrastructure\Console\ProjectionRebuildCommand;

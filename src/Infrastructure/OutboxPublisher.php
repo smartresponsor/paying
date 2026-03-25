@@ -16,6 +16,7 @@ class OutboxPublisher implements OutboxPublisherInterface
     {
     }
 
+    /** @param array<string, mixed> $payload */
     public function enqueue(string $topic, array $payload): void
     {
         $this->data->insert('payment_outbox_message', [

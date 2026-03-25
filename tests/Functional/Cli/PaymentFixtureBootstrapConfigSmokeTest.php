@@ -17,8 +17,8 @@ final class PaymentFixtureBootstrapConfigSmokeTest extends TestCase
 
         self::assertArrayHasKey('fixtures:payment:load', $scripts);
         self::assertArrayHasKey('fixtures:payment:append', $scripts);
-        self::assertSame('php bin/console doctrine:fixtures:load --group=payment --no-interaction', $scripts['fixtures:payment:load']);
-        self::assertSame('php bin/console doctrine:fixtures:load --group=payment --append --no-interaction', $scripts['fixtures:payment:append']);
+        self::assertSame('@php tools/php/php84.php bin/console doctrine:fixtures:load --group=payment --no-interaction', $scripts['fixtures:payment:load']);
+        self::assertSame('@php tools/php/php84.php bin/console doctrine:fixtures:load --group=payment --append --no-interaction', $scripts['fixtures:payment:append']);
     }
 
     public function testPhpUnitBootstrapAndReadmeMentionFixtureContour(): void

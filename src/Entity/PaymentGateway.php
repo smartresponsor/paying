@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -16,11 +17,21 @@ class PaymentGateway
     private string $id;
 
     #[ORM\Column(type: 'string', length: 32)]
-    private string $code; // 'stripe','paypal','authorize'
+    private string $code;
 
     public function __construct(string $id, string $code)
     {
         $this->id = $id;
         $this->code = $code;
+    }
+
+    public function id(): string
+    {
+        return $this->id;
+    }
+
+    public function code(): string
+    {
+        return $this->code;
     }
 }

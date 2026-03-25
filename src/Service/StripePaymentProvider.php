@@ -1,11 +1,13 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Service;
-use App\ServiceInterface\PaymentProviderInterface;
+
 use App\Entity\Payment;
+use App\ServiceInterface\PaymentProviderInterface;
 use App\ValueObject\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 
@@ -25,6 +27,11 @@ final class StripePaymentProvider implements PaymentProviderInterface
         $this->webhookSecret = $webhookSecret ?? (getenv('STRIPE_WEBHOOK_SECRET') ?: '');
     }
 
+    /**
+     * @param array<string, mixed> $context
+     *
+     * @return array<string, mixed>
+     */
     public function start(Payment $payment, array $context = []): array
     {
         return [
@@ -39,6 +46,7 @@ final class StripePaymentProvider implements PaymentProviderInterface
         ];
     }
 
+    /** @param array<string, mixed> $payload */
     public function finalize(Ulid $id, array $payload = []): Payment
     {
         return new Payment($id, PaymentStatus::completed, (string) ($payload['amount'] ?? '0.00'), (string) ($payload['currency'] ?? 'USD'));
@@ -54,11 +62,12 @@ final class StripePaymentProvider implements PaymentProviderInterface
         return new Payment($id, PaymentStatus::processing, '0.00', 'USD');
     }
 
+    /** @return array{providerRef: string, checkoutUrl?: string|null} */
     public function create(string $projectId, float $amount, string $currency, string $idempotencyKey): array
     {
         if (class_exists('\Stripe\StripeClient') && '' !== $this->secretKey) {
             $stripe = new \Stripe\StripeClient($this->secretKey);
-            $amt = (int) round($amount * 100);
+            $amountMinor = (int) round($amount * 100);
             $session = $stripe->checkout->sessions->create([
                 'mode' => 'payment',
                 'payment_method_types' => ['card'],
@@ -66,7 +75,7 @@ final class StripePaymentProvider implements PaymentProviderInterface
                     'price_data' => [
                         'currency' => strtolower($currency),
                         'product_data' => ['name' => 'Project '.$projectId],
-                        'unit_amount' => $amt,
+                        'unit_amount' => $amountMinor,
                     ],
                     'quantity' => 1,
                 ]],
@@ -80,11 +89,12 @@ final class StripePaymentProvider implements PaymentProviderInterface
             ];
         }
 
-        $ref = 'stripe_'.substr(sha1($projectId.$amount.$currency.$idempotencyKey), 0, 24);
+        $reference = 'stripe_'.substr(sha1($projectId.$amount.$currency.$idempotencyKey), 0, 24);
 
-        return ['providerRef' => $ref];
+        return ['providerRef' => $reference];
     }
 
+    /** @return array{ok: bool, error?: string, event?: mixed, providerRef?: mixed, amount?: float, currency?: string, projectId?: mixed} */
     public function verifyWebhook(string $rawBody, string $signatureHeader): array
     {
         if ('' === $this->webhookSecret) {
@@ -98,10 +108,10 @@ final class StripePaymentProvider implements PaymentProviderInterface
             }
         }
         $timestamp = isset($parts['t']) ? (int) $parts['t'] : 0;
-        $signatures = array_values(array_filter(explode(',', $signatureHeader), fn ($x) => str_starts_with(trim($x), 'v1=')));
-        $sigs = [];
+        $signatures = array_values(array_filter(explode(',', $signatureHeader), fn (string $item): bool => str_starts_with(trim($item), 'v1=')));
+        $computedSignatures = [];
         foreach ($signatures as $signature) {
-            $sigs[] = substr($signature, 3);
+            $computedSignatures[] = substr($signature, 3);
         }
 
         if (0 === $timestamp || abs(time() - $timestamp) > 300) {
@@ -112,8 +122,8 @@ final class StripePaymentProvider implements PaymentProviderInterface
         $expected = hash_hmac('sha256', $signedPayload, $this->webhookSecret);
 
         $valid = false;
-        foreach ($sigs as $sig) {
-            if (hash_equals($expected, $sig)) {
+        foreach ($computedSignatures as $signature) {
+            if (hash_equals($expected, $signature)) {
                 $valid = true;
                 break;
             }
@@ -124,11 +134,11 @@ final class StripePaymentProvider implements PaymentProviderInterface
 
         $event = json_decode($rawBody, true) ?: [];
         $type = $event['type'] ?? 'unknown';
-        $obj = $event['data']['object'] ?? [];
-        $providerRef = $obj['id'] ?? null;
-        $amount = isset($obj['amount_total']) ? $obj['amount_total'] / 100.0 : (isset($obj['amount']) ? $obj['amount'] / 100.0 : 0.0);
-        $currency = strtoupper($obj['currency'] ?? 'USD');
-        $projectId = $obj['metadata']['projectId'] ?? ($obj['client_reference_id'] ?? '');
+        $object = $event['data']['object'] ?? [];
+        $providerRef = $object['id'] ?? null;
+        $amount = isset($object['amount_total']) ? $object['amount_total'] / 100.0 : (isset($object['amount']) ? $object['amount'] / 100.0 : 0.0);
+        $currency = strtoupper($object['currency'] ?? 'USD');
+        $projectId = $object['metadata']['projectId'] ?? ($object['client_reference_id'] ?? '');
 
         return ['ok' => true, 'event' => $type, 'providerRef' => $providerRef, 'amount' => $amount, 'currency' => $currency, 'projectId' => $projectId];
     }

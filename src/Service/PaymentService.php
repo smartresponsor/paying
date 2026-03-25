@@ -1,12 +1,14 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Service;
-use App\ServiceInterface\PaymentServiceInterface;
+
 use App\Entity\Payment;
 use App\RepositoryInterface\PaymentRepositoryInterface;
+use App\ServiceInterface\PaymentServiceInterface;
 use App\ValueObject\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 

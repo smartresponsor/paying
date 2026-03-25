@@ -63,7 +63,7 @@ class WebhookVerifier implements WebhookVerifierInterface
     {
         $value = $_ENV[$name] ?? $_SERVER[$name] ?? getenv($name);
 
-        if (false === $value || null === $value) {
+        if (false === $value) {
             return $default;
         }
 

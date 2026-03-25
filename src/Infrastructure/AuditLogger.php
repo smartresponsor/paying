@@ -15,6 +15,7 @@ class AuditLogger implements AuditLoggerInterface
     {
     }
 
+    /** @param array<string, mixed> $context */
     public function log(string $action, array $context = []): void
     {
         $this->data->insert('payment_audit', [

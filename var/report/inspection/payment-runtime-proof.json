@@ -1,0 +1,7 @@
+{
+    "kernel": true,
+    "services_yaml": true,
+    "phpunit": true,
+    "openapi": true,
+    "pipeline_runner_ps1": true
+}

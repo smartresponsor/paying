@@ -10,9 +10,9 @@ use App\InfrastructureInterface\PublisherTransportInterface;
 
 class PublisherTransportLog implements PublisherTransportInterface
 {
+    /** @param array<string, mixed> $payload */
     public function publish(string $topic, array $payload): void
     {
-        // Minimal transport: log to stdout (Docker/Pod logs)
         error_log('[outbox] topic='.$topic.' payload='.json_encode($payload));
     }
 }

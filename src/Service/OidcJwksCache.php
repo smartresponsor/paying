@@ -1,9 +1,11 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Service;
+
 use App\ServiceInterface\OidcJwksCacheInterface;
 
 class OidcJwksCache implements OidcJwksCacheInterface
@@ -17,6 +19,7 @@ class OidcJwksCache implements OidcJwksCacheInterface
         $this->ttl = (int) ($_ENV['OIDC_JWKS_TTL'] ?? $ttl);
     }
 
+    /** @return array{keys?: list<array<string, mixed>>} */
     public function get(): array
     {
         $url = (string) ($_ENV['OIDC_JWKS_URL'] ?? '');
@@ -27,8 +30,8 @@ class OidcJwksCache implements OidcJwksCacheInterface
         if (is_file($this->cacheFile) && (time() - filemtime($this->cacheFile) < $this->ttl)) {
             return json_decode((string) file_get_contents($this->cacheFile), true) ?? [];
         }
-        $ctx = stream_context_create(['http' => ['timeout' => 3]]);
-        $json = @file_get_contents($url, false, $ctx);
+        $context = stream_context_create(['http' => ['timeout' => 3]]);
+        $json = @file_get_contents($url, false, $context);
         if (false !== $json) {
             @file_put_contents($this->cacheFile, $json);
 

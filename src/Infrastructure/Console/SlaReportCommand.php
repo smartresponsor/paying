@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -29,7 +30,7 @@ class SlaReportCommand extends Command
     {
         $win = (string) $input->getArgument('window');
         $data = $this->sla->since($win);
-        $output->writeln(json_encode($data));
+        $output->writeln((string) json_encode($data, JSON_THROW_ON_ERROR));
 
         return Command::SUCCESS;
     }

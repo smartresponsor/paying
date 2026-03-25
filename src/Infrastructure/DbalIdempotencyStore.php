@@ -1,9 +1,11 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Infrastructure;
+
 use App\ServiceInterface\IdempotencyStoreInterface;
 use Doctrine\DBAL\Connection;
 
@@ -40,6 +42,6 @@ class DbalIdempotencyStore implements IdempotencyStoreInterface
 
     public function purgeExpired(): int
     {
-        return $this->data->executeStatement('DELETE FROM payment_idempotency WHERE expires_at < NOW()');
+        return (int) $this->data->executeStatement('DELETE FROM payment_idempotency WHERE expires_at < NOW()');
     }
 }

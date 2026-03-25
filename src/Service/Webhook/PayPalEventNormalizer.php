@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -7,6 +8,7 @@ namespace App\Service\Webhook;
 
 final class PayPalEventNormalizer
 {
+    /** @param array<string, mixed> $payload */
     public function routingKey(array $payload): string
     {
         return match ((string) ($payload['event_type'] ?? '')) {
@@ -18,6 +20,8 @@ final class PayPalEventNormalizer
     }
 
     /**
+     * @param array<string, mixed> $payload
+     *
      * @return array<string, mixed>
      */
     public function normalize(array $payload): array

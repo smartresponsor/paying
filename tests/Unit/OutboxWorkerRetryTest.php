@@ -1,12 +1,13 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Tests\Unit;
 
-use App\InfrastructureInterface\OutboxPublisherInterface;
 use App\Infrastructure\OutboxWorker;
+use App\InfrastructureInterface\OutboxPublisherInterface;
 use App\InfrastructureInterface\PublisherTransportInterface;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;

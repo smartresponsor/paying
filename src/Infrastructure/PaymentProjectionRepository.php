@@ -16,6 +16,7 @@ class PaymentProjectionRepository implements PaymentProjectionRepositoryInterfac
     {
     }
 
+    /** @return array<string, scalar|null>|null */
     public function findById(string $id): ?array
     {
         $row = $this->infra->fetchAssociative(
@@ -26,6 +27,7 @@ class PaymentProjectionRepository implements PaymentProjectionRepositoryInterfac
         return $row ?: null;
     }
 
+    /** @return list<array<string, scalar|null>> */
     public function listByStatus(string $status, int $limit = 100): array
     {
         return $this->infra->fetchAllAssociative(
@@ -35,6 +37,7 @@ class PaymentProjectionRepository implements PaymentProjectionRepositoryInterfac
         );
     }
 
+    /** @param array<string, scalar|null> $row */
     public function upsert(array $row): void
     {
         $this->infra->transactional(function (Connection $connection) use ($row): void {

@@ -1,16 +1,23 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Service;
-use App\ServiceInterface\PaymentProviderInterface;
+
 use App\Entity\Payment;
+use App\ServiceInterface\PaymentProviderInterface;
 use App\ValueObject\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 
 final class InternalPaymentProvider implements PaymentProviderInterface
 {
+    /**
+     * @param array<string, mixed> $context
+     *
+     * @return array<string, mixed>
+     */
     public function start(Payment $payment, array $context = []): array
     {
         return [
@@ -21,6 +28,7 @@ final class InternalPaymentProvider implements PaymentProviderInterface
         ];
     }
 
+    /** @param array<string, mixed> $payload */
     public function finalize(Ulid $id, array $payload = []): Payment
     {
         return new Payment($id, PaymentStatus::completed, (string) ($payload['amount'] ?? '0.00'), (string) ($payload['currency'] ?? 'USD'));

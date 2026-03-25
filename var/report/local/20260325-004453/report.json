@@ -1,0 +1,147 @@
+﻿{
+    "pipeline":  "payment-local",
+    "timestamp":  "20260325-004453",
+    "report_root":  "D:\\PhpstormProjects\\www\\Paying\\var\\report\\local\\20260325-004453",
+    "status":  "passed_with_issues",
+    "duration_ms":  57290,
+    "include_smokes":  true,
+    "include_reports":  true,
+    "fail_on_errors":  false,
+    "steps":  [
+                  {
+                      "name":  "install-preflight",
+                      "command":  "composer install:preflight",
+                      "status":  "passed",
+                      "exit_code":  0,
+                      "duration_ms":  1666,
+                      "log":  "logs/install-preflight.log",
+                      "command_file":  "logs/install-preflight.cmd.txt"
+                  },
+                  {
+                      "name":  "lint",
+                      "command":  "composer lint",
+                      "status":  "passed",
+                      "exit_code":  0,
+                      "duration_ms":  15592,
+                      "log":  "logs/lint.log",
+                      "command_file":  "logs/lint.cmd.txt"
+                  },
+                  {
+                      "name":  "lint-yaml",
+                      "command":  "composer lint:yaml",
+                      "status":  "passed",
+                      "exit_code":  0,
+                      "duration_ms":  1818,
+                      "log":  "logs/lint-yaml.log",
+                      "command_file":  "logs/lint-yaml.cmd.txt"
+                  },
+                  {
+                      "name":  "lint-container",
+                      "command":  "composer lint:container",
+                      "status":  "passed",
+                      "exit_code":  0,
+                      "duration_ms":  5368,
+                      "log":  "logs/lint-container.log",
+                      "command_file":  "logs/lint-container.cmd.txt"
+                  },
+                  {
+                      "name":  "cs-check",
+                      "command":  "composer cs:check-quiet",
+                      "status":  "failed",
+                      "exit_code":  1,
+                      "duration_ms":  4579,
+                      "log":  "logs/cs-check.log",
+                      "command_file":  "logs/cs-check.cmd.txt"
+                  },
+                  {
+                      "name":  "stan",
+                      "command":  "composer stan:runtime-target",
+                      "status":  "failed",
+                      "exit_code":  1,
+                      "duration_ms":  3460,
+                      "log":  "logs/stan.log",
+                      "command_file":  "logs/stan.cmd.txt"
+                  },
+                  {
+                      "name":  "docs-phpdoc-check",
+                      "command":  "composer docs:phpdoc:check",
+                      "status":  "passed",
+                      "exit_code":  0,
+                      "duration_ms":  1574,
+                      "log":  "logs/docs-phpdoc-check.log",
+                      "command_file":  "logs/docs-phpdoc-check.cmd.txt"
+                  },
+                  {
+                      "name":  "test-bootstrap-reset",
+                      "command":  "composer test:bootstrap:reset",
+                      "status":  "passed",
+                      "exit_code":  0,
+                      "duration_ms":  1800,
+                      "log":  "logs/test-bootstrap-reset.log",
+                      "command_file":  "logs/test-bootstrap-reset.cmd.txt"
+                  },
+                  {
+                      "name":  "test",
+                      "command":  "composer test",
+                      "status":  "passed",
+                      "exit_code":  0,
+                      "duration_ms":  10987,
+                      "log":  "logs/test.log",
+                      "command_file":  "logs/test.cmd.txt"
+                  },
+                  {
+                      "name":  "smoke-runtime",
+                      "command":  "composer smoke:runtime",
+                      "status":  "passed",
+                      "exit_code":  0,
+                      "duration_ms":  1588,
+                      "log":  "logs/smoke-runtime.log",
+                      "command_file":  "logs/smoke-runtime.cmd.txt"
+                  },
+                  {
+                      "name":  "smoke-fixtures",
+                      "command":  "composer smoke:fixtures",
+                      "status":  "passed",
+                      "exit_code":  0,
+                      "duration_ms":  1604,
+                      "log":  "logs/smoke-fixtures.log",
+                      "command_file":  "logs/smoke-fixtures.cmd.txt"
+                  },
+                  {
+                      "name":  "smoke-container",
+                      "command":  "composer smoke:container",
+                      "status":  "failed",
+                      "exit_code":  1,
+                      "duration_ms":  1848,
+                      "log":  "logs/smoke-container.log",
+                      "command_file":  "logs/smoke-container.cmd.txt"
+                  },
+                  {
+                      "name":  "smoke-doctrine",
+                      "command":  "composer smoke:doctrine",
+                      "status":  "passed",
+                      "exit_code":  0,
+                      "duration_ms":  1758,
+                      "log":  "logs/smoke-doctrine.log",
+                      "command_file":  "logs/smoke-doctrine.cmd.txt"
+                  },
+                  {
+                      "name":  "report-route-inventory",
+                      "command":  "composer report:route-inventory",
+                      "status":  "passed",
+                      "exit_code":  0,
+                      "duration_ms":  1707,
+                      "log":  "logs/report-route-inventory.log",
+                      "command_file":  "logs/report-route-inventory.cmd.txt"
+                  },
+                  {
+                      "name":  "report-runtime-proof",
+                      "command":  "composer report:runtime-proof",
+                      "status":  "passed",
+                      "exit_code":  0,
+                      "duration_ms":  1820,
+                      "log":  "logs/report-runtime-proof.log",
+                      "command_file":  "logs/report-runtime-proof.cmd.txt"
+                  }
+              ]
+}

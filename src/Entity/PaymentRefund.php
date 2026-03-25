@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -38,5 +39,35 @@ class PaymentRefund
         $this->currency = $currency;
         $this->reason = $reason;
         $this->refundedAt = new \DateTimeImmutable('now');
+    }
+
+    public function id(): string
+    {
+        return $this->id;
+    }
+
+    public function paymentId(): string
+    {
+        return $this->paymentId;
+    }
+
+    public function amountMinor(): int
+    {
+        return $this->amountMinor;
+    }
+
+    public function currency(): string
+    {
+        return $this->currency;
+    }
+
+    public function reason(): ?string
+    {
+        return $this->reason;
+    }
+
+    public function refundedAt(): \DateTimeImmutable
+    {
+        return $this->refundedAt;
     }
 }

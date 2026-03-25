@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -18,6 +19,7 @@ class PaymentOutboxMessage
     #[ORM\Column(type: 'string', length: 128)]
     private string $type;
 
+    /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')]
     private array $payload;
 
@@ -36,6 +38,9 @@ class PaymentOutboxMessage
     #[ORM\Column(type: 'string', length: 128, nullable: true)]
     private ?string $routingKey = null;
 
+    /**
+     * @param array<string, mixed> $payload
+     */
     public function __construct(string $id, string $type, array $payload, ?string $routingKey = null)
     {
         $this->id = $id;
@@ -55,6 +60,7 @@ class PaymentOutboxMessage
         return $this->type;
     }
 
+    /** @return array<string, mixed> */
     public function payload(): array
     {
         return $this->payload;
@@ -89,5 +95,15 @@ class PaymentOutboxMessage
     public function attempts(): int
     {
         return $this->attempts;
+    }
+
+    public function occurredAt(): \DateTimeImmutable
+    {
+        return $this->occurredAt;
+    }
+
+    public function lastError(): ?string
+    {
+        return $this->lastError;
     }
 }

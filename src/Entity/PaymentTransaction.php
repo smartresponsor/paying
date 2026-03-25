@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -22,7 +23,7 @@ class PaymentTransaction
     private string $gatewayTransactionId;
 
     #[ORM\Column(type: 'string', length: 16)]
-    private string $type; // 'authorize'|'capture'|'refund'
+    private string $type;
 
     #[ORM\Column(type: 'integer')]
     private int $amountMinor;
@@ -38,5 +39,35 @@ class PaymentTransaction
         $this->type = $type;
         $this->amountMinor = $amountMinor;
         $this->occurredAt = new \DateTimeImmutable('now');
+    }
+
+    public function id(): string
+    {
+        return $this->id;
+    }
+
+    public function paymentId(): string
+    {
+        return $this->paymentId;
+    }
+
+    public function gatewayTransactionId(): string
+    {
+        return $this->gatewayTransactionId;
+    }
+
+    public function type(): string
+    {
+        return $this->type;
+    }
+
+    public function amountMinor(): int
+    {
+        return $this->amountMinor;
+    }
+
+    public function occurredAt(): \DateTimeImmutable
+    {
+        return $this->occurredAt;
     }
 }

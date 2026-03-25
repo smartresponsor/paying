@@ -1,9 +1,11 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Message\Handler;
+
 use App\Message\Event\PaymentTransportMessage;
 use App\ServiceInterface\Order\OrderPaymentSyncInterface;
 use App\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface;

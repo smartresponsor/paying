@@ -1,9 +1,11 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Service\Mapper;
+
 use App\ServiceInterface\EventMapperInterface;
 
 class StripeEventMapper implements EventMapperInterface
@@ -13,19 +15,21 @@ class StripeEventMapper implements EventMapperInterface
         return 'stripe';
     }
 
+    /** @param array<string, mixed> $payload */
     public function extractPaymentId(array $payload): ?string
     {
-        $obj = $payload['data']['object'] ?? null;
-        if (is_array($obj) && isset($obj['metadata']['payment'])) {
-            return (string) $obj['metadata']['payment'];
+        $object = $payload['data']['object'] ?? null;
+        if (is_array($object) && isset($object['metadata']['payment'])) {
+            return (string) $object['metadata']['payment'];
         }
-        if (is_array($obj) && isset($obj['id'])) {
-            return (string) $obj['id'];
+        if (is_array($object) && isset($object['id'])) {
+            return (string) $object['id'];
         }
 
         return null;
     }
 
+    /** @param array<string, mixed> $payload */
     public function mapStatus(array $payload): ?string
     {
         $type = (string) ($payload['type'] ?? '');

@@ -1,99 +1,130 @@
 {
-  "name": "marketing-america-corp/payment",
-  "type": "project",
-  "license": "proprietary",
-  "require": {
-    "php": "^8.4",
-    "ext-json": "*",
-    "ext-openssl": "*",
-    "doctrine/doctrine-bundle": "^2.10",
-    "doctrine/doctrine-migrations-bundle": "^3.6",
-    "doctrine/orm": "^2.16",
-    "nelmio/api-doc-bundle": "^5.1",
-    "symfony/asset": "^7.1 || ^8.0",
-    "symfony/config": "^7.1 || ^8.0",
-    "symfony/console": "^7.1 || ^8.0",
-    "symfony/dependency-injection": "^7.1 || ^8.0",
-    "symfony/form": "^7.1 || ^8.0",
-    "symfony/framework-bundle": "^7.1 || ^8.0",
-    "symfony/http-foundation": "^7.1 || ^8.0",
-    "symfony/intl": "^8.0",
-    "symfony/messenger": "^7.1 || ^8.0",
-    "symfony/monolog-bundle": "^3.10",
-    "symfony/rate-limiter": "^7.1 || ^8.0",
-    "symfony/routing": "^7.1 || ^8.0",
-    "symfony/runtime": "^7.1 || ^8.0",
-    "symfony/security-bundle": "^7.1 || ^8.0",
-    "symfony/serializer": "^7.1 || ^8.0",
-    "symfony/twig-bundle": "^7.1 || ^8.0",
-    "symfony/uid": "^7.1 || ^8.0",
-    "symfony/validator": "^7.1 || ^8.0",
-    "symfony/workflow": "^7.1 || ^8.0",
-    "symfony/yaml": "^7.1 || ^8.0",
-    "twig/twig": "^3.0"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^10.5",
-    "rector/rector": "^1.2",
-    "phpstan/phpstan": "^1.11",
-    "symfony/browser-kit": "^7.1 || ^8.0",
-    "symfony/css-selector": "^7.1 || ^8.0",
-    "doctrine/doctrine-fixtures-bundle": "^3.6",
-    "friendsofphp/php-cs-fixer": "^3.66"
-  },
-  "autoload": {
-    "psr-4": {
-      "App\\": "src/"
-    }
-  },
-  "config": {
-    "platform": {
-      "php": "8.4.0"
+    "name": "marketing-america-corp/payment",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "doctrine/doctrine-bundle": "^2.10",
+        "doctrine/doctrine-migrations-bundle": "^3.6",
+        "doctrine/orm": "^2.16",
+        "nelmio/api-doc-bundle": "^5.1",
+        "symfony/asset": "^7.1 || ^8.0",
+        "symfony/config": "^7.1 || ^8.0",
+        "symfony/console": "^7.1 || ^8.0",
+        "symfony/dependency-injection": "^7.1 || ^8.0",
+        "symfony/form": "^7.1 || ^8.0",
+        "symfony/framework-bundle": "^7.1 || ^8.0",
+        "symfony/http-foundation": "^7.1 || ^8.0",
+        "symfony/intl": "^8.0",
+        "symfony/messenger": "^7.1 || ^8.0",
+        "symfony/monolog-bundle": "^3.10",
+        "symfony/rate-limiter": "^7.1 || ^8.0",
+        "symfony/routing": "^7.1 || ^8.0",
+        "symfony/runtime": "^7.1 || ^8.0",
+        "symfony/security-bundle": "^7.1 || ^8.0",
+        "symfony/serializer": "^7.1 || ^8.0",
+        "symfony/twig-bundle": "^7.1 || ^8.0",
+        "symfony/uid": "^7.1 || ^8.0",
+        "symfony/validator": "^7.1 || ^8.0",
+        "symfony/workflow": "^7.1 || ^8.0",
+        "symfony/yaml": "^7.1 || ^8.0",
+        "twig/twig": "^3.0"
     },
-    "sort-packages": true,
-    "process-timeout": 900,
-    "allow-plugins": {
-      "symfony/runtime": true
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "rector/rector": "^1.2",
+        "phpstan/phpstan": "^1.11",
+        "symfony/browser-kit": "^7.1 || ^8.0",
+        "symfony/css-selector": "^7.1 || ^8.0",
+        "doctrine/doctrine-fixtures-bundle": "^3.6",
+        "friendsofphp/php-cs-fixer": "^3.66"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.4.0"
+        },
+        "sort-packages": true,
+        "process-timeout": 900,
+        "allow-plugins": {
+            "symfony/runtime": true
+        }
+    },
+    "scripts": {
+        "lint": "@php tools/php/php84.php tools/qa/PayingPhpLint.php",
+        "cs:fix": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php",
+        "cs:check": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff",
+        "cs:check-quiet": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run",
+        "stan": "@stan:runtime-target",
+        "stan:conservative": "@php tools/php/php82.php vendor/bin/phpstan analyse --memory-limit=1G",
+        "stan:runtime-target": "@php tools/php/php84.php vendor/bin/phpstan analyse --memory-limit=1G",
+        "test": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist",
+        "test:unit": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
+        "test:functional": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional",
+        "test:e2e": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite e2e",
+        "test:functional:debug": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional --stop-on-error --debug",
+        "test:debug:first-error": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --stop-on-error --debug",
+        "lint:yaml": "@php tools/ci/console-test-env.php lint:yaml config --parse-tags",
+        "lint:container": "@php tools/ci/console-test-env.php lint:container",
+        "docs:openapi:lint": "@php tools/php/php84.php tools/inspection/PaymentOpenApiLint.php",
+        "docs:phpdoc": "@php tools/php/php84.php tools/runtime/phpDocumentor.phar -c phpdoc.dist.xml",
+        "docs:phpdoc:check": "@php tools/ci/phpdoc-check.php",
+        "test:bootstrap:reset": "@php tools/ci/test-bootstrap-reset.php",
+        "test:bootstrap:migrate": "@php tools/php/php84.php bin/console doctrine:migrations:migrate --env=test --no-interaction",
+        "test:bootstrap:fixtures": "@php tools/php/php84.php bin/console doctrine:fixtures:load --env=test --group=payment --no-interaction",
+        "test:bootstrap": [
+            "@test:bootstrap:reset",
+            "@test:bootstrap:migrate",
+            "@test:bootstrap:fixtures"
+        ],
+        "install:preflight": "@php tools/ci/install-preflight.php",
+        "install:proof:checklist": "@php tools/php/php84.php tools/inspection/PaymentRuntimeProofReport.php",
+        "runtime:preflight:sh": "bash tools/runtime/payment_install_preflight.sh",
+        "runtime:preflight:ps1": "pwsh -NoProfile -File tools/runtime/payment_install_preflight.ps1",
+        "fixtures:payment:load": "@php tools/php/php84.php bin/console doctrine:fixtures:load --group=payment --no-interaction",
+        "fixtures:payment:append": "@php tools/php/php84.php bin/console doctrine:fixtures:load --group=payment --append --no-interaction",
+        "smoke:runtime": "@php tools/php/php84.php tools/smoke/payment-runtime-smoke.php",
+        "smoke:fixtures": "@php tools/php/php84.php tools/smoke/payment-fixture-sanity.php",
+        "smoke:container": "@php tools/php/php84.php tools/smoke/payment-container-boot-smoke.php",
+        "smoke:doctrine": "@php tools/php/php84.php tools/smoke/payment-doctrine-mapping-smoke.php",
+        "report:route-inventory": "@php tools/php/php84.php tools/inspection/PaymentRouteInventoryReport.php",
+        "report:runtime-proof": "@php tools/php/php84.php tools/inspection/PaymentRuntimeProofReport.php",
+        "qa:style": [
+            "@lint",
+            "@cs:check"
+        ],
+        "qa:static": [
+            "@stan"
+        ],
+        "qa:test": [
+            "@test"
+        ],
+        "qa:smoke": [
+            "@smoke:runtime",
+            "@smoke:fixtures",
+            "@smoke:container",
+            "@smoke:doctrine"
+        ],
+        "qa:report": [
+            "@report:route-inventory",
+            "@report:runtime-proof"
+        ],
+        "qa:full": [
+            "@qa:style",
+            "@qa:static",
+            "@qa:test"
+        ],
+        "pipeline:local": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1",
+        "pipeline:local:ps1": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1",
+        "pipeline:local:sh": "bash tools/ci/run-payment-local-pipeline.sh",
+        "pipeline:local:full": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1 -IncludeSmokes -IncludeReports",
+        "pipeline:local:strict": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1 -IncludeSmokes -IncludeReports -FailOnErrors",
+        "report:local:latest": "@php tools/ci/report-local-latest.php"
     }
-  },
-  "scripts": {
-    "test": "vendor/bin/phpunit --configuration phpunit.xml.dist",
-    "test:unit": "vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
-    "test:functional": "vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional",
-    "test:e2e": "vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite e2e",
-    "stan": "vendor/bin/phpstan analyse --memory-limit=1G",
-    "cs": "vendor/bin/php-cs-fixer fix --dry-run --diff",
-    "cs:fix": "vendor/bin/php-cs-fixer fix",
-    "rector": "vendor/bin/rector process",
-    "lint:yaml": "php bin/console lint:yaml config",
-    "lint:container": "php bin/console lint:container --env=test",
-    "smoke:payment:sh": "bash tools/smoke/payment_smoke.sh",
-    "smoke:payment:ps1": "pwsh -NoProfile -File tools/smoke/payment_smoke.ps1",
-    "fixtures:payment:load": "php bin/console doctrine:fixtures:load --group=payment --no-interaction",
-    "fixtures:payment:append": "php bin/console doctrine:fixtures:load --group=payment --append --no-interaction",
-    "qa": [
-      "@lint:yaml",
-      "@lint:container",
-      "@stan",
-      "@cs",
-      "@test"
-    ],
-    "docs:phpdoc": "php tools/runtime/phpDocumentor.phar -c phpdoc.dist.xml",
-    "docs:phpdoc:check": "php -r \"if (!file_exists('tools/runtime/phpDocumentor.phar')) { fwrite(STDERR, 'tools/runtime/phpDocumentor.phar missing\n'); exit(1);} echo 'phpDocumentor PHAR present\n';\"",
-    "docs:openapi:lint": "php -r \"if (!file_exists('docs/api/openapi.yaml')) { fwrite(STDERR, 'docs/api/openapi.yaml not found\\n'); exit(1);} echo 'OpenAPI document present: docs/api/openapi.yaml\\n';\"",
-    "test:bootstrap:reset": "php -r \"foreach (['var/payment.test.data.sqlite','var/payment.test.infra.sqlite'] as $f) { if (file_exists($f)) unlink($f); } if (is_dir('var/cache/test')) { $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator('var/cache/test', FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST); foreach ($it as $item) { $item->isDir() ? rmdir($item->getPathname()) : unlink($item->getPathname()); } rmdir('var/cache/test'); } echo 'Test sqlite files and test cache reset'.PHP_EOL;\"",
-    "test:bootstrap:migrate": "php bin/console doctrine:migrations:migrate --env=test --no-interaction",
-    "test:bootstrap:fixtures": "php bin/console doctrine:fixtures:load --env=test --group=payment --no-interaction",
-    "test:bootstrap": [
-      "@test:bootstrap:reset",
-      "@test:bootstrap:migrate",
-      "@test:bootstrap:fixtures"
-    ],
-    "install:preflight": "php -r \"foreach (['composer.json','.env.example','.env.test','phpunit.xml.dist'] as $f) { if (!file_exists($f)) { fwrite(STDERR, $f . \" missing\\n\"); exit(1);} } echo \"Install preflight files present\\n\";\"",
-    "install:proof:checklist": "php -r \"foreach (['composer.lock','tools/runtime/payment_install_preflight.sh','tools/runtime/payment_install_preflight.ps1','docs/architecture/payment-install-preflight-proof.md'] as $f) { echo (file_exists($f) ? \"OK   \" : \"MISS \" ) . $f . PHP_EOL; }\"",
-    "runtime:preflight:sh": "bash tools/runtime/payment_install_preflight.sh",
-    "runtime:preflight:ps1": "pwsh -NoProfile -File tools/runtime/payment_install_preflight.ps1",
-    "test:functional:debug": "vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional --stop-on-error --debug",
-    "test:debug:first-error": "vendor/bin/phpunit --configuration phpunit.xml.dist --stop-on-error --debug"
-  }
 }
