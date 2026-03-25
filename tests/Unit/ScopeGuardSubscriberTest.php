@@ -1,14 +1,17 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Tests\Unit;
+
 use App\Attribute\RequireScope;
 use App\Infrastructure\ScopeGuardSubscriber;
 use App\ServiceInterface\TokenVerifierInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -42,8 +45,12 @@ final class ScopeGuardSubscriberTest extends TestCase
 
         $subscriber->onController($event);
 
-        self::assertNotNull($event->getResponse());
-        self::assertSame(401, $event->getResponse()?->getStatusCode());
+        $guardedController = $event->getController();
+        self::assertIsCallable($guardedController);
+
+        $response = $guardedController();
+        self::assertInstanceOf(JsonResponse::class, $response);
+        self::assertSame(401, $response->getStatusCode());
     }
 }
 

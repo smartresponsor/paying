@@ -1,10 +1,13 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Controller;
+
 use App\Attribute\RequireScope;
+use App\ControllerInterface\DlqControllerInterface;
 use App\ServiceInterface\DlqServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

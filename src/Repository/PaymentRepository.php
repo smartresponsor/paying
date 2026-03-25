@@ -1,11 +1,13 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Repository;
 
 use App\Entity\Payment;
+use App\RepositoryInterface\PaymentRepositoryInterface;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,7 +26,16 @@ final class PaymentRepository implements PaymentRepositoryInterface
 
     public function find(string $id): ?Payment
     {
-        return $this->em->getRepository(Payment::class)->find($id);
+        $payment = $this->em->find(Payment::class, $id);
+        if (!$payment instanceof Payment) {
+            return null;
+        }
+
+        if ($this->em->contains($payment)) {
+            $this->em->refresh($payment);
+        }
+
+        return $payment;
     }
 
     public function listRecent(int $limit = 10): array

@@ -1,9 +1,11 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Infrastructure;
+
 use App\Attribute\RequireScope;
 use App\ServiceInterface\TokenVerifierInterface;
 use Psr\Log\LoggerInterface;
@@ -17,8 +19,7 @@ class ScopeGuardSubscriber implements EventSubscriberInterface
     public function __construct(
         private readonly TokenVerifierInterface $verifier,
         private readonly LoggerInterface $logger,
-    )
-    {
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -58,7 +59,7 @@ class ScopeGuardSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $auth = (string) $request->headers->get('Authorization', '');
         if (!str_starts_with($auth, 'Bearer ')) {
-            $event->setResponse(new JsonResponse(['error' => 'unauthorized'], 401));
+            $event->setController(static fn (): JsonResponse => new JsonResponse(['error' => 'unauthorized'], 401));
 
             return;
         }
@@ -67,14 +68,14 @@ class ScopeGuardSubscriber implements EventSubscriberInterface
             $claims = $this->verifier->verify($token);
             foreach ($reqs as $r) {
                 if (!$this->verifier->hasScopes($claims, $r->scopes, $r->any)) {
-                    $event->setResponse(new JsonResponse(['error' => 'forbidden'], 403));
+                    $event->setController(static fn (): JsonResponse => new JsonResponse(['error' => 'forbidden'], 403));
 
                     return;
                 }
             }
         } catch (\Throwable $e) {
             $this->logger->warning('Scope guard rejected bearer token due to verification failure.', ['exception' => $e]);
-            $event->setResponse(new JsonResponse(['error' => 'unauthorized'], 401));
+            $event->setController(static fn (): JsonResponse => new JsonResponse(['error' => 'unauthorized'], 401));
         }
     }
 }

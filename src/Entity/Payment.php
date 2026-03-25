@@ -1,16 +1,16 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Repository\PaymentRepository;
 use App\ValueObject\PaymentStatus;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Ulid;
 
-#[ORM\Entity(repositoryClass: PaymentRepository::class)]
+#[ORM\Entity]
 #[ORM\Table(name: 'payment')]
 #[ORM\HasLifecycleCallbacks]
 class Payment

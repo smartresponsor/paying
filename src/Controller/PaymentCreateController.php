@@ -1,11 +1,14 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Controller;
+
 use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentCreateRequestDto;
+use App\ControllerInterface\PaymentCreateControllerInterface;
 use App\ServiceInterface\PaymentServiceInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;

@@ -1,9 +1,11 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Webhook;
+
 use App\Controller\Webhook\PayPalWebhookController;
 use App\Controller\Webhook\StripeWebhookController;
 use App\Entity\Payment;
@@ -12,7 +14,6 @@ use App\Entity\PaymentWebhookLog;
 use App\Message\Event\PaymentTransportMessage;
 use App\Message\Handler\PaymentEventConsumer;
 use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\ServiceInterface\Order\OrderPaymentSyncInterface;
 use App\Service\Outbox\PaymentOutboxProcessor;
 use App\Service\Reconciliation\PaymentReconciliationService;
 use App\Service\Webhook\JsonSchemaValidator;
@@ -20,6 +21,7 @@ use App\Service\Webhook\PayPalEventNormalizer;
 use App\Service\Webhook\PayPalSignatureValidator;
 use App\Service\Webhook\StripeEventNormalizer;
 use App\Service\Webhook\StripeSignatureValidator;
+use App\ServiceInterface\Order\OrderPaymentSyncInterface;
 use App\ServiceInterface\WebhookVerifierInterface;
 use App\ValueObject\PaymentStatus;
 use Doctrine\ORM\EntityManagerInterface;
@@ -44,10 +46,10 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
         $transport = $this->createTransport();
 
         $controller = new StripeWebhookController(
-            $em,
             new StripeSignatureValidator($this->createAlwaysValidVerifier()),
             new StripeEventNormalizer(),
             new JsonSchemaValidator(),
+            new \App\Service\WebhookIngestService($em),
             new NullLogger(),
         );
 
@@ -114,10 +116,10 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
         $transport = $this->createTransport();
 
         $controller = new PayPalWebhookController(
-            $em,
             new PayPalSignatureValidator($this->createAlwaysValidVerifier()),
             new PayPalEventNormalizer(),
             new JsonSchemaValidator(),
+            new \App\Service\WebhookIngestService($em),
             new NullLogger(),
         );
 

@@ -15,9 +15,9 @@ The current slice contains integrated proof that the owned webhook contour can:
 
 ## Proof files
 
-- `tests/Payment/Functional/Webhook/PaymentWebhookOutboxConsumerIntegratedProofTest.php`
-- `tests/Payment/E2E/PaymentWebhookToOrderFlowTest.php`
-- `tests/Payment/E2E/Kernel/StripeWebhookKernelFlowTest.php`
+- `tests/Functional/Webhook/PaymentWebhookOutboxConsumerIntegratedProofTest.php`
+- `tests/E2E/PaymentWebhookToOrderFlowTest.php`
+- `tests/E2E/Kernel/StripeWebhookKernelFlowTest.php`
 
 ## Provider-specific proof currently covered
 

@@ -37,7 +37,7 @@ Observed in:
 - `src/Message/Handler/Payment/*`
 - `src/Api/Processor/*`
 - `src/Service/Payment/Outbox/PaymentOutboxProcessor.php`
-- `tests/Payment/E2E/PaymentWebhookToOrderFlowTest.php`
+- `tests/E2E/PaymentWebhookToOrderFlowTest.php`
 
 **Target action:** add `symfony/messenger`.
 
@@ -77,8 +77,8 @@ Observed imports:
 
 Observed in:
 
-- `tests/Payment/Functional/Api/PaymentCreateEndpointTest.php`
-- `tests/Payment/E2E/Kernel/StripeWebhookKernelFlowTest.php`
+- `tests/Functional/Api/PaymentCreateEndpointTest.php`
+- `tests/E2E/Kernel/StripeWebhookKernelFlowTest.php`
 
 **Target action:** add the missing framework testing stack as needed, commonly `symfony/browser-kit` and `symfony/css-selector` for functional tests.
 

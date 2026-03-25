@@ -21,13 +21,13 @@ The current smoke coverage now includes:
 
 ### Registration proof
 
-`tests/Payment/Functional/Cli/PaymentCommandRegistrationTest.php` proves that the owned Payment commands are registered in the Symfony console application.
+`tests/Functional/Cli/PaymentCommandRegistrationTest.php` proves that the owned Payment commands are registered in the Symfony console application.
 
 ### Execution proof
 
-`tests/Payment/Functional/Cli/PaymentCommandExecutionSmokeTest.php` covers command execution for projection, outbox, and reconciliation flows.
+`tests/Functional/Cli/PaymentCommandExecutionSmokeTest.php` covers command execution for projection, outbox, and reconciliation flows.
 
-`tests/Payment/Functional/Cli/PaymentOperationalCommandExecutionSmokeTest.php` covers command execution for:
+`tests/Functional/Cli/PaymentOperationalCommandExecutionSmokeTest.php` covers command execution for:
 
 - DLQ replay
 - idempotency purge

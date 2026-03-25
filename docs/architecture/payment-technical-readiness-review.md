@@ -23,7 +23,7 @@ The current slice already has an app-owned Symfony contour:
 
 The current slice contains:
 
-- 22 PHPUnit test files under `tests/Payment`
+- 22 PHPUnit test files under `tests` plus one stale legacy duplicate under `tests/Payment` before cleanup
 - 8 owned operational commands under `src/Infrastructure/Payment/Console`
 - controller-owned API endpoints for create, read, start, finalize and refund
 - controller-owned internal UI flows for create, start, finalize and refund

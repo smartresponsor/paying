@@ -1,3 +1,6 @@
+parameters:
+    payment.idem_ttl_default: 86400
+
 services:
     _defaults:
         autowire: true
@@ -22,9 +25,16 @@ services:
     App\InfrastructureInterface\PaymentProjectionRepositoryInterface: '@App\Infrastructure\PaymentProjectionRepository'
     App\ServiceInterface\ProviderRouterInterface: '@App\Service\ProviderRouter'
     App\ServiceInterface\ProviderGuardInterface: '@App\Service\ProviderGuard'
-    App\ServiceInterface\PaymentServiceInterface: "@App\Service\PaymentService"
+    App\ServiceInterface\PaymentServiceInterface: '@App\Service\PaymentService'
     App\ServiceInterface\IdempotencyStoreInterface:
         factory: ['@App\Service\IdempotencyStoreFactory', 'create']
+
+
+    App\Controller\:
+        resource: '../src/Controller/'
+        public: true
+        tags: ['controller.service_arguments']
+
 
     App\Service\ProviderRouter:
         arguments:
@@ -41,7 +51,7 @@ services:
 
     App\Service\IdempotencyService:
         arguments:
-            $ttlSec: '%env(int:default:86400:IDEM_TTL)%'
+            $ttlSec: '%env(int:default:payment.idem_ttl_default:IDEM_TTL)%'
 
     App\Infrastructure\PaymentProjectionRepository:
         arguments:
@@ -66,19 +76,23 @@ services:
     App\InfrastructureInterface\OutboxPublisherInterface: '@App\Infrastructure\OutboxPublisher'
 
     App\Controller\WebhookController:
+        public: true
+        tags: ['controller.service_arguments']
         arguments:
             $mappers: !tagged_iterator payment.event_mapper
 
     payment_audit.logger:
-        class: Psr\Log\LoggerInterface
-        factory: ['@monolog.logger', 'get']
-        arguments: ['payment_audit']
+        alias: monolog.logger.payment_audit
 
     App\Controller\Webhook\StripeWebhookController:
+        public: true
+        tags: ['controller.service_arguments']
         arguments:
             $paymentAuditLogger: '@payment_audit.logger'
 
     App\Controller\Webhook\PayPalWebhookController:
+        public: true
+        tags: ['controller.service_arguments']
         arguments:
             $paymentAuditLogger: '@payment_audit.logger'
 

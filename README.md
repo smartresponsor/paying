@@ -10,3 +10,11 @@ php bin/console doctrine:migrations:migrate --no-interaction
 symfony server:start -d
 curl -X POST http://localhost:8000/payment/start -H 'Content-Type: application/json' -d '{"amount":"1.00","currency":"USD","provider":"internal"}'
 ```
+
+## Fixtures and smoke bootstrap
+```bash
+composer fixtures:payment:load
+composer fixtures:payment:append
+```
+
+See `docs/architecture/payment-fixture-bootstrap-proof.md` for the fixture/bootstrap contour used by the functional suite.

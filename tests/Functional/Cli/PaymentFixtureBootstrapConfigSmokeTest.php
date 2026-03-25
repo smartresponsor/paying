@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -11,18 +12,18 @@ final class PaymentFixtureBootstrapConfigSmokeTest extends TestCase
 {
     public function testComposerOwnsPaymentFixtureEntryPoints(): void
     {
-        $composer = json_decode((string) file_get_contents(dirname(__DIR__, 4).'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
+        $composer = json_decode((string) file_get_contents(dirname(__DIR__, 3).'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
         $scripts = $composer['scripts'] ?? [];
 
         self::assertArrayHasKey('fixtures:payment:load', $scripts);
         self::assertArrayHasKey('fixtures:payment:append', $scripts);
-        self::assertSame('bin/console doctrine:fixtures:load --group=payment --no-interaction', $scripts['fixtures:payment:load']);
-        self::assertSame('bin/console doctrine:fixtures:load --group=payment --append --no-interaction', $scripts['fixtures:payment:append']);
+        self::assertSame('php bin/console doctrine:fixtures:load --group=payment --no-interaction', $scripts['fixtures:payment:load']);
+        self::assertSame('php bin/console doctrine:fixtures:load --group=payment --append --no-interaction', $scripts['fixtures:payment:append']);
     }
 
     public function testPhpUnitBootstrapAndReadmeMentionFixtureContour(): void
     {
-        $root = dirname(__DIR__, 4);
+        $root = dirname(__DIR__, 3);
         $phpUnitXml = (string) file_get_contents($root.'/phpunit.xml.dist');
         $readme = (string) file_get_contents($root.'/README.md');
 

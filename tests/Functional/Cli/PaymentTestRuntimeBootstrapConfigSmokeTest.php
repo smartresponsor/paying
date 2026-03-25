@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -11,7 +12,7 @@ final class PaymentTestRuntimeBootstrapConfigSmokeTest extends TestCase
 {
     public function testOwnedTestBootstrapScriptsAndConfigsArePresent(): void
     {
-        $composer = json_decode((string) file_get_contents(dirname(__DIR__, 4).'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
+        $composer = json_decode((string) file_get_contents(dirname(__DIR__, 3).'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
         $scripts = $composer['scripts'] ?? [];
 
         self::assertArrayHasKey('test:bootstrap', $scripts);
@@ -19,18 +20,18 @@ final class PaymentTestRuntimeBootstrapConfigSmokeTest extends TestCase
         self::assertArrayHasKey('test:bootstrap:migrate', $scripts);
         self::assertArrayHasKey('test:bootstrap:fixtures', $scripts);
 
-        self::assertFileExists(dirname(__DIR__, 4).'/.env.test');
-        self::assertFileExists(dirname(__DIR__, 4).'/config/packages/test/framework.yaml');
-        self::assertFileExists(dirname(__DIR__, 4).'/config/packages/test/doctrine.yaml');
-        self::assertFileExists(dirname(__DIR__, 4).'/config/packages/test/messenger.yaml');
-        self::assertFileExists(dirname(__DIR__, 4).'/tools/runtime/payment_test_bootstrap.sh');
-        self::assertFileExists(dirname(__DIR__, 4).'/tools/runtime/payment_test_bootstrap.ps1');
+        self::assertFileExists(dirname(__DIR__, 3).'/.env.test');
+        self::assertFileExists(dirname(__DIR__, 3).'/config/packages/test/framework.yaml');
+        self::assertFileExists(dirname(__DIR__, 3).'/config/packages/test/doctrine.yaml');
+        self::assertFileExists(dirname(__DIR__, 3).'/config/packages/test/messenger.yaml');
+        self::assertFileExists(dirname(__DIR__, 3).'/tools/runtime/payment_test_bootstrap.sh');
+        self::assertFileExists(dirname(__DIR__, 3).'/tools/runtime/payment_test_bootstrap.ps1');
     }
 
     public function testTestDoctrineAndMessengerOverridesUseDeterministicLocalRuntime(): void
     {
-        $doctrine = (string) file_get_contents(dirname(__DIR__, 4).'/config/packages/test/doctrine.yaml');
-        $messenger = (string) file_get_contents(dirname(__DIR__, 4).'/config/packages/test/messenger.yaml');
+        $doctrine = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/test/doctrine.yaml');
+        $messenger = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/test/messenger.yaml');
 
         self::assertStringContainsString('payment.test.data.sqlite', $doctrine);
         self::assertStringContainsString('payment.test.infra.sqlite', $doctrine);

@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -8,7 +9,6 @@ namespace App\Form;
 use App\Controller\Dto\PaymentConsoleRefundRequestDto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,11 +19,8 @@ final class PaymentConsoleRefundType extends AbstractType
     {
         $builder
             ->add('paymentId', TextType::class, ['label' => 'Payment ID'])
-            ->add('amount', MoneyType::class, [
+            ->add('amount', TextType::class, [
                 'label' => 'Refund amount',
-                'currency' => false,
-                'scale' => 2,
-                'divisor' => 1,
             ])
             ->add('provider', ChoiceType::class, [
                 'label' => 'Provider',

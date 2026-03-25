@@ -1,10 +1,13 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Controller;
+
 use App\Attribute\RequireScope;
+use App\ControllerInterface\MetricControllerInterface;
 use App\Service\Metric;
 use App\ServiceInterface\ProjectionLagServiceInterface;
 use Psr\Log\LoggerInterface;

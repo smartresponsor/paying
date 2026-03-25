@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -11,7 +12,7 @@ final class PaymentInstallRuntimePreflightConfigSmokeTest extends TestCase
 {
     public function testInstallPreflightScriptsAndDocsArePresent(): void
     {
-        $root = dirname(__DIR__, 4);
+        $root = dirname(__DIR__, 3);
         $composer = json_decode((string) file_get_contents($root.'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
         $scripts = $composer['scripts'] ?? [];
 
@@ -27,7 +28,7 @@ final class PaymentInstallRuntimePreflightConfigSmokeTest extends TestCase
 
     public function testInstallPreflightScriptsReferenceOwnedRuntimeFiles(): void
     {
-        $root = dirname(__DIR__, 4);
+        $root = dirname(__DIR__, 3);
         $shell = (string) file_get_contents($root.'/tools/runtime/payment_install_preflight.sh');
         $powershell = (string) file_get_contents($root.'/tools/runtime/payment_install_preflight.ps1');
 

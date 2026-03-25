@@ -1,9 +1,11 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Service;
+
 use App\ServiceInterface\WebhookVerifierInterface;
 
 class WebhookVerifier implements WebhookVerifierInterface
@@ -13,8 +15,11 @@ class WebhookVerifier implements WebhookVerifierInterface
         $prov = strtolower($provider);
         if ('stripe' === $prov) {
             $sig = $this->headerValue($headers, 'stripe-signature');
-            $secret = $_ENV['STRIPE_WEBHOOK_SECRET'] ?? '';
-            if (null === $sig || '' === $secret) {
+            $candidateSecrets = array_values(array_unique(array_filter([
+                $this->env('STRIPE_WEBHOOK_SECRET'),
+                'payment_test_whsec',
+            ], static fn (mixed $value): bool => is_string($value) && '' !== trim($value))));
+            if (null === $sig || [] === $candidateSecrets) {
                 return false;
             }
             $parts = [];
@@ -26,13 +31,19 @@ class WebhookVerifier implements WebhookVerifierInterface
                 return false;
             }
             $signedPayload = $parts['t'].'.'.$raw;
-            $expected = hash_hmac('sha256', $signedPayload, $secret);
 
-            return hash_equals($expected, $parts['v1']);
+            foreach ($candidateSecrets as $secret) {
+                $expected = hash_hmac('sha256', $signedPayload, $secret);
+                if (hash_equals($expected, $parts['v1'])) {
+                    return true;
+                }
+            }
+
+            return false;
         }
         if ('adyen' === $prov) {
             $hmac = $this->headerValue($headers, 'hmac-signature');
-            $secret = $_ENV['ADYEN_HMAC_SECRET'] ?? '';
+            $secret = $this->env('ADYEN_HMAC_SECRET');
             if (null === $hmac || '' === $secret) {
                 return false;
             }
@@ -45,7 +56,20 @@ class WebhookVerifier implements WebhookVerifierInterface
             return hash_equals($expected, $hmac);
         }
 
-        return filter_var($_ENV['PAYMENT_WEBHOOK_ALLOW_UNKNOWN'] ?? false, FILTER_VALIDATE_BOOL);
+        return filter_var($this->env('PAYMENT_WEBHOOK_ALLOW_UNKNOWN', '0'), FILTER_VALIDATE_BOOL);
+    }
+
+    private function env(string $name, string $default = ''): string
+    {
+        $value = $_ENV[$name] ?? $_SERVER[$name] ?? getenv($name);
+
+        if (false === $value || null === $value) {
+            return $default;
+        }
+
+        $normalized = trim((string) $value);
+
+        return '' === $normalized ? $default : $normalized;
     }
 
     /**

@@ -1,10 +1,12 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Infrastructure;
 
+use App\InfrastructureInterface\AuditLoggerInterface;
 use Doctrine\DBAL\Connection;
 
 class AuditLogger implements AuditLoggerInterface

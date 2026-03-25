@@ -89,7 +89,7 @@ The repository still contains API Platform resources and processors under `src/A
 
 ### 3. Test contour is present, but not yet fully operationalised
 
-The current slice contains real tests under `tests/Payment/*`, but the repository still lacks a canonical `phpunit.xml.dist` and a fully explicit test bootstrap / suite layout.
+The current slice contains real tests under `tests/*`, but the repository still lacks a canonical `phpunit.xml.dist` and a fully explicit test bootstrap / suite layout.
 
 ### 4. Quality gates exist as files, but not as a complete pipeline
 

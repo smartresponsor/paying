@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -37,12 +38,13 @@ final class PaymentConsolePageTest extends WebTestCase
         $crawler = $client->request('GET', '/payment/console');
 
         self::assertSame(200, $client->getResponse()->getStatusCode());
-        self::assertStringContainsString('Payment Console', $client->getResponse()->getContent());
+        $content = (string) $client->getResponse()->getContent();
+        self::assertStringContainsString('Payment Console', $content);
         self::assertGreaterThanOrEqual(4, $crawler->filter('form')->count());
-        self::assertSelectorTextContains('h2', 'Create payment');
-        self::assertSelectorTextContains('h2', 'Start payment');
-        self::assertSelectorTextContains('h2', 'Finalize payment');
-        self::assertSelectorTextContains('h2', 'Refund payment');
-        self::assertSelectorTextContains('h2', 'Recent payments');
+        self::assertStringContainsString('Create payment', $content);
+        self::assertStringContainsString('Start payment', $content);
+        self::assertStringContainsString('Finalize payment', $content);
+        self::assertStringContainsString('Refund payment', $content);
+        self::assertStringContainsString('Recent payments', $content);
     }
 }
