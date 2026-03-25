@@ -28,8 +28,8 @@ final class PaymentFixtureBootstrapConfigSmokeTest extends TestCase
         $readme = (string) file_get_contents($root.'/README.md');
 
         self::assertStringContainsString('bootstrap="tests/bootstrap.php"', $phpUnitXml);
-        self::assertStringContainsString('fixtures:payment:load', $readme);
-        self::assertStringContainsString('fixtures:payment:append', $readme);
-        self::assertStringContainsString('docs/architecture/payment-fixture-bootstrap-proof.md', $readme);
+        self::assertStringContainsString('docs/OPERATIONS.md', $readme);
+        self::assertStringContainsString('payment:outbox:process', $readme);
+        self::assertStringContainsString('/payment/console', $readme);
     }
 }

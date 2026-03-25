@@ -45,6 +45,6 @@ final class PaymentConsolePageTest extends WebTestCase
         self::assertStringContainsString('Start payment', $content);
         self::assertStringContainsString('Finalize payment', $content);
         self::assertStringContainsString('Refund payment', $content);
-        self::assertStringContainsString('Recent payments', $content);
+        self::assertStringContainsString('Payments', $content);
     }
 }

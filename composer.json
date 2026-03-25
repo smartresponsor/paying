@@ -1,5 +1,5 @@
 {
-    "name": "marketing-america-corp/payment",
+    "name": "paying/payment",
     "type": "project",
     "license": "proprietary",
     "require": {
@@ -62,8 +62,8 @@
         "cs:check": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff",
         "cs:check-quiet": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run",
         "stan": "@stan:runtime-target",
-        "stan:conservative": "@php tools/php/php82.php vendor/bin/phpstan analyse --memory-limit=1G",
-        "stan:runtime-target": "@php tools/php/php84.php vendor/bin/phpstan analyse --memory-limit=1G",
+        "stan:conservative": "@php tools/php/php82.php vendor/bin/phpstan analyse --memory-limit=1G --debug --no-progress",
+        "stan:runtime-target": "@php tools/php/php84.php vendor/bin/phpstan analyse --memory-limit=1G --debug --no-progress",
         "test": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist",
         "test:unit": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
         "test:functional": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional",

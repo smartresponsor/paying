@@ -57,13 +57,28 @@ foreach ($step in $steps) {
     Write-Host ('[RUN ] ' + $step.Name + ' -> ' + $step.Command)
     $stepStart = Get-Date
     $exitCode = 0
+    $previousErrorActionPreference = $ErrorActionPreference
+    $previousNativePreference = $null
+    $restoreNativePreference = $false
     try {
+        $ErrorActionPreference = 'Continue'
+        if (Get-Variable -Name PSNativeCommandUseErrorActionPreference -ErrorAction SilentlyContinue) {
+            $previousNativePreference = $PSNativeCommandUseErrorActionPreference
+            $restoreNativePreference = $true
+            $PSNativeCommandUseErrorActionPreference = $false
+        }
+
         cmd.exe /d /c $step.Command 2>&1 | Tee-Object -FilePath $logFile
         $exitCode = $LASTEXITCODE
         if ($null -eq $exitCode) { $exitCode = 0 }
     } catch {
         $_ | Out-String | Tee-Object -FilePath $logFile -Append | Out-Null
         $exitCode = 1
+    } finally {
+        $ErrorActionPreference = $previousErrorActionPreference
+        if ($restoreNativePreference) {
+            $PSNativeCommandUseErrorActionPreference = $previousNativePreference
+        }
     }
     $durationMs = [int]((Get-Date) - $stepStart).TotalMilliseconds
     $status = if ($exitCode -eq 0) { 'passed' } else { 'failed' }

@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -66,7 +67,7 @@ final class PaymentConsoleReadModelTest extends TestCase
             {
             }
 
-            public function findBy(array $criteria, array $orderBy = null, int $limit = null): array
+            public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null): array
             {
                 return array_slice($this->logs, 0, $limit ?? count($this->logs));
             }

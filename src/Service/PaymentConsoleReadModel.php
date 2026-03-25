@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -45,6 +46,7 @@ final class PaymentConsoleReadModel implements PaymentConsoleReadModelInterface
         ];
     }
 
+    /** @param array{id: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string} $payment */
     private function matchStatus(array $payment, string $status): bool
     {
         if ('all' === $status) {
@@ -54,6 +56,7 @@ final class PaymentConsoleReadModel implements PaymentConsoleReadModelInterface
         return $payment['status'] === $status;
     }
 
+    /** @param array{id: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string} $payment */
     private function matchQuery(array $payment, string $query): bool
     {
         if ('' === $query) {
@@ -70,7 +73,11 @@ final class PaymentConsoleReadModel implements PaymentConsoleReadModelInterface
         return str_contains($candidate, strtolower($query));
     }
 
-    /** @param list<array<string, mixed>> $filteredPayments */
+    /**
+     * @param list<array{id: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string}> $filteredPayments
+     *
+     * @return array{id: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string}|null
+     */
     private function resolveSelectedPayment(array $filteredPayments, string $selectedPaymentId): ?array
     {
         $id = trim($selectedPaymentId);

@@ -48,10 +48,12 @@ final class PaymentConsoleSubmitFlowTest extends WebTestCase
         ]);
         $client->submit($createForm);
 
-        self::assertResponseRedirects('/payment/console');
+        self::assertConsoleRedirectWithSelectedPayment();
         $client->followRedirect();
         self::assertResponseIsSuccessful();
-        self::assertStringContainsString('Created payment', (string) $client->getResponse()->getContent());
+        $content = (string) $client->getResponse()->getContent();
+        self::assertStringContainsString('alert alert-success', $content);
+        self::assertMatchesRegularExpression('/Payment [0-9A-HJKMNP-TV-Z]{26} created with status new\./', $content);
 
         $crawler = $client->request('GET', '/payment/console');
         $startForm = $crawler->selectButton('Start')->form([
@@ -61,10 +63,12 @@ final class PaymentConsoleSubmitFlowTest extends WebTestCase
         ]);
         $client->submit($startForm);
 
-        self::assertResponseRedirects('/payment/console');
+        self::assertConsoleRedirectWithSelectedPayment();
         $client->followRedirect();
         self::assertResponseIsSuccessful();
-        self::assertStringContainsString('Started payment', (string) $client->getResponse()->getContent());
+        $content = (string) $client->getResponse()->getContent();
+        self::assertStringContainsString('alert alert-success', $content);
+        self::assertMatchesRegularExpression('/Payment [0-9A-HJKMNP-TV-Z]{26} started via internal\./', $content);
     }
 
     public function testConsoleFinalizeAndRefundFormsMutateExistingFixtureBackedPayment(): void
@@ -87,10 +91,12 @@ final class PaymentConsoleSubmitFlowTest extends WebTestCase
         ]);
         $client->submit($finalizeForm);
 
-        self::assertResponseRedirects('/payment/console');
+        self::assertConsoleRedirectWithSelectedPayment();
         $client->followRedirect();
         self::assertResponseIsSuccessful();
-        self::assertStringContainsString('Finalized payment', (string) $client->getResponse()->getContent());
+        $content = (string) $client->getResponse()->getContent();
+        self::assertStringContainsString('alert alert-success', $content);
+        self::assertStringContainsString(sprintf('Payment %s finalized with status completed.', (string) $payment->id()), $content);
 
         $refreshed = $repo->find((string) $payment->id());
         self::assertNotNull($refreshed);
@@ -104,13 +110,23 @@ final class PaymentConsoleSubmitFlowTest extends WebTestCase
         ]);
         $client->submit($refundForm);
 
-        self::assertResponseRedirects('/payment/console');
+        self::assertConsoleRedirectWithSelectedPayment();
         $client->followRedirect();
         self::assertResponseIsSuccessful();
-        self::assertStringContainsString('Refunded payment', (string) $client->getResponse()->getContent());
+        $content = (string) $client->getResponse()->getContent();
+        self::assertStringContainsString('alert alert-success', $content);
+        self::assertStringContainsString(sprintf('Payment %s refunded with status refunded.', (string) $payment->id()), $content);
 
         $refreshed = $repo->find((string) $payment->id());
         self::assertNotNull($refreshed);
         self::assertSame('refunded', $refreshed->status()->value);
+    }
+
+    private static function assertConsoleRedirectWithSelectedPayment(): void
+    {
+        self::assertResponseStatusCodeSame(302);
+        $location = static::getClient()->getResponse()->headers->get('Location');
+        self::assertNotNull($location);
+        self::assertMatchesRegularExpression('#^/payment/console\?payment=[0-9A-HJKMNP-TV-Z]{26}$#', $location);
     }
 }
