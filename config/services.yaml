@@ -65,6 +65,7 @@ services:
     App\ServiceInterface\DlqServiceInterface: '@App\Service\DlqService'
     App\ServiceInterface\ProjectionLagServiceInterface: '@App\Service\ProjectionLagService'
     App\ServiceInterface\PaymentStartServiceInterface: '@App\Service\PaymentStartService'
+    App\ServiceInterface\PaymentConsoleReadModelInterface: '@App\Service\PaymentConsoleReadModel'
     App\ServiceInterface\WebhookIngestServiceInterface: '@App\Service\WebhookIngestService'
 
     App\ServiceInterface\WebhookVerifierInterface: '@App\Service\WebhookVerifier'

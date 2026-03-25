@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -17,6 +16,7 @@ use App\Form\PaymentCreateType;
 use App\Form\PaymentStartType;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\Service\PaymentService;
+use App\ServiceInterface\PaymentConsoleReadModelInterface;
 use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\RefundServiceInterface;
@@ -35,22 +35,38 @@ final class PaymentConsoleController extends AbstractController
         private readonly ProviderGuardInterface $guard,
         private readonly RefundServiceInterface $refundService,
         private readonly PaymentRepositoryInterface $repo,
+        private readonly PaymentConsoleReadModelInterface $readModel,
     ) {
     }
 
     #[RequireScope(['payment:read'])]
     public function console(Request $request): Response
     {
+        $selectedPaymentId = trim((string) $request->query->get('payment', ''));
+        $consoleView = $this->readModel->build(
+            (string) $request->query->get('q', ''),
+            (string) $request->query->get('status', 'all'),
+            $selectedPaymentId,
+        );
+
         $createForm = $this->createForm(PaymentCreateType::class, new PaymentCreateRequestDto(), [
             'action' => $this->generateUrl('payment_console_create', [], UrlGeneratorInterface::ABSOLUTE_PATH),
         ]);
         $startForm = $this->createForm(PaymentStartType::class, new PaymentStartRequestDto(), [
             'action' => $this->generateUrl('payment_console_start', [], UrlGeneratorInterface::ABSOLUTE_PATH),
         ]);
-        $finalizeForm = $this->createForm(PaymentConsoleFinalizeType::class, new PaymentConsoleFinalizeRequestDto(), [
+
+        $finalizeDto = new PaymentConsoleFinalizeRequestDto();
+        $refundDto = new PaymentConsoleRefundRequestDto();
+        if (null !== $consoleView['selectedPayment']) {
+            $finalizeDto->paymentId = (string) $consoleView['selectedPayment']['id'];
+            $refundDto->paymentId = (string) $consoleView['selectedPayment']['id'];
+        }
+
+        $finalizeForm = $this->createForm(PaymentConsoleFinalizeType::class, $finalizeDto, [
             'action' => $this->generateUrl('payment_console_finalize', [], UrlGeneratorInterface::ABSOLUTE_PATH),
         ]);
-        $refundForm = $this->createForm(PaymentConsoleRefundType::class, new PaymentConsoleRefundRequestDto(), [
+        $refundForm = $this->createForm(PaymentConsoleRefundType::class, $refundDto, [
             'action' => $this->generateUrl('payment_console_refund', [], UrlGeneratorInterface::ABSOLUTE_PATH),
         ]);
 
@@ -59,7 +75,10 @@ final class PaymentConsoleController extends AbstractController
             'start_form' => $startForm->createView(),
             'finalize_form' => $finalizeForm->createView(),
             'refund_form' => $refundForm->createView(),
-            'recent_payments' => $this->repo->listRecent(12),
+            'payments' => $consoleView['payments'],
+            'selected_payment' => $consoleView['selectedPayment'],
+            'webhook_events' => $consoleView['events'],
+            'filters' => $consoleView['filters'],
         ]);
     }
 
@@ -71,15 +90,15 @@ final class PaymentConsoleController extends AbstractController
         $form->handleRequest($request);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
-            $this->addFlash('danger', 'Payment create form is invalid.');
+            $this->addFlash('danger', 'Create payment form is invalid.');
 
             return $this->redirectToRoute('payment_console');
         }
 
         $payment = $this->paymentService->create($dto->orderId, $dto->amountMinor, $dto->currency);
-        $this->addFlash('success', sprintf('Created payment %s with status %s.', (string) $payment->id(), $payment->status()->value));
+        $this->addFlash('success', sprintf('Payment %s created with status %s.', (string) $payment->id(), $payment->status()->value));
 
-        return $this->redirectToRoute('payment_console');
+        return $this->redirectToRoute('payment_console', ['payment' => (string) $payment->id()]);
     }
 
     #[RequireScope(['payment:write'])]
@@ -90,7 +109,7 @@ final class PaymentConsoleController extends AbstractController
         $form->handleRequest($request);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
-            $this->addFlash('danger', 'Payment start form is invalid.');
+            $this->addFlash('danger', 'Start payment form is invalid.');
 
             return $this->redirectToRoute('payment_console');
         }
@@ -98,9 +117,9 @@ final class PaymentConsoleController extends AbstractController
         $started = $this->paymentStartService->start($dto->provider, $dto->amount, $dto->currency, '', 'payment-console');
         $payment = $started['payment'];
 
-        $this->addFlash('success', sprintf('Started payment %s via %s.', (string) $payment->id(), $dto->provider));
+        $this->addFlash('success', sprintf('Payment %s started via %s.', (string) $payment->id(), $dto->provider));
 
-        return $this->redirectToRoute('payment_console');
+        return $this->redirectToRoute('payment_console', ['payment' => (string) $payment->id()]);
     }
 
     #[RequireScope(['payment:write'])]
@@ -111,7 +130,7 @@ final class PaymentConsoleController extends AbstractController
         $form->handleRequest($request);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
-            $this->addFlash('danger', 'Payment finalize form is invalid.');
+            $this->addFlash('danger', 'Finalize payment form is invalid.');
 
             return $this->redirectToRoute('payment_console');
         }
@@ -133,9 +152,9 @@ final class PaymentConsoleController extends AbstractController
         $payment->syncFrom($resolved);
         $this->repo->save($payment);
 
-        $this->addFlash('success', sprintf('Finalized payment %s with status %s.', $dto->paymentId, $payment->status()->value));
+        $this->addFlash('success', sprintf('Payment %s finalized with status %s.', $dto->paymentId, $payment->status()->value));
 
-        return $this->redirectToRoute('payment_console');
+        return $this->redirectToRoute('payment_console', ['payment' => $dto->paymentId]);
     }
 
     #[RequireScope(['payment:write'])]
@@ -146,7 +165,7 @@ final class PaymentConsoleController extends AbstractController
         $form->handleRequest($request);
 
         if (!$form->isSubmitted() || !$form->isValid()) {
-            $this->addFlash('danger', 'Payment refund form is invalid.');
+            $this->addFlash('danger', 'Refund payment form is invalid.');
 
             return $this->redirectToRoute('payment_console');
         }
@@ -160,8 +179,8 @@ final class PaymentConsoleController extends AbstractController
             return $this->redirectToRoute('payment_console');
         }
 
-        $this->addFlash('success', sprintf('Refunded payment %s with status %s.', (string) $payment->id(), $payment->status()->value));
+        $this->addFlash('success', sprintf('Payment %s refunded with status %s.', (string) $payment->id(), $payment->status()->value));
 
-        return $this->redirectToRoute('payment_console');
+        return $this->redirectToRoute('payment_console', ['payment' => (string) $payment->id()]);
     }
 }
