@@ -6,6 +6,7 @@ Canonical documentation package:
 - [OPERATIONS](docs/OPERATIONS.md)
 - [API](docs/API.md)
 - [LIMITS](docs/LIMITS.md)
+- [PROOF_PACK](docs/PROOF_PACK.md)
 
 ## Honest portrait
 

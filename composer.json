@@ -125,6 +125,8 @@
         "pipeline:local:sh": "bash tools/ci/run-payment-local-pipeline.sh",
         "pipeline:local:full": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1 -IncludeSmokes -IncludeReports",
         "pipeline:local:strict": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1 -IncludeSmokes -IncludeReports -FailOnErrors",
-        "report:local:latest": "@php tools/ci/report-local-latest.php"
+        "report:local:latest": "@php tools/ci/report-local-latest.php",
+        "proof:pack:sh": "bash tools/ci/run-payment-proof-pack.sh",
+        "proof:pack": "bash tools/ci/run-payment-proof-pack.sh"
     }
 }
