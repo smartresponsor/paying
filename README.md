@@ -30,7 +30,7 @@ Canonical documentation package:
 - Generic webhook verifier supports signatures for `stripe`, `adyen`; unknown providers can be allowed only via env flag.
 
 ## Canonical surface
-- **Canonical UI**: `/payment/console`.
+- **Canonical UI**: `/payment/console` (payment list + card, create/start/finalize/refund actions, webhook visibility, filter/search, links to OpenAPI/status/metrics).
 - **Canonical API**: `/api/payments`, `/api/payments/{id}`, `/api/payments/{id}/refund`, `/payment/start`, `/payment/finalize/{id}`, `/payment/webhook/{provider}`, `/webhook/stripe`, `/webhook/paypal`, `/status`, `/metrics`, `/payment/dlq`.
 - **Canonical CLI**: `payment:outbox:process`, `payment:e2e:demo`.
 
