@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -17,19 +16,21 @@ final class PaymentFixture extends Fixture implements FixtureGroupInterface
 {
     public function load(ObjectManager $manager): void
     {
+        $faker = new PaymentFixtureFaker();
         $definitions = [
-            ['payment-new', PaymentStatus::new, '15.00', 'USD', null],
-            ['payment-processing', PaymentStatus::processing, '24.99', 'USD', 'stripe_pi_processing'],
-            ['payment-completed', PaymentStatus::completed, '99.00', 'USD', 'stripe_pi_completed'],
-            ['payment-failed', PaymentStatus::failed, '42.00', 'USD', 'stripe_pi_failed'],
-            ['payment-refunded', PaymentStatus::refunded, '12.50', 'USD', 'paypal_refunded_1001'],
+            ['payment-new', PaymentStatus::new, null],
+            ['payment-processing', PaymentStatus::processing, 'stripe'],
+            ['payment-completed', PaymentStatus::completed, 'stripe'],
+            ['payment-failed', PaymentStatus::failed, 'stripe'],
+            ['payment-refunded', PaymentStatus::refunded, 'paypal'],
         ];
 
-        foreach ($definitions as [$reference, $status, $amount, $currency, $providerRef]) {
-            $payment = new Payment(new Ulid(), $status, $amount, $currency);
-            if (null !== $providerRef) {
-                $payment->withProviderRef($providerRef);
+        foreach ($definitions as [$reference, $status, $provider]) {
+            $payment = new Payment(new Ulid(), $status, $faker->amount(), 'USD');
+            if (null !== $provider) {
+                $payment->withProviderRef($faker->providerReference($provider));
             }
+
             $manager->persist($payment);
             $this->addReference($reference, $payment);
         }
