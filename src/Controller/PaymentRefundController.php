@@ -8,6 +8,7 @@ namespace App\Controller;
 use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentRefundRequestDto;
 use App\ControllerInterface\PaymentRefundControllerInterface;
+use App\Service\PaymentNotFoundException;
 use App\ServiceInterface\RefundServiceInterface;
 use App\ServiceInterface\ValidationErrorMapperInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
@@ -76,7 +77,7 @@ final class PaymentRefundController implements PaymentRefundControllerInterface
 
         try {
             $payment = $this->refundService->refund(new Ulid($id), $dto->amount, $dto->provider);
-        } catch (\RuntimeException $exception) {
+        } catch (PaymentNotFoundException $exception) {
             $this->logger->warning('Unable to refund payment.', [
                 'payment_id' => $id,
                 'error' => $exception->getMessage(),

@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Payment;
+use App\Service\PaymentNotFoundException;
 use App\ServiceInterface\PaymentConsoleRefundHandlerInterface;
 use App\ServiceInterface\RefundServiceInterface;
 use Psr\Log\LoggerInterface;
@@ -23,7 +24,7 @@ final class PaymentConsoleRefundHandler implements PaymentConsoleRefundHandlerIn
     {
         try {
             return $this->refundService->refund(new Ulid($paymentId), $amount, $provider);
-        } catch (\RuntimeException $exception) {
+        } catch (PaymentNotFoundException $exception) {
             $this->logger->warning('Payment console refund failed.', [
                 'payment_id' => $paymentId,
                 'error' => $exception->getMessage(),

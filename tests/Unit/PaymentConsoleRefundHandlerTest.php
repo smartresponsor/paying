@@ -7,6 +7,7 @@ namespace App\Tests\Unit;
 
 use App\Entity\Payment;
 use App\Service\PaymentConsoleRefundHandler;
+use App\Service\PaymentNotFoundException;
 use App\ServiceInterface\RefundServiceInterface;
 use App\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
@@ -40,7 +41,7 @@ final class PaymentConsoleRefundHandlerTest extends TestCase
         $refundService
             ->expects(self::once())
             ->method('refund')
-            ->willThrowException(new \RuntimeException('not found'));
+            ->willThrowException(PaymentNotFoundException::byId('test-id'));
 
         $logger = $this->createMock(LoggerInterface::class);
         $logger
