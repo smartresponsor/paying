@@ -14,11 +14,10 @@ use App\Form\PaymentConsoleFinalizeType;
 use App\Form\PaymentConsoleRefundType;
 use App\Form\PaymentCreateType;
 use App\Form\PaymentStartType;
-use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\Service\PaymentService;
+use App\ServiceInterface\PaymentConsoleFinalizeHandlerInterface;
 use App\ServiceInterface\PaymentConsoleReadModelInterface;
 use App\ServiceInterface\PaymentStartServiceInterface;
-use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\RefundServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,10 +32,9 @@ final class PaymentConsoleController extends AbstractController
     public function __construct(
         private readonly PaymentService $paymentService,
         private readonly PaymentStartServiceInterface $paymentStartService,
-        private readonly ProviderGuardInterface $guard,
         private readonly RefundServiceInterface $refundService,
-        private readonly PaymentRepositoryInterface $repo,
         private readonly PaymentConsoleReadModelInterface $readModel,
+        private readonly PaymentConsoleFinalizeHandlerInterface $finalizeHandler,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -131,20 +129,16 @@ final class PaymentConsoleController extends AbstractController
             return $this->invalidFormRedirect('Finalize payment form is invalid.');
         }
 
-        $payment = $this->repo->find($dto->paymentId);
+        $payment = $this->finalizeHandler->finalize(
+            $dto->paymentId,
+            $dto->provider,
+            $dto->providerRef,
+            $dto->gatewayTransactionId,
+            $dto->status,
+        );
         if (null === $payment) {
             return $this->paymentNotFoundRedirect($dto->paymentId);
         }
-
-        $payload = array_filter([
-            'providerRef' => $dto->providerRef,
-            'gatewayTransactionId' => $dto->gatewayTransactionId,
-            'status' => $dto->status,
-        ], static fn (mixed $value): bool => is_string($value) && '' !== $value);
-
-        $resolved = $this->guard->finalize($dto->provider, new Ulid($dto->paymentId), $payload);
-        $payment->syncFrom($resolved);
-        $this->repo->save($payment);
 
         $this->addFlash('success', sprintf('Payment %s finalized with status %s.', $dto->paymentId, $payment->status()->value));
 
