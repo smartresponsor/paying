@@ -7,6 +7,7 @@ The Payment component owns the following operational CLI surfaces:
 - `payment:dlq:replay`
 - `payment:gate:slo`
 - `payment:idem:purge`
+- `payment:lifecycle:run`
 - `payment:outbox:run`
 - `payment:projection:rebuild`
 - `payment:projection:sync`
