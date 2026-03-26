@@ -9,7 +9,6 @@ use App\Controller\Dto\PaymentStartRequestDto;
 use App\Entity\Payment;
 use App\Service\IdempotencyService;
 use App\Service\PaymentApiStartHandler;
-use App\Service\PaymentStartResult;
 use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +30,11 @@ final class PaymentApiStartHandlerTest extends TestCase
             ->expects(self::once())
             ->method('start')
             ->with('internal', '12.50', 'USD', 'idem-1', 'api')
-            ->willReturn(new PaymentStartResult($payment, 'ref-1', ['ok' => true]));
+            ->willReturn([
+                'payment' => $payment,
+                'providerRef' => 'ref-1',
+                'result' => ['ok' => true],
+            ]);
 
         $idem = $this->createMock(IdempotencyService::class);
         $idem
