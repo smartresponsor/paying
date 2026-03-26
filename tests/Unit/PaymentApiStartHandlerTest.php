@@ -5,11 +5,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit;
 
+use App\Controller\Dto\PaymentStartRequestDto;
 use App\Entity\Payment;
 use App\Service\IdempotencyService;
 use App\Service\PaymentApiStartHandler;
-use App\Service\PaymentStartResult;
-use App\Service\PaymentStartInput;
 use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +18,10 @@ final class PaymentApiStartHandlerTest extends TestCase
 {
     public function testHandleReturnsApiPayloadViaIdempotencyGate(): void
     {
-        $input = new PaymentStartInput('internal', '12.50', 'USD');
+        $dto = new PaymentStartRequestDto();
+        $dto->provider = 'internal';
+        $dto->amount = '12.50';
+        $dto->currency = 'USD';
 
         $payment = new Payment(new Ulid(), PaymentStatus::processing, '12.50', 'USD');
 
@@ -28,7 +30,11 @@ final class PaymentApiStartHandlerTest extends TestCase
             ->expects(self::once())
             ->method('start')
             ->with('internal', '12.50', 'USD', 'idem-1', 'api')
-            ->willReturn(new PaymentStartResult($payment, 'ref-1', ['ok' => true]));
+            ->willReturn([
+                'payment' => $payment,
+                'providerRef' => 'ref-1',
+                'result' => ['ok' => true],
+            ]);
 
         $idem = $this->createMock(IdempotencyService::class);
         $idem
@@ -38,7 +44,7 @@ final class PaymentApiStartHandlerTest extends TestCase
             ->willReturnCallback(static fn (string $key, string $hash, callable $callback): array => $callback());
 
         $handler = new PaymentApiStartHandler($startService, $idem);
-        $result = $handler->handle($input, 'idem-1', 'hash-1');
+        $result = $handler->handle($dto, 'idem-1', 'hash-1');
 
         self::assertSame((string) $payment->id(), $result['payment']);
         self::assertSame('internal', $result['provider']);

@@ -8,7 +8,6 @@ namespace App\Controller;
 use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentStartRequestDto;
 use App\ControllerInterface\StartControllerInterface;
-use App\Service\PaymentStartInput;
 use App\ServiceInterface\PaymentApiStartHandlerInterface;
 use App\ServiceInterface\ValidationErrorMapperInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
@@ -70,7 +69,7 @@ final class StartController implements StartControllerInterface
 
         $key = (string) $request->headers->get('Idempotency-Key', '');
         $payloadHash = hash('sha256', $request->getContent());
-        $result = $this->startHandler->handle(new PaymentStartInput($dto->provider, $dto->amount, $dto->currency), $key, $payloadHash);
+        $result = $this->startHandler->handle($dto, $key, $payloadHash);
 
         return new JsonResponse($result, JsonResponse::HTTP_OK);
     }

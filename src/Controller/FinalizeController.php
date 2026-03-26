@@ -11,7 +11,6 @@ use App\ControllerInterface\FinalizeControllerInterface;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\ValidationErrorMapperInterface;
-use App\ValueObject\PaymentFinalizePayload;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
