@@ -18,24 +18,21 @@ use App\Service\PaymentService;
 use App\ServiceInterface\PaymentConsoleFinalizeHandlerInterface;
 use App\ServiceInterface\PaymentConsoleReadModelInterface;
 use App\ServiceInterface\PaymentStartServiceInterface;
-use App\ServiceInterface\RefundServiceInterface;
-use Psr\Log\LoggerInterface;
+use App\ServiceInterface\PaymentConsoleRefundHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Uid\Ulid;
 
 final class PaymentConsoleController extends AbstractController
 {
     public function __construct(
         private readonly PaymentService $paymentService,
         private readonly PaymentStartServiceInterface $paymentStartService,
-        private readonly RefundServiceInterface $refundService,
         private readonly PaymentConsoleReadModelInterface $readModel,
         private readonly PaymentConsoleFinalizeHandlerInterface $finalizeHandler,
-        private readonly LoggerInterface $logger,
+        private readonly PaymentConsoleRefundHandlerInterface $refundHandler,
     ) {
     }
 
@@ -156,14 +153,8 @@ final class PaymentConsoleController extends AbstractController
             return $this->invalidFormRedirect('Refund payment form is invalid.');
         }
 
-        try {
-            $payment = $this->refundService->refund(new Ulid($dto->paymentId), $dto->amount, $dto->provider);
-        } catch (\RuntimeException $exception) {
-            $this->logger->warning('Payment console refund failed.', [
-                'payment_id' => $dto->paymentId,
-                'error' => $exception->getMessage(),
-            ]);
-
+        $payment = $this->refundHandler->refund($dto->paymentId, $dto->amount, $dto->provider);
+        if (null === $payment) {
             return $this->paymentNotFoundRedirect($dto->paymentId);
         }
 
