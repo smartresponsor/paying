@@ -25,6 +25,17 @@ final readonly class Money
         return new self($amountMinor, $currency);
     }
 
+    public static function fromDecimalString(string $amount, string $currency): self
+    {
+        if (1 !== preg_match('/^\d+(\.\d{2})$/', $amount)) {
+            throw new \InvalidArgumentException('Amount must be in decimal format like 10.00.');
+        }
+
+        [$major, $minor] = explode('.', $amount, 2);
+
+        return new self(((int) $major * 100) + (int) $minor, $currency);
+    }
+
     public function amountMinor(): int
     {
         return $this->amountMinor;
