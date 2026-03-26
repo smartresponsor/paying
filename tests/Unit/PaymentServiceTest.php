@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -40,7 +39,7 @@ final class PaymentServiceTest extends TestCase
         };
 
         $service = new PaymentService($repo);
-        $payment = $service->create('00000000-0000-0000-0000-000000000001', 1000, 'USD');
+        $payment = $service->create('00000000-0000-0000-0000-000000000001', 1000, 'usd');
 
         self::assertInstanceOf(Payment::class, $payment);
         self::assertSame($payment, $repo->saved);

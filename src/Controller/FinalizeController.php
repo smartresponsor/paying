@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -11,6 +10,7 @@ use App\Controller\Dto\PaymentFinalizeRequestDto;
 use App\ControllerInterface\FinalizeControllerInterface;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\ProviderGuardInterface;
+use App\ServiceInterface\ValidationErrorMapperInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,6 +24,7 @@ final class FinalizeController implements FinalizeControllerInterface
         private readonly ProviderGuardInterface $guard,
         private readonly PaymentRepositoryInterface $repo,
         private readonly ValidatorInterface $validator,
+        private readonly ValidationErrorMapperInterface $validationErrorMapper,
     ) {
     }
 
@@ -72,15 +73,7 @@ final class FinalizeController implements FinalizeControllerInterface
 
         $violations = $this->validator->validate($dto);
         if (count($violations) > 0) {
-            $errors = [];
-            foreach ($violations as $violation) {
-                $errors[] = [
-                    'field' => (string) $violation->getPropertyPath(),
-                    'message' => (string) $violation->getMessage(),
-                ];
-            }
-
-            return new JsonResponse(['errors' => $errors], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return new JsonResponse(['errors' => $this->validationErrorMapper->toArray($violations)], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $existing = $this->repo->find($id);
