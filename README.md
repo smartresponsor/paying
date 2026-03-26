@@ -38,5 +38,5 @@ Canonical documentation package:
 ## Runtime story (short)
 - Install: see `docs/INSTALL.md`.
 - Env + DB topology: see `docs/INSTALL.md`.
-- Bootstrap/reset/tests/pipeline: see `docs/OPERATIONS.md`.
+- Bootstrap/reset/tests/pipeline (SQLite defaults + PostgreSQL override for local/Docker): see `docs/OPERATIONS.md`.
 - Demo flow: see `docs/OPERATIONS.md`.

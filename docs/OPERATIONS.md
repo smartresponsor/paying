@@ -13,11 +13,19 @@ Test bootstrap (reset + migrate + fixtures):
 composer test:bootstrap
 ```
 
-Manual equivalent:
+Manual equivalent (SQLite test topology):
 ```bash
 rm -f var/payment.test.data.sqlite var/payment.test.infra.sqlite
 php bin/console doctrine:migrations:migrate --env=test --no-interaction
 php bin/console doctrine:fixtures:load --env=test --group=payment --no-interaction
+```
+
+Manual equivalent (PostgreSQL user-data topology, local or Docker):
+```bash
+export DATABASE_URL="pgsql://app:app@127.0.0.1:5432/payment_test"
+# or in docker-compose app container:
+# export DATABASE_URL="pgsql://app:app@pg:5432/payment_test"
+composer test:bootstrap
 ```
 
 ## Tests and QA

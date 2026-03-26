@@ -3,6 +3,6 @@ doctrine:
     default_connection: data
     connections:
       data:
-        url: 'sqlite:///%kernel.project_dir%/var/payment.test.data.sqlite'
+        url: '%env(resolve:DATABASE_URL)%'
       infra:
-        url: 'sqlite:///%kernel.project_dir%/var/payment.test.infra.sqlite'
+        url: '%env(resolve:INFRA_URL)%'
