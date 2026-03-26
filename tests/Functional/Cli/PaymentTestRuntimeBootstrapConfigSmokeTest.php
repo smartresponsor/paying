@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -33,8 +32,8 @@ final class PaymentTestRuntimeBootstrapConfigSmokeTest extends TestCase
         $doctrine = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/test/doctrine.yaml');
         $messenger = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/test/messenger.yaml');
 
-        self::assertStringContainsString('payment.test.data.sqlite', $doctrine);
-        self::assertStringContainsString('payment.test.infra.sqlite', $doctrine);
+        self::assertStringContainsString("url: '%env(resolve:DATABASE_URL)%'", $doctrine);
+        self::assertStringContainsString("url: '%env(resolve:INFRA_URL)%'", $doctrine);
         self::assertStringContainsString("payment_outbox: 'in-memory://'", $messenger);
         self::assertStringContainsString("payment_outbox_failed: 'in-memory://'", $messenger);
         self::assertStringContainsString("payment_events_in: 'in-memory://'", $messenger);
