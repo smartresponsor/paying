@@ -70,12 +70,12 @@ final class PaymentStartServiceTest extends TestCase
 
         $service = new PaymentStartService($guard, $repo);
         $started = $service->start('internal', '10.00', 'usd', '', 'payment-console');
-        $payment = $started['payment'];
+        $payment = $started->payment;
 
         self::assertSame(2, $repo->saveCount);
         self::assertSame($payment, $repo->saved);
         self::assertSame('processing', $payment->status()->value);
-        self::assertSame('provider-ref-123', $started['providerRef']);
+        self::assertSame('provider-ref-123', $started->providerRef);
         self::assertSame('USD', $payment->currency());
         self::assertSame('payment-console', $guard->receivedContext['origin']);
         self::assertArrayHasKey('idempotencyKey', $guard->receivedContext);

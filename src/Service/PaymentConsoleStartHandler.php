@@ -17,13 +17,6 @@ final class PaymentConsoleStartHandler implements PaymentConsoleStartHandlerInte
 
     public function start(string $provider, string $amount, string $currency): Payment
     {
-        $started = $this->paymentStartService->start($provider, $amount, $currency, '', 'payment-console');
-        $payment = $started['payment'] ?? null;
-
-        if (!$payment instanceof Payment) {
-            throw new \RuntimeException('Payment start response does not contain payment entity.');
-        }
-
-        return $payment;
+        return $this->paymentStartService->start($provider, $amount, $currency, '', 'payment-console')->payment;
     }
 }

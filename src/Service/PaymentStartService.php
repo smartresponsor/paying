@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Payment;
+use App\Service\PaymentStartResult;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ServiceInterface\ProviderGuardInterface;
@@ -21,7 +22,7 @@ final class PaymentStartService implements PaymentStartServiceInterface
     ) {
     }
 
-    public function start(string $provider, string $amount, string $currency, string $idempotencyKey = '', string $origin = 'api'): array
+    public function start(string $provider, string $amount, string $currency, string $idempotencyKey = '', string $origin = 'api'): PaymentStartResult
     {
         $money = Money::fromDecimalString($amount, strtoupper($currency));
 
@@ -38,10 +39,6 @@ final class PaymentStartService implements PaymentStartServiceInterface
         $payment->markProcessing($providerRef);
         $this->repo->save($payment);
 
-        return [
-            'payment' => $payment,
-            'providerRef' => $providerRef,
-            'result' => $providerResult,
-        ];
+        return new PaymentStartResult($payment, $providerRef, $providerResult);
     }
 }

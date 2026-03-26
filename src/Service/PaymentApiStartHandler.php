@@ -6,7 +6,6 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Controller\Dto\PaymentStartRequestDto;
-use App\Entity\Payment;
 use App\ServiceInterface\PaymentApiStartHandlerInterface;
 use App\ServiceInterface\PaymentStartServiceInterface;
 
@@ -22,18 +21,13 @@ final class PaymentApiStartHandler implements PaymentApiStartHandlerInterface
     {
         return $this->idem->execute($idempotencyKey, $payloadHash, function () use ($dto, $idempotencyKey): array {
             $started = $this->paymentStartService->start($dto->provider, $dto->amount, $dto->currency, $idempotencyKey, 'api');
-            $payment = $started['payment'] ?? null;
-
-            if (!$payment instanceof Payment) {
-                throw new \RuntimeException('Payment start response does not contain payment entity.');
-            }
 
             return [
-                'payment' => (string) $payment->id(),
+                'payment' => (string) $started->payment->id(),
                 'provider' => $dto->provider,
-                'status' => $payment->status()->value,
-                'providerRef' => $started['providerRef'] ?? null,
-                'result' => $started['result'] ?? [],
+                'status' => $started->payment->status()->value,
+                'providerRef' => $started->providerRef,
+                'result' => $started->providerResult,
             ];
         });
     }
