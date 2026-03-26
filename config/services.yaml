@@ -64,6 +64,7 @@ services:
 
     App\ServiceInterface\DlqServiceInterface: '@App\Service\DlqService'
     App\ServiceInterface\ProjectionLagServiceInterface: '@App\Service\ProjectionLagService'
+    App\ServiceInterface\MetricInterface: '@App\Service\Metric'
     App\ServiceInterface\PaymentStartServiceInterface: '@App\Service\PaymentStartService'
     App\ServiceInterface\PaymentApiStartHandlerInterface: '@App\Service\PaymentApiStartHandler'
     App\ServiceInterface\PaymentConsoleReadModelInterface: '@App\Service\PaymentConsoleReadModel'
