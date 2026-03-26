@@ -81,13 +81,9 @@ final class FinalizeController implements FinalizeControllerInterface
             return new JsonResponse(['error' => 'payment-not-found'], JsonResponse::HTTP_NOT_FOUND);
         }
 
-        $payload = array_filter([
-            'providerRef' => $dto->providerRef,
-            'gatewayTransactionId' => $dto->gatewayTransactionId,
-            'status' => $dto->status,
-        ], static fn (mixed $value): bool => is_string($value) && '' !== $value);
+        $payload = new PaymentFinalizePayload($dto->providerRef, $dto->gatewayTransactionId, $dto->status);
 
-        $resolved = $this->guard->finalize($dto->provider, new Ulid($id), $payload);
+        $resolved = $this->guard->finalize($dto->provider, new Ulid($id), $payload->toProviderPayload());
         $existing->syncFrom($resolved);
         $this->repo->save($existing);
 
