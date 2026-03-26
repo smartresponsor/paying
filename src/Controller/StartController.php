@@ -9,6 +9,7 @@ use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentStartRequestDto;
 use App\ControllerInterface\StartControllerInterface;
 use App\ServiceInterface\PaymentApiStartHandlerInterface;
+use App\ServiceInterface\ValidationErrorMapperInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,6 +21,7 @@ final class StartController implements StartControllerInterface
     public function __construct(
         private readonly PaymentApiStartHandlerInterface $startHandler,
         private readonly ValidatorInterface $validator,
+        private readonly ValidationErrorMapperInterface $validationErrorMapper,
     ) {
     }
 
@@ -62,15 +64,7 @@ final class StartController implements StartControllerInterface
 
         $violations = $this->validator->validate($dto);
         if (count($violations) > 0) {
-            $errors = [];
-            foreach ($violations as $violation) {
-                $errors[] = [
-                    'field' => (string) $violation->getPropertyPath(),
-                    'message' => (string) $violation->getMessage(),
-                ];
-            }
-
-            return new JsonResponse(['errors' => $errors], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return new JsonResponse(['errors' => $this->validationErrorMapper->toArray($violations)], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $key = (string) $request->headers->get('Idempotency-Key', '');

@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -10,6 +9,7 @@ use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentCreateRequestDto;
 use App\ControllerInterface\PaymentCreateControllerInterface;
 use App\ServiceInterface\PaymentServiceInterface;
+use App\ServiceInterface\ValidationErrorMapperInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,6 +21,7 @@ final class PaymentCreateController implements PaymentCreateControllerInterface
     public function __construct(
         private readonly PaymentServiceInterface $paymentService,
         private readonly ValidatorInterface $validator,
+        private readonly ValidationErrorMapperInterface $validationErrorMapper,
     ) {
     }
 
@@ -75,15 +76,7 @@ final class PaymentCreateController implements PaymentCreateControllerInterface
 
         $violations = $this->validator->validate($dto);
         if (count($violations) > 0) {
-            $errors = [];
-            foreach ($violations as $violation) {
-                $errors[] = [
-                    'field' => (string) $violation->getPropertyPath(),
-                    'message' => (string) $violation->getMessage(),
-                ];
-            }
-
-            return new JsonResponse(['errors' => $errors], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return new JsonResponse(['errors' => $this->validationErrorMapper->toArray($violations)], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $payment = $this->paymentService->create($dto->orderId, $dto->amountMinor, $dto->currency);

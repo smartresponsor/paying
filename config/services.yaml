@@ -75,6 +75,7 @@ services:
 
     App\ServiceInterface\WebhookVerifierInterface: '@App\Service\WebhookVerifier'
     App\ServiceInterface\TokenVerifierInterface: '@App\Service\TokenVerifier'
+    App\ServiceInterface\ValidationErrorMapperInterface: '@App\Service\ValidationErrorMapper'
 
     App\ServiceInterface\ProjectionSyncInterface: '@App\Service\ProjectionSync'
     App\ServiceInterface\RefundServiceInterface: '@App\Service\RefundService'
