@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -9,8 +8,9 @@ namespace App\Controller;
 use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentStartRequestDto;
 use App\ControllerInterface\StartControllerInterface;
-use App\Service\IdempotencyService;
-use App\ServiceInterface\PaymentStartServiceInterface;
+use App\Service\PaymentStartInput;
+use App\ServiceInterface\PaymentApiStartHandlerInterface;
+use App\ServiceInterface\ValidationErrorMapperInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,9 +20,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final class StartController implements StartControllerInterface
 {
     public function __construct(
-        private readonly PaymentStartServiceInterface $paymentStartService,
-        private readonly IdempotencyService $idem,
+        private readonly PaymentApiStartHandlerInterface $startHandler,
         private readonly ValidatorInterface $validator,
+        private readonly ValidationErrorMapperInterface $validationErrorMapper,
     ) {
     }
 
@@ -65,32 +65,12 @@ final class StartController implements StartControllerInterface
 
         $violations = $this->validator->validate($dto);
         if (count($violations) > 0) {
-            $errors = [];
-            foreach ($violations as $violation) {
-                $errors[] = [
-                    'field' => (string) $violation->getPropertyPath(),
-                    'message' => (string) $violation->getMessage(),
-                ];
-            }
-
-            return new JsonResponse(['errors' => $errors], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return new JsonResponse(['errors' => $this->validationErrorMapper->toArray($violations)], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $key = (string) $request->headers->get('Idempotency-Key', '');
         $payloadHash = hash('sha256', $request->getContent());
-
-        $result = $this->idem->execute($key, $payloadHash, function () use ($dto, $key): array {
-            $started = $this->paymentStartService->start($dto->provider, $dto->amount, $dto->currency, $key, 'api');
-            $payment = $started['payment'];
-
-            return [
-                'payment' => (string) $payment->id(),
-                'provider' => $dto->provider,
-                'status' => $payment->status()->value,
-                'providerRef' => $started['providerRef'],
-                'result' => $started['result'],
-            ];
-        });
+        $result = $this->startHandler->handle(new PaymentStartInput($dto->provider, $dto->amount, $dto->currency), $key, $payloadHash);
 
         return new JsonResponse($result, JsonResponse::HTTP_OK);
     }

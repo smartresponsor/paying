@@ -1,15 +1,16 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 namespace App\Service;
 
 use App\Entity\Payment;
+use App\Service\PaymentStartResult;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ServiceInterface\ProviderGuardInterface;
+use App\ValueObject\Money;
 use App\ValueObject\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 
@@ -21,9 +22,11 @@ final class PaymentStartService implements PaymentStartServiceInterface
     ) {
     }
 
-    public function start(string $provider, string $amount, string $currency, string $idempotencyKey = '', string $origin = 'api'): array
+    public function start(string $provider, string $amount, string $currency, string $idempotencyKey = '', string $origin = 'api'): PaymentStartResult
     {
-        $payment = new Payment(new Ulid(), PaymentStatus::new, $amount, $currency);
+        $money = Money::fromDecimalString($amount, strtoupper($currency));
+
+        $payment = new Payment(new Ulid(), PaymentStatus::new, $money->toDecimalString(), $money->currency());
         $this->repo->save($payment);
 
         $providerResult = $this->guard->start($provider, $payment, [
@@ -36,10 +39,6 @@ final class PaymentStartService implements PaymentStartServiceInterface
         $payment->markProcessing($providerRef);
         $this->repo->save($payment);
 
-        return [
-            'payment' => $payment,
-            'providerRef' => $providerRef,
-            'result' => $providerResult,
-        ];
+        return new PaymentStartResult($payment, $providerRef, $providerResult);
     }
 }
