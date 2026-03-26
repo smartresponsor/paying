@@ -66,6 +66,8 @@ services:
     App\ServiceInterface\ProjectionLagServiceInterface: '@App\Service\ProjectionLagService'
     App\ServiceInterface\PaymentStartServiceInterface: '@App\Service\PaymentStartService'
     App\ServiceInterface\PaymentConsoleReadModelInterface: '@App\Service\PaymentConsoleReadModel'
+    App\ServiceInterface\PaymentConsoleCreateHandlerInterface: '@App\Service\PaymentConsoleCreateHandler'
+    App\ServiceInterface\PaymentConsoleStartHandlerInterface: '@App\Service\PaymentConsoleStartHandler'
     App\ServiceInterface\PaymentConsoleFinalizeHandlerInterface: '@App\Service\PaymentConsoleFinalizeHandler'
     App\ServiceInterface\PaymentConsoleRefundHandlerInterface: '@App\Service\PaymentConsoleRefundHandler'
     App\ServiceInterface\WebhookIngestServiceInterface: '@App\Service\WebhookIngestService'

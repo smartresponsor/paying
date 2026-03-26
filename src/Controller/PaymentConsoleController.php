@@ -14,10 +14,10 @@ use App\Form\PaymentConsoleFinalizeType;
 use App\Form\PaymentConsoleRefundType;
 use App\Form\PaymentCreateType;
 use App\Form\PaymentStartType;
-use App\Service\PaymentService;
 use App\ServiceInterface\PaymentConsoleFinalizeHandlerInterface;
 use App\ServiceInterface\PaymentConsoleReadModelInterface;
-use App\ServiceInterface\PaymentStartServiceInterface;
+use App\ServiceInterface\PaymentConsoleCreateHandlerInterface;
+use App\ServiceInterface\PaymentConsoleStartHandlerInterface;
 use App\ServiceInterface\PaymentConsoleRefundHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -28,8 +28,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 final class PaymentConsoleController extends AbstractController
 {
     public function __construct(
-        private readonly PaymentService $paymentService,
-        private readonly PaymentStartServiceInterface $paymentStartService,
+        private readonly PaymentConsoleCreateHandlerInterface $createHandler,
+        private readonly PaymentConsoleStartHandlerInterface $startHandler,
         private readonly PaymentConsoleReadModelInterface $readModel,
         private readonly PaymentConsoleFinalizeHandlerInterface $finalizeHandler,
         private readonly PaymentConsoleRefundHandlerInterface $refundHandler,
@@ -90,7 +90,7 @@ final class PaymentConsoleController extends AbstractController
             return $this->invalidFormRedirect('Create payment form is invalid.');
         }
 
-        $payment = $this->paymentService->create($dto->orderId, $dto->amountMinor, $dto->currency);
+        $payment = $this->createHandler->create($dto->orderId, $dto->amountMinor, $dto->currency);
         $this->addFlash('success', sprintf('Payment %s created with status %s.', (string) $payment->id(), $payment->status()->value));
 
         return $this->redirectToRoute('payment_console', ['payment' => (string) $payment->id()]);
@@ -107,8 +107,7 @@ final class PaymentConsoleController extends AbstractController
             return $this->invalidFormRedirect('Start payment form is invalid.');
         }
 
-        $started = $this->paymentStartService->start($dto->provider, $dto->amount, $dto->currency, '', 'payment-console');
-        $payment = $started['payment'];
+        $payment = $this->startHandler->start($dto->provider, $dto->amount, $dto->currency);
 
         $this->addFlash('success', sprintf('Payment %s started via %s.', (string) $payment->id(), $dto->provider));
 
