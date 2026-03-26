@@ -40,3 +40,8 @@ Canonical documentation package:
 - Env + DB topology: see `docs/INSTALL.md`.
 - Bootstrap/reset/tests/pipeline (SQLite defaults + PostgreSQL override for local/Docker): see `docs/OPERATIONS.md`.
 - Demo flow: see `docs/OPERATIONS.md`.
+
+## UI e2e coverage strategy
+- Symfony Panther remains the canonical PHP-first browser e2e harness for the operator console.
+- Playwright (Chromium) adds complementary browser-engine coverage for flows that are not yet covered via Panther.
+- Playwright specs and config live under `tests/Playwright/`.

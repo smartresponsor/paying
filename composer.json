@@ -69,6 +69,7 @@
         "test:unit": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
         "test:functional": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional",
         "test:e2e": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite e2e",
+        "test:ui:playwright": "npm run test:playwright",
         "test:functional:debug": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional --stop-on-error --debug",
         "test:debug:first-error": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --stop-on-error --debug",
         "lint:yaml": "@php tools/ci/console-test-env.php lint:yaml config --parse-tags",
