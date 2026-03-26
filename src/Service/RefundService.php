@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -12,7 +11,7 @@ use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\RefundServiceInterface;
 use Symfony\Component\Uid\Ulid;
 
-class RefundService implements RefundServiceInterface
+final class RefundService implements RefundServiceInterface
 {
     public function __construct(
         private readonly ProviderGuardInterface $guard,
@@ -24,7 +23,7 @@ class RefundService implements RefundServiceInterface
     {
         $existing = $this->repo->find((string) $id);
         if (null === $existing) {
-            throw new \RuntimeException('Payment not found: '.(string) $id);
+            throw PaymentNotFoundException::byId((string) $id);
         }
 
         $resolved = $this->guard->refund($provider, $id, $amount);
