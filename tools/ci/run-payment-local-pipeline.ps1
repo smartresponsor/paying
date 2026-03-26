@@ -2,6 +2,7 @@
 param(
     [switch]$IncludeSmokes,
     [switch]$IncludeReports,
+    [switch]$IncludeSecurity,
     [switch]$FailOnErrors
 )
 
@@ -43,6 +44,15 @@ if ($IncludeReports) {
     foreach ($item in @(
         @{ Name = 'report-route-inventory'; Command = 'composer report:route-inventory' },
         @{ Name = 'report-runtime-proof'; Command = 'composer report:runtime-proof' }
+    )) { $steps.Add([pscustomobject]$item) }
+}
+if ($IncludeSecurity) {
+    foreach ($item in @(
+        @{ Name = 'security-composer-audit'; Command = 'composer security:composer-audit' },
+        @{ Name = 'security-importmap-audit'; Command = 'composer security:importmap-audit' },
+        @{ Name = 'security-gitleaks'; Command = 'composer security:gitleaks' },
+        @{ Name = 'security-semgrep-ce'; Command = 'composer security:semgrep-ce' },
+        @{ Name = 'test-security'; Command = 'composer test:security' }
     )) { $steps.Add([pscustomobject]$item) }
 }
 
@@ -111,6 +121,7 @@ $summary.Add('- Result: ' + ($(if ($overallSuccess) { 'PASSED' } elseif ($FailOn
 $summary.Add('- Duration ms: ' + $durationTotalMs)
 $summary.Add('- Include smokes: ' + $IncludeSmokes.IsPresent)
 $summary.Add('- Include reports: ' + $IncludeReports.IsPresent)
+$summary.Add('- Include security: ' + $IncludeSecurity.IsPresent)
 $summary.Add('- Fail on errors: ' + $FailOnErrors.IsPresent)
 $summary.Add('')
 $summary.Add('| Step | Status | Exit | Duration ms | Log |')
@@ -130,6 +141,7 @@ $reportObject = [pscustomobject]@{
     duration_ms = [int]$durationTotalMs
     include_smokes = [bool]$IncludeSmokes.IsPresent
     include_reports = [bool]$IncludeReports.IsPresent
+    include_security = [bool]$IncludeSecurity.IsPresent
     fail_on_errors = [bool]$FailOnErrors.IsPresent
     steps = @($results.ToArray())
 }

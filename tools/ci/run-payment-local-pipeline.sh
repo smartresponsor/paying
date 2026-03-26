@@ -4,11 +4,13 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT_DIR"
 include_smokes=0
 include_reports=0
+include_security=0
 fail_on_errors=0
 for arg in "$@"; do
   case "$arg" in
     --include-smokes) include_smokes=1 ;;
     --include-reports) include_reports=1 ;;
+    --include-security) include_security=1 ;;
     --fail-on-errors) fail_on_errors=1 ;;
   esac
 done
@@ -44,6 +46,15 @@ if [[ "$include_reports" -eq 1 ]]; then
   steps+=(
     'report-route-inventory|composer report:route-inventory'
     'report-runtime-proof|composer report:runtime-proof'
+  )
+fi
+if [[ "$include_security" -eq 1 ]]; then
+  steps+=(
+    'security-composer-audit|composer security:composer-audit'
+    'security-importmap-audit|composer security:importmap-audit'
+    'security-gitleaks|composer security:gitleaks'
+    'security-semgrep-ce|composer security:semgrep-ce'
+    'test-security|composer test:security'
   )
 fi
 SUMMARY_ROWS=''
@@ -85,18 +96,19 @@ cat > "$REPORT_ROOT/summary.md" <<MD
 - Duration seconds: ${DURATION_TOTAL}
 - Include smokes: ${include_smokes}
 - Include reports: ${include_reports}
+- Include security: ${include_security}
 - Fail on errors: ${fail_on_errors}
 
 | Step | Status | Exit | Duration s | Log |
 |---|---:|---:|---:|---|
 ${SUMMARY_ROWS}
 MD
-python3 - "$TIMESTAMP" "$REPORT_ROOT" "$OVERALL_STATUS" "$DURATION_TOTAL" "$JSON_LINES_FILE" "$include_smokes" "$include_reports" "$fail_on_errors" > "$REPORT_ROOT/report.json" <<'PY'
+python3 - "$TIMESTAMP" "$REPORT_ROOT" "$OVERALL_STATUS" "$DURATION_TOTAL" "$JSON_LINES_FILE" "$include_smokes" "$include_reports" "$include_security" "$fail_on_errors" > "$REPORT_ROOT/report.json" <<'PY'
 import json, sys
 from pathlib import Path
-timestamp, report_root, status, duration, jsonl_path, include_smokes, include_reports, fail_on_errors = sys.argv[1:9]
+timestamp, report_root, status, duration, jsonl_path, include_smokes, include_reports, include_security, fail_on_errors = sys.argv[1:10]
 steps=[json.loads(line) for line in Path(jsonl_path).read_text().splitlines() if line.strip()]
-print(json.dumps({"pipeline":"payment-local","timestamp":timestamp,"report_root":report_root,"status":status,"duration_seconds":int(duration),"include_smokes":bool(int(include_smokes)),"include_reports":bool(int(include_reports)),"fail_on_errors":bool(int(fail_on_errors)),"steps":steps}, indent=2))
+print(json.dumps({"pipeline":"payment-local","timestamp":timestamp,"report_root":report_root,"status":status,"duration_seconds":int(duration),"include_smokes":bool(int(include_smokes)),"include_reports":bool(int(include_reports)),"include_security":bool(int(include_security)),"fail_on_errors":bool(int(fail_on_errors)),"steps":steps}, indent=2))
 PY
 cp -R "$REPORT_ROOT"/* "$LATEST_ROOT/"
 printf '%s\n' "$TIMESTAMP" > "$LATEST_ROOT/LATEST.txt"
