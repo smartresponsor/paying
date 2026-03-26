@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -9,9 +8,12 @@ namespace App\Controller;
 use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentRefundRequestDto;
 use App\ControllerInterface\PaymentRefundControllerInterface;
+use App\Service\PaymentNotFoundException;
 use App\ServiceInterface\RefundServiceInterface;
+use App\ServiceInterface\ValidationErrorMapperInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Uid\Ulid;
@@ -22,6 +24,8 @@ final class PaymentRefundController implements PaymentRefundControllerInterface
     public function __construct(
         private readonly RefundServiceInterface $refundService,
         private readonly ValidatorInterface $validator,
+        private readonly ValidationErrorMapperInterface $validationErrorMapper,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -68,21 +72,16 @@ final class PaymentRefundController implements PaymentRefundControllerInterface
 
         $violations = $this->validator->validate($dto);
         if (count($violations) > 0) {
-            $errors = [];
-            foreach ($violations as $violation) {
-                $errors[] = [
-                    'field' => (string) $violation->getPropertyPath(),
-                    'message' => (string) $violation->getMessage(),
-                ];
-            }
-
-            return new JsonResponse(['errors' => $errors], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return new JsonResponse(['errors' => $this->validationErrorMapper->toArray($violations)], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         try {
             $payment = $this->refundService->refund(new Ulid($id), $dto->amount, $dto->provider);
-        } catch (\RuntimeException $exception) {
-            error_log(sprintf('[payment-refund] unable to refund payment %s: %s', $id, $exception->getMessage()));
+        } catch (PaymentNotFoundException $exception) {
+            $this->logger->warning('Unable to refund payment.', [
+                'payment_id' => $id,
+                'error' => $exception->getMessage(),
+            ]);
 
             return new JsonResponse(['error' => 'payment-not-found'], JsonResponse::HTTP_NOT_FOUND);
         }
