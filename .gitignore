@@ -49,6 +49,8 @@ Thumbs.db
 /build/
 /reports/
 /test-output/
+/playwright-report/
+/test-results/
 .cachegrind.out.*
 
 # ──────────────────────────────────────────────

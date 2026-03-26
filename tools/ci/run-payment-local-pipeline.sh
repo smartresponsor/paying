@@ -30,6 +30,7 @@ steps=(
   'docs-phpdoc-check|composer docs:phpdoc:check'
   'test-bootstrap-reset|composer test:bootstrap:reset'
   'test|composer test'
+  'test-ui-playwright|composer test:ui:playwright'
 )
 if [[ "$include_smokes" -eq 1 ]]; then
   steps+=(

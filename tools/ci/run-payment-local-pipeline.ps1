@@ -28,7 +28,8 @@ foreach ($item in @(
     @{ Name = 'stan'; Command = 'composer stan:runtime-target' },
     @{ Name = 'docs-phpdoc-check'; Command = 'composer docs:phpdoc:check' },
     @{ Name = 'test-bootstrap-reset'; Command = 'composer test:bootstrap:reset' },
-    @{ Name = 'test'; Command = 'composer test' }
+    @{ Name = 'test'; Command = 'composer test' },
+    @{ Name = 'test-ui-playwright'; Command = 'composer test:ui:playwright' }
 )) { $steps.Add([pscustomobject]$item) }
 if ($IncludeSmokes) {
     foreach ($item in @(

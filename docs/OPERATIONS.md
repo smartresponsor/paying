@@ -34,6 +34,9 @@ composer test
 composer test:unit
 composer test:functional
 composer test:e2e
+npm install
+npx playwright install --with-deps chromium
+npm run test:playwright
 composer qa:style
 composer qa:static
 composer qa:test
@@ -46,6 +49,7 @@ Local pipeline:
 ```bash
 composer pipeline:local:sh
 ```
+Includes Playwright Chromium UI run (`composer test:ui:playwright`), so ensure Node dependencies and browser are installed before running the pipeline.
 
 Full/strict contour (smokes + reports + fail-on-errors):
 ```bash
