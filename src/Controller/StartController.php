@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -9,8 +8,7 @@ namespace App\Controller;
 use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentStartRequestDto;
 use App\ControllerInterface\StartControllerInterface;
-use App\Service\IdempotencyService;
-use App\ServiceInterface\PaymentStartServiceInterface;
+use App\ServiceInterface\PaymentApiStartHandlerInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,8 +18,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final class StartController implements StartControllerInterface
 {
     public function __construct(
-        private readonly PaymentStartServiceInterface $paymentStartService,
-        private readonly IdempotencyService $idem,
+        private readonly PaymentApiStartHandlerInterface $startHandler,
         private readonly ValidatorInterface $validator,
     ) {
     }
@@ -78,19 +75,7 @@ final class StartController implements StartControllerInterface
 
         $key = (string) $request->headers->get('Idempotency-Key', '');
         $payloadHash = hash('sha256', $request->getContent());
-
-        $result = $this->idem->execute($key, $payloadHash, function () use ($dto, $key): array {
-            $started = $this->paymentStartService->start($dto->provider, $dto->amount, $dto->currency, $key, 'api');
-            $payment = $started['payment'];
-
-            return [
-                'payment' => (string) $payment->id(),
-                'provider' => $dto->provider,
-                'status' => $payment->status()->value,
-                'providerRef' => $started['providerRef'],
-                'result' => $started['result'],
-            ];
-        });
+        $result = $this->startHandler->handle($dto, $key, $payloadHash);
 
         return new JsonResponse($result, JsonResponse::HTTP_OK);
     }
