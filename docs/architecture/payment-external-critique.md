@@ -133,3 +133,25 @@ Add to `docs/api/openapi.yaml`:
 - ⏳ A1 in progress: controller still orchestrates multiple use-cases and should be split into dedicated handlers.
 - ⏳ B1 in progress: OpenAPI contract still requires full error/security/idempotency expansion.
 - ⏳ C2/C3 in progress: architecture dependency rules and deterministic CI gates are not yet fully enforced.
+
+## What is still not closed in substance (evidence-based)
+
+1. **Controllers are still not thin enough**
+   - `PaymentConsoleController` still owns full use-case orchestration for create/start/finalize/refund, including DTO flow + repository usage + provider guard calls.
+   - Target state: one action -> one application handler call -> response mapping.
+
+2. **OpenAPI/business interoperability remains under-specified**
+   - Public schema still needs explicit reusable error contracts, scope mapping, idempotency behavior, and webhook signature contracts across all routes.
+   - Target state: every public route has typed request/response + non-2xx problem schema + security scope declaration.
+
+3. **Architecture boundaries are not machine-enforced yet**
+   - Layer model is documented but CI fitness rules for forbidden dependencies are not yet part of build gates.
+   - Target state: architecture rule violations fail CI deterministically.
+
+4. **Deterministic test gates are incomplete**
+   - Unit coverage for Money exists, but integration coverage for failure semantics and contract errors per endpoint should be expanded.
+   - Target state: stable unit + functional + e2e smoke checks with deterministic fixtures and flaky protection.
+
+5. **Uniform error contract is still partial**
+   - Logging style was improved in console refund flow, but cross-controller error contract normalization is still pending.
+   - Target state: shared exception mapper for API + UI with consistent machine-readable codes.
