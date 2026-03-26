@@ -15,6 +15,7 @@ The current smoke coverage now includes:
 - `payment:reconcile:run`
 - `payment:dlq:replay`
 - `payment:idem:purge`
+- `payment:lifecycle:run`
 - `payment:sla:report`
 
 ## What is proved
@@ -33,6 +34,11 @@ The current smoke coverage now includes:
 - idempotency purge
 - SLA report generation
 
+`tests/Functional/Cli/PaymentLifecycleCommandExecutionSmokeTest.php` covers command execution for:
+
+- business create flow
+- business finalize flow
+
 These tests prove:
 
 - the command can execute successfully;
@@ -41,11 +47,14 @@ These tests prove:
 
 ## Not yet covered
 
-The following command still benefits from dedicated execution smoke or deeper behavioral proof:
+The following lifecycle actions still benefit from dedicated execution smoke coverage:
+
+- `payment:lifecycle:run --action=start`
+- `payment:lifecycle:run --action=refund`
+
+The following command is registration- and execution-covered, but still benefits from deeper behavioral thresholds:
 
 - `payment:gate:slo`
-
-It is registered and owned, but its failure/success threshold behavior should eventually be covered by a dedicated CLI test.
 
 ## Ownership note
 

@@ -1,7 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Cli;
@@ -20,6 +18,7 @@ final class PaymentCommandRegistrationTest extends KernelTestCase
             'payment:dlq:replay',
             'payment:gate:slo',
             'payment:idem:purge',
+            'payment:lifecycle:run',
             'payment:outbox:run',
             'payment:projection:rebuild',
             'payment:projection:sync',
