@@ -1,11 +1,12 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\ControllerInterface\WebhookControllerInterface;
+use App\ServiceInterface\ApiJsonBodyDecoderInterface;
 use App\ServiceInterface\EventMapperInterface;
 use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\WebhookVerifierInterface;
@@ -18,6 +19,7 @@ final class WebhookController implements WebhookControllerInterface
     public function __construct(
         private readonly WebhookVerifierInterface $verifier,
         private readonly ProviderGuardInterface $guard,
+        private readonly ApiJsonBodyDecoderInterface $jsonBodyDecoder,
         /** @var iterable<EventMapperInterface> */ private readonly iterable $mappers,
     ) {
     }
@@ -33,7 +35,7 @@ final class WebhookController implements WebhookControllerInterface
                 return new Response('', Response::HTTP_BAD_REQUEST);
             }
 
-            $data = json_decode($raw, true);
+            $data = $this->jsonBodyDecoder->decode($request);
             if (!is_array($data)) {
                 return new Response('', Response::HTTP_BAD_REQUEST);
             }

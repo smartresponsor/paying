@@ -1,11 +1,12 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
 
 use App\ServiceInterface\PaymentApiStartHandlerInterface;
+use App\ServiceInterface\PaymentStartInput;
 use App\ServiceInterface\PaymentStartServiceInterface;
 
 final class PaymentApiStartHandler implements PaymentApiStartHandlerInterface

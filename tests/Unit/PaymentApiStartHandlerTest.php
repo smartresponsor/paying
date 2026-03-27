@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit;
@@ -8,8 +8,8 @@ namespace App\Tests\Unit;
 use App\Entity\Payment;
 use App\Service\IdempotencyService;
 use App\Service\PaymentApiStartHandler;
-use App\Service\PaymentStartInput;
 use App\Service\PaymentStartResult;
+use App\ServiceInterface\PaymentStartInput;
 use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
