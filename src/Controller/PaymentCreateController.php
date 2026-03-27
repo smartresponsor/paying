@@ -1,7 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -10,17 +8,21 @@ use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentCreateRequestDto;
 use App\ControllerInterface\PaymentCreateControllerInterface;
 use App\ServiceInterface\PaymentServiceInterface;
+use App\ServiceInterface\ApiErrorResponseFactoryInterface;
+use App\ServiceInterface\ApiJsonBodyDecoderInterface;
+use App\ServiceInterface\ApiRequestValidatorInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class PaymentCreateController implements PaymentCreateControllerInterface
 {
     public function __construct(
         private readonly PaymentServiceInterface $paymentService,
-        private readonly ValidatorInterface $validator,
+        private readonly ApiErrorResponseFactoryInterface $errorResponseFactory,
+        private readonly ApiJsonBodyDecoderInterface $jsonBodyDecoder,
+        private readonly ApiRequestValidatorInterface $requestValidator,
     ) {
     }
 
@@ -63,9 +65,9 @@ final class PaymentCreateController implements PaymentCreateControllerInterface
     #[Security(name: 'Bearer')]
     public function create(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        if (!is_array($data)) {
-            return new JsonResponse(['errors' => [['field' => 'body', 'message' => 'Invalid JSON body.']]], JsonResponse::HTTP_BAD_REQUEST);
+        $data = $this->jsonBodyDecoder->decode($request);
+        if (null === $data) {
+            return $this->errorResponseFactory->badJsonBody();
         }
 
         $dto = new PaymentCreateRequestDto();
@@ -73,17 +75,9 @@ final class PaymentCreateController implements PaymentCreateControllerInterface
         $dto->amountMinor = (int) ($data['amountMinor'] ?? 0);
         $dto->currency = strtoupper((string) ($data['currency'] ?? 'USD'));
 
-        $violations = $this->validator->validate($dto);
-        if (count($violations) > 0) {
-            $errors = [];
-            foreach ($violations as $violation) {
-                $errors[] = [
-                    'field' => (string) $violation->getPropertyPath(),
-                    'message' => (string) $violation->getMessage(),
-                ];
-            }
-
-            return new JsonResponse(['errors' => $errors], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+        $validationResponse = $this->requestValidator->validate($dto);
+        if (null !== $validationResponse) {
+            return $validationResponse;
         }
 
         $payment = $this->paymentService->create($dto->orderId, $dto->amountMinor, $dto->currency);

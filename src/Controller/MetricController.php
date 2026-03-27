@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -8,7 +7,7 @@ namespace App\Controller;
 
 use App\Attribute\RequireScope;
 use App\ControllerInterface\MetricControllerInterface;
-use App\Service\Metric;
+use App\ServiceInterface\MetricInterface;
 use App\ServiceInterface\ProjectionLagServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 final class MetricController implements MetricControllerInterface
 {
     public function __construct(
-        private readonly Metric $metrics,
+        private readonly MetricInterface $metrics,
         private readonly ProjectionLagServiceInterface $projectionLag,
         private readonly LoggerInterface $logger,
     ) {

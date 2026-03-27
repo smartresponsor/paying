@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -70,14 +69,31 @@ final class PaymentStartServiceTest extends TestCase
         };
 
         $service = new PaymentStartService($guard, $repo);
-        $started = $service->start('internal', '10.00', 'USD', '', 'payment-console');
-        $payment = $started['payment'];
+        $started = $service->start('internal', '10.00', 'usd', '', 'payment-console');
+        $payment = $started->payment;
 
         self::assertSame(2, $repo->saveCount);
         self::assertSame($payment, $repo->saved);
         self::assertSame('processing', $payment->status()->value);
-        self::assertSame('provider-ref-123', $started['providerRef']);
+        self::assertSame('provider-ref-123', $started->providerRef);
+        self::assertSame('USD', $payment->currency());
         self::assertSame('payment-console', $guard->receivedContext['origin']);
         self::assertArrayHasKey('idempotencyKey', $guard->receivedContext);
+    }
+
+    public function testStartRejectsInvalidAmountFormat(): void
+    {
+        $repo = $this->createMock(PaymentRepositoryInterface::class);
+        $guard = $this->createMock(ProviderGuardInterface::class);
+
+        $repo->expects(self::never())->method('save');
+        $guard->expects(self::never())->method('start');
+
+        $service = new PaymentStartService($guard, $repo);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Amount must be in decimal format like 10.00.');
+
+        $service->start('internal', '10', 'USD');
     }
 }

@@ -97,12 +97,12 @@ final class PaymentLifecycleCommand extends Command
         }
 
         $started = $this->paymentStartService->start($provider, $amount, $currency, $idempotencyKey, $origin);
-        $payment = $started['payment'];
+        $payment = $started->payment;
         $this->writeResult($output, [
             'action' => 'start',
             'id' => (string) $payment->id(),
             'status' => $payment->status()->value,
-            'providerRef' => $started['providerRef'],
+            'providerRef' => $started->providerRef,
         ]);
 
         return Command::SUCCESS;
