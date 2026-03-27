@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Tests\E2E\Ui;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Process\Exception\LogicException as ProcessLogicException;
+use Symfony\Component\Panther\PantherTestCase;
 
-if (class_exists(\Symfony\Component\Panther\PantherTestCase::class)) {
-    abstract class PaymentConsolePantherFlowTestBase extends \Symfony\Component\Panther\PantherTestCase
+if (class_exists(PantherTestCase::class)) {
+    abstract class PaymentConsolePantherFlowTestBase extends PantherTestCase
     {
     }
 } else {
