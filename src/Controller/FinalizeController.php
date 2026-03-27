@@ -59,6 +59,10 @@ final class FinalizeController implements FinalizeControllerInterface
     #[Security(name: 'Bearer')]
     public function finalize(string $id, Request $request): JsonResponse
     {
+        if (!Ulid::isValid($id)) {
+            return $this->errorResponseFactory->paymentNotFound();
+        }
+
         $data = $this->jsonBodyDecoder->decode($request, true);
         if (null === $data) {
             return $this->errorResponseFactory->badJsonBody();
