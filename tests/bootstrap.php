@@ -200,14 +200,7 @@ if (!is_file($autoload)) {
 require $autoload;
 
 if (class_exists(\Symfony\Component\Dotenv\Dotenv::class)) {
-    $dotenv = new \Symfony\Component\Dotenv\Dotenv();
-    $dotenv->usePutenv(true);
-
-    if (is_file($projectDir.'/.env')) {
-        $dotenv->bootEnv($projectDir.'/.env');
-    } elseif (is_file($projectDir.'/.env.test')) {
-        $dotenv->load($projectDir.'/.env.test');
-    }
+    (new \Symfony\Component\Dotenv\Dotenv())->usePutenv(true)->bootEnv($projectDir.'/.env');
 }
 
 $resolveSqlitePath = static function (?string $url, string $projectDir): ?string {
