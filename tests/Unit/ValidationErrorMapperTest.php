@@ -26,4 +26,22 @@ final class ValidationErrorMapperTest extends TestCase
             ['field' => 'currency', 'message' => 'Currency is invalid.'],
         ], $errors);
     }
+
+    public function testToArrayReturnsStableOrderByFieldThenMessage(): void
+    {
+        $violations = new ConstraintViolationList([
+            new ConstraintViolation('Second error on amount.', null, [], null, 'amount', null),
+            new ConstraintViolation('Provider is required.', null, [], null, 'provider', null),
+            new ConstraintViolation('First error on amount.', null, [], null, 'amount', null),
+        ]);
+
+        $mapper = new ValidationErrorMapper();
+        $errors = $mapper->toArray($violations);
+
+        self::assertSame([
+            ['field' => 'amount', 'message' => 'First error on amount.'],
+            ['field' => 'amount', 'message' => 'Second error on amount.'],
+            ['field' => 'provider', 'message' => 'Provider is required.'],
+        ], $errors);
+    }
 }

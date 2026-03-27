@@ -19,6 +19,15 @@ final class ValidationErrorMapper implements ValidationErrorMapperInterface
             ];
         }
 
+        usort($errors, static function (array $left, array $right): int {
+            $byField = strcmp($left['field'], $right['field']);
+            if (0 !== $byField) {
+                return $byField;
+            }
+
+            return strcmp($left['message'], $right['message']);
+        });
+
         return $errors;
     }
 }
