@@ -11,8 +11,6 @@ use App\ControllerInterface\PaymentRefundControllerInterface;
 use App\Service\PaymentNotFoundException;
 use App\ServiceInterface\RefundServiceInterface;
 use App\ServiceInterface\ValidationErrorMapperInterface;
-use App\ServiceInterface\ApiErrorResponseFactoryInterface;
-use App\ServiceInterface\ApiJsonBodyDecoderInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
@@ -27,8 +25,6 @@ final class PaymentRefundController implements PaymentRefundControllerInterface
         private readonly RefundServiceInterface $refundService,
         private readonly ValidatorInterface $validator,
         private readonly ValidationErrorMapperInterface $validationErrorMapper,
-        private readonly ApiErrorResponseFactoryInterface $errorResponseFactory,
-        private readonly ApiJsonBodyDecoderInterface $jsonBodyDecoder,
         private readonly LoggerInterface $logger,
     ) {
     }

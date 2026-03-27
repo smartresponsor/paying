@@ -11,9 +11,6 @@ use App\ControllerInterface\FinalizeControllerInterface;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\ValidationErrorMapperInterface;
-use App\ServiceInterface\ApiErrorResponseFactoryInterface;
-use App\ServiceInterface\ApiJsonBodyDecoderInterface;
-use App\ValueObject\PaymentFinalizePayload;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -28,8 +25,6 @@ final class FinalizeController implements FinalizeControllerInterface
         private readonly PaymentRepositoryInterface $repo,
         private readonly ValidatorInterface $validator,
         private readonly ValidationErrorMapperInterface $validationErrorMapper,
-        private readonly ApiErrorResponseFactoryInterface $errorResponseFactory,
-        private readonly ApiJsonBodyDecoderInterface $jsonBodyDecoder,
     ) {
     }
 

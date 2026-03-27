@@ -10,8 +10,6 @@ use App\Controller\Dto\PaymentCreateRequestDto;
 use App\ControllerInterface\PaymentCreateControllerInterface;
 use App\ServiceInterface\PaymentServiceInterface;
 use App\ServiceInterface\ValidationErrorMapperInterface;
-use App\ServiceInterface\ApiErrorResponseFactoryInterface;
-use App\ServiceInterface\ApiJsonBodyDecoderInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,8 +22,6 @@ final class PaymentCreateController implements PaymentCreateControllerInterface
         private readonly PaymentServiceInterface $paymentService,
         private readonly ValidatorInterface $validator,
         private readonly ValidationErrorMapperInterface $validationErrorMapper,
-        private readonly ApiErrorResponseFactoryInterface $errorResponseFactory,
-        private readonly ApiJsonBodyDecoderInterface $jsonBodyDecoder,
     ) {
     }
 

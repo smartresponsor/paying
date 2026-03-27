@@ -8,11 +8,8 @@ namespace App\Controller;
 use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentStartRequestDto;
 use App\ControllerInterface\StartControllerInterface;
-use App\Service\PaymentStartInput;
 use App\ServiceInterface\PaymentApiStartHandlerInterface;
 use App\ServiceInterface\ValidationErrorMapperInterface;
-use App\ServiceInterface\ApiErrorResponseFactoryInterface;
-use App\ServiceInterface\ApiJsonBodyDecoderInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,8 +22,6 @@ final class StartController implements StartControllerInterface
         private readonly PaymentApiStartHandlerInterface $startHandler,
         private readonly ValidatorInterface $validator,
         private readonly ValidationErrorMapperInterface $validationErrorMapper,
-        private readonly ApiErrorResponseFactoryInterface $errorResponseFactory,
-        private readonly ApiJsonBodyDecoderInterface $jsonBodyDecoder,
     ) {
     }
 
@@ -74,7 +69,7 @@ final class StartController implements StartControllerInterface
 
         $key = (string) $request->headers->get('Idempotency-Key', '');
         $payloadHash = hash('sha256', $request->getContent());
-        $result = $this->startHandler->handle(new PaymentStartInput($dto->provider, $dto->amount, $dto->currency), $key, $payloadHash);
+        $result = $this->startHandler->handle($dto, $key, $payloadHash);
 
         return new JsonResponse($result, JsonResponse::HTTP_OK);
     }

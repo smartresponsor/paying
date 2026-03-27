@@ -9,7 +9,6 @@ use App\Entity\Payment;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\PaymentConsoleFinalizeHandlerInterface;
 use App\ServiceInterface\ProviderGuardInterface;
-use App\ValueObject\PaymentFinalizePayload;
 use Symfony\Component\Uid\Ulid;
 
 final class PaymentConsoleFinalizeHandler implements PaymentConsoleFinalizeHandlerInterface
@@ -32,13 +31,13 @@ final class PaymentConsoleFinalizeHandler implements PaymentConsoleFinalizeHandl
             return null;
         }
 
-        $payload = new PaymentFinalizePayload(
-            $providerRef ?? '',
-            $gatewayTransactionId ?? '',
-            $status ?? '',
-        );
+        $payload = array_filter([
+            'providerRef' => $providerRef,
+            'gatewayTransactionId' => $gatewayTransactionId,
+            'status' => $status,
+        ], static fn (mixed $value): bool => is_string($value) && '' !== $value);
 
-        $resolved = $this->guard->finalize($provider, new Ulid($paymentId), $payload->toProviderPayload());
+        $resolved = $this->guard->finalize($provider, new Ulid($paymentId), $payload);
         $payment->syncFrom($resolved);
         $this->repo->save($payment);
 
