@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
@@ -17,13 +17,6 @@ final class PaymentConsoleStartHandler implements PaymentConsoleStartHandlerInte
 
     public function start(string $provider, string $amount, string $currency): Payment
     {
-        $started = $this->paymentStartService->start($provider, $amount, $currency, '', 'payment-console');
-        $payment = $started['payment'] ?? null;
-
-        if (!$payment instanceof Payment) {
-            throw new \RuntimeException('Payment start response does not contain payment entity.');
-        }
-
-        return $payment;
+        return $this->paymentStartService->start($provider, $amount, $currency, '', 'payment-console')->payment;
     }
 }

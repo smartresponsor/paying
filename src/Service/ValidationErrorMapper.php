@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
@@ -19,6 +19,15 @@ final class ValidationErrorMapper implements ValidationErrorMapperInterface
                 'message' => (string) $violation->getMessage(),
             ];
         }
+
+        usort($errors, static function (array $left, array $right): int {
+            $byField = strcmp($left['field'], $right['field']);
+            if (0 !== $byField) {
+                return $byField;
+            }
+
+            return strcmp($left['message'], $right['message']);
+        });
 
         return $errors;
     }

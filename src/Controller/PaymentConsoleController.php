@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -14,11 +14,11 @@ use App\Form\PaymentConsoleFinalizeType;
 use App\Form\PaymentConsoleRefundType;
 use App\Form\PaymentCreateType;
 use App\Form\PaymentStartType;
+use App\ServiceInterface\PaymentConsoleCreateHandlerInterface;
 use App\ServiceInterface\PaymentConsoleFinalizeHandlerInterface;
 use App\ServiceInterface\PaymentConsoleReadModelInterface;
-use App\ServiceInterface\PaymentConsoleCreateHandlerInterface;
-use App\ServiceInterface\PaymentConsoleStartHandlerInterface;
 use App\ServiceInterface\PaymentConsoleRefundHandlerInterface;
+use App\ServiceInterface\PaymentConsoleStartHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

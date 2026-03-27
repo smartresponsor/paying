@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -8,20 +8,23 @@ namespace App\Controller;
 use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentStartRequestDto;
 use App\ControllerInterface\StartControllerInterface;
+use App\Service\PaymentStartInput;
+use App\ServiceInterface\ApiErrorResponseFactoryInterface;
+use App\ServiceInterface\ApiJsonBodyDecoderInterface;
+use App\ServiceInterface\ApiRequestValidatorInterface;
 use App\ServiceInterface\PaymentApiStartHandlerInterface;
-use App\ServiceInterface\ValidationErrorMapperInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class StartController implements StartControllerInterface
 {
     public function __construct(
         private readonly PaymentApiStartHandlerInterface $startHandler,
-        private readonly ValidatorInterface $validator,
-        private readonly ValidationErrorMapperInterface $validationErrorMapper,
+        private readonly ApiErrorResponseFactoryInterface $errorResponseFactory,
+        private readonly ApiJsonBodyDecoderInterface $jsonBodyDecoder,
+        private readonly ApiRequestValidatorInterface $requestValidator,
     ) {
     }
 
@@ -52,9 +55,9 @@ final class StartController implements StartControllerInterface
     #[Security(name: 'Bearer')]
     public function start(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-        if (!is_array($data)) {
-            return new JsonResponse(['errors' => [['field' => 'body', 'message' => 'Invalid JSON body.']]], JsonResponse::HTTP_BAD_REQUEST);
+        $data = $this->jsonBodyDecoder->decode($request);
+        if (null === $data) {
+            return $this->errorResponseFactory->badJsonBody();
         }
 
         $dto = new PaymentStartRequestDto();
@@ -62,14 +65,14 @@ final class StartController implements StartControllerInterface
         $dto->currency = strtoupper((string) ($data['currency'] ?? 'USD'));
         $dto->provider = (string) ($data['provider'] ?? 'internal');
 
-        $violations = $this->validator->validate($dto);
-        if (count($violations) > 0) {
-            return new JsonResponse(['errors' => $this->validationErrorMapper->toArray($violations)], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+        $validationResponse = $this->requestValidator->validate($dto);
+        if (null !== $validationResponse) {
+            return $validationResponse;
         }
 
         $key = (string) $request->headers->get('Idempotency-Key', '');
         $payloadHash = hash('sha256', $request->getContent());
-        $result = $this->startHandler->handle($dto, $key, $payloadHash);
+        $result = $this->startHandler->handle(new PaymentStartInput($dto->provider, $dto->amount, $dto->currency), $key, $payloadHash);
 
         return new JsonResponse($result, JsonResponse::HTTP_OK);
     }

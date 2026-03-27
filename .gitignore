@@ -17,6 +17,7 @@ Thumbs.db
 /composer.phar
 /.phpunit.cache
 /phpunit.result.cache
+/report/
 
 # ──────────────────────────────────────────────
 #  🧩 Symfony cache, logs, temp
