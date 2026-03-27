@@ -7,7 +7,7 @@ if (!file_exists($file)) {
     fwrite(STDERR, $file . ' not found' . PHP_EOL);
     exit(1);
 }
-$contents = (string) file_get_contents($file);
+$contents = (string)file_get_contents($file);
 if (!str_contains($contents, 'openapi:')) {
     fwrite(STDERR, $file . ' does not contain openapi: header' . PHP_EOL);
     exit(1);

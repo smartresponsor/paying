@@ -1,4 +1,5 @@
 # GA checklist (Payment)
+
 - [ ] composer.lock committed
 - [ ] composer install proven from committed lock
 - [ ] doctrine migrations proven on data/infra stores

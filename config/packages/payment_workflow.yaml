@@ -9,10 +9,10 @@ framework:
       supports:
         - App\Entity\Payment
       initial_marking: new
-      places: [new, processing, completed, failed, canceled, refunded]
+      places: [ new, processing, completed, failed, canceled, refunded ]
       transitions:
         start: { from: new, to: processing }
         complete: { from: processing, to: completed }
         fail: { from: processing, to: failed }
-        cancel: { from: [new, processing], to: canceled }
+        cancel: { from: [ new, processing ], to: canceled }
         refund: { from: completed, to: refunded }

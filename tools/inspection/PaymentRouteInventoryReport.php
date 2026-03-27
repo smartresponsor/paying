@@ -5,7 +5,7 @@ declare(strict_types=1);
 $routes = glob('config/routes/*.yaml') ?: [];
 $rows = ["file,route_count"];
 foreach ($routes as $routeFile) {
-    $contents = (string) file_get_contents($routeFile);
+    $contents = (string)file_get_contents($routeFile);
     preg_match_all('/^\w[\w.-]*:\s*$/m', $contents, $matches);
     $rows[] = basename($routeFile) . ',' . count($matches[0]);
 }

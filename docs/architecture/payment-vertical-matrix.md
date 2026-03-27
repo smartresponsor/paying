@@ -4,7 +4,8 @@
 
 ## Goal
 
-This matrix defines the business verticals that must be proven for the Payment component to be considered technically reliable.
+This matrix defines the business verticals that must be proven for the Payment component to be considered technically
+reliable.
 
 ## V1. Create payment
 

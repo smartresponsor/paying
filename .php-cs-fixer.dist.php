@@ -8,9 +8,9 @@ use PhpCsFixer\Finder;
 
 $finder = Finder::create()
     ->in([
-        __DIR__.'/src',
-        __DIR__.'/tests',
-        __DIR__.'/config',
+        __DIR__ . '/src',
+        __DIR__ . '/tests',
+        __DIR__ . '/config',
     ])
     ->exclude([
         'var',
@@ -25,7 +25,7 @@ $config = new Config();
 $config
     ->setRiskyAllowed(true)
     ->setUsingCache(true)
-    ->setCacheFile(__DIR__.'/var/.php-cs-fixer.cache')
+    ->setCacheFile(__DIR__ . '/var/.php-cs-fixer.cache')
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,

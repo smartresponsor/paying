@@ -1,68 +1,68 @@
 payment_console:
   path: /payment/console
   controller: App\Controller\PaymentConsoleController::console
-  methods: [GET]
+  methods: [ GET ]
 
 payment_console_create:
   path: /payment/console/create
   controller: App\Controller\PaymentConsoleController::create
-  methods: [POST]
+  methods: [ POST ]
 
 payment_console_start:
   path: /payment/console/start
   controller: App\Controller\PaymentConsoleController::start
-  methods: [POST]
+  methods: [ POST ]
 
 payment_console_finalize:
   path: /payment/console/finalize
   controller: App\Controller\PaymentConsoleController::finalize
-  methods: [POST]
+  methods: [ POST ]
 
 payment_console_refund:
   path: /payment/console/refund
   controller: App\Controller\PaymentConsoleController::refund
-  methods: [POST]
+  methods: [ POST ]
 
 payment_create:
   path: /api/payments
   controller: App\Controller\PaymentCreateController::create
-  methods: [POST]
+  methods: [ POST ]
 
 payment_read:
   path: /api/payments/{id}
   controller: App\Controller\PaymentReadController::read
-  methods: [GET]
+  methods: [ GET ]
 
 payment_refund:
   path: /api/payments/{id}/refund
   controller: App\Controller\PaymentRefundController::refund
-  methods: [POST]
+  methods: [ POST ]
 
 payment_start:
   path: /payment/start
   controller: App\Controller\StartController::start
-  methods: [POST]
+  methods: [ POST ]
 
 payment_finalize:
   path: /payment/finalize/{id}
   controller: App\Controller\FinalizeController::finalize
-  methods: [POST]
+  methods: [ POST ]
 payment_metrics:
   path: /metrics
   controller: App\Controller\MetricController::metrics
-  methods: [GET]
+  methods: [ GET ]
 
 payment_dlq_list:
   path: /payment/dlq
   controller: App\Controller\DlqController::list
-  methods: [GET]
+  methods: [ GET ]
 
 payment_dlq_replay:
   path: /payment/dlq/replay/{id}
   controller: App\Controller\DlqController::replay
-  methods: [POST]
+  methods: [ POST ]
 
 payment_status:
   path: /status
   controller: App\Controller\StatusController::status
-  methods: [GET]
+  methods: [ GET ]

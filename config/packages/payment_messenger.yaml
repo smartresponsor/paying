@@ -9,7 +9,7 @@ framework:
             type: 'topic'
           queues:
             payment_outbox:
-              binding_keys: ['payment.*']
+              binding_keys: [ 'payment.*' ]
       payment_outbox_failed:
         dsn: '%env(resolve:RABBITMQ_DSN)%'
         options:
