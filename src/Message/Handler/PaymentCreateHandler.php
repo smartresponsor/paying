@@ -14,12 +14,12 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Uid\Ulid;
 
 #[AsMessageHandler]
-final class PaymentCreateHandler
+final readonly class PaymentCreateHandler
 {
     public function __construct(
-        private readonly PaymentRepositoryInterface $repo,
+        private PaymentRepositoryInterface $repo,
         /** @var iterable<PaymentGatewayInterface> */
-        private readonly iterable $gateways,
+        private iterable $gateways,
     ) {
     }
 

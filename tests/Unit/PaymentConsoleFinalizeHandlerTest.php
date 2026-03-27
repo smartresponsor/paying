@@ -15,6 +15,12 @@ use Symfony\Component\Uid\Ulid;
 
 final class PaymentConsoleFinalizeHandlerTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testFinalizeReturnsNullWhenPaymentDoesNotExist(): void
     {
         $repo = new class implements PaymentRepositoryInterface {
@@ -46,6 +52,12 @@ final class PaymentConsoleFinalizeHandlerTest extends TestCase
         self::assertNull($handler->finalize((string) new Ulid(), 'internal', null, null, null));
     }
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testFinalizeUpdatesAndPersistsPayment(): void
     {
         $existing = new Payment(new Ulid(), PaymentStatus::new, '10.00', 'USD');

@@ -10,9 +10,5 @@ interface TokenVerifierInterface
     /** @return array<string, mixed> */
     public function verify(string $jwt): array;
 
-    /**
-     * @param array<string, mixed> $claims
-     * @param list<string>         $required
-     */
     public function hasScopes(array $claims, array $required, bool $any = false): bool;
 }

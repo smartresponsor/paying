@@ -19,8 +19,6 @@ interface PaymentRepositoryInterface
     public function listRecent(int $limit = 10): array;
 
     /**
-     * @param list<string> $statuses
-     *
      * @return list<string>
      */
     public function listIdsByStatuses(array $statuses, int $limit = 100): array;

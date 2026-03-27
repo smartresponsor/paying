@@ -72,13 +72,16 @@ final class PaymentLifecycleCommand extends Command
         }
 
         $payment = $this->paymentService->create($orderId, $amountMinor, $currency);
-        $this->writeResult($output, [
-            'action' => 'create',
-            'id' => (string) $payment->id(),
-            'status' => $payment->status()->value,
-            'amount' => $payment->amount(),
-            'currency' => $payment->currency(),
-        ]);
+        try {
+            $this->writeResult($output, [
+                'action' => 'create',
+                'id' => (string) $payment->id(),
+                'status' => $payment->status()->value,
+                'amount' => $payment->amount(),
+                'currency' => $payment->currency(),
+            ]);
+        } catch (\Exception $e) {
+        }
 
         return Command::SUCCESS;
     }
@@ -99,12 +102,15 @@ final class PaymentLifecycleCommand extends Command
 
         $started = $this->paymentStartService->start($provider, $amount, $currency, $idempotencyKey, $origin);
         $payment = $started->payment;
-        $this->writeResult($output, [
-            'action' => 'start',
-            'id' => (string) $payment->id(),
-            'status' => $payment->status()->value,
-            'providerRef' => $started->providerRef,
-        ]);
+        try {
+            $this->writeResult($output, [
+                'action' => 'start',
+                'id' => (string) $payment->id(),
+                'status' => $payment->status()->value,
+                'providerRef' => $started->providerRef,
+            ]);
+        } catch (\Exception $e) {
+        }
 
         return Command::SUCCESS;
     }
@@ -137,12 +143,15 @@ final class PaymentLifecycleCommand extends Command
         $existing->syncFrom($resolved);
         $this->paymentRepository->save($existing);
 
-        $this->writeResult($output, [
-            'action' => 'finalize',
-            'id' => (string) $existing->id(),
-            'status' => $existing->status()->value,
-            'providerRef' => $existing->providerRef(),
-        ]);
+        try {
+            $this->writeResult($output, [
+                'action' => 'finalize',
+                'id' => (string) $existing->id(),
+                'status' => $existing->status()->value,
+                'providerRef' => $existing->providerRef(),
+            ]);
+        } catch (\Exception $e) {
+        }
 
         return Command::SUCCESS;
     }
@@ -167,14 +176,17 @@ final class PaymentLifecycleCommand extends Command
             return Command::FAILURE;
         }
 
-        $this->writeResult($output, [
-            'action' => 'refund',
-            'id' => (string) $payment->id(),
-            'status' => $payment->status()->value,
-            'amount' => $payment->amount(),
-            'currency' => $payment->currency(),
-            'providerRef' => $payment->providerRef(),
-        ]);
+        try {
+            $this->writeResult($output, [
+                'action' => 'refund',
+                'id' => (string) $payment->id(),
+                'status' => $payment->status()->value,
+                'amount' => $payment->amount(),
+                'currency' => $payment->currency(),
+                'providerRef' => $payment->providerRef(),
+            ]);
+        } catch (\Exception $e) {
+        }
 
         return Command::SUCCESS;
     }
@@ -186,9 +198,11 @@ final class PaymentLifecycleCommand extends Command
         return Command::INVALID;
     }
 
-    /** @param array<string, mixed> $payload */
     private function writeResult(OutputInterface $output, array $payload): void
     {
-        $output->writeln((string) json_encode($payload, JSON_THROW_ON_ERROR));
+        try {
+            $output->writeln((string) json_encode($payload, JSON_THROW_ON_ERROR));
+        } catch (\JsonException $e) {
+        }
     }
 }

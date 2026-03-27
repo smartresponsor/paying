@@ -9,9 +9,15 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class StripeWebhookKernelFlowTest extends WebTestCase
 {
+    /**
+     * @throws \JsonException
+     */
+    /**
+     * @throws \JsonException
+     */
     public function testEndToEndStripeWebhook(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $payload = json_encode(['id' => 'evt_ker_1', 'type' => 'payment_intent.succeeded'], JSON_THROW_ON_ERROR);
         $timestamp = '1';
         $secret = (string) ($_ENV['STRIPE_WEBHOOK_SECRET'] ?? 'payment_test_whsec');
@@ -22,9 +28,9 @@ final class StripeWebhookKernelFlowTest extends WebTestCase
             'HTTP_Stripe-Signature' => sprintf('t=%s,v1=%s', $timestamp, $signature),
         ], $payload);
 
-        $this->assertTrue($client->getResponse()->isSuccessful(), (string) $client->getResponse()->getContent());
+        static::assertTrue($client->getResponse()->isSuccessful(), (string) $client->getResponse()->getContent());
 
         // NOTE: here you would run `payment:outbox:process` and then a messenger consumer in test env.
-        $this->assertTrue(true);
+        static::assertTrue(true);
     }
 }

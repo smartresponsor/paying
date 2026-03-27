@@ -29,6 +29,12 @@ class DlqReplayCommand extends Command
         $this->addArgument('limit', InputArgument::OPTIONAL, 'Max items to replay', '50');
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $limit = max(1, (int) $input->getArgument('limit'));

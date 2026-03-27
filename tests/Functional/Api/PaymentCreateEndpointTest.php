@@ -29,7 +29,7 @@ final class PaymentCreateEndpointTest extends WebTestCase
         unset($_ENV['OIDC_DISABLED']);
         putenv('OIDC_DISABLED');
 
-        $client = static::createClient();
+        $client = self::createClient();
         $client->request(
             'POST',
             '/api/payments',
@@ -52,7 +52,7 @@ final class PaymentCreateEndpointTest extends WebTestCase
         $_ENV['OIDC_DISABLED'] = '1';
         putenv('OIDC_DISABLED=1');
 
-        $client = static::createClient();
+        $client = self::createClient();
         $client->request(
             'POST',
             '/api/payments',

@@ -50,7 +50,7 @@ final class PaymentConsolePantherFlowTest extends PaymentConsolePantherFlowTestB
     public function testFinalizeShowsBusinessErrorForMissingPayment(): void
     {
         try {
-            $client = static::createPantherClient();
+            $client = self::createPantherClient();
         } catch (ProcessLogicException $exception) {
             if ('Output has been disabled.' === $exception->getMessage()) {
                 self::markTestSkipped('Panther web server process output is disabled in this runtime.');

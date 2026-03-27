@@ -7,8 +7,5 @@ namespace App\ServiceInterface;
 
 interface WebhookVerifierInterface
 {
-    /**
-     * @param array<string, string|list<string>> $headers
-     */
     public function verify(string $provider, string $raw, array $headers): bool;
 }

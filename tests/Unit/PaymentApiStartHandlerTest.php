@@ -17,6 +17,13 @@ use Symfony\Component\Uid\Ulid;
 
 final class PaymentApiStartHandlerTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \JsonException
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testHandleReturnsApiPayloadViaIdempotencyGate(): void
     {
         $input = new PaymentStartInput('internal', '12.50', 'USD');

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+declare(strict_types=1);
+
 // This file is auto-generated and is for apps only. Bundles SHOULD NOT rely on its content.
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
@@ -1548,11 +1550,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
 final class App
 {
     /**
-     * @param ConfigType $config
-     *
      * @psalm-return ConfigType
      */
-    public static function config(array $config): array
+    public static function config(array $config): ConfigType
     {
         /** @var ConfigType $config */
         $config = AppReference::config($config);
@@ -1627,8 +1627,6 @@ namespace Symfony\Component\Routing\Loader\Configurator;
 final class Routes
 {
     /**
-     * @param RoutesConfig $config
-     *
      * @psalm-return RoutesConfig
      */
     public static function config(array $config): array

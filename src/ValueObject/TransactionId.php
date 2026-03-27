@@ -7,7 +7,7 @@ namespace App\ValueObject;
 
 final class TransactionId
 {
-    public function __construct(private string $value)
+    public function __construct(private readonly string $value)
     {
         if ('' === $value) {
             throw new \InvalidArgumentException('TransactionId cannot be empty');

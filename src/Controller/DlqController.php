@@ -9,10 +9,11 @@ use App\Attribute\RequireScope;
 use App\ControllerInterface\DlqControllerInterface;
 use App\ServiceInterface\DlqServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
-final class DlqController implements DlqControllerInterface
+final readonly class DlqController implements DlqControllerInterface
 {
-    public function __construct(private readonly DlqServiceInterface $dlqService)
+    public function __construct(private DlqServiceInterface $dlqService)
     {
     }
 
@@ -20,16 +21,16 @@ final class DlqController implements DlqControllerInterface
     #[RequireScope(['payment:read'])]
     public function list(): JsonResponse
     {
-        return new JsonResponse(['items' => $this->dlqService->list()], JsonResponse::HTTP_OK);
+        return new JsonResponse(['items' => $this->dlqService->list()], Response::HTTP_OK);
     }
 
     #[RequireScope(['payment:admin'])]
     public function replay(int $id): JsonResponse
     {
         if (!$this->dlqService->replay($id)) {
-            return new JsonResponse(['ok' => false], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['ok' => false], Response::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse(['ok' => true], JsonResponse::HTTP_OK);
+        return new JsonResponse(['ok' => true], Response::HTTP_OK);
     }
 }

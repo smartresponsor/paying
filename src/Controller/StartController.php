@@ -17,14 +17,15 @@ use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-final class StartController implements StartControllerInterface
+final readonly class StartController implements StartControllerInterface
 {
     public function __construct(
-        private readonly PaymentApiStartHandlerInterface $startHandler,
-        private readonly ApiErrorResponseFactoryInterface $errorResponseFactory,
-        private readonly ApiJsonBodyDecoderInterface $jsonBodyDecoder,
-        private readonly ApiRequestValidatorInterface $requestValidator,
+        private PaymentApiStartHandlerInterface $startHandler,
+        private ApiErrorResponseFactoryInterface $errorResponseFactory,
+        private ApiJsonBodyDecoderInterface $jsonBodyDecoder,
+        private ApiRequestValidatorInterface $requestValidator,
     ) {
     }
 
@@ -74,6 +75,6 @@ final class StartController implements StartControllerInterface
         $payloadHash = hash('sha256', $request->getContent());
         $result = $this->startHandler->handle(new PaymentStartInput($dto->provider, $dto->amount, $dto->currency), $key, $payloadHash);
 
-        return new JsonResponse($result, JsonResponse::HTTP_OK);
+        return new JsonResponse($result, Response::HTTP_OK);
     }
 }

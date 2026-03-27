@@ -8,8 +8,6 @@ namespace App\ServiceInterface;
 interface WebhookIngestServiceInterface
 {
     /**
-     * @param array<string, mixed> $normalized
-     *
      * @return array{status: string, outboxId: string|null}
      */
     public function ingest(string $provider, string $externalId, array $normalized, string $routingKey): array;

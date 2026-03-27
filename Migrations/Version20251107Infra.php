@@ -8,13 +8,24 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
+/**
+ *
+ */
 final class Version20251107Infra extends AbstractMigration
 {
+    /**
+     * @return string
+     */
     public function getDescription(): string
     {
         return 'Create infrastructure projection tables for payment read model and watermark storage';
     }
 
+    /**
+     * @param \Doctrine\DBAL\Schema\Schema $schema
+     * @return void
+     * @throws \Doctrine\DBAL\Schema\SchemaException
+     */
     public function up(Schema $schema): void
     {
         if (!$schema->hasTable('payment_projection')) {
@@ -38,6 +49,11 @@ final class Version20251107Infra extends AbstractMigration
         }
     }
 
+    /**
+     * @param \Doctrine\DBAL\Schema\Schema $schema
+     * @return void
+     * @throws \Doctrine\DBAL\Schema\SchemaException
+     */
     public function down(Schema $schema): void
     {
         if ($schema->hasTable('payment_projection_meta')) {

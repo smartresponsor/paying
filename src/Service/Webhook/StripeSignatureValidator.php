@@ -7,9 +7,9 @@ namespace App\Service\Webhook;
 
 use App\ServiceInterface\WebhookVerifierInterface;
 
-final class StripeSignatureValidator
+final readonly class StripeSignatureValidator
 {
-    public function __construct(private readonly WebhookVerifierInterface $verifier)
+    public function __construct(private WebhookVerifierInterface $verifier)
     {
     }
 

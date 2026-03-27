@@ -16,8 +16,8 @@ use Symfony\Component\Uid\Ulid;
 final class PaymentReconciliationService implements PaymentReconciliationServiceInterface
 {
     public function __construct(
-        private PaymentRepositoryInterface $payments,
-        private EntityManagerInterface $em,
+        private readonly PaymentRepositoryInterface $payments,
+        private readonly EntityManagerInterface $em,
     ) {
     }
 

@@ -1,11 +1,12 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
 $secretB64 = $_ENV['ADYEN_HMAC_SECRET'] ?? ($argv[1] ?? '');
 $payload = $argv[2] ?? '{"test":"ok"}';
-if ($secretB64 === '') {
+if ('' === $secretB64) {
     fwrite(STDERR, "secret required\n");
     exit(2);
 }

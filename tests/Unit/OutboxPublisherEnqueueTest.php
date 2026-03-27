@@ -11,6 +11,13 @@ use PHPUnit\Framework\TestCase;
 
 final class OutboxPublisherEnqueueTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \JsonException
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testEnqueueWritesUnifiedPaymentOutboxMessageTable(): void
     {
         $connection = $this->createMock(Connection::class);

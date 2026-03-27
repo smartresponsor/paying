@@ -16,6 +16,12 @@ use Symfony\Component\Uid\Ulid;
 
 final class PaymentConsoleReadModelTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testBuildFiltersPaymentsAndPrefillsSelectedCard(): void
     {
         $paymentA = new Payment(new Ulid('01HK153X000000000000000001'), PaymentStatus::processing, '10.00', 'USD');
@@ -28,7 +34,6 @@ final class PaymentConsoleReadModelTest extends TestCase
         $logB = new PaymentWebhookLog('paypal', 'evt_2', ['paymentId' => (string) $paymentB->id()]);
 
         $repo = new class([$paymentA, $paymentB]) implements PaymentRepositoryInterface {
-            /** @param list<Payment> $payments */
             public function __construct(private readonly array $payments)
             {
             }
@@ -61,7 +66,6 @@ final class PaymentConsoleReadModelTest extends TestCase
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->method('getRepository')->willReturn(new class([$logA, $logB]) {
-            /** @param list<PaymentWebhookLog> $logs */
             public function __construct(private readonly array $logs)
             {
             }
@@ -84,6 +88,12 @@ final class PaymentConsoleReadModelTest extends TestCase
         self::assertSame('evt_1', $result['events'][0]['externalEventId']);
     }
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testBuildFallsBackToFirstFilteredPaymentWhenSelectionIsMissing(): void
     {
         $paymentA = new Payment(new Ulid('01HK153X000000000000000003'), PaymentStatus::processing, '10.00', 'USD');
@@ -93,7 +103,6 @@ final class PaymentConsoleReadModelTest extends TestCase
         $paymentB->withProviderRef('stripe_pi_1004');
 
         $repo = new class([$paymentA, $paymentB]) implements PaymentRepositoryInterface {
-            /** @param list<Payment> $payments */
             public function __construct(private readonly array $payments)
             {
             }

@@ -36,6 +36,9 @@ final class PaymentWebhookLogFixture extends Fixture implements FixtureGroupInte
         $manager->flush();
     }
 
+    /**
+     * @return string[]
+     */
     public static function getGroups(): array
     {
         return ['payment'];

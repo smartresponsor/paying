@@ -7,13 +7,12 @@ namespace App\Service\Webhook;
 
 use App\ServiceInterface\WebhookVerifierInterface;
 
-final class PayPalSignatureValidator
+final readonly class PayPalSignatureValidator
 {
-    public function __construct(private readonly WebhookVerifierInterface $verifier)
+    public function __construct(private WebhookVerifierInterface $verifier)
     {
     }
 
-    /** @param array<string, string|list<string>> $headers */
     public function isValid(string $payload, array $headers): bool
     {
         return $this->verifier->verify('paypal', $payload, $headers);

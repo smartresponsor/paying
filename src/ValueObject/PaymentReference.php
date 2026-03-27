@@ -7,7 +7,7 @@ namespace App\ValueObject;
 
 final class PaymentReference
 {
-    public function __construct(private string $value)
+    public function __construct(private readonly string $value)
     {
         if ('' === $value) {
             throw new \InvalidArgumentException('PaymentReference cannot be empty');

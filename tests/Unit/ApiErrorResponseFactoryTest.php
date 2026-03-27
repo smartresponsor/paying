@@ -7,7 +7,7 @@ namespace App\Tests\Unit;
 
 use App\Service\ApiErrorResponseFactory;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 final class ApiErrorResponseFactoryTest extends TestCase
 {
@@ -18,7 +18,7 @@ final class ApiErrorResponseFactoryTest extends TestCase
         $response = $factory->badJsonBody();
         $payload = json_decode((string) $response->getContent(), true);
 
-        self::assertSame(JsonResponse::HTTP_BAD_REQUEST, $response->getStatusCode());
+        self::assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
         self::assertSame([
             'errors' => [['field' => 'body', 'message' => 'Invalid JSON body.']],
         ], $payload);
@@ -31,7 +31,7 @@ final class ApiErrorResponseFactoryTest extends TestCase
         $response = $factory->paymentNotFound();
         $payload = json_decode((string) $response->getContent(), true);
 
-        self::assertSame(JsonResponse::HTTP_NOT_FOUND, $response->getStatusCode());
+        self::assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         self::assertSame(['error' => 'payment-not-found'], $payload);
     }
 }

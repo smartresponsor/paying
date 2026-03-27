@@ -13,19 +13,28 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class ScopeGuardSubscriber implements EventSubscriberInterface
+readonly class ScopeGuardSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly TokenVerifierInterface $verifier,
-        private readonly LoggerInterface $logger,
+        private TokenVerifierInterface $verifier,
+        private LoggerInterface $logger,
     ) {
     }
 
+    /**
+     * @return string[]
+     */
     public static function getSubscribedEvents(): array
     {
         return [KernelEvents::CONTROLLER => 'onController'];
     }
 
+    /**
+     * @throws \ReflectionException
+     */
+    /**
+     * @throws \ReflectionException
+     */
     public function onController(ControllerEvent $event): void
     {
         if ('1' === (string) ($_ENV['OIDC_DISABLED'] ?? '')) {

@@ -5,11 +5,11 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-final class PaymentEvent
+final readonly class PaymentEvent
 {
     public function __construct(
-        private readonly string $paymentId,
-        private readonly string $status,
+        private string $paymentId,
+        private string $status,
     ) {
     }
 

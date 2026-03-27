@@ -12,14 +12,33 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ *
+ */
+
+/**
+ *
+ */
 #[AsCommand(name: 'payment:outbox:process', description: 'Publish payment outbox messages to RabbitMQ')]
 class PaymentOutboxProcessCommand extends Command
 {
-    public function __construct(private PaymentOutboxProcessorInterface $processor)
+    /**
+     * @param \App\ServiceInterface\Outbox\PaymentOutboxProcessorInterface $processor
+     */
+    /**
+     * @param \App\ServiceInterface\Outbox\PaymentOutboxProcessorInterface $processor
+     */
+    public function __construct(private readonly readonly PaymentOutboxProcessorInterface $processor)
     {
         parent::__construct();
     }
 
+    /**
+     * @return void
+     */
+    /**
+     * @return void
+     */
     protected function configure(): void
     {
         $this
@@ -27,6 +46,16 @@ class PaymentOutboxProcessCommand extends Command
             ->addOption('retry', null, InputOption::VALUE_NONE, 'Also retry previously failed');
     }
 
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @return int
+     */
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @return int
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $limit = (int) $input->getOption('limit');

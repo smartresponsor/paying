@@ -18,16 +18,17 @@ use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
 
-final class PaymentRefundController implements PaymentRefundControllerInterface
+final readonly class PaymentRefundController implements PaymentRefundControllerInterface
 {
     public function __construct(
-        private readonly RefundServiceInterface $refundService,
-        private readonly ApiErrorResponseFactoryInterface $errorResponseFactory,
-        private readonly ApiJsonBodyDecoderInterface $jsonBodyDecoder,
-        private readonly ApiRequestValidatorInterface $requestValidator,
-        private readonly LoggerInterface $logger,
+        private RefundServiceInterface $refundService,
+        private ApiErrorResponseFactoryInterface $errorResponseFactory,
+        private ApiJsonBodyDecoderInterface $jsonBodyDecoder,
+        private ApiRequestValidatorInterface $requestValidator,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -94,6 +95,6 @@ final class PaymentRefundController implements PaymentRefundControllerInterface
             'amount' => $payment->amount(),
             'currency' => $payment->currency(),
             'providerRef' => $payment->providerRef(),
-        ], JsonResponse::HTTP_OK);
+        ], Response::HTTP_OK);
     }
 }

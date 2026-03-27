@@ -11,9 +11,9 @@ use App\ServiceInterface\WebhookIngestServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;
 
-final class WebhookIngestService implements WebhookIngestServiceInterface
+final readonly class WebhookIngestService implements WebhookIngestServiceInterface
 {
-    public function __construct(private readonly EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em)
     {
     }
 

@@ -7,10 +7,6 @@ namespace App\Service\Webhook;
 
 final class JsonSchemaValidator
 {
-    /**
-     * @param array<string, mixed> $payload
-     * @param list<string>         $requiredKeys
-     */
     public function validate(array $payload, array $requiredKeys): bool
     {
         foreach ($requiredKeys as $requiredKey) {

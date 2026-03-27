@@ -33,7 +33,7 @@ final class PaymentCreateStartFinalizeVerticalTest extends WebTestCase
 
     public function testCreateStartFinalizeReadAndRefundVertical(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
 
         $client->request(
             'POST',

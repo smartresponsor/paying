@@ -9,9 +9,9 @@ use App\ServiceInterface\IdempotencyServiceInterface;
 use App\ServiceInterface\IdempotencyStoreInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class IdempotencyService implements IdempotencyServiceInterface
+readonly class IdempotencyService implements IdempotencyServiceInterface
 {
-    public function __construct(private readonly IdempotencyStoreInterface $store, private readonly int $ttlSec = 86400)
+    public function __construct(private IdempotencyStoreInterface $store, private int $ttlSec = 86400)
     {
     }
 
@@ -25,13 +25,21 @@ class IdempotencyService implements IdempotencyServiceInterface
         return 'payment:idem:api:'.$hash;
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * @return array<string, mixed>
+     *
+     * @throws \JsonException
+     */
     public function once(Request $req, callable $producer): array
     {
         return $this->execute($this->keyFor($req), hash('sha256', (string) $req->getContent()), $producer);
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * @return array<string, mixed>
+     *
+     * @throws \JsonException
+     */
     public function execute(string $key, string $payloadHash, callable $producer): array
     {
         $cacheKey = 'payment:idem:direct:'.$key.':'.$payloadHash;

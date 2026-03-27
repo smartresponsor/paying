@@ -13,11 +13,11 @@ use App\ValueObject\Money;
 use App\ValueObject\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 
-final class PaymentStartService implements PaymentStartServiceInterface
+final readonly class PaymentStartService implements PaymentStartServiceInterface
 {
     public function __construct(
-        private readonly ProviderGuardInterface $guard,
-        private readonly PaymentRepositoryInterface $repo,
+        private ProviderGuardInterface $guard,
+        private PaymentRepositoryInterface $repo,
     ) {
     }
 

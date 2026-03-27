@@ -37,7 +37,7 @@ final class PaymentConsoleSubmitFlowTest extends WebTestCase
 
     public function testConsoleCreateAndStartFormsRedirectWithSuccessFlash(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $crawler = $client->request('GET', '/payment/console');
 
         $createForm = $crawler->selectButton('Create')->form([
@@ -72,8 +72,8 @@ final class PaymentConsoleSubmitFlowTest extends WebTestCase
 
     public function testConsoleFinalizeAndRefundFormsMutateExistingFixtureBackedPayment(): void
     {
-        $client = static::createClient();
-        $repo = static::getContainer()->get(PaymentRepositoryInterface::class);
+        $client = self::createClient();
+        $repo = self::getContainer()->get(PaymentRepositoryInterface::class);
         \assert($repo instanceof PaymentRepositoryInterface);
 
         $payment = new Payment(new Ulid(), PaymentStatus::processing, '33.00', 'USD');
@@ -123,8 +123,8 @@ final class PaymentConsoleSubmitFlowTest extends WebTestCase
 
     public function testConsoleSelectionPrefillsFinalizeAndRefundPaymentIdFields(): void
     {
-        $client = static::createClient();
-        $repo = static::getContainer()->get(PaymentRepositoryInterface::class);
+        $client = self::createClient();
+        $repo = self::getContainer()->get(PaymentRepositoryInterface::class);
         \assert($repo instanceof PaymentRepositoryInterface);
 
         $payment = new Payment(new Ulid(), PaymentStatus::processing, '44.00', 'USD');
@@ -147,7 +147,7 @@ final class PaymentConsoleSubmitFlowTest extends WebTestCase
     private static function assertConsoleRedirectWithSelectedPayment(): void
     {
         self::assertResponseStatusCodeSame(302);
-        $location = static::getClient()->getResponse()->headers->get('Location');
+        $location = self::getClient()->getResponse()->headers->get('Location');
         self::assertNotNull($location);
         self::assertMatchesRegularExpression('#^/payment/console\?payment=[0-9A-HJKMNP-TV-Z]{26}$#', $location);
     }

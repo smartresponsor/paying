@@ -33,7 +33,7 @@ final class PaymentConsoleAccessSmokeTest extends WebTestCase
 
     public function testPaymentConsoleRemainsReachableWhenOidcIsDisabledForSmoke(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $client->request('GET', '/payment/console');
 
         self::assertSame(200, $client->getResponse()->getStatusCode());

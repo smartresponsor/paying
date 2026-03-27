@@ -51,7 +51,7 @@ $extractDeclaredSymbol = static function (string $pathname): ?string {
             $namespace = '';
             for ($j = $index + 1; $j < $count; ++$j) {
                 $part = $tokens[$j];
-                if (is_string($part) && (';' === $part || '{' === $part)) {
+                if (';' === $part || '{' === $part) {
                     break;
                 }
                 if (is_array($part) && in_array($part[0], [T_STRING, T_NAME_QUALIFIED, T_NS_SEPARATOR], true)) {
@@ -214,7 +214,7 @@ $resolveSqlitePath = static function (?string $url, string $projectDir): ?string
     }
 
     $path = substr($resolved, strlen('sqlite:///'));
-    if (false === $path || '' === $path) {
+    if ('' === $path) {
         return null;
     }
 

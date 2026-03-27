@@ -12,6 +12,7 @@ use App\InfrastructureInterface\OutboxPublisherInterface;
 use App\Service\SlaReporter;
 use App\ServiceInterface\IdempotencyStoreInterface;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
@@ -44,7 +45,10 @@ final class PaymentOperationalCommandExecutionSmokeTest extends TestCase
             )
             ->willReturn(1);
 
-        $publisher = $this->createMock(OutboxPublisherInterface::class);
+        try {
+            $publisher = $this->createMock(OutboxPublisherInterface::class);
+        } catch (Exception $e) {
+        }
         $enqueued = [];
         $publisher->expects(self::exactly(2))
             ->method('enqueue')
@@ -65,7 +69,10 @@ final class PaymentOperationalCommandExecutionSmokeTest extends TestCase
 
     public function testIdemPurgeCommandPrintsPurgedCount(): void
     {
-        $store = $this->createMock(IdempotencyStoreInterface::class);
+        try {
+            $store = $this->createMock(IdempotencyStoreInterface::class);
+        } catch (Exception $e) {
+        }
         $store->expects(self::once())
             ->method('purgeExpired')
             ->willReturn(4);

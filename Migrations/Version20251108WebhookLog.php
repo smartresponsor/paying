@@ -8,13 +8,24 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
+/**
+ *
+ */
 final class Version20251108WebhookLog extends AbstractMigration
 {
+    /**
+     * @return string
+     */
     public function getDescription(): string
     {
         return 'Create payment_webhook_log table for webhook idempotency and processing audit';
     }
 
+    /**
+     * @param \Doctrine\DBAL\Schema\Schema $schema
+     * @return void
+     * @throws \Doctrine\DBAL\Schema\SchemaException
+     */
     public function up(Schema $schema): void
     {
         if ($schema->hasTable('payment_webhook_log')) {
@@ -36,6 +47,11 @@ final class Version20251108WebhookLog extends AbstractMigration
         $table->addIndex(['received_at'], 'idx_payment_webhook_received_at');
     }
 
+    /**
+     * @param \Doctrine\DBAL\Schema\Schema $schema
+     * @return void
+     * @throws \Doctrine\DBAL\Schema\SchemaException
+     */
     public function down(Schema $schema): void
     {
         if ($schema->hasTable('payment_webhook_log')) {

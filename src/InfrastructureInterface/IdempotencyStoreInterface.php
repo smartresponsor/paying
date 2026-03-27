@@ -10,6 +10,5 @@ interface IdempotencyStoreInterface
     /** @return array{response: array<string, mixed>|list<mixed>|scalar|null, hash: string}|null */
     public function get(string $key): ?array;
 
-    /** @param array<string, mixed>|list<mixed> $response */
     public function save(string $key, string $payloadHash, array $response, int $statusCode, int $ttlSeconds): void;
 }

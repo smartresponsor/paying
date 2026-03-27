@@ -5,12 +5,12 @@ declare(strict_types=1);
 
 namespace App\Message\Event;
 
-final class PaymentTransportMessage
+final readonly class PaymentTransportMessage
 {
     public function __construct(
-        public readonly string $type,
+        public string $type,
         /** @var array<string, mixed> */
-        public readonly array $payload,
+        public array $payload,
     ) {
     }
 }

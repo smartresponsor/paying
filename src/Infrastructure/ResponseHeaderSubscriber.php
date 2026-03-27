@@ -11,6 +11,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class ResponseHeaderSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @return string[]
+     */
     public static function getSubscribedEvents(): array
     {
         return [KernelEvents::RESPONSE => 'onResponse'];

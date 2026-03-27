@@ -9,9 +9,7 @@ interface EventMapperInterface
 {
     public function provider(): string;
 
-    /** @param array<string, mixed> $payload */
     public function extractPaymentId(array $payload): ?string;
 
-    /** @param array<string, mixed> $payload */
     public function mapStatus(array $payload): ?string;
 }

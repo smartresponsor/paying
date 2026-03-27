@@ -8,6 +8,7 @@ namespace App\Tests\Functional\Cli;
 use App\Infrastructure\Console\GateSloCommand;
 use App\Service\Metric;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -39,7 +40,10 @@ final class PaymentGateSloCommandExecutionSmokeTest extends TestCase
             ->with(self::stringContains('SELECT MAX(updated_at) FROM payment'))
             ->willReturn('2025-11-07 10:00:00');
 
-        $logger = $this->createMock(LoggerInterface::class);
+        try {
+            $logger = $this->createMock(LoggerInterface::class);
+        } catch (Exception $e) {
+        }
         $logger->expects(self::never())->method('warning');
 
         $command = new GateSloCommand($metric, $data, $logger);
@@ -72,7 +76,10 @@ final class PaymentGateSloCommandExecutionSmokeTest extends TestCase
             ->method('fetchOne')
             ->willReturn('2025-11-07 10:00:00');
 
-        $logger = $this->createMock(LoggerInterface::class);
+        try {
+            $logger = $this->createMock(LoggerInterface::class);
+        } catch (Exception $e) {
+        }
         $logger->expects(self::never())->method('warning');
 
         $command = new GateSloCommand($metric, $data, $logger);

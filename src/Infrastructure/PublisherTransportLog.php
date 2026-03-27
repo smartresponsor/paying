@@ -9,7 +9,6 @@ use App\InfrastructureInterface\PublisherTransportInterface;
 
 class PublisherTransportLog implements PublisherTransportInterface
 {
-    /** @param array<string, mixed> $payload */
     public function publish(string $topic, array $payload): void
     {
         error_log('[outbox] topic='.$topic.' payload='.json_encode($payload));

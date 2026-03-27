@@ -7,12 +7,18 @@ namespace App\Service;
 
 use App\ServiceInterface\RetryExecutorInterface;
 
-class RetryExecutor implements RetryExecutorInterface
+readonly class RetryExecutor implements RetryExecutorInterface
 {
-    public function __construct(private readonly int $max = 3, private readonly int $baseMs = 50)
+    public function __construct(private int $max = 3, private int $baseMs = 50)
     {
     }
 
+    /**
+     * @throws \Throwable
+     */
+    /**
+     * @throws \Throwable
+     */
     public function execute(callable $callable): mixed
     {
         $attempt = 0;

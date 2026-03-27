@@ -37,8 +37,8 @@ final class PaymentConsoleFixtureTableSmokeTest extends WebTestCase
 
     public function testConsoleListsRecentlyPersistedPayments(): void
     {
-        $client = static::createClient();
-        $container = static::getContainer();
+        $client = self::createClient();
+        $container = self::getContainer();
         $em = $container->get(EntityManagerInterface::class);
         \assert($em instanceof EntityManagerInterface);
 

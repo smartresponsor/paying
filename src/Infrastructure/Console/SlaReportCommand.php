@@ -25,6 +25,12 @@ class SlaReportCommand extends Command
         $this->addArgument('window', InputArgument::OPTIONAL, 'ISO interval like P1D/PT24H', 'P1D');
     }
 
+    /**
+     * @throws \JsonException
+     */
+    /**
+     * @throws \JsonException
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $win = (string) $input->getArgument('window');

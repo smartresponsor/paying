@@ -9,6 +9,9 @@ use PHPUnit\Framework\TestCase;
 
 final class PaymentInstallRuntimePreflightConfigSmokeTest extends TestCase
 {
+    /**
+     * @throws \JsonException
+     */
     public function testInstallPreflightScriptsAndDocsArePresent(): void
     {
         $root = dirname(__DIR__, 3);

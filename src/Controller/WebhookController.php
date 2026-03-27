@@ -14,13 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
 
-final class WebhookController implements WebhookControllerInterface
+final readonly class WebhookController implements WebhookControllerInterface
 {
     public function __construct(
-        private readonly WebhookVerifierInterface $verifier,
-        private readonly ProviderGuardInterface $guard,
-        private readonly ApiJsonBodyDecoderInterface $jsonBodyDecoder,
-        /** @var iterable<EventMapperInterface> */ private readonly iterable $mappers,
+        private WebhookVerifierInterface $verifier,
+        private ProviderGuardInterface $guard,
+        private ApiJsonBodyDecoderInterface $jsonBodyDecoder,
+        /** @var iterable<EventMapperInterface> */ private iterable $mappers,
     ) {
     }
 
@@ -28,7 +28,7 @@ final class WebhookController implements WebhookControllerInterface
     {
         try {
             $raw = $request->getContent();
-            $headers = array_change_key_case($request->headers->all(), CASE_LOWER);
+            $headers = array_change_key_case($request->headers->all());
             $verified = $this->verifier->verify($provider, $raw, $headers);
 
             if (!$verified) {

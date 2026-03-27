@@ -13,6 +13,12 @@ use PHPUnit\Framework\TestCase;
 
 final class OutboxWorkerRetryTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testRunMarksFailedBeforeDlqThreshold(): void
     {
         $connection = $this->createMock(Connection::class);
@@ -50,6 +56,6 @@ final class OutboxWorkerRetryTest extends TestCase
         $publisher->expects(self::never())->method('moveToDlq');
 
         $worker = new OutboxWorker($connection, $transport, $publisher);
-        self::assertSame(0, $worker->run(10, false));
+        self::assertSame(0, $worker->run(10));
     }
 }

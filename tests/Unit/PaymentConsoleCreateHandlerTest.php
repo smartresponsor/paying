@@ -14,6 +14,12 @@ use Symfony\Component\Uid\Ulid;
 
 final class PaymentConsoleCreateHandlerTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testCreateDelegatesToPaymentService(): void
     {
         $payment = new Payment(new Ulid(), PaymentStatus::new, '10.00', 'USD');

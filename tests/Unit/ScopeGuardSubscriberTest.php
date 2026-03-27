@@ -17,6 +17,13 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 final class ScopeGuardSubscriberTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \ReflectionException
+     */
     public function testOnControllerLogsVerificationFailureAndReturnsUnauthorized(): void
     {
         $verifier = $this->createMock(TokenVerifierInterface::class);

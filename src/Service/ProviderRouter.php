@@ -10,7 +10,6 @@ use App\ServiceInterface\ProviderRouterInterface;
 
 final class ProviderRouter implements ProviderRouterInterface
 {
-    /** @var array<string, PaymentProviderInterface> */
     private array $map = [];
 
     /** @param iterable<string, PaymentProviderInterface> $providers */

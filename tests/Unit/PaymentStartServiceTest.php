@@ -9,6 +9,7 @@ use App\Entity\Payment;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\Service\PaymentStartService;
 use App\ServiceInterface\ProviderGuardInterface;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
@@ -45,6 +46,9 @@ final class PaymentStartServiceTest extends TestCase
         $guard = new class implements ProviderGuardInterface {
             public array $receivedContext = [];
 
+            /**
+             * @return string[]
+             */
             public function start(string $provider, Payment $payment, array $context = []): array
             {
                 $this->receivedContext = $context;
@@ -83,8 +87,14 @@ final class PaymentStartServiceTest extends TestCase
 
     public function testStartRejectsInvalidAmountFormat(): void
     {
-        $repo = $this->createMock(PaymentRepositoryInterface::class);
-        $guard = $this->createMock(ProviderGuardInterface::class);
+        try {
+            $repo = $this->createMock(PaymentRepositoryInterface::class);
+        } catch (Exception $e) {
+        }
+        try {
+            $guard = $this->createMock(ProviderGuardInterface::class);
+        } catch (Exception $e) {
+        }
 
         $repo->expects(self::never())->method('save');
         $guard->expects(self::never())->method('start');

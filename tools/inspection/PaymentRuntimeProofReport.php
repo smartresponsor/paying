@@ -13,6 +13,6 @@ $targetDir = 'var/report/inspection';
 if (!is_dir($targetDir)) {
     mkdir($targetDir, 0777, true);
 }
-$target = $targetDir . '/payment-runtime-proof.json';
-file_put_contents($target, json_encode($proof, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);
-echo $target . PHP_EOL;
+$target = $targetDir.'/payment-runtime-proof.json';
+file_put_contents($target, json_encode($proof, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).PHP_EOL);
+echo $target.PHP_EOL;

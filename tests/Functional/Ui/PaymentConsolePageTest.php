@@ -33,7 +33,7 @@ final class PaymentConsolePageTest extends WebTestCase
 
     public function testConsolePageRendersBootstrapSmokeForms(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $crawler = $client->request('GET', '/payment/console');
 
         self::assertSame(200, $client->getResponse()->getStatusCode());
