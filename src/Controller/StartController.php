@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -8,11 +8,11 @@ namespace App\Controller;
 use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentStartRequestDto;
 use App\ControllerInterface\StartControllerInterface;
-use App\Service\PaymentStartInput;
 use App\ServiceInterface\ApiErrorResponseFactoryInterface;
 use App\ServiceInterface\ApiJsonBodyDecoderInterface;
 use App\ServiceInterface\ApiRequestValidatorInterface;
 use App\ServiceInterface\PaymentApiStartHandlerInterface;
+use App\ServiceInterface\PaymentStartInput;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
