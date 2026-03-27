@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 $projectDir = dirname(__DIR__);
@@ -198,6 +197,10 @@ if (!is_file($autoload)) {
 }
 
 require $autoload;
+
+if (class_exists(\Symfony\Component\Dotenv\Dotenv::class)) {
+    (new \Symfony\Component\Dotenv\Dotenv())->bootEnv($projectDir.'/.env');
+}
 
 $resolveSqlitePath = static function (?string $url, string $projectDir): ?string {
     if (null === $url || '' === $url) {
