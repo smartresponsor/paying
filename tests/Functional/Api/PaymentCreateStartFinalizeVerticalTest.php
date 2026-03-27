@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Api;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Uid\Ulid;
 
 final class PaymentCreateStartFinalizeVerticalTest extends WebTestCase
 {
@@ -62,7 +63,7 @@ final class PaymentCreateStartFinalizeVerticalTest extends WebTestCase
             '/payment/start',
             [],
             [],
-            ['CONTENT_TYPE' => 'application/json', 'HTTP_Idempotency_Key' => 'vertical-start-1001'],
+            ['CONTENT_TYPE' => 'application/json', 'HTTP_Idempotency_Key' => 'vertical-start-'.(new Ulid())],
             (string) json_encode([
                 'amount' => '12.50',
                 'currency' => 'USD',

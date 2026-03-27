@@ -197,11 +197,7 @@ if (!is_file($autoload)) {
     exit(1);
 }
 
-require $autoload;
-
-if (class_exists(Symfony\Component\Dotenv\Dotenv::class)) {
-    (new Symfony\Component\Dotenv\Dotenv())->usePutenv(true)->bootEnv($projectDir.'/.env');
-}
+require $projectDir.'/config/bootstrap.php';
 
 $resolveSqlitePath = static function (?string $url, string $projectDir): ?string {
     if (null === $url || '' === $url) {

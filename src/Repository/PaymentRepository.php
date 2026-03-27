@@ -58,6 +58,7 @@ final readonly class PaymentRepository implements PaymentRepositoryInterface
             return [];
         }
 
+        $rows = [];
         try {
             $rows = $this->em->getConnection()->fetchFirstColumn(
                 'SELECT id FROM payment WHERE status IN (?) ORDER BY updated_at ASC LIMIT ?',

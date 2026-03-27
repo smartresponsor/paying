@@ -48,8 +48,8 @@ final class ControllerValidationBoundaryTest extends TestCase
                 $content,
                 sprintf('Controller %s must use ApiRequestValidatorInterface import.', $controller),
             );
-            self::assertStringContainsString(
-                'private readonly ApiRequestValidatorInterface $requestValidator,',
+            self::assertMatchesRegularExpression(
+                '/private\s+(?:readonly\s+)?ApiRequestValidatorInterface\s+\$requestValidator,/',
                 $content,
                 sprintf('Controller %s must inject ApiRequestValidatorInterface.', $controller),
             );

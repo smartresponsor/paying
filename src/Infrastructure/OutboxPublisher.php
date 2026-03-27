@@ -36,6 +36,8 @@ readonly class OutboxPublisher implements OutboxPublisherInterface
 
     public function moveToDlq(string $id, string $reason): void
     {
+        $row = false;
+
         try {
             $row = $this->data->fetchAssociative(
                 'SELECT * FROM payment_outbox_message WHERE id = :id',

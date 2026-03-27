@@ -21,6 +21,8 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
      */
     public function findById(string $id): ?array
     {
+        $row = false;
+
         try {
             $row = $this->infra->fetchAssociative(
                 'SELECT id, amount, currency, status, updated_at FROM payment_projection WHERE id = :id',
@@ -44,6 +46,7 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
                 ['st' => ParameterType::STRING, 'lim' => ParameterType::INTEGER],
             );
         } catch (Exception $e) {
+            return [];
         }
     }
 
@@ -63,6 +66,7 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
                     'updated_at' => (string) ($row['updated_at'] ?? ''),
                 ];
 
+                $updated = 0;
                 try {
                     $updated = $connection->update('payment_projection', $payload, ['id' => $id]);
                 } catch (Exception $e) {
@@ -80,6 +84,8 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
 
     public function maxUpdatedAt(): ?string
     {
+        $row = false;
+
         try {
             $row = $this->infra->fetchOne('SELECT MAX(updated_at) FROM payment_projection');
         } catch (Exception $e) {
@@ -90,6 +96,8 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
 
     public function watermark(): ?string
     {
+        $row = false;
+
         try {
             $row = $this->infra->fetchOne("SELECT value FROM payment_projection_meta WHERE name = 'watermark'");
         } catch (Exception $e) {
@@ -100,6 +108,8 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
 
     public function saveWatermark(string $ts): void
     {
+        $updated = 0;
+
         try {
             $updated = $this->infra->update('payment_projection_meta', ['value' => $ts], ['name' => 'watermark']);
         } catch (Exception $e) {

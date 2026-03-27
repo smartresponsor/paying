@@ -84,6 +84,7 @@ class OutboxWorker
         try {
             return $this->data->fetchAllAssociative($sql);
         } catch (Exception $e) {
+            return [];
         }
     }
 

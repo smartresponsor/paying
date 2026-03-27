@@ -9,8 +9,8 @@ use App\Infrastructure\Console\DlqReplayCommand;
 use App\Infrastructure\Console\IdemPurgeCommand;
 use App\Infrastructure\Console\SlaReportCommand;
 use App\InfrastructureInterface\OutboxPublisherInterface;
-use App\Service\SlaReporter;
 use App\ServiceInterface\IdempotencyStoreInterface;
+use App\ServiceInterface\SlaReporterInterface;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -86,11 +86,8 @@ final class PaymentOperationalCommandExecutionSmokeTest extends TestCase
 
     public function testSlaReportCommandPrintsJsonReportForWindow(): void
     {
-        /** @var SlaReporter&MockObject $reporter */
-        $reporter = $this->getMockBuilder(SlaReporter::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['since'])
-            ->getMock();
+        /** @var SlaReporterInterface&MockObject $reporter */
+        $reporter = $this->createMock(SlaReporterInterface::class);
 
         $reporter->expects(self::once())
             ->method('since')

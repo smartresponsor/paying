@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\ServiceInterface\IdempotencyServiceInterface;
 use App\ServiceInterface\PaymentApiStartHandlerInterface;
 use App\ServiceInterface\PaymentStartInput;
 use App\ServiceInterface\PaymentStartServiceInterface;
@@ -13,7 +14,7 @@ final readonly class PaymentApiStartHandler implements PaymentApiStartHandlerInt
 {
     public function __construct(
         private PaymentStartServiceInterface $paymentStartService,
-        private IdempotencyService $idem,
+        private IdempotencyServiceInterface $idem,
     ) {
     }
 
