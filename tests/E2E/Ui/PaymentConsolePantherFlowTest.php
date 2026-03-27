@@ -5,9 +5,24 @@ declare(strict_types=1);
 
 namespace App\Tests\E2E\Ui;
 
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Panther\PantherTestCase;
 
-final class PaymentConsolePantherFlowTest extends PantherTestCase
+if (class_exists(PantherTestCase::class)) {
+    abstract class PaymentConsolePantherFlowTestBase extends PantherTestCase
+    {
+    }
+} else {
+    abstract class PaymentConsolePantherFlowTestBase extends TestCase
+    {
+        protected static function createPantherClient(): never
+        {
+            self::markTestSkipped('symfony/panther is not installed in this environment.');
+        }
+    }
+}
+
+final class PaymentConsolePantherFlowTest extends PaymentConsolePantherFlowTestBase
 {
     private ?string $originalOidcDisabled = null;
 
