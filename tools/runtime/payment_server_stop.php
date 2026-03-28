@@ -2,37 +2,22 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/payment_runtime.php';
+
 $projectDir = dirname(__DIR__, 2);
 $pidFile = $projectDir.'/var/run/payment-local-server.pid';
-$portFile = $projectDir.'/var/run/payment-local-server.port';
-$modeFile = $projectDir.'/var/run/payment-local-server.mode';
+$portFile = paymentResolvePortFile($projectDir);
+$modeFile = paymentResolveModeFile($projectDir);
 
 $symfonyBinary = trim((string) shell_exec('command -v symfony 2>/dev/null'));
 if ('' !== $symfonyBinary) {
-    $command = [
-        $symfonyBinary,
-        'server:stop',
-    ];
-    $process = proc_open($command, [0 => STDIN, 1 => STDOUT, 2 => STDERR], $pipes, $projectDir, $_ENV);
-    if (!is_resource($process)) {
-        fwrite(STDERR, "Failed to stop Symfony local server.\n");
-        exit(1);
-    }
-
-    $status = proc_close($process);
+    $status = paymentRunProcess([$symfonyBinary, 'server:stop'], $projectDir);
     exit(is_int($status) ? $status : 1);
 }
 
 $mode = is_file($modeFile) ? trim((string) file_get_contents($modeFile)) : '';
 if ('docker' === $mode) {
-    $command = ['docker', 'compose', 'stop', 'app'];
-    $process = proc_open($command, [0 => STDIN, 1 => STDOUT, 2 => STDERR], $pipes, $projectDir, $_ENV);
-    if (!is_resource($process)) {
-        fwrite(STDERR, "Failed to stop Docker-backed local server.\n");
-        exit(1);
-    }
-
-    $status = proc_close($process);
+    $status = paymentRunProcess(['docker', 'compose', 'stop', 'app'], $projectDir);
     @unlink($modeFile);
     @unlink($portFile);
     exit(is_int($status) ? $status : 1);

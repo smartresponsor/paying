@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/../runtime/payment_runtime.php';
+
 /**
  * @param array<string, string> $env
  */
@@ -12,30 +14,6 @@ function paymentExportEnv(array $env): void
         $_ENV[$name] = $value;
         $_SERVER[$name] = $value;
     }
-}
-
-/**
- * @param list<string> $escapedArgs
- * @param array<string, string> $env
- */
-function paymentBuildDockerConsoleCommand(array $escapedArgs, array $env): string
-{
-    $dockerEnv = array_map(
-        static fn (string $name, string $value): string => '-e '.escapeshellarg($name.'='.$value),
-        array_keys($env),
-        array_values($env),
-    );
-
-    return implode(' ', array_filter([
-        'docker compose run --rm -T',
-        '-e PAYMENT_BOOTSTRAP_SCHEMA=0',
-        implode(' ', $dockerEnv),
-        'app',
-        'php',
-        escapeshellarg('bin/console'),
-        implode(' ', $escapedArgs),
-        '--env=test',
-    ]));
 }
 
 /**
@@ -66,12 +44,28 @@ paymentExportEnv($env);
 $args = array_slice($argv, 1);
 $escaped = array_map(static fn(string $arg): string => escapeshellarg($arg), $args);
 
-$shouldUseDocker = !extension_loaded('pdo_sqlite')
-    || !extension_loaded('pdo_pgsql')
-    || (is_dir('var/cache/test') && !is_writable('var/cache/test'));
+$shouldUseDocker = paymentShouldUseDockerRuntime(['pdo_sqlite', 'pdo_pgsql'], 'var/cache/test');
 
 if ($shouldUseDocker) {
-    $command = paymentBuildDockerConsoleCommand($escaped, $env);
+    try {
+        $dockerCommand = paymentDockerPhpCommand(dirname(__DIR__, 2), 'bin/console', $args);
+    } catch (RuntimeException $exception) {
+        fwrite(STDERR, $exception->getMessage().PHP_EOL);
+        exit(1);
+    }
+
+    $dockerEnv = array_map(
+        static fn (string $name, string $value): string => '-e '.escapeshellarg($name.'='.$value),
+        array_keys($env),
+        array_values($env),
+    );
+
+    $command = implode(' ', array_filter([
+        implode(' ', array_map(static fn (string $part): string => escapeshellarg($part), array_slice($dockerCommand, 0, 5))),
+        implode(' ', $dockerEnv),
+        implode(' ', array_map(static fn (string $part): string => escapeshellarg($part), array_slice($dockerCommand, 5))),
+        '--env=test',
+    ]));
 } else {
     $command = paymentBuildLocalConsoleCommand($escaped);
 }

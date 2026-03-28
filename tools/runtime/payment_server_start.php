@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/payment_runtime.php';
+
 $projectDir = dirname(__DIR__, 2);
 $pidDir = $projectDir.'/var/run';
 $pidFile = $pidDir.'/payment-local-server.pid';
-$portFile = $pidDir.'/payment-local-server.port';
-$modeFile = $pidDir.'/payment-local-server.mode';
+$portFile = paymentResolvePortFile($projectDir);
+$modeFile = paymentResolveModeFile($projectDir);
 $logFile = sys_get_temp_dir().'/paying-local-server.log';
 
 if (!is_dir($pidDir) && !mkdir($pidDir, 0777, true) && !is_dir($pidDir)) {
@@ -20,20 +22,14 @@ if ($existingPid > 0 && function_exists('posix_kill') && @posix_kill($existingPi
     exit(0);
 }
 
-$mustUseDocker = 'docker' === (string) ($_ENV['PAYMENT_SERVER_RUNTIME'] ?? $_SERVER['PAYMENT_SERVER_RUNTIME'] ?? '')
-    || !extension_loaded('pdo_pgsql')
-    || !extension_loaded('pdo_sqlite')
-    || (is_dir($projectDir.'/var/cache/dev') && !is_writable($projectDir.'/var/cache/dev'));
+$mustUseDocker = paymentShouldUseDockerRuntime(
+    ['pdo_pgsql', 'pdo_sqlite'],
+    $projectDir.'/var/cache/dev',
+    'PAYMENT_SERVER_RUNTIME',
+);
 
 if ($mustUseDocker) {
-    $command = ['docker', 'compose', 'up', '-d', 'app'];
-    $process = proc_open($command, [0 => STDIN, 1 => STDOUT, 2 => STDERR], $pipes, $projectDir, $_ENV);
-    if (!is_resource($process)) {
-        fwrite(STDERR, "Failed to start Docker-backed local server.\n");
-        exit(1);
-    }
-
-    $status = proc_close($process);
+    $status = paymentRunProcess(['docker', 'compose', 'up', '-d', 'app'], $projectDir);
     if (0 !== $status) {
         exit($status);
     }
@@ -55,13 +51,7 @@ if ('' !== $symfonyBinary) {
         '--port='.$port,
         '-d',
     ];
-    $process = proc_open($command, [0 => STDIN, 1 => STDOUT, 2 => STDERR], $pipes, $projectDir, $_ENV);
-    if (!is_resource($process)) {
-        fwrite(STDERR, "Failed to start Symfony local server.\n");
-        exit(1);
-    }
-
-    $status = proc_close($process);
+    $status = paymentRunProcess($command, $projectDir);
     exit(is_int($status) ? $status : 1);
 }
 
