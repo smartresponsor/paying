@@ -4,6 +4,32 @@ declare(strict_types=1);
 
 use Symfony\Component\Dotenv\Dotenv;
 
+/**
+ * @param array<int, string> $argv
+ */
+function paymentResolveCliEnv(array $argv): ?string
+{
+    foreach ($argv as $index => $arg) {
+        if (str_starts_with($arg, '--env=')) {
+            return substr($arg, 6);
+        }
+
+        if (in_array($arg, ['--env', '-e'], true)) {
+            return $argv[$index + 1] ?? null;
+        }
+    }
+
+    return null;
+}
+
+function paymentResolveAppEnv(): ?string
+{
+    return $_SERVER['APP_ENV']
+        ?? $_ENV['APP_ENV']
+        ?? (getenv('APP_ENV') ?: null)
+        ?? null;
+}
+
 $projectDir = dirname(__DIR__);
 
 require $projectDir.'/vendor/autoload.php';
@@ -27,23 +53,10 @@ if (is_file($defaultEnvFile)) {
 
 $cliEnv = null;
 if (\PHP_SAPI === 'cli' && isset($_SERVER['argv']) && is_array($_SERVER['argv'])) {
-    foreach ($_SERVER['argv'] as $index => $arg) {
-        if (str_starts_with($arg, '--env=')) {
-            $cliEnv = substr($arg, 6);
-            break;
-        }
-
-        if (in_array($arg, ['--env', '-e'], true)) {
-            $cliEnv = $_SERVER['argv'][$index + 1] ?? null;
-            break;
-        }
-    }
+    $cliEnv = paymentResolveCliEnv($_SERVER['argv']);
 }
 
-$resolvedEnv = $cliEnv
-    ?? ($_SERVER['APP_ENV'] ?? null)
-    ?? ($_ENV['APP_ENV'] ?? null)
-    ?? (getenv('APP_ENV') ?: null);
+$resolvedEnv = $cliEnv ?? paymentResolveAppEnv();
 
 if ('test' === $resolvedEnv && is_file($testEnvFile)) {
     $dotenv->overload($testEnvFile);

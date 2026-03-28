@@ -28,71 +28,38 @@ if (class_exists(PantherTestCase::class)) {
 
 final class PaymentConsolePantherFlowTest extends PaymentConsolePantherFlowTestBase
 {
-    private ?string $originalOidcDisabled = null;
-    private ?string $originalPantherChromeArguments = null;
-    private ?string $originalPantherChromeBinary = null;
-    private ?string $originalPantherNoSandbox = null;
-    private ?string $originalPantherAppEnv = null;
+    private const SQLITE_TEST_DATABASE_URL = 'sqlite:///%kernel.project_dir%/var/payment.test.data.sqlite';
+    private const SQLITE_TEST_INFRA_URL = 'sqlite:///%kernel.project_dir%/var/payment.test.infra.sqlite';
+    private const PANTHER_BROWSER_ARGUMENTS = [
+        '--headless',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--no-sandbox',
+        '--disable-features=HttpsUpgrades,HTTPS-FirstMode,UseHttpsOnlyMode',
+    ];
+
+    /** @var array<string, string|null> */
+    private array $originalEnv = [];
 
     protected function setUp(): void
     {
-        $this->originalOidcDisabled = $_ENV['OIDC_DISABLED'] ?? null;
-        $this->originalPantherChromeArguments = $_ENV['PANTHER_CHROME_ARGUMENTS'] ?? null;
-        $this->originalPantherChromeBinary = $_ENV['PANTHER_CHROME_BINARY'] ?? null;
-        $this->originalPantherNoSandbox = $_ENV['PANTHER_NO_SANDBOX'] ?? null;
-        $this->originalPantherAppEnv = $_ENV['PANTHER_APP_ENV'] ?? null;
-        $_ENV['OIDC_DISABLED'] = '1';
-        $_ENV['PANTHER_CHROME_ARGUMENTS'] = '--disable-dev-shm-usage --disable-gpu --disable-features=HttpsUpgrades,HTTPS-FirstMode,UseHttpsOnlyMode --headless';
-        $_ENV['PANTHER_CHROME_BINARY'] = '/usr/bin/chromium';
-        $_ENV['PANTHER_NO_SANDBOX'] = '1';
-        $_ENV['PANTHER_APP_ENV'] = 'test';
-        putenv('OIDC_DISABLED=1');
-        putenv('PANTHER_CHROME_ARGUMENTS='.$_ENV['PANTHER_CHROME_ARGUMENTS']);
-        putenv('PANTHER_CHROME_BINARY=/usr/bin/chromium');
-        putenv('PANTHER_NO_SANDBOX=1');
-        putenv('PANTHER_APP_ENV=test');
+        $this->rememberEnvironmentValue('OIDC_DISABLED');
+        $this->rememberEnvironmentValue('PANTHER_CHROME_ARGUMENTS');
+        $this->rememberEnvironmentValue('PANTHER_CHROME_BINARY');
+        $this->rememberEnvironmentValue('PANTHER_NO_SANDBOX');
+        $this->rememberEnvironmentValue('PANTHER_APP_ENV');
+
+        $this->setEnvironmentValue('OIDC_DISABLED', '1');
+        $this->setEnvironmentValue('PANTHER_CHROME_ARGUMENTS', implode(' ', self::PANTHER_BROWSER_ARGUMENTS));
+        $this->setEnvironmentValue('PANTHER_CHROME_BINARY', '/usr/bin/chromium');
+        $this->setEnvironmentValue('PANTHER_NO_SANDBOX', '1');
+        $this->setEnvironmentValue('PANTHER_APP_ENV', 'test');
     }
 
     protected function tearDown(): void
     {
-        if (null === $this->originalOidcDisabled) {
-            unset($_ENV['OIDC_DISABLED']);
-            putenv('OIDC_DISABLED');
-        } else {
-            $_ENV['OIDC_DISABLED'] = $this->originalOidcDisabled;
-            putenv('OIDC_DISABLED='.$this->originalOidcDisabled);
-        }
-
-        if (null === $this->originalPantherChromeArguments) {
-            unset($_ENV['PANTHER_CHROME_ARGUMENTS']);
-            putenv('PANTHER_CHROME_ARGUMENTS');
-        } else {
-            $_ENV['PANTHER_CHROME_ARGUMENTS'] = $this->originalPantherChromeArguments;
-            putenv('PANTHER_CHROME_ARGUMENTS='.$this->originalPantherChromeArguments);
-        }
-
-        if (null === $this->originalPantherChromeBinary) {
-            unset($_ENV['PANTHER_CHROME_BINARY']);
-            putenv('PANTHER_CHROME_BINARY');
-        } else {
-            $_ENV['PANTHER_CHROME_BINARY'] = $this->originalPantherChromeBinary;
-            putenv('PANTHER_CHROME_BINARY='.$this->originalPantherChromeBinary);
-        }
-
-        if (null === $this->originalPantherNoSandbox) {
-            unset($_ENV['PANTHER_NO_SANDBOX']);
-            putenv('PANTHER_NO_SANDBOX');
-        } else {
-            $_ENV['PANTHER_NO_SANDBOX'] = $this->originalPantherNoSandbox;
-            putenv('PANTHER_NO_SANDBOX='.$this->originalPantherNoSandbox);
-        }
-
-        if (null === $this->originalPantherAppEnv) {
-            unset($_ENV['PANTHER_APP_ENV']);
-            putenv('PANTHER_APP_ENV');
-        } else {
-            $_ENV['PANTHER_APP_ENV'] = $this->originalPantherAppEnv;
-            putenv('PANTHER_APP_ENV='.$this->originalPantherAppEnv);
+        foreach (array_keys($this->originalEnv) as $name) {
+            $this->restoreEnvironmentValue($name);
         }
 
         parent::tearDown();
@@ -102,58 +69,20 @@ final class PaymentConsolePantherFlowTest extends PaymentConsolePantherFlowTestB
     {
         $externalBaseUri = $_ENV['PANTHER_EXTERNAL_BASE_URI'] ?? getenv('PANTHER_EXTERNAL_BASE_URI') ?: null;
 
-        $options = [
-            'browser' => PantherTestCase::CHROME,
-            'browser_arguments' => [
-                '--headless',
-                '--disable-dev-shm-usage',
-                '--disable-gpu',
-                '--no-sandbox',
-                '--disable-features=HttpsUpgrades,HTTPS-FirstMode,UseHttpsOnlyMode',
-            ],
-        ];
+        $options = $this->buildPantherOptions();
 
         if (is_string($externalBaseUri) && '' !== $externalBaseUri) {
             $options['external_base_uri'] = $externalBaseUri;
         } else {
-            self::bootKernel([
-                'environment' => 'test',
-                'debug' => false,
-            ]);
-
-            /** @var EntityManagerInterface $entityManager */
-            $entityManager = self::getContainer()->get(EntityManagerInterface::class);
-            $metadata = $entityManager->getMetadataFactory()->getAllMetadata();
-            $schemaTool = new SchemaTool($entityManager);
-
-            if ([] !== $metadata) {
-                try {
-                    $schemaTool->dropSchema($metadata);
-                } catch (\Throwable) {
-                    // Fresh test databases have nothing to drop.
-                }
-
-                $schemaTool->createSchema($metadata);
-            }
-
-            $entityManager->getConnection()->executeStatement('DROP TABLE IF EXISTS payment_idempotency');
-            $entityManager->getConnection()->executeStatement(
-                'CREATE TABLE payment_idempotency ('
-                .'key VARCHAR(80) PRIMARY KEY NOT NULL, '
-                .'value CLOB NOT NULL, '
-                .'expires_at DATETIME NOT NULL'
-                .')'
-            );
-            self::ensureKernelShutdown();
-
+            $this->bootstrapPantherTestDatabase();
             $options['webServerDir'] = dirname(__DIR__, 3).'/public';
             $options['router'] = dirname(__DIR__, 3).'/public/index.php';
             $options['env'] = [
                 'APP_ENV' => 'test',
                 'APP_DEBUG' => '0',
                 'APP_SECRET' => 'payment_test_secret',
-                'DATABASE_URL' => 'sqlite:///%kernel.project_dir%/var/payment.test.data.sqlite',
-                'INFRA_URL' => 'sqlite:///%kernel.project_dir%/var/payment.test.infra.sqlite',
+                'DATABASE_URL' => self::SQLITE_TEST_DATABASE_URL,
+                'INFRA_URL' => self::SQLITE_TEST_INFRA_URL,
                 'STRIPE_WEBHOOK_SECRET' => 'payment_test_whsec',
                 'OIDC_DISABLED' => '1',
             ];
@@ -213,5 +142,75 @@ JS);
 
         self::assertStringContainsString('/payment/console', $client->getCurrentURL());
         self::assertSelectorTextContains('.alert-danger', 'was not found');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function buildPantherOptions(): array
+    {
+        return [
+            'browser' => PantherTestCase::CHROME,
+            'browser_arguments' => self::PANTHER_BROWSER_ARGUMENTS,
+        ];
+    }
+
+    private function bootstrapPantherTestDatabase(): void
+    {
+        self::bootKernel([
+            'environment' => 'test',
+            'debug' => false,
+        ]);
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = self::getContainer()->get(EntityManagerInterface::class);
+        $metadata = $entityManager->getMetadataFactory()->getAllMetadata();
+        $schemaTool = new SchemaTool($entityManager);
+
+        if ([] !== $metadata) {
+            try {
+                $schemaTool->dropSchema($metadata);
+            } catch (\Throwable) {
+                // Fresh test databases have nothing to drop.
+            }
+
+            $schemaTool->createSchema($metadata);
+        }
+
+        $entityManager->getConnection()->executeStatement('DROP TABLE IF EXISTS payment_idempotency');
+        $entityManager->getConnection()->executeStatement(
+            'CREATE TABLE payment_idempotency ('
+            .'key VARCHAR(80) PRIMARY KEY NOT NULL, '
+            .'value CLOB NOT NULL, '
+            .'expires_at DATETIME NOT NULL'
+            .')'
+        );
+
+        self::ensureKernelShutdown();
+    }
+
+    private function rememberEnvironmentValue(string $name): void
+    {
+        $this->originalEnv[$name] = $_ENV[$name] ?? (getenv($name) ?: null);
+    }
+
+    private function setEnvironmentValue(string $name, string $value): void
+    {
+        $_ENV[$name] = $value;
+        putenv($name.'='.$value);
+    }
+
+    private function restoreEnvironmentValue(string $name): void
+    {
+        $originalValue = $this->originalEnv[$name] ?? null;
+        if (null === $originalValue) {
+            unset($_ENV[$name]);
+            putenv($name);
+
+            return;
+        }
+
+        $_ENV[$name] = $originalValue;
+        putenv($name.'='.$originalValue);
     }
 }
