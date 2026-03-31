@@ -14,5 +14,8 @@ interface MetricInterface
     public function incProviderFailure(string $provider, string $operation): void;
     public function observeProviderDuration(string $provider, string $operation, float $ms): void;
 
+    public function incRetryAttempt(): void;
+    public function incRetryExhausted(): void;
+
     public function export(): string;
 }
