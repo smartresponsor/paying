@@ -9,6 +9,7 @@ use App\ServiceInterface\PaymentServiceInterface;
 use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\RefundServiceInterface;
+use App\ValueObject\PaymentStatus;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -43,6 +44,7 @@ final class PaymentLifecycleCommand extends Command
         $this->addOption('provider-ref', null, InputOption::VALUE_OPTIONAL);
         $this->addOption('gateway-transaction-id', null, InputOption::VALUE_OPTIONAL);
         $this->addOption('status', null, InputOption::VALUE_OPTIONAL);
+        $this->addOption('limit', null, InputOption::VALUE_OPTIONAL, '', '50');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -52,6 +54,7 @@ final class PaymentLifecycleCommand extends Command
         return match ($action) {
             'create' => $this->runCreate($input, $output),
             'start' => $this->runStart($input, $output),
+            'restart-failed' => $this->runRestartFailed($input, $output),
             'finalize' => $this->runFinalize($input, $output),
             'refund' => $this->runRefund($input, $output),
             default => $this->invalidAction($output, $action),
@@ -62,20 +65,24 @@ final class PaymentLifecycleCommand extends Command
     {
         $paymentId = trim((string) $input->getOption('payment-id'));
         $provider = trim((string) $input->getOption('provider'));
+        $idempotencyKey = (string) $input->getOption('idempotency-key');
+        $origin = (string) $input->getOption('origin');
 
-        if ('' !== $paymentId && Ulid::isValid($paymentId)) {
-            $result = $this->paymentStartService->restart(
-                $paymentId,
-                $provider,
-                (string) $input->getOption('idempotency-key'),
-                (string) $input->getOption('origin')
-            );
+        if ('' !== $paymentId) {
+            if (!Ulid::isValid($paymentId)) {
+                $output->writeln('<error>start restart requires --payment-id as ULID.</error>');
+
+                return Command::INVALID;
+            }
+
+            $result = $this->paymentStartService->restart($paymentId, $provider, $idempotencyKey, $origin);
 
             $this->writeResult($output, [
                 'action' => 'start',
                 'mode' => 'restart',
                 'id' => (string) $result->payment->id(),
                 'status' => $result->payment->status()->value,
+                'providerRef' => $result->providerRef,
             ]);
 
             return Command::SUCCESS;
@@ -84,10 +91,17 @@ final class PaymentLifecycleCommand extends Command
         $amount = trim((string) $input->getOption('amount'));
         $currency = strtoupper(trim((string) $input->getOption('currency')));
 
-        $started = $this->paymentStartService->start($provider, $amount, $currency);
+        if ('' === $provider || '' === $amount || '' === $currency) {
+            $output->writeln('<error>start requires --provider, --amount, and --currency.</error>');
+
+            return Command::INVALID;
+        }
+
+        $started = $this->paymentStartService->start($provider, $amount, $currency, $idempotencyKey, $origin);
 
         $this->writeResult($output, [
             'action' => 'start',
+            'mode' => 'create',
             'id' => (string) $started->payment->id(),
             'status' => $started->payment->status()->value,
             'providerRef' => $started->providerRef,
@@ -96,13 +110,50 @@ final class PaymentLifecycleCommand extends Command
         return Command::SUCCESS;
     }
 
+    private function runRestartFailed(InputInterface $input, OutputInterface $output): int
+    {
+        $provider = trim((string) $input->getOption('provider'));
+        $origin = (string) $input->getOption('origin');
+        $limit = max(1, (int) $input->getOption('limit'));
+
+        $paymentIds = $this->paymentRepository->listIdsByStatuses([PaymentStatus::failed->value], $limit);
+        $restarted = 0;
+        $failed = [];
+
+        foreach ($paymentIds as $paymentId) {
+            try {
+                $this->paymentStartService->restart((string) $paymentId, $provider, '', $origin);
+                ++$restarted;
+            } catch (\Throwable $exception) {
+                $failed[] = (string) $paymentId;
+            }
+        }
+
+        $this->writeResult($output, [
+            'action' => 'restart-failed',
+            'provider' => $provider,
+            'processed' => count($paymentIds),
+            'restarted' => $restarted,
+            'failed' => count($failed),
+            'failedIds' => $failed,
+        ]);
+
+        return 0 === count($failed) ? Command::SUCCESS : Command::FAILURE;
+    }
+
     private function runCreate(InputInterface $input, OutputInterface $output): int
     {
-        $payment = $this->paymentService->create(
-            (string) $input->getOption('order-id'),
-            (int) $input->getOption('amount-minor'),
-            strtoupper((string) $input->getOption('currency'))
-        );
+        $orderId = (string) $input->getOption('order-id');
+        $amountMinor = (int) $input->getOption('amount-minor');
+        $currency = strtoupper((string) $input->getOption('currency'));
+
+        if ('' === $orderId || $amountMinor <= 0 || '' === $currency) {
+            $output->writeln('<error>create requires --order-id, --amount-minor (>0), and --currency.</error>');
+
+            return Command::INVALID;
+        }
+
+        $payment = $this->paymentService->create($orderId, $amountMinor, $currency);
 
         $this->writeResult($output, [
             'action' => 'create',
@@ -116,10 +167,23 @@ final class PaymentLifecycleCommand extends Command
     private function runFinalize(InputInterface $input, OutputInterface $output): int
     {
         $paymentId = (string) $input->getOption('payment-id');
+        $provider = (string) $input->getOption('provider');
+
+        if (!Ulid::isValid($paymentId) || '' === $provider) {
+            $output->writeln('<error>finalize requires --payment-id (ULID) and --provider.</error>');
+
+            return Command::INVALID;
+        }
+
         $existing = $this->paymentRepository->find($paymentId);
+        if (null === $existing) {
+            $output->writeln(sprintf('<error>Payment %s was not found.</error>', $paymentId));
+
+            return Command::FAILURE;
+        }
 
         $resolved = $this->providerGuard->finalize(
-            (string) $input->getOption('provider'),
+            $provider,
             new Ulid($paymentId),
             array_filter([
                 'providerRef' => (string) $input->getOption('provider-ref'),
@@ -142,11 +206,17 @@ final class PaymentLifecycleCommand extends Command
 
     private function runRefund(InputInterface $input, OutputInterface $output): int
     {
-        $payment = $this->refundService->refund(
-            new Ulid((string) $input->getOption('payment-id')),
-            (string) $input->getOption('amount'),
-            (string) $input->getOption('provider')
-        );
+        $paymentId = (string) $input->getOption('payment-id');
+        $amount = (string) $input->getOption('amount');
+        $provider = (string) $input->getOption('provider');
+
+        if (!Ulid::isValid($paymentId) || '' === $amount || '' === $provider) {
+            $output->writeln('<error>refund requires --payment-id (ULID), --amount, and --provider.</error>');
+
+            return Command::INVALID;
+        }
+
+        $payment = $this->refundService->refund(new Ulid($paymentId), $amount, $provider);
 
         $this->writeResult($output, [
             'action' => 'refund',
@@ -160,11 +230,12 @@ final class PaymentLifecycleCommand extends Command
     private function invalidAction(OutputInterface $output, string $action): int
     {
         $output->writeln("invalid action: $action");
+
         return Command::INVALID;
     }
 
     private function writeResult(OutputInterface $output, array $payload): void
     {
-        $output->writeln(json_encode($payload, JSON_THROW_ON_ERROR));
+        $output->writeln((string) json_encode($payload, JSON_THROW_ON_ERROR));
     }
 }
