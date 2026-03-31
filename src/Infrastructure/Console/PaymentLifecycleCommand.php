@@ -7,6 +7,7 @@ namespace App\Infrastructure\Console;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\PaymentServiceInterface;
 use App\ServiceInterface\PaymentStartServiceInterface;
+use App\ServiceInterface\ProjectionLagServiceInterface;
 use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\RefundServiceInterface;
 use App\ValueObject\PaymentStatus;
@@ -26,6 +27,7 @@ final class PaymentLifecycleCommand extends Command
         private readonly PaymentRepositoryInterface $paymentRepository,
         private readonly ProviderGuardInterface $providerGuard,
         private readonly RefundServiceInterface $refundService,
+        private readonly ProjectionLagServiceInterface $projectionLagService,
     ) {
         parent::__construct();
     }
@@ -45,6 +47,8 @@ final class PaymentLifecycleCommand extends Command
         $this->addOption('gateway-transaction-id', null, InputOption::VALUE_OPTIONAL);
         $this->addOption('status', null, InputOption::VALUE_OPTIONAL);
         $this->addOption('limit', null, InputOption::VALUE_OPTIONAL, '', '50');
+        $this->addOption('failed-threshold', null, InputOption::VALUE_OPTIONAL, '', '1');
+        $this->addOption('lag-threshold-ms', null, InputOption::VALUE_OPTIONAL, '', '60000');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -55,6 +59,7 @@ final class PaymentLifecycleCommand extends Command
             'create' => $this->runCreate($input, $output),
             'start' => $this->runStart($input, $output),
             'restart-failed' => $this->runRestartFailed($input, $output),
+            'alerts' => $this->runAlerts($input, $output),
             'finalize' => $this->runFinalize($input, $output),
             'refund' => $this->runRefund($input, $output),
             default => $this->invalidAction($output, $action),
@@ -124,7 +129,7 @@ final class PaymentLifecycleCommand extends Command
             try {
                 $this->paymentStartService->restart((string) $paymentId, $provider, '', $origin);
                 ++$restarted;
-            } catch (\Throwable $exception) {
+            } catch (\Throwable) {
                 $failed[] = (string) $paymentId;
             }
         }
@@ -139,6 +144,39 @@ final class PaymentLifecycleCommand extends Command
         ]);
 
         return 0 === count($failed) ? Command::SUCCESS : Command::FAILURE;
+    }
+
+    private function runAlerts(InputInterface $input, OutputInterface $output): int
+    {
+        $failedThreshold = max(0, (int) $input->getOption('failed-threshold'));
+        $lagThresholdMs = max(0, (int) $input->getOption('lag-threshold-ms'));
+
+        $failedIds = $this->paymentRepository->listIdsByStatuses([PaymentStatus::failed->value], $failedThreshold + 1);
+        $snapshot = $this->projectionLagService->snapshot();
+
+        $checks = [
+            'failedPayments' => [
+                'threshold' => $failedThreshold,
+                'value' => count($failedIds),
+                'triggered' => count($failedIds) > $failedThreshold,
+            ],
+            'projectionLagMs' => [
+                'threshold' => $lagThresholdMs,
+                'value' => $snapshot['projectionLagMs'],
+                'triggered' => $snapshot['projectionLagMs'] > $lagThresholdMs,
+            ],
+        ];
+
+        $triggered = array_filter($checks, static fn (array $check): bool => true === $check['triggered']);
+
+        $this->writeResult($output, [
+            'action' => 'alerts',
+            'status' => [] === $triggered ? 'ok' : 'alert',
+            'checks' => $checks,
+            'failedIdsSample' => $failedIds,
+        ]);
+
+        return [] === $triggered ? Command::SUCCESS : Command::FAILURE;
     }
 
     private function runCreate(InputInterface $input, OutputInterface $output): int
