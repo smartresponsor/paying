@@ -13,6 +13,9 @@ class Metric implements MetricInterface
     private float $sumMs = 0.0;
     private int $countMs = 0;
 
+    private int $retryAttempts = 0;
+    private int $retryExhausted = 0;
+
     private array $providerSuccess = [];
     private array $providerFailure = [];
     private array $providerDuration = [];
@@ -37,6 +40,9 @@ class Metric implements MetricInterface
         $this->providerDuration[$provider][$operation]['count'] = ($this->providerDuration[$provider][$operation]['count'] ?? 0) + 1;
     }
 
+    public function incRetryAttempt(): void { ++$this->retryAttempts; }
+    public function incRetryExhausted(): void { ++$this->retryExhausted; }
+
     public function export(): string
     {
         $avg = $this->countMs ? ($this->sumMs / $this->countMs) : 0.0;
@@ -45,6 +51,8 @@ class Metric implements MetricInterface
             "payment_success_total {$this->success}",
             "payment_failure_total {$this->failure}",
             "payment_duration_ms_avg {$avg}",
+            "payment_retry_attempts_total {$this->retryAttempts}",
+            "payment_retry_exhausted_total {$this->retryExhausted}",
         ];
 
         foreach ($this->providerSuccess as $provider => $ops) {
