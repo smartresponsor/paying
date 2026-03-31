@@ -2,18 +2,31 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/../runtime/payment_runtime.php';
+
+const PAYMENT_REQUIRED_EXTENSIONS = [
+    'pdo_sqlite',
+    'pdo_pgsql',
+];
+
 array_shift($argv);
 if ($argv === []) {
     fwrite(STDERR, "Usage: php tools/php/php84.php <target> [args...]\n");
     exit(1);
 }
+
 $target = array_shift($argv);
 $cmd = array_merge([PHP_BINARY, $target], $argv);
-$descriptorSpec = [0 => STDIN, 1 => STDOUT, 2 => STDERR];
-$process = proc_open($cmd, $descriptorSpec, $pipes, getcwd(), $_ENV);
-if (!is_resource($process)) {
-    fwrite(STDERR, "Unable to start PHP target process.\n");
-    exit(1);
+
+if (paymentShouldUseDockerRuntime(PAYMENT_REQUIRED_EXTENSIONS, 'var/cache/test')) {
+    try {
+        $dockerCmd = paymentDockerPhpCommand((string) getcwd(), $target, $argv);
+    } catch (RuntimeException $exception) {
+        fwrite(STDERR, $exception->getMessage()."\n");
+        exit(1);
+    }
+
+    exit(paymentRunProcess($dockerCmd));
 }
-$status = proc_close($process);
-exit(is_int($status) ? $status : 1);
+
+exit(paymentRunProcess($cmd));

@@ -36,10 +36,13 @@
         "phpunit/phpunit": "^10.5",
         "rector/rector": "^1.2",
         "phpstan/phpstan": "^1.11",
+        "doctrine/doctrine-fixtures-bundle": "^3.6",
+        "friendsofphp/php-cs-fixer": "^3.66",
         "symfony/browser-kit": "^7.1 || ^8.0",
         "symfony/css-selector": "^7.1 || ^8.0",
-        "doctrine/doctrine-fixtures-bundle": "^3.6",
-        "friendsofphp/php-cs-fixer": "^3.66"
+        "symfony/dotenv": "^7.1 || ^8.0",
+        "symfony/panther": "^2.2",
+        "ext-pdo": "*"
     },
     "autoload": {
         "psr-4": {
@@ -58,6 +61,8 @@
     },
     "scripts": {
         "lint": "@php tools/php/php84.php tools/qa/PayingPhpLint.php",
+        "server:start": "@php tools/runtime/payment_server_start.php",
+        "server:stop": "@php tools/runtime/payment_server_stop.php",
         "cs:fix": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php",
         "cs:check": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff",
         "cs:check-quiet": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run",
@@ -67,7 +72,8 @@
         "test": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist",
         "test:unit": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
         "test:functional": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional",
-        "test:e2e": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite e2e",
+        "test:e2e": "bash tools/runtime/payment_panther_e2e.sh",
+        "test:ui:playwright": "npm run test:playwright",
         "test:functional:debug": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional --stop-on-error --debug",
         "test:debug:first-error": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --stop-on-error --debug",
         "lint:yaml": "@php tools/ci/console-test-env.php lint:yaml config --parse-tags",
@@ -75,6 +81,18 @@
         "docs:openapi:lint": "@php tools/php/php84.php tools/inspection/PaymentOpenApiLint.php",
         "docs:phpdoc": "@php tools/php/php84.php tools/runtime/phpDocumentor.phar -c phpdoc.dist.xml",
         "docs:phpdoc:check": "@php tools/ci/phpdoc-check.php",
+        "security:composer-audit": "composer audit --locked --no-interaction --format=plain",
+        "security:importmap-audit": "@php tools/ci/console-test-env.php importmap:audit --no-interaction",
+        "security:gitleaks": "gitleaks git --config=.gitleaks.toml --redact --exit-code 1",
+        "security:semgrep-ce": "semgrep scan --config auto --metrics=off --error",
+        "test:security": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --filter ScopeGuardSubscriberTest",
+        "qa:security": [
+            "@security:composer-audit",
+            "@security:importmap-audit",
+            "@security:gitleaks",
+            "@security:semgrep-ce",
+            "@test:security"
+        ],
         "test:bootstrap:reset": "@php tools/ci/test-bootstrap-reset.php",
         "test:bootstrap:migrate": "@php tools/php/php84.php bin/console doctrine:migrations:migrate --env=test --no-interaction",
         "test:bootstrap:fixtures": "@php tools/php/php84.php bin/console doctrine:fixtures:load --env=test --group=payment --no-interaction",
@@ -89,6 +107,7 @@
         "runtime:preflight:ps1": "pwsh -NoProfile -File tools/runtime/payment_install_preflight.ps1",
         "fixtures:payment:load": "@php tools/php/php84.php bin/console doctrine:fixtures:load --group=payment --no-interaction",
         "fixtures:payment:append": "@php tools/php/php84.php bin/console doctrine:fixtures:load --group=payment --append --no-interaction",
+        "fixtures:payment:dry-run:docker": "bash tools/runtime/payment_fixture_dry_run.sh",
         "smoke:runtime": "@php tools/php/php84.php tools/smoke/payment-runtime-smoke.php",
         "smoke:fixtures": "@php tools/php/php84.php tools/smoke/payment-fixture-sanity.php",
         "smoke:container": "@php tools/php/php84.php tools/smoke/payment-container-boot-smoke.php",
@@ -123,8 +142,8 @@
         "pipeline:local": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1",
         "pipeline:local:ps1": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1",
         "pipeline:local:sh": "bash tools/ci/run-payment-local-pipeline.sh",
-        "pipeline:local:full": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1 -IncludeSmokes -IncludeReports",
-        "pipeline:local:strict": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1 -IncludeSmokes -IncludeReports -FailOnErrors",
+        "pipeline:local:full": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1 -IncludeSmokes -IncludeReports -IncludeSecurity",
+        "pipeline:local:strict": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1 -IncludeSmokes -IncludeReports -IncludeSecurity -FailOnErrors",
         "report:local:latest": "@php tools/ci/report-local-latest.php",
         "proof:pack:sh": "bash tools/ci/run-payment-proof-pack.sh",
         "proof:pack": "bash tools/ci/run-payment-proof-pack.sh"

@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Service;
@@ -12,19 +11,19 @@ use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\RetryExecutorInterface;
 use Symfony\Component\Uid\Ulid;
 
-class ProviderGuard implements ProviderGuardInterface
+readonly class ProviderGuard implements ProviderGuardInterface
 {
     public function __construct(
-        private readonly ProviderRouter $router,
-        private readonly RetryExecutorInterface $retry,
-        private readonly CircuitBreakerInterface $breaker,
+        private ProviderRouter $router,
+        private RetryExecutorInterface $retry,
+        private CircuitBreakerInterface $breaker,
     ) {
     }
 
     /**
-     * @param array<string, mixed> $context
-     *
      * @return array<string, mixed>
+     *
+     * @throws \Throwable
      */
     public function start(string $provider, Payment $payment, array $context = []): array
     {
@@ -43,7 +42,9 @@ class ProviderGuard implements ProviderGuardInterface
         }
     }
 
-    /** @param array<string, mixed> $payload */
+    /**
+     * @throws \Throwable
+     */
     public function finalize(string $provider, Ulid $id, array $payload = []): Payment
     {
         $key = 'provider:'.$provider;
@@ -61,6 +62,9 @@ class ProviderGuard implements ProviderGuardInterface
         }
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function refund(string $provider, Ulid $id, string $amount): Payment
     {
         $key = 'provider:'.$provider;
@@ -78,6 +82,9 @@ class ProviderGuard implements ProviderGuardInterface
         }
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function reconcile(string $provider, Ulid $id): Payment
     {
         $key = 'provider:'.$provider;

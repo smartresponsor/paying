@@ -1,9 +1,11 @@
 <?php
+declare(strict_types=1);
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 use App\Kernel;
 
-require dirname(__DIR__).'/vendor/autoload.php';
+require dirname(__DIR__).'/config/bootstrap.php';
 
 $env = $_SERVER['APP_ENV'] ?? 'dev';
 $debug = (bool)($_SERVER['APP_DEBUG'] ?? true);

@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Service\Order;
@@ -11,7 +10,7 @@ use Psr\Log\LoggerInterface;
 
 final class NullOrderPaymentSync implements OrderPaymentSyncInterface
 {
-    public function __construct(private LoggerInterface $logger)
+    public function __construct(private readonly LoggerInterface $logger)
     {
     }
 

@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Service;
@@ -9,6 +8,7 @@ namespace App\Service;
 use App\Entity\Payment;
 use App\ServiceInterface\PaymentProviderInterface;
 use App\ValueObject\PaymentStatus;
+use Stripe\StripeClient;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -28,8 +28,6 @@ final class StripePaymentProvider implements PaymentProviderInterface
     }
 
     /**
-     * @param array<string, mixed> $context
-     *
      * @return array<string, mixed>
      */
     public function start(Payment $payment, array $context = []): array
@@ -46,7 +44,6 @@ final class StripePaymentProvider implements PaymentProviderInterface
         ];
     }
 
-    /** @param array<string, mixed> $payload */
     public function finalize(Ulid $id, array $payload = []): Payment
     {
         return new Payment($id, PaymentStatus::completed, (string) ($payload['amount'] ?? '0.00'), (string) ($payload['currency'] ?? 'USD'));
@@ -66,7 +63,7 @@ final class StripePaymentProvider implements PaymentProviderInterface
     public function create(string $projectId, float $amount, string $currency, string $idempotencyKey): array
     {
         if (class_exists('\Stripe\StripeClient') && '' !== $this->secretKey) {
-            $stripe = new \Stripe\StripeClient($this->secretKey);
+            $stripe = new StripeClient($this->secretKey);
             $amountMinor = (int) round($amount * 100);
             $session = $stripe->checkout->sessions->create([
                 'mode' => 'payment',

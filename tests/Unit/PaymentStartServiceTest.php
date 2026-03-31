@@ -9,7 +9,7 @@ use App\Entity\Payment;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\Service\PaymentStartService;
 use App\ServiceInterface\ProviderGuardInterface;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
@@ -39,8 +39,12 @@ final class PaymentStartServiceTest extends TestCase
             public function reconcile(string $provider, Ulid $id): Payment { throw new \RuntimeException(); }
         };
 
-        $service = new PaymentStartService($guard, $repo);
-        $started = $service->start('internal', '10.00', 'usd');
+            /**
+             * @return string[]
+             */
+            public function start(string $provider, Payment $payment, array $context = []): array
+            {
+                $this->receivedContext = $context;
 
         self::assertSame(2, $repo->saveCount);
         self::assertSame('processing', $started->payment->status()->value);
@@ -68,14 +72,37 @@ final class PaymentStartServiceTest extends TestCase
         $guard->method('start')->willThrowException(new \RuntimeException('fail'));
 
         $service = new PaymentStartService($guard, $repo);
+        $started = $service->start('internal', '10.00', 'usd', '', 'payment-console');
+        $payment = $started->payment;
 
-        $this->expectException(\RuntimeException::class);
+        self::assertSame(2, $repo->saveCount);
+        self::assertSame($payment, $repo->saved);
+        self::assertSame('processing', $payment->status()->value);
+        self::assertSame('provider-ref-123', $started->providerRef);
+        self::assertSame('USD', $payment->currency());
+        self::assertSame('payment-console', $guard->receivedContext['origin']);
+        self::assertArrayHasKey('idempotencyKey', $guard->receivedContext);
+    }
 
+    public function testStartRejectsInvalidAmountFormat(): void
+    {
         try {
-            $service->start('stripe', '10.00', 'USD');
-        } finally {
-            self::assertSame(2, $repo->saveCount);
-            self::assertSame('failed', $repo->last?->status()->value);
+            $repo = $this->createMock(PaymentRepositoryInterface::class);
+        } catch (Exception $e) {
         }
+        try {
+            $guard = $this->createMock(ProviderGuardInterface::class);
+        } catch (Exception $e) {
+        }
+
+        $repo->expects(self::never())->method('save');
+        $guard->expects(self::never())->method('start');
+
+        $service = new PaymentStartService($guard, $repo);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Amount must be in decimal format like 10.00.');
+
+        $service->start('internal', '10', 'USD');
     }
 }

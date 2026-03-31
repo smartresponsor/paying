@@ -2,7 +2,9 @@
 
 ## Current state
 
-The current slice still contains an `src/Api/*` tail based on API Platform resource metadata and processors. The runtime dependency is not part of the canonical Payment application and the HTTP surface already exists as Symfony-owned controllers under `src/Controller/*`.
+The current slice still contains an `src/Api/*` tail based on API Platform resource metadata and processors. The runtime
+dependency is not part of the canonical Payment application and the HTTP surface already exists as Symfony-owned
+controllers under `src/Controller/*`.
 
 ## Decision
 

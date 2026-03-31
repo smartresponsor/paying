@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Ui;
@@ -38,8 +37,8 @@ final class PaymentConsoleFixtureTableSmokeTest extends WebTestCase
 
     public function testConsoleListsRecentlyPersistedPayments(): void
     {
-        $client = static::createClient();
-        $container = static::getContainer();
+        $client = self::createClient();
+        $container = self::getContainer();
         $em = $container->get(EntityManagerInterface::class);
         \assert($em instanceof EntityManagerInterface);
 

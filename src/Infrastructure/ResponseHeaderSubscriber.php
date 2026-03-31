@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Infrastructure;
@@ -12,6 +11,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class ResponseHeaderSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @return string[]
+     */
     public static function getSubscribedEvents(): array
     {
         return [KernelEvents::RESPONSE => 'onResponse'];

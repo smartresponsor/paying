@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Ui;
@@ -34,7 +33,7 @@ final class PaymentConsolePageTest extends WebTestCase
 
     public function testConsolePageRendersBootstrapSmokeForms(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $crawler = $client->request('GET', '/payment/console');
 
         self::assertSame(200, $client->getResponse()->getStatusCode());

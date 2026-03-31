@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Service;
@@ -12,9 +11,9 @@ use App\ServiceInterface\IdempotencyStoreInterface;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 
-class IdempotencyStoreFactory
+readonly class IdempotencyStoreFactory
 {
-    public function __construct(private readonly Connection $data, private readonly LoggerInterface $logger)
+    public function __construct(private Connection $data, private LoggerInterface $logger)
     {
     }
 

@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Infrastructure\Fixture;
@@ -24,6 +24,9 @@ final class PaymentMethodFixture extends Fixture implements FixtureGroupInterfac
         $manager->flush();
     }
 
+    /**
+     * @return string[]
+     */
     public static function getGroups(): array
     {
         return ['payment'];

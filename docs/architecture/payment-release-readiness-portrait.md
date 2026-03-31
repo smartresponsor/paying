@@ -4,7 +4,8 @@
 
 ## What the component is now
 
-The current Payment slice is an App-owned Symfony payment execution component rather than a cleanup candidate or an API Platform resource wrapper.
+The current Payment slice is an App-owned Symfony payment execution component rather than a cleanup candidate or an API
+Platform resource wrapper.
 
 It now owns these contours directly:
 
@@ -77,7 +78,8 @@ The current slice now owns:
 
 ### 1. Installed-runtime proof
 
-The repository now owns the required configuration and scripts, but the current slice still does not prove the full installed runtime path end-to-end:
+The repository now owns the required configuration and scripts, but the current slice still does not prove the full
+installed runtime path end-to-end:
 
 - `composer install` from a lock-backed dependency graph;
 - `doctrine:migrations:migrate` against real data/infra stores;
@@ -89,11 +91,13 @@ This is now the most important remaining hardening track.
 
 ### 2. Final docs consolidation
 
-The repository has many strong docs, but they still read as a layered trail of waves rather than one final consolidated operator/developer package.
+The repository has many strong docs, but they still read as a layered trail of waves rather than one final consolidated
+operator/developer package.
 
 ### 3. Lock-backed reproducibility
 
-`composer.lock` is still absent from the current slice, so declared ownership is stronger than actual reproducible installation proof.
+`composer.lock` is still absent from the current slice, so declared ownership is stronger than actual reproducible
+installation proof.
 
 ## Practical readiness reading
 
@@ -127,7 +131,7 @@ That phase should close these items in order:
 
 - `docs/architecture/payment-test-runtime-bootstrap.md` defines the deterministic test-runtime bootstrap contour.
 
-
 ## Installed runtime preflight
 
-The repository now contains preflight helpers for installed-runtime hardening, but final closure still depends on committed lock + successful install + migrations + fixtures execution.
+The repository now contains preflight helpers for installed-runtime hardening, but final closure still depends on
+committed lock + successful install + migrations + fixtures execution.

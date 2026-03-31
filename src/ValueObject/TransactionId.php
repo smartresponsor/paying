@@ -1,14 +1,13 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\ValueObject;
 
 final class TransactionId
 {
-    public function __construct(private string $value)
+    public function __construct(private readonly string $value)
     {
         if ('' === $value) {
             throw new \InvalidArgumentException('TransactionId cannot be empty');

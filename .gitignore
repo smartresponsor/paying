@@ -17,6 +17,7 @@ Thumbs.db
 /composer.phar
 /.phpunit.cache
 /phpunit.result.cache
+/report/
 
 # ──────────────────────────────────────────────
 #  🧩 Symfony cache, logs, temp
@@ -49,6 +50,8 @@ Thumbs.db
 /build/
 /reports/
 /test-output/
+/playwright-report/
+/test-results/
 .cachegrind.out.*
 
 # ──────────────────────────────────────────────
@@ -73,8 +76,6 @@ Thumbs.db
 *.old
 *.orig
 *.log
-*.swp
-*.swo
 *~
 # PHP-CS-Fixer cache
 .php-cs-fixer.cache

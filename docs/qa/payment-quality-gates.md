@@ -45,7 +45,8 @@ A Payment slice should be considered green only when all of the following pass:
 
 ## Important note
 
-The current slice has quality-tool files, but not yet a full proof-oriented gate system. The next engineering phase should turn tool presence into an actual executable release gate.
+The current slice has quality-tool files, but not yet a full proof-oriented gate system. The next engineering phase
+should turn tool presence into an actual executable release gate.
 
 ## Closure update after wave 35
 

@@ -14,6 +14,7 @@ use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\RefundServiceInterface;
 use App\ValueObject\PaymentStatus;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
@@ -26,19 +27,25 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
     {
         $payment = new Payment(new Ulid('01ARZ3NDEKTSV4RRFFQ69G5FAV'), PaymentStatus::new, '50.00', 'USD');
 
-        $paymentService = $this->createMock(PaymentServiceInterface::class);
+        try {
+            $paymentService = $this->createMock(PaymentServiceInterface::class);
+        } catch (Exception $e) {
+        }
         $paymentService->expects(self::once())
             ->method('create')
             ->with('order-1001', 5000, 'USD')
             ->willReturn($payment);
 
-        $command = new PaymentLifecycleCommand(
-            $paymentService,
-            $this->createMock(PaymentStartServiceInterface::class),
-            $this->createMock(PaymentRepositoryInterface::class),
-            $this->createMock(ProviderGuardInterface::class),
-            $this->createMock(RefundServiceInterface::class),
-        );
+        try {
+            $command = new PaymentLifecycleCommand(
+                $paymentService,
+                $this->createMock(PaymentStartServiceInterface::class),
+                $this->createMock(PaymentRepositoryInterface::class),
+                $this->createMock(ProviderGuardInterface::class),
+                $this->createMock(RefundServiceInterface::class),
+            );
+        } catch (Exception $e) {
+        }
 
         $tester = new CommandTester($command);
 
@@ -100,7 +107,10 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
         $resolved = new Payment(new Ulid($paymentId), PaymentStatus::completed, '50.00', 'USD');
         $resolved->withProviderRef('stripe_pi_123');
 
-        $repo = $this->createMock(PaymentRepositoryInterface::class);
+        try {
+            $repo = $this->createMock(PaymentRepositoryInterface::class);
+        } catch (Exception $e) {
+        }
         $repo->expects(self::once())
             ->method('find')
             ->with($paymentId)
@@ -109,8 +119,11 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
             ->method('save')
             ->with(self::identicalTo($existing));
 
-        /** @var ProviderGuardInterface&MockObject $guard */
-        $guard = $this->createMock(ProviderGuardInterface::class);
+        /* @var ProviderGuardInterface&MockObject $guard */
+        try {
+            $guard = $this->createMock(ProviderGuardInterface::class);
+        } catch (Exception $e) {
+        }
         $guard->expects(self::once())
             ->method('finalize')
             ->with(
@@ -124,13 +137,16 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
             )
             ->willReturn($resolved);
 
-        $command = new PaymentLifecycleCommand(
-            $this->createMock(PaymentServiceInterface::class),
-            $this->createMock(PaymentStartServiceInterface::class),
-            $repo,
-            $guard,
-            $this->createMock(RefundServiceInterface::class),
-        );
+        try {
+            $command = new PaymentLifecycleCommand(
+                $this->createMock(PaymentServiceInterface::class),
+                $this->createMock(PaymentStartServiceInterface::class),
+                $repo,
+                $guard,
+                $this->createMock(RefundServiceInterface::class),
+            );
+        } catch (Exception $e) {
+        }
 
         $tester = new CommandTester($command);
 

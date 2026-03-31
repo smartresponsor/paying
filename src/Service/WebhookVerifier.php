@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Service;
@@ -72,9 +71,6 @@ class WebhookVerifier implements WebhookVerifierInterface
         return '' === $normalized ? $default : $normalized;
     }
 
-    /**
-     * @param array<string, string|list<string>> $headers
-     */
     private function headerValue(array $headers, string $name): ?string
     {
         $value = $headers[strtolower($name)] ?? $headers[$name] ?? null;

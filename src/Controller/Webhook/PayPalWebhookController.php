@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Controller\Webhook;
@@ -13,32 +12,33 @@ use App\ServiceInterface\WebhookIngestServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-final class PayPalWebhookController
+final readonly class PayPalWebhookController
 {
     public function __construct(
-        private readonly PayPalSignatureValidator $validator,
-        private readonly PayPalEventNormalizer $normalizer,
-        private readonly JsonSchemaValidator $schema,
-        private readonly WebhookIngestServiceInterface $webhookIngestService,
-        private readonly LoggerInterface $paymentAuditLogger,
+        private PayPalSignatureValidator $validator,
+        private PayPalEventNormalizer $normalizer,
+        private JsonSchemaValidator $schema,
+        private WebhookIngestServiceInterface $webhookIngestService,
+        private LoggerInterface $paymentAuditLogger,
     ) {
     }
 
     public function __invoke(Request $request): JsonResponse
     {
         $payload = $request->getContent();
-        $headers = array_change_key_case($request->headers->all(), CASE_LOWER);
+        $headers = array_change_key_case($request->headers->all());
         if (!$this->validator->isValid($payload, $headers)) {
-            return new JsonResponse(['error' => 'invalid-signature'], JsonResponse::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'invalid-signature'], Response::HTTP_BAD_REQUEST);
         }
         $data = json_decode($payload, true) ?? [];
         if (!$this->schema->validate($data, ['id', 'event_type'])) {
-            return new JsonResponse(['error' => 'invalid-payload'], JsonResponse::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'invalid-payload'], Response::HTTP_BAD_REQUEST);
         }
         $externalId = (string) ($data['id'] ?? '');
         if ('' === $externalId) {
-            return new JsonResponse(['error' => 'invalid-id'], JsonResponse::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'invalid-id'], Response::HTTP_BAD_REQUEST);
         }
 
         $normalized = $this->normalizer->normalize($data);
@@ -46,7 +46,7 @@ final class PayPalWebhookController
         $ingested = $this->webhookIngestService->ingest('paypal', $externalId, $normalized, $routingKey);
 
         if ('duplicate' === $ingested['status']) {
-            return new JsonResponse(['status' => 'duplicate'], JsonResponse::HTTP_OK);
+            return new JsonResponse(['status' => 'duplicate'], Response::HTTP_OK);
         }
 
         $this->paymentAuditLogger->info('PayPal webhook accepted', [
@@ -56,6 +56,6 @@ final class PayPalWebhookController
             'routingKey' => $routingKey,
         ]);
 
-        return new JsonResponse(['status' => 'queued', 'outbox_id' => $ingested['outboxId']], JsonResponse::HTTP_OK);
+        return new JsonResponse(['status' => 'queued', 'outbox_id' => $ingested['outboxId']], Response::HTTP_OK);
     }
 }

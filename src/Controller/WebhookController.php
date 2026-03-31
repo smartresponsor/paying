@@ -1,12 +1,12 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\ControllerInterface\WebhookControllerInterface;
+use App\ServiceInterface\ApiJsonBodyDecoderInterface;
 use App\ServiceInterface\EventMapperInterface;
 use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\WebhookVerifierInterface;
@@ -14,12 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
 
-final class WebhookController implements WebhookControllerInterface
+final readonly class WebhookController implements WebhookControllerInterface
 {
     public function __construct(
-        private readonly WebhookVerifierInterface $verifier,
-        private readonly ProviderGuardInterface $guard,
-        /** @var iterable<EventMapperInterface> */ private readonly iterable $mappers,
+        private WebhookVerifierInterface $verifier,
+        private ProviderGuardInterface $guard,
+        private ApiJsonBodyDecoderInterface $jsonBodyDecoder,
+        /** @var iterable<EventMapperInterface> */ private iterable $mappers,
     ) {
     }
 
@@ -27,14 +28,14 @@ final class WebhookController implements WebhookControllerInterface
     {
         try {
             $raw = $request->getContent();
-            $headers = array_change_key_case($request->headers->all(), CASE_LOWER);
+            $headers = array_change_key_case($request->headers->all());
             $verified = $this->verifier->verify($provider, $raw, $headers);
 
             if (!$verified) {
                 return new Response('', Response::HTTP_BAD_REQUEST);
             }
 
-            $data = json_decode($raw, true);
+            $data = $this->jsonBodyDecoder->decode($request);
             if (!is_array($data)) {
                 return new Response('', Response::HTTP_BAD_REQUEST);
             }

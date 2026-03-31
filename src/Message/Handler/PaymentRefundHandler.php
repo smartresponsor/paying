@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Message\Handler;
@@ -12,12 +11,12 @@ use App\ServiceInterface\Gateway\PaymentGatewayInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-final class PaymentRefundHandler
+final readonly class PaymentRefundHandler
 {
     public function __construct(
-        private readonly PaymentRepositoryInterface $repo,
+        private PaymentRepositoryInterface $repo,
         /** @var iterable<PaymentGatewayInterface> */
-        private readonly iterable $gateways,
+        private iterable $gateways,
     ) {
     }
 

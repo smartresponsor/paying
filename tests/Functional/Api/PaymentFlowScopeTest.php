@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Api;
@@ -18,7 +17,7 @@ final class PaymentFlowScopeTest extends WebTestCase
 
     public function testStartPaymentRequiresBearerToken(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $client->request(
             'POST',
             '/payment/start',
@@ -37,7 +36,7 @@ final class PaymentFlowScopeTest extends WebTestCase
 
     public function testFinalizePaymentRequiresBearerToken(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $client->request('POST', '/payment/finalize/01HZY9M8Q6M7X4YH3B2A1C0D9E');
 
         self::assertSame(401, $client->getResponse()->getStatusCode());

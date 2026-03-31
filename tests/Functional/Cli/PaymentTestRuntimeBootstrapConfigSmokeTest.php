@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Cli;
@@ -9,6 +9,9 @@ use PHPUnit\Framework\TestCase;
 
 final class PaymentTestRuntimeBootstrapConfigSmokeTest extends TestCase
 {
+    /**
+     * @throws \JsonException
+     */
     public function testOwnedTestBootstrapScriptsAndConfigsArePresent(): void
     {
         $composer = json_decode((string) file_get_contents(dirname(__DIR__, 3).'/composer.json'), true, 512, JSON_THROW_ON_ERROR);

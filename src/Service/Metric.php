@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Service;
@@ -36,7 +35,7 @@ class Metric implements MetricInterface
         $avg = $this->countMs ? ($this->sumMs / $this->countMs) : 0.0;
 
         return "payment_success_total {$this->success}\n"
-             ."payment_failure_total {$this->failure}\n"
-             ."payment_duration_ms_avg {$avg}\n";
+            ."payment_failure_total {$this->failure}\n"
+            ."payment_duration_ms_avg {$avg}\n";
     }
 }

@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Entity;
@@ -24,7 +23,6 @@ class PaymentWebhookLog
     #[ORM\Column(name: 'external_event_id', type: 'string', length: 191)]
     private string $externalEventId;
 
-    /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')]
     private array $payload;
 
@@ -40,9 +38,6 @@ class PaymentWebhookLog
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $processedAt = null;
 
-    /**
-     * @param array<string, mixed> $payload
-     */
     public function __construct(string $provider, string $externalEventId, array $payload)
     {
         $this->id = (new Ulid())->toRfc4122();

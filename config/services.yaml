@@ -8,9 +8,9 @@ services:
 
     _instanceof:
         App\ServiceInterface\EventMapperInterface:
-            tags: ['payment.event_mapper']
+            tags: [ 'payment.event_mapper' ]
         App\ServiceInterface\Gateway\PaymentGatewayInterface:
-            tags: ['payment.gateway']
+            tags: [ 'payment.gateway' ]
 
     App\:
         resource: '../src/'
@@ -27,13 +27,13 @@ services:
     App\ServiceInterface\ProviderGuardInterface: '@App\Service\ProviderGuard'
     App\ServiceInterface\PaymentServiceInterface: '@App\Service\PaymentService'
     App\ServiceInterface\IdempotencyStoreInterface:
-        factory: ['@App\Service\IdempotencyStoreFactory', 'create']
+        factory: [ '@App\Service\IdempotencyStoreFactory', 'create' ]
 
 
     App\Controller\:
         resource: '../src/Controller/'
         public: true
-        tags: ['controller.service_arguments']
+        tags: [ 'controller.service_arguments' ]
 
 
     App\Service\ProviderRouter:
@@ -64,12 +64,22 @@ services:
 
     App\ServiceInterface\DlqServiceInterface: '@App\Service\DlqService'
     App\ServiceInterface\ProjectionLagServiceInterface: '@App\Service\ProjectionLagService'
+    App\ServiceInterface\MetricInterface: '@App\Service\Metric'
     App\ServiceInterface\PaymentStartServiceInterface: '@App\Service\PaymentStartService'
+    App\ServiceInterface\PaymentApiStartHandlerInterface: '@App\Service\PaymentApiStartHandler'
     App\ServiceInterface\PaymentConsoleReadModelInterface: '@App\Service\PaymentConsoleReadModel'
+    App\ServiceInterface\PaymentConsoleCreateHandlerInterface: '@App\Service\PaymentConsoleCreateHandler'
+    App\ServiceInterface\PaymentConsoleStartHandlerInterface: '@App\Service\PaymentConsoleStartHandler'
+    App\ServiceInterface\PaymentConsoleFinalizeHandlerInterface: '@App\Service\PaymentConsoleFinalizeHandler'
+    App\ServiceInterface\PaymentConsoleRefundHandlerInterface: '@App\Service\PaymentConsoleRefundHandler'
     App\ServiceInterface\WebhookIngestServiceInterface: '@App\Service\WebhookIngestService'
 
     App\ServiceInterface\WebhookVerifierInterface: '@App\Service\WebhookVerifier'
     App\ServiceInterface\TokenVerifierInterface: '@App\Service\TokenVerifier'
+    App\ServiceInterface\ValidationErrorMapperInterface: '@App\Service\ValidationErrorMapper'
+    App\ServiceInterface\ApiErrorResponseFactoryInterface: '@App\Service\ApiErrorResponseFactory'
+    App\ServiceInterface\ApiJsonBodyDecoderInterface: '@App\Service\ApiJsonBodyDecoder'
+    App\ServiceInterface\ApiRequestValidatorInterface: '@App\Service\ApiRequestValidator'
 
     App\ServiceInterface\ProjectionSyncInterface: '@App\Service\ProjectionSync'
     App\ServiceInterface\RefundServiceInterface: '@App\Service\RefundService'
@@ -78,7 +88,7 @@ services:
 
     App\Controller\WebhookController:
         public: true
-        tags: ['controller.service_arguments']
+        tags: [ 'controller.service_arguments' ]
         arguments:
             $mappers: !tagged_iterator payment.event_mapper
 
@@ -87,13 +97,13 @@ services:
 
     App\Controller\Webhook\StripeWebhookController:
         public: true
-        tags: ['controller.service_arguments']
+        tags: [ 'controller.service_arguments' ]
         arguments:
             $paymentAuditLogger: '@payment_audit.logger'
 
     App\Controller\Webhook\PayPalWebhookController:
         public: true
-        tags: ['controller.service_arguments']
+        tags: [ 'controller.service_arguments' ]
         arguments:
             $paymentAuditLogger: '@payment_audit.logger'
 
