@@ -1,5 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Infrastructure\Console;
@@ -97,12 +98,12 @@ final class PaymentLifecycleCommand extends Command
         }
 
         $started = $this->paymentStartService->start($provider, $amount, $currency, $idempotencyKey, $origin);
-        $payment = $started['payment'];
+        $payment = $started->payment;
         $this->writeResult($output, [
             'action' => 'start',
             'id' => (string) $payment->id(),
             'status' => $payment->status()->value,
-            'providerRef' => $started['providerRef'],
+            'providerRef' => $started->providerRef,
         ]);
 
         return Command::SUCCESS;
