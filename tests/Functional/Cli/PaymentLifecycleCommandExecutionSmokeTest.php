@@ -8,6 +8,7 @@ namespace App\Tests\Functional\Cli;
 use App\Entity\Payment;
 use App\Infrastructure\Console\PaymentLifecycleCommand;
 use App\RepositoryInterface\PaymentRepositoryInterface;
+use App\Service\PaymentStartResult;
 use App\ServiceInterface\PaymentServiceInterface;
 use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ServiceInterface\ProviderGuardInterface;
@@ -59,6 +60,44 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
         self::assertJson($display);
         self::assertStringContainsString('"action":"create"', $display);
         self::assertStringContainsString('"status":"new"', $display);
+    }
+
+    public function testStartActionDelegatesToPaymentStartServiceAndPrintsJson(): void
+    {
+        $payment = new Payment(new Ulid('01ARZ3NDEKTSV4RRFFQ69G5FB0'), PaymentStatus::processing, '50.00', 'USD');
+        $started = new PaymentStartResult($payment, 'stripe_pi_123', ['ok' => true]);
+
+        /** @var PaymentStartServiceInterface&MockObject $paymentStartService */
+        $paymentStartService = $this->createMock(PaymentStartServiceInterface::class);
+        $paymentStartService->expects(self::once())
+            ->method('start')
+            ->with('stripe', '50.00', 'USD', 'idem-123', 'cli')
+            ->willReturn($started);
+
+        $command = new PaymentLifecycleCommand(
+            $this->createMock(PaymentServiceInterface::class),
+            $paymentStartService,
+            $this->createMock(PaymentRepositoryInterface::class),
+            $this->createMock(ProviderGuardInterface::class),
+            $this->createMock(RefundServiceInterface::class),
+        );
+
+        $tester = new CommandTester($command);
+
+        self::assertSame(Command::SUCCESS, $tester->execute([
+            '--action' => 'start',
+            '--provider' => 'stripe',
+            '--amount' => '50.00',
+            '--currency' => 'usd',
+            '--idempotency-key' => 'idem-123',
+            '--origin' => 'cli',
+        ]));
+
+        $display = trim($tester->getDisplay());
+        self::assertJson($display);
+        self::assertStringContainsString('"action":"start"', $display);
+        self::assertStringContainsString('"status":"processing"', $display);
+        self::assertStringContainsString('"providerRef":"stripe_pi_123"', $display);
     }
 
     public function testFinalizeActionSyncsExistingPaymentAndSavesIt(): void
@@ -124,5 +163,42 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
         self::assertStringContainsString('"action":"finalize"', $display);
         self::assertStringContainsString('"status":"completed"', $display);
         self::assertStringContainsString('"providerRef":"stripe_pi_123"', $display);
+    }
+
+    public function testRefundActionDelegatesToRefundServiceAndPrintsJson(): void
+    {
+        $paymentId = new Ulid('01ARZ3NDEKTSV4RRFFQ69G5FB1');
+        $payment = new Payment($paymentId, PaymentStatus::refunded, '50.00', 'USD');
+        $payment->withProviderRef('stripe_refund_123');
+
+        /** @var RefundServiceInterface&MockObject $refundService */
+        $refundService = $this->createMock(RefundServiceInterface::class);
+        $refundService->expects(self::once())
+            ->method('refund')
+            ->with(self::equalTo($paymentId), '50.00', 'stripe')
+            ->willReturn($payment);
+
+        $command = new PaymentLifecycleCommand(
+            $this->createMock(PaymentServiceInterface::class),
+            $this->createMock(PaymentStartServiceInterface::class),
+            $this->createMock(PaymentRepositoryInterface::class),
+            $this->createMock(ProviderGuardInterface::class),
+            $refundService,
+        );
+
+        $tester = new CommandTester($command);
+
+        self::assertSame(Command::SUCCESS, $tester->execute([
+            '--action' => 'refund',
+            '--payment-id' => (string) $paymentId,
+            '--amount' => '50.00',
+            '--provider' => 'stripe',
+        ]));
+
+        $display = trim($tester->getDisplay());
+        self::assertJson($display);
+        self::assertStringContainsString('"action":"refund"', $display);
+        self::assertStringContainsString('"status":"refunded"', $display);
+        self::assertStringContainsString('"providerRef":"stripe_refund_123"', $display);
     }
 }

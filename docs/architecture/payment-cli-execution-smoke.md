@@ -40,24 +40,15 @@ reconciliation flows.
 `tests/Functional/Cli/PaymentLifecycleCommandExecutionSmokeTest.php` covers command execution for:
 
 - business create flow
+- business start flow
 - business finalize flow
+- business refund flow
 
 These tests prove:
 
 - the command can execute successfully;
 - the command delegates to its owned seam or service;
 - the command prints operator-facing output in the expected shape.
-
-## Not yet covered
-
-The following lifecycle actions still benefit from dedicated execution smoke coverage:
-
-- `payment:lifecycle:run --action=start`
-- `payment:lifecycle:run --action=refund`
-
-The following command is registration- and execution-covered, but still benefits from deeper behavioral thresholds:
-
-- `payment:gate:slo`
 
 ## Ownership note
 

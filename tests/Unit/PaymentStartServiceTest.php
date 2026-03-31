@@ -27,24 +27,17 @@ final class PaymentStartServiceTest extends TestCase
                 ++$this->saveCount;
             }
 
-            public function find(string $id): ?Payment
-            {
-                return null;
-            }
-
-            public function listRecent(int $limit = 10): array
-            {
-                return [];
-            }
-
-            public function listIdsByStatuses(array $statuses, int $limit = 100): array
-            {
-                return [];
-            }
+            public function find(string $id): ?Payment { return null; }
+            public function listRecent(int $limit = 10): array { return []; }
+            public function listIdsByStatuses(array $statuses, int $limit = 100): array { return []; }
         };
 
         $guard = new class implements ProviderGuardInterface {
-            public array $receivedContext = [];
+            public function start(string $provider, Payment $payment, array $context = []): array { return ['providerRef' => 'provider-ref-123']; }
+            public function finalize(string $provider, Ulid $id, array $payload = []): Payment { throw new \RuntimeException(); }
+            public function refund(string $provider, Ulid $id, string $amount): Payment { throw new \RuntimeException(); }
+            public function reconcile(string $provider, Ulid $id): Payment { throw new \RuntimeException(); }
+        };
 
             /**
              * @return string[]
@@ -53,24 +46,30 @@ final class PaymentStartServiceTest extends TestCase
             {
                 $this->receivedContext = $context;
 
-                return ['providerRef' => 'provider-ref-123'];
+        self::assertSame(2, $repo->saveCount);
+        self::assertSame('processing', $started->payment->status()->value);
+    }
+
+    public function testStartMarksPaymentFailedOnProviderError(): void
+    {
+        $repo = new class implements PaymentRepositoryInterface {
+            public int $saveCount = 0;
+            public ?Payment $last = null;
+
+            public function save(Payment $payment): void
+            {
+                ++$this->saveCount;
+                $this->last = $payment;
             }
 
-            public function finalize(string $provider, Ulid $id, array $payload = []): Payment
-            {
-                throw new \RuntimeException('not-used');
-            }
-
-            public function refund(string $provider, Ulid $id, string $amount): Payment
-            {
-                throw new \RuntimeException('not-used');
-            }
-
-            public function reconcile(string $provider, Ulid $id): Payment
-            {
-                throw new \RuntimeException('not-used');
-            }
+            public function find(string $id): ?Payment { return null; }
+            public function listRecent(int $limit = 10): array { return []; }
+            public function listIdsByStatuses(array $statuses, int $limit = 100): array { return []; }
         };
+
+        /** @var ProviderGuardInterface&MockObject $guard */
+        $guard = $this->createMock(ProviderGuardInterface::class);
+        $guard->method('start')->willThrowException(new \RuntimeException('fail'));
 
         $service = new PaymentStartService($guard, $repo);
         $started = $service->start('internal', '10.00', 'usd', '', 'payment-console');
