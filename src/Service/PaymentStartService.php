@@ -1,6 +1,5 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
@@ -28,6 +27,25 @@ final readonly class PaymentStartService implements PaymentStartServiceInterface
         $payment = new Payment(new Ulid(), PaymentStatus::new, $money->toDecimalString(), $money->currency());
         $this->repo->save($payment);
 
+        return $this->startExistingPayment($payment, $provider, $idempotencyKey, $origin);
+    }
+
+    public function restart(string $paymentId, string $provider, string $idempotencyKey = '', string $origin = 'api'): PaymentStartResult
+    {
+        $existing = $this->repo->find($paymentId);
+        if (null === $existing) {
+            throw PaymentNotFoundException::byId($paymentId);
+        }
+
+        if ($existing->status() !== PaymentStatus::failed) {
+            throw new \InvalidArgumentException('Only failed payments can be restarted.');
+        }
+
+        return $this->startExistingPayment($existing, $provider, $idempotencyKey, $origin);
+    }
+
+    private function startExistingPayment(Payment $payment, string $provider, string $idempotencyKey, string $origin): PaymentStartResult
+    {
         try {
             $providerResult = $this->guard->start($provider, $payment, [
                 'idempotencyKey' => '' !== $idempotencyKey ? $idempotencyKey : (string) $payment->id(),
