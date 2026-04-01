@@ -10,6 +10,7 @@ use App\ServiceInterface\ApiJsonBodyDecoderInterface;
 use App\ServiceInterface\EventMapperInterface;
 use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\WebhookVerifierInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
@@ -21,6 +22,7 @@ final readonly class WebhookController implements WebhookControllerInterface
         private ProviderGuardInterface $guard,
         private ApiJsonBodyDecoderInterface $jsonBodyDecoder,
         /** @var iterable<EventMapperInterface> */ private iterable $mappers,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -32,11 +34,19 @@ final readonly class WebhookController implements WebhookControllerInterface
             $verified = $this->verifier->verify($provider, $raw, $headers);
 
             if (!$verified) {
+                $this->logger->warning('Webhook verification failed.', [
+                    'provider' => $provider,
+                ]);
+
                 return new Response('', Response::HTTP_BAD_REQUEST);
             }
 
             $data = $this->jsonBodyDecoder->decode($request);
             if (!is_array($data)) {
+                $this->logger->warning('Webhook payload could not be decoded to array.', [
+                    'provider' => $provider,
+                ]);
+
                 return new Response('', Response::HTTP_BAD_REQUEST);
             }
 
@@ -52,10 +62,19 @@ final readonly class WebhookController implements WebhookControllerInterface
 
             if (null !== $paymentId && Ulid::isValid($paymentId)) {
                 $this->guard->reconcile($provider, new Ulid($paymentId));
+            } elseif (null === $paymentId) {
+                $this->logger->warning('Webhook payload did not resolve a payment identifier.', [
+                    'provider' => $provider,
+                ]);
             }
 
             return new Response('', Response::HTTP_OK);
-        } catch (\Throwable) {
+        } catch (\Throwable $exception) {
+            $this->logger->error('Webhook processing failed.', [
+                'provider' => $provider,
+                'exception' => $exception,
+            ]);
+
             return new Response('', Response::HTTP_BAD_REQUEST);
         }
     }

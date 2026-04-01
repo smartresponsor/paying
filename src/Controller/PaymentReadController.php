@@ -32,6 +32,7 @@ final readonly class PaymentReadController implements PaymentReadControllerInter
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'id', type: 'string', example: '01HZY9M8Q6M7X4YH3B2A1C0D9E'),
+                        new OA\Property(property: 'orderId', type: 'string', example: 'order-1001'),
                         new OA\Property(property: 'status', type: 'string', example: 'processing'),
                         new OA\Property(property: 'amount', type: 'string', example: '50.00'),
                         new OA\Property(property: 'currency', type: 'string', example: 'USD'),
@@ -60,6 +61,7 @@ final readonly class PaymentReadController implements PaymentReadControllerInter
 
         return new JsonResponse([
             'id' => (string) $payment->id(),
+            'orderId' => $payment->orderId(),
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),
             'currency' => $payment->currency(),

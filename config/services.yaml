@@ -9,8 +9,6 @@ services:
     _instanceof:
         App\ServiceInterface\EventMapperInterface:
             tags: [ 'payment.event_mapper' ]
-        App\ServiceInterface\Gateway\PaymentGatewayInterface:
-            tags: [ 'payment.gateway' ]
 
     App\:
         resource: '../src/'
@@ -29,12 +27,10 @@ services:
     App\ServiceInterface\IdempotencyStoreInterface:
         factory: [ '@App\Service\IdempotencyStoreFactory', 'create' ]
 
-
     App\Controller\:
         resource: '../src/Controller/'
         public: true
         tags: [ 'controller.service_arguments' ]
-
 
     App\Service\ProviderRouter:
         arguments:
@@ -60,7 +56,6 @@ services:
     App\Infrastructure\RateLimitSubscriber:
         arguments:
             $paymentApiLimiter: '@limiter.payment_api'
-
 
     App\ServiceInterface\DlqServiceInterface: '@App\Service\DlqService'
     App\ServiceInterface\ProjectionLagServiceInterface: '@App\Service\ProjectionLagService'
@@ -107,7 +102,6 @@ services:
         arguments:
             $paymentAuditLogger: '@payment_audit.logger'
 
-
     App\ServiceInterface\Outbox\PaymentOutboxProcessorInterface: '@App\Service\Outbox\PaymentOutboxProcessor'
 
     App\Service\Outbox\PaymentOutboxProcessor:
@@ -115,14 +109,6 @@ services:
             $em: '@doctrine.orm.entity_manager'
             $transport: '@messenger.transport.payment_outbox'
             $logger: '@logger'
-
-    App\Message\Handler\PaymentCreateHandler:
-        arguments:
-            $gateways: !tagged_iterator payment.gateway
-
-    App\Message\Handler\PaymentRefundHandler:
-        arguments:
-            $gateways: !tagged_iterator payment.gateway
 
     App\Service\Order\NullOrderPaymentSync:
         arguments:

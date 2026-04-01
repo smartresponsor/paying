@@ -21,39 +21,37 @@ readonly class ProjectionSync implements ProjectionSyncInterface
     /**
      * @throws \Doctrine\DBAL\Exception
      */
-    /**
-     * @throws \Doctrine\DBAL\Exception
-     */
     public function sync(int $limit = 500): int
     {
         $wm = $this->infra->watermark() ?? '1970-01-01 00:00:00';
-        $sql = 'SELECT id, amount, currency, status, updated_at FROM payment WHERE updated_at > :wm ORDER BY updated_at ASC LIMIT :lim';
+        $sql = 'SELECT id, order_id, amount, currency, status, provider_ref, updated_at FROM payment WHERE updated_at > :wm ORDER BY updated_at ASC LIMIT :lim';
         $rows = $this->data->fetchAllAssociative(
             $sql,
             ['wm' => $wm, 'lim' => $limit],
             ['wm' => ParameterType::STRING, 'lim' => ParameterType::INTEGER],
         );
+
         $n = 0;
         foreach ($rows as $r) {
             $this->infra->upsert([
                 'id' => (string) $r['id'],
+                'order_id' => (string) ($r['order_id'] ?? ''),
                 'amount' => (string) $r['amount'],
                 'currency' => (string) $r['currency'],
                 'status' => (string) $r['status'],
+                'provider_ref' => isset($r['provider_ref']) ? (string) $r['provider_ref'] : null,
                 'updated_at' => (string) $r['updated_at'],
             ]);
             ++$n;
         }
+
         if ($n > 0) {
-            $this->infra->saveWatermark((string) end($rows)['updated_at']);
+            $this->infra->saveWatermark(string(end($rows)['updated_at']));
         }
 
         return $n;
     }
 
-    /**
-     * @throws \Doctrine\DBAL\Exception
-     */
     /**
      * @throws \Doctrine\DBAL\Exception
      */
@@ -63,7 +61,7 @@ readonly class ProjectionSync implements ProjectionSyncInterface
         $n = 0;
         while (true) {
             $rows = $this->data->fetchAllAssociative(
-                'SELECT id, amount, currency, status, updated_at FROM payment ORDER BY updated_at ASC LIMIT :lim OFFSET :off',
+                'SELECT id, order_id, amount, currency, status, provider_ref, updated_at FROM payment ORDER BY updated_at ASC LIMIT :lim OFFSET :off',
                 ['lim' => $batch, 'off' => $off],
                 ['lim' => ParameterType::INTEGER, 'off' => ParameterType::INTEGER],
             );
@@ -73,15 +71,17 @@ readonly class ProjectionSync implements ProjectionSyncInterface
             foreach ($rows as $r) {
                 $this->infra->upsert([
                     'id' => (string) $r['id'],
+                    'order_id' => (string) ($r['order_id'] ?? ''),
                     'amount' => (string) $r['amount'],
                     'currency' => (string) $r['currency'],
                     'status' => (string) $r['status'],
+                    'provider_ref' => isset($r['provider_ref']) ? (string) $r['provider_ref'] : null,
                     'updated_at' => (string) $r['updated_at'],
                 ]);
                 ++$n;
             }
             $off += $batch;
-            $this->infra->saveWatermark((string) end($rows)['updated_at']);
+            $this->infra->saveWatermark(string(end($rows)['updated_at']));
         }
 
         return $n;

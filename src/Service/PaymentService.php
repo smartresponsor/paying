@@ -14,15 +14,17 @@ use Symfony\Component\Uid\Ulid;
 
 final class PaymentService implements PaymentServiceInterface
 {
-    public function __construct(private readonly PaymentRepositoryInterface $repo)
+    public function __construct(private readonly PaymentRepositoryInterface $paymentRepository)
     {
     }
 
     public function create(string $orderId, int $amountMinor, string $currency): Payment
     {
         $money = Money::fromMinor($amountMinor, strtoupper($currency));
-        $payment = new Payment(new Ulid(), PaymentStatus::new, $money->toDecimalString(), $money->currency());
-        $this->repo->save($payment);
+
+        $payment = new Payment(new Ulid(), PaymentStatus::new, $money->toDecimalString(), $money->currency(), $orderId);
+
+        $this->paymentRepository->save($payment);
 
         return $payment;
     }

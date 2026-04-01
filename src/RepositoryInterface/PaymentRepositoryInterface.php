@@ -13,6 +13,8 @@ interface PaymentRepositoryInterface
 
     public function find(string $id): ?Payment;
 
+    public function findByOrderId(string $orderId): ?Payment;
+
     /**
      * @return list<Payment>
      */

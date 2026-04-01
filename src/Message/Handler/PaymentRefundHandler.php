@@ -7,16 +7,17 @@ namespace App\Message\Handler;
 
 use App\Message\Command\PaymentRefundCommand;
 use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\ServiceInterface\Gateway\PaymentGatewayInterface;
+use App\ServiceInterface\RefundServiceInterface;
+use App\ValueObject\Money;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Component\Uid\Ulid;
 
 #[AsMessageHandler]
 final readonly class PaymentRefundHandler
 {
     public function __construct(
         private PaymentRepositoryInterface $repo,
-        /** @var iterable<PaymentGatewayInterface> */
-        private iterable $gateways,
+        private RefundServiceInterface $refundService,
     ) {
     }
 
@@ -27,33 +28,32 @@ final readonly class PaymentRefundHandler
             throw new \RuntimeException('Payment not found');
         }
 
-        $gateway = $this->selectGatewayByPayment($payment->providerRef());
-        $refundRef = $gateway->refund((string) $payment->id(), $command->amountMinor, $command->currency, $command->reason);
+        $amount = Money::fromMinor($command->amountMinor, strtoupper($command->currency))->toDecimalString();
+        $provider = $this->resolveProvider($payment->providerRef());
 
-        $payment->markRefunded($refundRef);
-
-        $this->repo->save($payment);
+        $this->refundService->refund(new Ulid($command->paymentId), $amount, $provider);
     }
 
-    private function selectGatewayByPayment(?string $providerRef): PaymentGatewayInterface
+    private function resolveProvider(?string $providerRef): string
     {
-        $code = $this->resolveGatewayCode($providerRef);
-
-        foreach ($this->gateways as $gateway) {
-            if ($gateway->code() === $code) {
-                return $gateway;
-            }
+        if (!is_string($providerRef) || '' === trim($providerRef)) {
+            return 'internal';
         }
 
-        throw new \RuntimeException('Gateway for payment not found: '.$code);
-    }
+        $normalized = strtolower($providerRef);
 
-    private function resolveGatewayCode(?string $providerRef): string
-    {
-        if (is_string($providerRef) && str_starts_with($providerRef, 'paypal_')) {
+        if (str_starts_with($normalized, 'paypal_')) {
             return 'paypal';
         }
 
-        return 'stripe';
+        if (str_starts_with($normalized, 'stripe_') || str_starts_with($normalized, 'cs_')) {
+            return 'stripe';
+        }
+
+        if (str_starts_with($normalized, 'internal')) {
+            return 'internal';
+        }
+
+        return 'internal';
     }
 }

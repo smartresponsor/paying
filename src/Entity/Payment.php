@@ -18,6 +18,9 @@ class Payment
     #[ORM\Column(type: 'ulid', unique: true)]
     private Ulid $id;
 
+    #[ORM\Column(type: 'string', length: 128)]
+    private string $orderId;
+
     #[ORM\Column(type: 'string', length: 16, enumType: PaymentStatus::class)]
     private PaymentStatus $status;
 
@@ -36,9 +39,10 @@ class Payment
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $updatedAt;
 
-    public function __construct(Ulid $id, PaymentStatus $status, string $amount, string $currency)
+    public function __construct(Ulid $id, PaymentStatus $status, string $amount, string $currency, string $orderId = '')
     {
         $this->id = $id;
+        $this->orderId = '' !== trim($orderId) ? trim($orderId) : (string) $id;
         $this->status = $status;
         $this->amount = $amount;
         $this->currency = $currency;
@@ -55,6 +59,11 @@ class Payment
     public function id(): Ulid
     {
         return $this->id;
+    }
+
+    public function orderId(): string
+    {
+        return $this->orderId;
     }
 
     public function status(): PaymentStatus
@@ -87,12 +96,6 @@ class Payment
         return $this->updatedAt;
     }
 
-    /**
-     * @return $this
-     */
-    /**
-     * @return $this
-     */
     public function withStatus(PaymentStatus $status): self
     {
         $this->status = $status;
@@ -101,12 +104,6 @@ class Payment
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    /**
-     * @return $this
-     */
     public function withProviderRef(?string $ref): self
     {
         $this->providerRef = $ref;
@@ -115,12 +112,6 @@ class Payment
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    /**
-     * @return $this
-     */
     public function markProcessing(?string $providerRef = null): self
     {
         if (null !== $providerRef) {
@@ -130,12 +121,6 @@ class Payment
         return $this->withStatus(PaymentStatus::processing);
     }
 
-    /**
-     * @return $this
-     */
-    /**
-     * @return $this
-     */
     public function markCompleted(?string $providerRef = null): self
     {
         if (null !== $providerRef) {
@@ -145,12 +130,6 @@ class Payment
         return $this->withStatus(PaymentStatus::completed);
     }
 
-    /**
-     * @return $this
-     */
-    /**
-     * @return $this
-     */
     public function markFailed(?string $providerRef = null): self
     {
         if (null !== $providerRef) {
@@ -160,12 +139,6 @@ class Payment
         return $this->withStatus(PaymentStatus::failed);
     }
 
-    /**
-     * @return $this
-     */
-    /**
-     * @return $this
-     */
     public function markRefunded(?string $providerRef = null): self
     {
         if (null !== $providerRef) {
@@ -175,12 +148,6 @@ class Payment
         return $this->withStatus(PaymentStatus::refunded);
     }
 
-    /**
-     * @return $this
-     */
-    /**
-     * @return $this
-     */
     public function syncFrom(self $payment): self
     {
         $this->amount = $payment->amount();

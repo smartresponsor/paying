@@ -9,5 +9,5 @@ use App\Service\PaymentStartResult;
 
 interface PaymentStartServiceInterface
 {
-    public function start(string $provider, string $amount, string $currency, string $idempotencyKey = '', string $origin = 'api'): PaymentStartResult;
+    public function start(string $orderId, string $provider, string $amount, string $currency, string $idempotencyKey = '', string $origin = 'api'): PaymentStartResult;
 }

@@ -5,49 +5,39 @@ declare(strict_types=1);
 
 namespace App\Message\Handler;
 
-use App\Entity\Payment;
 use App\Message\Command\PaymentCreateCommand;
-use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\ServiceInterface\Gateway\PaymentGatewayInterface;
-use App\ValueObject\PaymentStatus;
+use App\ServiceInterface\PaymentStartServiceInterface;
+use App\ValueObject\Money;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Uid\Ulid;
 
 #[AsMessageHandler]
 final readonly class PaymentCreateHandler
 {
-    public function __construct(
-        private PaymentRepositoryInterface $repo,
-        /** @var iterable<PaymentGatewayInterface> */
-        private iterable $gateways,
-    ) {
+    public function __construct(private PaymentStartServiceInterface $paymentStartService)
+    {
     }
 
     public function __invoke(PaymentCreateCommand $command): void
     {
-        $payment = new Payment(
-            new Ulid(),
-            PaymentStatus::new,
-            number_format($command->amountMinor / 100, 2, '.', ''),
-            $command->currency,
+        $money = Money::fromMinor($command->amountMinor, strtoupper($command->currency));
+
+        $this->paymentStartService->start(
+            $command->orderId,
+            $this->normalizeProvider($command->gatewayCode),
+            $money->toDecimalString(),
+            $money->currency(),
+            $command->idempotencyKey ?? '',
+            'messager-create',
         );
-
-        $gateway = $this->selectGateway($command->gatewayCode);
-        $providerRef = $gateway->authorize((string) $payment->id(), $command->amountMinor, $command->currency);
-
-        $payment->markProcessing($providerRef);
-
-        $this->repo->save($payment);
     }
 
-    private function selectGateway(string $code): PaymentGatewayInterface
+    private function normalizeProvider(string $code): string
     {
-        foreach ($this->gateways as $gateway) {
-            if ($gateway->code() === $code) {
-                return $gateway;
-            }
-        }
+        $normalized = strtolower(trim($code));
 
-        throw new \RuntimeException('Payment gateway not found: '.$code);
+        return match ($normalized) {
+            'stripe', 'paypal', 'internal' => $normalized,
+            default => throw new \RuntimeException('Payment provider not found: '.$code),
+        };
     }
 }

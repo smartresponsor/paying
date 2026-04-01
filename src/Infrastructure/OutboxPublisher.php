@@ -5,15 +5,19 @@ declare(strict_types=1);
 
 namespace App\Infrastructure;
 
+use App\Exception\OutboxOperationException;
 use App\InfrastructureInterface\OutboxPublisherInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Uid\Ulid;
 
 readonly class OutboxPublisher implements OutboxPublisherInterface
 {
-    public function __construct(private Connection $data)
-    {
+    public function __construct(
+        private Connection $data,
+        private LoggerInterface $logger,
+    ) {
     }
 
     public function enqueue(string $topic, array $payload): void
@@ -29,24 +33,33 @@ readonly class OutboxPublisher implements OutboxPublisherInterface
                 'last_error' => null,
                 'routing_key' => $topic,
             ]);
-        } catch (Exception $e) {
-        } catch (\JsonException $e) {
+        } catch (Exception|\JsonException $e) {
+            $this->logger->error('Failed to enqueue payment outbox message.', [
+                'topic' => $topic,
+                'payload' => $payload,
+                'exception' => $e,
+            ]);
+
+            throw new OutboxOperationException('Unable to enqueue outbox message.', 0, $e);
         }
     }
 
     public function moveToDlq(string $id, string $reason): void
     {
-        $row = false;
-
         try {
             $row = $this->data->fetchAssociative(
                 'SELECT * FROM payment_outbox_message WHERE id = :id',
                 ['id' => $id],
             );
         } catch (Exception $e) {
+            $this->logger->error('Failed to load outbox message for DLQ move.', ['id' => $id, 'exception' => $e^]);
+
+            throw new OutboxOperationException('Unable to read outbox message for DLQ move.', 0, $e);
         }
 
         if (false === $row) {
+            $this->logger->warning('Outbox message not found for DLQ move.', ['id' => $id, 'reason' => $reason]);
+
             return;
         }
 
@@ -59,6 +72,9 @@ readonly class OutboxPublisher implements OutboxPublisherInterface
                 'created_at' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
             ]);
         } catch (Exception $e) {
+            $this->logger->error('Failed to insert payment DLQ message.', ['id' => $id, 'reason' => $reason, 'exception' => $e]);
+
+            throw new OutboxOperationException('Unable to insert DLQ message.', 0, $e);
         }
 
         try {
@@ -67,6 +83,9 @@ readonly class OutboxPublisher implements OutboxPublisherInterface
                 ['id' => $id],
             );
         } catch (Exception $e) {
+            $this->logger->error('Failed to delete outbox message after DLQ move.', ['id' => $id, 'exception' => $e]);
+
+            throw new OutboxOperationException('Unable to delete outbox message after DLQ move.', 0, $e);
         }
     }
 }

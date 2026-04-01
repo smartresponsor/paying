@@ -22,11 +22,11 @@ final readonly class PaymentStartService implements PaymentStartServiceInterface
     ) {
     }
 
-    public function start(string $provider, string $amount, string $currency, string $idempotencyKey = '', string $origin = 'api'): PaymentStartResult
+    public function start(string $orderId, string $provider, string $amount, string $currency, string $idempotencyKey = '', string $origin = 'api'): PaymentStartResult
     {
         $money = Money::fromDecimalString($amount, strtoupper($currency));
 
-        $payment = new Payment(new Ulid(), PaymentStatus::new, $money->toDecimalString(), $money->currency());
+        $payment = new Payment(new Ulid(), PaymentStatus::new, $money->toDecimalString(), $money->currency(), $orderId);
         $this->repo->save($payment);
 
         return $this->startExistingPayment($payment, $provider, $idempotencyKey, $origin);

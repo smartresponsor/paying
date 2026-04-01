@@ -10,6 +10,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class PaymentStartRequestDto
 {
     #[Assert\NotBlank]
+    public string $orderId = '';
+
+    #[Assert\NotBlank]
     #[Assert\Regex(pattern: '/^\d+(\.\d{2})$/', message: 'Use decimal amount format like 50.00.')]
     public string $amount = '0.00';
 
