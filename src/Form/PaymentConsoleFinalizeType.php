@@ -23,6 +23,7 @@ final class PaymentConsoleFinalizeType extends AbstractType
                 'choices' => [
                     'Internal' => 'internal',
                     'Stripe' => 'stripe',
+                    'PayPal' => 'paypal',
                 ],
             ])
             ->add('providerRef', TextType::class, [
