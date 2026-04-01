@@ -5,10 +5,12 @@ declare(strict_types=1);
 
 namespace App\Infrastructure;
 
+use App\Exception\OutboxOperationException;
 use App\InfrastructureInterface\OutboxPublisherInterface;
 use App\InfrastructureInterface\PublisherTransportInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Psr\Log\LoggerInterface;
 
 class OutboxWorker
 {
@@ -18,6 +20,7 @@ class OutboxWorker
         private readonly Connection $data,
         private readonly PublisherTransportInterface $transport,
         private readonly OutboxPublisherInterface $outboxPublisher,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -45,6 +48,12 @@ class OutboxWorker
                 ++$count;
             } catch (\Throwable $exception) {
                 $reason = 'publish-failed: '.$exception->getMessage();
+                $this->logger->error('Failed to publish outbox message.', [
+                    'id' => $id,
+                    'routingKey' => $routingKey,
+                    'attempts' => $attempts,
+                    'exception' => $exception,
+                ]);
 
                 if ($attempts >= self::MAX_ATTEMPTS) {
                     $this->outboxPublisher->moveToDlq($id, $reason);
@@ -62,6 +71,13 @@ class OutboxWorker
                         ],
                     );
                 } catch (Exception $e) {
+                    $this->logger->error('Failed to persist outbox failure status.', [
+                        'id' => $id,
+                        'reason' => $reason,
+                        'exception' => $e,
+                    ]);
+
+                    throw new OutboxOperationException('Unable to persist outbox failure state.', 0, $e);
                 }
             }
         }
@@ -84,7 +100,13 @@ class OutboxWorker
         try {
             return $this->data->fetchAllAssociative($sql);
         } catch (Exception $e) {
-            return [];
+            $this->logger->error('Failed to load outbox messages.', [
+                'limit' => $limit,
+                'retryFailed' => $retryFailed,
+                'exception' => $e,
+            ]);
+
+            throw new OutboxOperationException('Unable to load outbox messages.', 0, $e);
         }
     }
 
