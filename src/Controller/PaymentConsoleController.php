@@ -55,8 +55,15 @@ final class PaymentConsoleController extends AbstractController
         $finalizeDto = new PaymentConsoleFinalizeRequestDto();
         $refundDto = new PaymentConsoleRefundRequestDto();
         if (null !== $consoleView['selectedPayment']) {
-            $finalizeDto->paymentId = (string) $consoleView['selectedPayment']['id'];
-            $refundDto->paymentId = (string) $consoleView['selectedPayment']['id'];
+            $selectedPayment = $consoleView['selectedPayment'];
+            $resolvedProvider = $this->resolveProvider((string) ($selectedPayment['providerRef'] ?? ''));
+
+            $finalizeDto->paymentId = (string) $selectedPayment['id'];
+            $finalizeDto->provider = $resolvedProvider;
+            $finalizeDto->providerRef = (string) ($selectedPayment['providerRef'] ?? '');
+
+            $refundDto->paymentId = (string) $selectedPayment['id'];
+            $refundDto->provider = $resolvedProvider;
         }
 
         $finalizeForm = $this->createForm(PaymentConsoleFinalizeType::class, $finalizeDto, [
@@ -173,5 +180,23 @@ final class PaymentConsoleController extends AbstractController
         $this->addFlash('danger', sprintf('Payment %s was not found.', $paymentId));
 
         return $this->redirectToRoute('payment_console');
+    }
+
+    private function resolveProvider(string $providerRef): string
+    {
+        $normalized = strtolower(trim($providerRef));
+        if ('' === $normalized) {
+            return 'internal';
+        }
+
+        if (str_starts_with($normalized, 'stripe_') || str_starts_with($normalized, 'cs_')) {
+            return 'stripe';
+        }
+
+        if (str_starts_with($normalized, 'internal')) {
+            return 'internal';
+        }
+
+        return 'internal';
     }
 }
