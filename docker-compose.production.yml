@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      APP_ENV: prod
+      DATABASE_URL: "sqlite:///%kernel.project_dir%/var/data.db"
+    healthcheck:
+      test: ["CMD", "php", "bin/console", "payment:lifecycle:run", "--action=alerts"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  scheduler:
+    build: .
+    command: >
+      sh -c "while true; do
+        php bin/console payment:lifecycle:run --action=restart-failed --provider=stripe || true;
+        php bin/console payment:lifecycle:run --action=alerts || true;
+        sleep 60;
+      done"
+    depends_on:
+      - app
