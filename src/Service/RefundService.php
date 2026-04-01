@@ -11,11 +11,11 @@ use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\RefundServiceInterface;
 use Symfony\Component\Uid\Ulid;
 
-final class RefundService implements RefundServiceInterface
+final readonly class RefundService implements RefundServiceInterface
 {
     public function __construct(
-        private readonly ProviderGuardInterface $guard,
-        private readonly PaymentRepositoryInterface $repo,
+        private ProviderGuardInterface $guard,
+        private PaymentRepositoryInterface $repo,
     ) {
     }
 

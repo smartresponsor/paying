@@ -33,7 +33,7 @@ final class PaymentStartFinalizeValidationTest extends WebTestCase
 
     public function testStartPaymentReturnsUnprocessableEntityForInvalidPayload(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $client->request(
             'POST',
             '/payment/start',
@@ -52,7 +52,7 @@ final class PaymentStartFinalizeValidationTest extends WebTestCase
 
     public function testFinalizePaymentReturnsUnprocessableEntityForUnknownProvider(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $client->request(
             'POST',
             '/payment/finalize/01HZY9M8Q6M7X4YH3B2A1C0D9E',

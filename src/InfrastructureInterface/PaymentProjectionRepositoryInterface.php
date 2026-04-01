@@ -13,7 +13,6 @@ interface PaymentProjectionRepositoryInterface
     /** @return list<array<string, scalar|null>> */
     public function listByStatus(string $status, int $limit = 100): array;
 
-    /** @param array<string, scalar|null> $row */
     public function upsert(array $row): void;
 
     public function maxUpdatedAt(): ?string;

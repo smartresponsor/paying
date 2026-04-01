@@ -17,7 +17,7 @@ final class PaymentWebhookRouteSmokeTest extends WebTestCase
 
     public function testGenericWebhookRouteIsWiredToControllerChain(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $client->request('POST', '/payment/webhook/stripe', [], [], [
             'CONTENT_TYPE' => 'application/json',
         ], '{}');

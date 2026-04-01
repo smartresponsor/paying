@@ -17,12 +17,12 @@ final class ServiceLayerDependencyBoundaryTest extends TestCase
         ];
 
         foreach ($serviceFiles as $file) {
-            $content = (string) file_get_contents($file);
+            $content = (string) file_get_contents((string) $file);
 
             self::assertStringNotContainsString(
                 'App\\Controller\\',
                 $content,
-                sprintf('Service-layer file %s must not depend on controller namespace.', basename($file)),
+                sprintf('Service-layer file %s must not depend on controller namespace.', basename((string) $file)),
             );
         }
     }

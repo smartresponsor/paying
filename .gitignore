@@ -76,8 +76,6 @@ Thumbs.db
 *.old
 *.orig
 *.log
-*.swp
-*.swo
 *~
 # PHP-CS-Fixer cache
 .php-cs-fixer.cache

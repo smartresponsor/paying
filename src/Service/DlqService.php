@@ -10,12 +10,15 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Symfony\Component\Uid\Ulid;
 
-final class DlqService implements DlqServiceInterface
+final readonly class DlqService implements DlqServiceInterface
 {
-    public function __construct(private readonly Connection $data)
+    public function __construct(private Connection $data)
     {
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function list(): array
     {
         return $this->data->fetchAllAssociative(
@@ -23,6 +26,12 @@ final class DlqService implements DlqServiceInterface
         );
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function replay(int $id): bool
     {
         $row = $this->data->fetchAssociative(

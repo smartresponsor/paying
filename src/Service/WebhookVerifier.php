@@ -71,9 +71,6 @@ class WebhookVerifier implements WebhookVerifierInterface
         return '' === $normalized ? $default : $normalized;
     }
 
-    /**
-     * @param array<string, string|list<string>> $headers
-     */
     private function headerValue(array $headers, string $name): ?string
     {
         $value = $headers[strtolower($name)] ?? $headers[$name] ?? null;

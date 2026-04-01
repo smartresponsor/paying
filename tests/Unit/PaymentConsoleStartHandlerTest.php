@@ -10,6 +10,7 @@ use App\Service\PaymentConsoleStartHandler;
 use App\Service\PaymentStartResult;
 use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ValueObject\PaymentStatus;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
@@ -19,7 +20,10 @@ final class PaymentConsoleStartHandlerTest extends TestCase
     {
         $payment = new Payment(new Ulid(), PaymentStatus::processing, '12.50', 'USD');
 
-        $startService = $this->createMock(PaymentStartServiceInterface::class);
+        try {
+            $startService = $this->createMock(PaymentStartServiceInterface::class);
+        } catch (Exception $e) {
+        }
         $startService
             ->expects(self::once())
             ->method('start')

@@ -11,12 +11,12 @@ use App\ServiceInterface\Gateway\PaymentGatewayInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-final class PaymentRefundHandler
+final readonly class PaymentRefundHandler
 {
     public function __construct(
-        private readonly PaymentRepositoryInterface $repo,
+        private PaymentRepositoryInterface $repo,
         /** @var iterable<PaymentGatewayInterface> */
-        private readonly iterable $gateways,
+        private iterable $gateways,
     ) {
     }
 

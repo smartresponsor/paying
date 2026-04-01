@@ -11,12 +11,15 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 
-class RateLimitSubscriber implements EventSubscriberInterface
+readonly class RateLimitSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly RateLimiterFactory $paymentApiLimiter)
+    public function __construct(private RateLimiterFactory $paymentApiLimiter)
     {
     }
 
+    /**
+     * @return string[]
+     */
     public static function getSubscribedEvents(): array
     {
         return [KernelEvents::REQUEST => 'onRequest'];

@@ -17,7 +17,8 @@ Target deliverables:
 
 ### Track 2 — final documentation consolidation
 
-Once installed-runtime proof exists, the next high-value step is to collapse the accumulated engineering docs into a tighter operator/developer package.
+Once installed-runtime proof exists, the next high-value step is to collapse the accumulated engineering docs into a
+tighter operator/developer package.
 
 Target deliverables:
 
@@ -56,7 +57,6 @@ That means installed-runtime proof now reduces more real risk than any further c
 
 
 - `docs/architecture/payment-test-runtime-bootstrap.md` defines the deterministic test-runtime bootstrap contour.
-
 
 ## Installed-runtime preflight
 

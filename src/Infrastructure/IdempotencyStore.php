@@ -18,13 +18,17 @@ use Doctrine\DBAL\Connection;
  * signature-compatible with its own infrastructure interface so Symfony can
  * compile the container under Symfony 8 / PHP 8.4.
  */
-class IdempotencyStore implements IdempotencyStoreInterface
+readonly class IdempotencyStore implements IdempotencyStoreInterface
 {
-    public function __construct(private readonly Connection $data)
+    public function __construct(private Connection $data)
     {
     }
 
-    /** @return array{response: array<string, mixed>|list<mixed>|scalar|null, hash: string}|null */
+    /**
+     * @return array{response: array<string, mixed>|list<mixed>|scalar|null, hash: string}|null
+     *
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function get(string $key): ?array
     {
         $row = $this->data->fetchAssociative(
@@ -42,7 +46,10 @@ class IdempotencyStore implements IdempotencyStoreInterface
         ];
     }
 
-    /** @param array<string, mixed>|list<mixed> $response */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \JsonException
+     */
     public function save(string $key, string $payloadHash, array $response, int $statusCode, int $ttlSeconds): void
     {
         $json = json_encode($response, JSON_THROW_ON_ERROR);

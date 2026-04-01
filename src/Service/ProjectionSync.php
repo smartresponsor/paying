@@ -10,14 +10,20 @@ use App\ServiceInterface\ProjectionSyncInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 
-class ProjectionSync implements ProjectionSyncInterface
+readonly class ProjectionSync implements ProjectionSyncInterface
 {
     public function __construct(
-        private readonly Connection $data,
-        private readonly PaymentProjectionRepositoryInterface $infra,
+        private Connection $data,
+        private PaymentProjectionRepositoryInterface $infra,
     ) {
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function sync(int $limit = 500): int
     {
         $wm = $this->infra->watermark() ?? '1970-01-01 00:00:00';
@@ -45,6 +51,12 @@ class ProjectionSync implements ProjectionSyncInterface
         return $n;
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function rebuild(int $batch = 1000): int
     {
         $off = 0;

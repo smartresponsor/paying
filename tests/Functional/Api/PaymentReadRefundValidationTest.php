@@ -33,7 +33,7 @@ final class PaymentReadRefundValidationTest extends WebTestCase
 
     public function testReadPaymentReturnsNotFoundForInvalidUlid(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $client->request('GET', '/api/payments/not-a-valid-ulid');
 
         self::assertSame(404, $client->getResponse()->getStatusCode());
@@ -41,7 +41,7 @@ final class PaymentReadRefundValidationTest extends WebTestCase
 
     public function testRefundPaymentReturnsUnprocessableEntityForInvalidPayload(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $client->request(
             'POST',
             '/api/payments/01HZY9M8Q6M7X4YH3B2A1C0D9E/refund',

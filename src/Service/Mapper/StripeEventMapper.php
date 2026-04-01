@@ -14,7 +14,6 @@ class StripeEventMapper implements EventMapperInterface
         return 'stripe';
     }
 
-    /** @param array<string, mixed> $payload */
     public function extractPaymentId(array $payload): ?string
     {
         $object = $payload['data']['object'] ?? null;
@@ -28,7 +27,6 @@ class StripeEventMapper implements EventMapperInterface
         return null;
     }
 
-    /** @param array<string, mixed> $payload */
     public function mapStatus(array $payload): ?string
     {
         $type = (string) ($payload['type'] ?? '');

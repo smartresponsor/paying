@@ -1,9 +1,9 @@
 # Payment technical portrait
 
-
 ## Current state
 
-The `Paying/Payment` component is now structurally canonical enough to be treated as a single Symfony-oriented application under `App\ -> src/`. The repository already contains live contours for:
+The `Paying/Payment` component is now structurally canonical enough to be treated as a single Symfony-oriented
+application under `App\ -> src/`. The repository already contains live contours for:
 
 - payment lifecycle (`Payment`, `PaymentStatus`, start/finalize/refund flows)
 - webhook intake and normalization
@@ -16,7 +16,8 @@ The component is no longer in a demolition/salvage phase. It has moved into a **
 
 ## Responsibility portrait
 
-This repository is not a pure CRUD payment store and not a provider SDK wrapper. Its factual responsibility is closer to:
+This repository is not a pure CRUD payment store and not a provider SDK wrapper. Its factual responsibility is closer
+to:
 
 **payment execution and integration orchestration for Smartresponsor**
 
@@ -85,11 +86,13 @@ But `composer.json` does not currently declare the full matching package contour
 
 ### 2. API Platform transitional tail still exists
 
-The repository still contains API Platform resources and processors under `src/Api/*`. This is transitional and conflicts with the target direction of explicit Symfony controllers plus Nelmio-based OpenAPI documentation.
+The repository still contains API Platform resources and processors under `src/Api/*`. This is transitional and
+conflicts with the target direction of explicit Symfony controllers plus Nelmio-based OpenAPI documentation.
 
 ### 3. Test contour is present, but not yet fully operationalised
 
-The current slice contains real tests under `tests/*`, but the repository still lacks a canonical `phpunit.xml.dist` and a fully explicit test bootstrap / suite layout.
+The current slice contains real tests under `tests/*`, but the repository still lacks a canonical `phpunit.xml.dist` and
+a fully explicit test bootstrap / suite layout.
 
 ### 4. Quality gates exist as files, but not as a complete pipeline
 
@@ -101,11 +104,13 @@ The repository contains:
 - `.yamllint.yml`
 - smoke scripts under `tools/smoke`
 
-However, this is not yet a complete operational QA contour because the repository still lacks a strong script matrix and a documented green pipeline.
+However, this is not yet a complete operational QA contour because the repository still lacks a strong script matrix and
+a documented green pipeline.
 
 ### 5. Vertical proof is incomplete
 
-There are already tests and working seams, but the main business verticals are not yet fully proven end-to-end with a clearly documented matrix.
+There are already tests and working seams, but the main business verticals are not yet fully proven end-to-end with a
+clearly documented matrix.
 
 ## Immediate conclusion
 
@@ -120,12 +125,13 @@ The next phase should not be more archive cleanup. It should be:
 7. vertical business-flow proof
 8. documentation refresh
 
-
 ## Current runtime note
 
-The legacy `src/Api/*` tail has already been evacuated from the current slice. The active HTTP contour is now controller-owned and Symfony-oriented.
-
+The legacy `src/Api/*` tail has already been evacuated from the current slice. The active HTTP contour is now
+controller-owned and Symfony-oriented.
 
 ## Current operational proof level
 
-CLI execution smoke now covers projection, outbox, reconciliation, DLQ replay, idempotency purge, and SLA reporting. This means the owned operational contour is no longer proved only by registration; it now has command-level execution proof across the main operator surfaces.
+CLI execution smoke now covers projection, outbox, reconciliation, DLQ replay, idempotency purge, and SLA reporting.
+This means the owned operational contour is no longer proved only by registration; it now has command-level execution
+proof across the main operator surfaces.

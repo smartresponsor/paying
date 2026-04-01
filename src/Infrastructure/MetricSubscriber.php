@@ -9,12 +9,15 @@ use App\Event\PaymentEvent;
 use App\Service\Metric;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class MetricSubscriber implements EventSubscriberInterface
+readonly class MetricSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly Metric $metrics)
+    public function __construct(private Metric $metrics)
     {
     }
 
+    /**
+     * @return string[]
+     */
     public static function getSubscribedEvents(): array
     {
         return [

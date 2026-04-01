@@ -11,11 +11,12 @@ use App\RepositoryInterface\PaymentRepositoryInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
 
-final class PaymentReadController implements PaymentReadControllerInterface
+final readonly class PaymentReadController implements PaymentReadControllerInterface
 {
-    public function __construct(private readonly PaymentRepositoryInterface $repo)
+    public function __construct(private PaymentRepositoryInterface $repo)
     {
     }
 
@@ -34,7 +35,7 @@ final class PaymentReadController implements PaymentReadControllerInterface
                         new OA\Property(property: 'status', type: 'string', example: 'processing'),
                         new OA\Property(property: 'amount', type: 'string', example: '50.00'),
                         new OA\Property(property: 'currency', type: 'string', example: 'USD'),
-                        new OA\Property(property: 'providerRef', type: 'string', nullable: true, example: 'internal-01HZY9M8Q6M7X4YH3B2A1C0D9E'),
+                        new OA\Property(property: 'providerRef', type: 'string', example: 'internal-01HZY9M8Q6M7X4YH3B2A1C0D9E', nullable: true),
                     ],
                     type: 'object',
                 ),
@@ -49,12 +50,12 @@ final class PaymentReadController implements PaymentReadControllerInterface
     public function read(string $id): JsonResponse
     {
         if (!Ulid::isValid($id)) {
-            return new JsonResponse(['error' => 'payment-not-found'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['error' => 'payment-not-found'], Response::HTTP_NOT_FOUND);
         }
 
         $payment = $this->repo->find($id);
         if (null === $payment) {
-            return new JsonResponse(['error' => 'payment-not-found'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['error' => 'payment-not-found'], Response::HTTP_NOT_FOUND);
         }
 
         return new JsonResponse([
@@ -63,6 +64,6 @@ final class PaymentReadController implements PaymentReadControllerInterface
             'amount' => $payment->amount(),
             'currency' => $payment->currency(),
             'providerRef' => $payment->providerRef(),
-        ], JsonResponse::HTTP_OK);
+        ], Response::HTTP_OK);
     }
 }

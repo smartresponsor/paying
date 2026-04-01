@@ -15,6 +15,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 final class FinalizeControllerTest extends TestCase
 {
@@ -30,6 +31,12 @@ final class FinalizeControllerTest extends TestCase
 
     private FinalizeController $controller;
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     protected function setUp(): void
     {
         $this->guard = $this->createMock(ProviderGuardInterface::class);
@@ -50,7 +57,7 @@ final class FinalizeControllerTest extends TestCase
     public function testFinalizeReturnsNotFoundForInvalidUlidBeforeDecodingOrValidation(): void
     {
         $request = new Request();
-        $notFoundResponse = new JsonResponse(['error' => 'Payment not found.'], JsonResponse::HTTP_NOT_FOUND);
+        $notFoundResponse = new JsonResponse(['error' => 'Payment not found.'], Response::HTTP_NOT_FOUND);
 
         $this->errorResponseFactory
             ->expects(self::once())
@@ -75,7 +82,7 @@ final class FinalizeControllerTest extends TestCase
 
         $response = $this->controller->finalize('invalid-id', $request);
 
-        self::assertSame(JsonResponse::HTTP_NOT_FOUND, $response->getStatusCode());
+        self::assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         self::assertSame($notFoundResponse, $response);
     }
 }

@@ -14,7 +14,7 @@ use Symfony\Component\Uid\Ulid;
 
 final class PaymentService implements PaymentServiceInterface
 {
-    public function __construct(private PaymentRepositoryInterface $repo)
+    public function __construct(private readonly PaymentRepositoryInterface $repo)
     {
     }
 

@@ -16,6 +16,7 @@ The current Payment slice is no longer a cleanup candidate. It is now an App-own
 ## What is already proven
 
 ### HTTP/UI
+
 - create endpoint functional coverage;
 - start/finalize validation coverage;
 - read/refund validation coverage;
@@ -24,13 +25,16 @@ The current Payment slice is no longer a cleanup candidate. It is now an App-own
 - access smoke for read/write surfaces.
 
 ### CLI
+
 - command registration proof for owned Payment commands;
 - execution smoke for projection, outbox, reconciliation, DLQ replay, idempotency purge, SLA reporting, and gate SLO.
 
 ### Runtime/documentation
+
 - post-API-Platform controller-owned runtime contour;
 - Nelmio/OpenAPI routes at `/api/docs` and `/api/docs.json`;
-- repo-owned engineering docs for dependency audit, vertical matrix, access matrix, CLI ownership, and CLI execution smoke.
+- repo-owned engineering docs for dependency audit, vertical matrix, access matrix, CLI ownership, and CLI execution
+  smoke.
 
 ## Remaining gaps before calling this release-ready
 
@@ -57,22 +61,24 @@ However, three gaps remain the main blockers before any stronger readiness claim
 
 1. fixture/bootstrap execution proof is not yet closed;
 2. webhook -> outbox -> consumer is still not proved as one integrated vertical;
-3. the QA/documentation toolchain is still incomplete because the slice has no CI, no composer lock, no phpDocumentor config, and no installed php-cs-fixer package.
+3. the QA/documentation toolchain is still incomplete because the slice has no CI, no composer lock, no phpDocumentor
+   config, and no installed php-cs-fixer package.
 
 See also:
 
 - `docs/architecture/payment-technical-readiness-review.md`
 - `docs/architecture/payment-priority-next-tracks.md`
 
-
 ## Fixture/bootstrap proof update
 
-The repository now owns grouped Payment fixtures, explicit Composer fixture entry points, and dataset/config smoke tests. Full installed-runtime proof is still pending.
-
+The repository now owns grouped Payment fixtures, explicit Composer fixture entry points, and dataset/config smoke
+tests. Full installed-runtime proof is still pending.
 
 ## Wave 34 update
 
-The current slice now includes integrated proof for the webhook -> outbox -> consumer contour via controller-owned provider endpoints and the owned outbox/consumer path. This reduces the largest behavioral gap from the earlier readiness review, while still leaving installed-runtime proof as a release-hardening concern.
+The current slice now includes integrated proof for the webhook -> outbox -> consumer contour via controller-owned
+provider endpoints and the owned outbox/consumer path. This reduces the largest behavioral gap from the earlier
+readiness review, while still leaving installed-runtime proof as a release-hardening concern.
 
 ## Wave 35 update
 
@@ -85,9 +91,9 @@ Quality/documentation closure is now materially stronger than in earlier waves:
 
 The main remaining release-hardening gap is installed-runtime proof rather than repository configuration ownership.
 
-
 ## Wave 36 update
 
 The repository now has a consolidated release-readiness portrait and a dedicated installed-runtime proof track.
 
-This sharpens the post-wave-35 conclusion: the main remaining gap is no longer structural, behavioral, or documentation ownership. It is reproducible installed-runtime proof.
+This sharpens the post-wave-35 conclusion: the main remaining gap is no longer structural, behavioral, or documentation
+ownership. It is reproducible installed-runtime proof.

@@ -18,7 +18,6 @@ class PaymentOutboxMessage
     #[ORM\Column(type: 'string', length: 128)]
     private string $type;
 
-    /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')]
     private array $payload;
 
@@ -37,9 +36,6 @@ class PaymentOutboxMessage
     #[ORM\Column(type: 'string', length: 128, nullable: true)]
     private ?string $routingKey = null;
 
-    /**
-     * @param array<string, mixed> $payload
-     */
     public function __construct(string $id, string $type, array $payload, ?string $routingKey = null)
     {
         $this->id = $id;

@@ -9,4 +9,4 @@ framework:
             type: 'topic'
           queues:
             payment_events_in:
-              binding_keys: ['payment.*']
+              binding_keys: [ 'payment.*' ]

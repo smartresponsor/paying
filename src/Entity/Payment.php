@@ -87,6 +87,12 @@ class Payment
         return $this->updatedAt;
     }
 
+    /**
+     * @return $this
+     */
+    /**
+     * @return $this
+     */
     public function withStatus(PaymentStatus $status): self
     {
         $this->status = $status;
@@ -95,6 +101,12 @@ class Payment
         return $this;
     }
 
+    /**
+     * @return $this
+     */
+    /**
+     * @return $this
+     */
     public function withProviderRef(?string $ref): self
     {
         $this->providerRef = $ref;
@@ -103,6 +115,12 @@ class Payment
         return $this;
     }
 
+    /**
+     * @return $this
+     */
+    /**
+     * @return $this
+     */
     public function markProcessing(?string $providerRef = null): self
     {
         if (null !== $providerRef) {
@@ -112,6 +130,12 @@ class Payment
         return $this->withStatus(PaymentStatus::processing);
     }
 
+    /**
+     * @return $this
+     */
+    /**
+     * @return $this
+     */
     public function markCompleted(?string $providerRef = null): self
     {
         if (null !== $providerRef) {
@@ -121,6 +145,12 @@ class Payment
         return $this->withStatus(PaymentStatus::completed);
     }
 
+    /**
+     * @return $this
+     */
+    /**
+     * @return $this
+     */
     public function markFailed(?string $providerRef = null): self
     {
         if (null !== $providerRef) {
@@ -130,6 +160,12 @@ class Payment
         return $this->withStatus(PaymentStatus::failed);
     }
 
+    /**
+     * @return $this
+     */
+    /**
+     * @return $this
+     */
     public function markRefunded(?string $providerRef = null): self
     {
         if (null !== $providerRef) {
@@ -139,6 +175,12 @@ class Payment
         return $this->withStatus(PaymentStatus::refunded);
     }
 
+    /**
+     * @return $this
+     */
+    /**
+     * @return $this
+     */
     public function syncFrom(self $payment): self
     {
         $this->amount = $payment->amount();

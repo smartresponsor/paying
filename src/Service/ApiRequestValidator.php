@@ -8,13 +8,14 @@ namespace App\Service;
 use App\ServiceInterface\ApiRequestValidatorInterface;
 use App\ServiceInterface\ValidationErrorMapperInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final class ApiRequestValidator implements ApiRequestValidatorInterface
+final readonly class ApiRequestValidator implements ApiRequestValidatorInterface
 {
     public function __construct(
-        private readonly ValidatorInterface $validator,
-        private readonly ValidationErrorMapperInterface $validationErrorMapper,
+        private ValidatorInterface $validator,
+        private ValidationErrorMapperInterface $validationErrorMapper,
     ) {
     }
 
@@ -25,6 +26,6 @@ final class ApiRequestValidator implements ApiRequestValidatorInterface
             return null;
         }
 
-        return new JsonResponse(['errors' => $this->validationErrorMapper->toArray($violations)], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+        return new JsonResponse(['errors' => $this->validationErrorMapper->toArray($violations)], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

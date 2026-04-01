@@ -38,6 +38,9 @@ final class PaymentFixture extends Fixture implements FixtureGroupInterface
         $manager->flush();
     }
 
+    /**
+     * @return string[]
+     */
     public static function getGroups(): array
     {
         return ['payment'];

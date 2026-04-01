@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Console;
 
-use App\Service\SlaReporter;
+use App\ServiceInterface\SlaReporterInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'payment:sla:report', description: 'Print SLA stats for window')]
 class SlaReportCommand extends Command
 {
-    public function __construct(private readonly SlaReporter $sla)
+    public function __construct(private readonly SlaReporterInterface $sla)
     {
         parent::__construct();
     }
@@ -25,6 +25,12 @@ class SlaReportCommand extends Command
         $this->addArgument('window', InputArgument::OPTIONAL, 'ISO interval like P1D/PT24H', 'P1D');
     }
 
+    /**
+     * @throws \JsonException
+     */
+    /**
+     * @throws \JsonException
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $win = (string) $input->getArgument('window');

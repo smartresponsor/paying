@@ -16,6 +16,12 @@ use Symfony\Component\Uid\Ulid;
 
 final class PaymentConsoleRefundHandlerTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testRefundReturnsPaymentOnSuccess(): void
     {
         $payment = new Payment(new Ulid(), PaymentStatus::refunded, '10.00', 'USD');
@@ -35,6 +41,12 @@ final class PaymentConsoleRefundHandlerTest extends TestCase
         self::assertSame($payment, $handler->refund((string) new Ulid(), '10.00', 'internal'));
     }
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testRefundReturnsNullAndLogsOnFailure(): void
     {
         $refundService = $this->createMock(RefundServiceInterface::class);

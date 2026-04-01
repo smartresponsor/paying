@@ -18,16 +18,17 @@ use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
 
-final class FinalizeController implements FinalizeControllerInterface
+final readonly class FinalizeController implements FinalizeControllerInterface
 {
     public function __construct(
-        private readonly ProviderGuardInterface $guard,
-        private readonly PaymentRepositoryInterface $repo,
-        private readonly ApiErrorResponseFactoryInterface $errorResponseFactory,
-        private readonly ApiJsonBodyDecoderInterface $jsonBodyDecoder,
-        private readonly ApiRequestValidatorInterface $requestValidator,
+        private ProviderGuardInterface $guard,
+        private PaymentRepositoryInterface $repo,
+        private ApiErrorResponseFactoryInterface $errorResponseFactory,
+        private ApiJsonBodyDecoderInterface $jsonBodyDecoder,
+        private ApiRequestValidatorInterface $requestValidator,
     ) {
     }
 
@@ -95,6 +96,6 @@ final class FinalizeController implements FinalizeControllerInterface
             'id' => (string) $existing->id(),
             'status' => $existing->status()->value,
             'providerRef' => $existing->providerRef(),
-        ], JsonResponse::HTTP_OK);
+        ], Response::HTTP_OK);
     }
 }

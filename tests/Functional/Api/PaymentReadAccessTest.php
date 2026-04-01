@@ -14,7 +14,7 @@ final class PaymentReadAccessTest extends WebTestCase
         unset($_ENV['OIDC_DISABLED']);
         putenv('OIDC_DISABLED');
 
-        $client = static::createClient();
+        $client = self::createClient();
         $client->request('GET', '/payment/console');
 
         self::assertSame(401, $client->getResponse()->getStatusCode());
@@ -25,7 +25,7 @@ final class PaymentReadAccessTest extends WebTestCase
         unset($_ENV['OIDC_DISABLED']);
         putenv('OIDC_DISABLED');
 
-        $client = static::createClient();
+        $client = self::createClient();
         $client->request('GET', '/status');
 
         self::assertSame(401, $client->getResponse()->getStatusCode());

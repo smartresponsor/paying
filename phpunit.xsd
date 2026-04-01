@@ -6,7 +6,7 @@
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            elementFormDefault="qualified"
-           attributeFormDefault="unqualified">
+>
 
     <xs:element name="phpunit">
         <xs:complexType>
@@ -18,8 +18,8 @@
                         <xs:sequence>
                             <xs:element name="env" minOccurs="0" maxOccurs="unbounded">
                                 <xs:complexType>
-                                    <xs:attribute name="name"  type="xs:string" use="required"/>
-                                    <xs:attribute name="value" type="xs:string" use="optional"/>
+                                    <xs:attribute name="name" type="xs:string" use="required"/>
+                                    <xs:attribute name="value" type="xs:string"/>
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
@@ -30,12 +30,13 @@
                 <xs:element name="testsuites" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="testsuite" minOccurs="1" maxOccurs="unbounded">
+                            <xs:element name="testsuite" maxOccurs="unbounded">
                                 <xs:complexType>
                                     <xs:sequence>
-                                        <xs:element name="directory" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+                                        <xs:element name="directory" type="xs:string"
+                                                    maxOccurs="unbounded"/>
                                     </xs:sequence>
-                                    <xs:attribute name="name" type="xs:string" use="optional"/>
+                                    <xs:attribute name="name" type="xs:string"/>
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
@@ -49,14 +50,16 @@
                             <xs:element name="include" minOccurs="0">
                                 <xs:complexType>
                                     <xs:sequence>
-                                        <xs:element name="directory" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                                        <xs:element name="directory" type="xs:string" minOccurs="0"
+                                                    maxOccurs="unbounded"/>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
                             <xs:element name="exclude" minOccurs="0">
                                 <xs:complexType>
                                     <xs:sequence>
-                                        <xs:element name="directory" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+                                        <xs:element name="directory" type="xs:string" minOccurs="0"
+                                                    maxOccurs="unbounded"/>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
@@ -71,12 +74,12 @@
                             <xs:element name="report" minOccurs="0">
                                 <xs:complexType>
                                     <xs:sequence>
-                                        <xs:element name="clover" minOccurs="0" maxOccurs="1">
+                                        <xs:element name="clover" minOccurs="0">
                                             <xs:complexType>
                                                 <xs:attribute name="outputFile" type="xs:string" use="required"/>
                                             </xs:complexType>
                                         </xs:element>
-                                        <xs:element name="html" minOccurs="0" maxOccurs="1">
+                                        <xs:element name="html" minOccurs="0">
                                             <xs:complexType>
                                                 <xs:attribute name="outputDirectory" type="xs:string" use="required"/>
                                             </xs:complexType>
@@ -92,7 +95,7 @@
                 <xs:element name="logging" minOccurs="0">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="testdoxText" minOccurs="0" maxOccurs="1">
+                            <xs:element name="testdoxText" minOccurs="0">
                                 <xs:complexType>
                                     <xs:attribute name="outputFile" type="xs:string" use="required"/>
                                 </xs:complexType>
@@ -104,15 +107,15 @@
             </xs:sequence>
 
             <!-- attributes -->
-            <xs:attribute name="bootstrap" type="xs:string" use="optional"/>
-            <xs:attribute name="colors" type="xs:string" use="optional"/>
-            <xs:attribute name="cacheDirectory" type="xs:string" use="optional"/>
-            <xs:attribute name="executionOrder" type="xs:string" use="optional"/>
-            <xs:attribute name="failOnWarning" type="xs:boolean" use="optional"/>
-            <xs:attribute name="failOnRisky" type="xs:boolean" use="optional"/>
-            <xs:attribute name="stopOnFailure" type="xs:boolean" use="optional"/>
-            <xs:attribute name="displayDetailsOnIncompleteTests" type="xs:boolean" use="optional"/>
-            <xs:attribute name="displayDetailsOnSkippedTests" type="xs:boolean" use="optional"/>
+            <xs:attribute name="bootstrap" type="xs:string"/>
+            <xs:attribute name="colors" type="xs:string"/>
+            <xs:attribute name="cacheDirectory" type="xs:string"/>
+            <xs:attribute name="executionOrder" type="xs:string"/>
+            <xs:attribute name="failOnWarning" type="xs:boolean"/>
+            <xs:attribute name="failOnRisky" type="xs:boolean"/>
+            <xs:attribute name="stopOnFailure" type="xs:boolean"/>
+            <xs:attribute name="displayDetailsOnIncompleteTests" type="xs:boolean"/>
+            <xs:attribute name="displayDetailsOnSkippedTests" type="xs:boolean"/>
 
         </xs:complexType>
     </xs:element>

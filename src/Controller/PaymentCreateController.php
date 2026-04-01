@@ -16,14 +16,15 @@ use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-final class PaymentCreateController implements PaymentCreateControllerInterface
+final readonly class PaymentCreateController implements PaymentCreateControllerInterface
 {
     public function __construct(
-        private readonly PaymentServiceInterface $paymentService,
-        private readonly ApiErrorResponseFactoryInterface $errorResponseFactory,
-        private readonly ApiJsonBodyDecoderInterface $jsonBodyDecoder,
-        private readonly ApiRequestValidatorInterface $requestValidator,
+        private PaymentServiceInterface $paymentService,
+        private ApiErrorResponseFactoryInterface $errorResponseFactory,
+        private ApiJsonBodyDecoderInterface $jsonBodyDecoder,
+        private ApiRequestValidatorInterface $requestValidator,
     ) {
     }
 
@@ -88,6 +89,6 @@ final class PaymentCreateController implements PaymentCreateControllerInterface
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),
             'currency' => $payment->currency(),
-        ], JsonResponse::HTTP_CREATED);
+        ], Response::HTTP_CREATED);
     }
 }

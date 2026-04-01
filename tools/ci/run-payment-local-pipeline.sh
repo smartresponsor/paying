@@ -66,6 +66,7 @@ run_step(){
   local name="$1" command="$2" log_file="$LOG_ROOT/${name}.log" cmd_file="$LOG_ROOT/${name}.cmd.txt"
   printf '%s\n' "$command" > "$cmd_file"
   printf '[RUN ] %s -> %s\n' "$name" "$command"
+  # shellcheck disable=SC2155
   local step_start="$(date +%s)"
   set +e
   bash -lc "$command" 2>&1 | tee "$log_file"

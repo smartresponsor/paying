@@ -9,6 +9,14 @@ use Doctrine\ORM\Tools\SchemaTool;
 
 final class DoctrineSchemaReset
 {
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Doctrine\ORM\Tools\ToolsException
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \Doctrine\ORM\Tools\ToolsException
+     */
     public static function reset(EntityManagerInterface $entityManager): void
     {
         $metadata = $entityManager->getMetadataFactory()->getAllMetadata();

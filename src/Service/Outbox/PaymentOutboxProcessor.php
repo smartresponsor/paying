@@ -14,12 +14,12 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\TransportNamesStamp;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
-final class PaymentOutboxProcessor implements PaymentOutboxProcessorInterface
+final readonly class PaymentOutboxProcessor implements PaymentOutboxProcessorInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly TransportInterface $transport,
-        private readonly LoggerInterface $logger,
+        private EntityManagerInterface $em,
+        private TransportInterface $transport,
+        private LoggerInterface $logger,
     ) {
     }
 

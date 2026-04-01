@@ -11,11 +11,11 @@ use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\PaymentConsoleReadModelInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class PaymentConsoleReadModel implements PaymentConsoleReadModelInterface
+final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelInterface
 {
     public function __construct(
-        private readonly PaymentRepositoryInterface $payments,
-        private readonly EntityManagerInterface $em,
+        private PaymentRepositoryInterface $payments,
+        private EntityManagerInterface $em,
     ) {
     }
 
@@ -73,8 +73,6 @@ final class PaymentConsoleReadModel implements PaymentConsoleReadModelInterface
     }
 
     /**
-     * @param list<array{id: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string}> $filteredPayments
-     *
      * @return array{id: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string}|null
      */
     private function resolveSelectedPayment(array $filteredPayments, string $selectedPaymentId): ?array

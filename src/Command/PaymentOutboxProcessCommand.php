@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'payment:outbox:process', description: 'Publish payment outbox messages to RabbitMQ')]
 class PaymentOutboxProcessCommand extends Command
 {
-    public function __construct(private PaymentOutboxProcessorInterface $processor)
+    public function __construct(private readonly PaymentOutboxProcessorInterface $processor)
     {
         parent::__construct();
     }

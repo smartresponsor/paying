@@ -11,11 +11,11 @@ use App\ServiceInterface\RefundServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Uid\Ulid;
 
-final class PaymentConsoleRefundHandler implements PaymentConsoleRefundHandlerInterface
+final readonly class PaymentConsoleRefundHandler implements PaymentConsoleRefundHandlerInterface
 {
     public function __construct(
-        private readonly RefundServiceInterface $refundService,
-        private readonly LoggerInterface $logger,
+        private RefundServiceInterface $refundService,
+        private LoggerInterface $logger,
     ) {
     }
 

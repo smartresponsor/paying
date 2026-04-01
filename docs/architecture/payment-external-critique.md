@@ -4,15 +4,20 @@
 
 ### 1) Responsibility boundaries
 
-- Controllers are not consistently thin: `PaymentConsoleController` handles form lifecycle, orchestration, persistence interactions, and UI composition in one class.
-- Exception and error handling policy is mixed in transport layer (`flash`, redirects, and direct runtime logging in controller).
+- Controllers are not consistently thin: `PaymentConsoleController` handles form lifecycle, orchestration, persistence
+  interactions, and UI composition in one class.
+- Exception and error handling policy is mixed in transport layer (`flash`, redirects, and direct runtime logging in
+  controller).
 - Domain-level money semantics are partially represented as formatted decimal strings.
 
 ### 2) Interoperability with other applications
 
-- OpenAPI description is currently minimal and does not fully describe error envelopes, auth scopes, idempotency semantics, and webhook security contracts.
-- Provider integration is selected by runtime string key; integrators may ask for explicit provider capability metadata and versioning commitments.
-- Operational integration primitives are present (DLQ/outbox/metrics), but business contract rigor should be raised to match them.
+- OpenAPI description is currently minimal and does not fully describe error envelopes, auth scopes, idempotency
+  semantics, and webhook security contracts.
+- Provider integration is selected by runtime string key; integrators may ask for explicit provider capability metadata
+  and versioning commitments.
+- Operational integration primitives are present (DLQ/outbox/metrics), but business contract rigor should be raised to
+  match them.
 
 ### 3) Code quality and architecture
 
@@ -90,9 +95,9 @@ Add to `docs/api/openapi.yaml`:
 ### Proposal C2: Architecture fitness checks
 
 - Add static rule checks that enforce allowed dependencies:
-  - Controller -> ServiceInterface/DTO only.
-  - Service -> RepositoryInterface/Entity/ValueObject only.
-  - Infrastructure must not be depended on by Controller directly.
+    - Controller -> ServiceInterface/DTO only.
+    - Service -> RepositoryInterface/Entity/ValueObject only.
+    - Infrastructure must not be depended on by Controller directly.
 
 **Acceptance criteria**
 
@@ -129,7 +134,8 @@ Add to `docs/api/openapi.yaml`:
 ## Scope closure status (current)
 
 - ✅ C1 partially closed: Money value object introduced in payment creation path with invariant tests.
-- ✅ A2 partially closed: direct runtime controller logging replaced with Symfony `LoggerInterface` usage in console refund flow.
+- ✅ A2 partially closed: direct runtime controller logging replaced with Symfony `LoggerInterface` usage in console
+  refund flow.
 - ⏳ A1 in progress: controller still orchestrates multiple use-cases and should be split into dedicated handlers.
 - ⏳ B1 in progress: OpenAPI contract still requires full error/security/idempotency expansion.
 - ⏳ C2/C3 in progress: architecture dependency rules and deterministic CI gates are not yet fully enforced.
@@ -137,38 +143,43 @@ Add to `docs/api/openapi.yaml`:
 ## What is still not closed in substance (evidence-based)
 
 1. **Controllers are still not thin enough**
-   - `PaymentConsoleController` still owns full use-case orchestration for create/start/finalize/refund, including DTO flow + repository usage + provider guard calls.
-   - Target state: one action -> one application handler call -> response mapping.
+    - `PaymentConsoleController` still owns full use-case orchestration for create/start/finalize/refund, including DTO
+      flow + repository usage + provider guard calls.
+    - Target state: one action -> one application handler call -> response mapping.
 
 2. **OpenAPI/business interoperability remains under-specified**
-   - Public schema still needs explicit reusable error contracts, scope mapping, idempotency behavior, and webhook signature contracts across all routes.
-   - Target state: every public route has typed request/response + non-2xx problem schema + security scope declaration.
+    - Public schema still needs explicit reusable error contracts, scope mapping, idempotency behavior, and webhook
+      signature contracts across all routes.
+    - Target state: every public route has typed request/response + non-2xx problem schema + security scope declaration.
 
 3. **Architecture boundaries are not machine-enforced yet**
-   - Layer model is documented but CI fitness rules for forbidden dependencies are not yet part of build gates.
-   - Target state: architecture rule violations fail CI deterministically.
+    - Layer model is documented but CI fitness rules for forbidden dependencies are not yet part of build gates.
+    - Target state: architecture rule violations fail CI deterministically.
 
 4. **Deterministic test gates are incomplete**
-   - Unit coverage for Money exists, but integration coverage for failure semantics and contract errors per endpoint should be expanded.
-   - Target state: stable unit + functional + e2e smoke checks with deterministic fixtures and flaky protection.
+    - Unit coverage for Money exists, but integration coverage for failure semantics and contract errors per endpoint
+      should be expanded.
+    - Target state: stable unit + functional + e2e smoke checks with deterministic fixtures and flaky protection.
 
 5. **Uniform error contract is still partial**
-   - Logging style was improved in console refund flow, but cross-controller error contract normalization is still pending.
-   - Target state: shared exception mapper for API + UI with consistent machine-readable codes.
+    - Logging style was improved in console refund flow, but cross-controller error contract normalization is still
+      pending.
+    - Target state: shared exception mapper for API + UI with consistent machine-readable codes.
 
 ## Remaining steps to full closure (current estimate)
 
 Based on the implemented fixes, the remaining work can be closed in **5 focused engineering steps**:
 
 1. **Complete thin-controller extraction for remaining mixed actions**
-   - Move any residual orchestration from API controllers into dedicated handlers.
+    - Move any residual orchestration from API controllers into dedicated handlers.
 2. **Finish API contract parity in OpenAPI for all active routes**
-   - Ensure every public route has full request/response/error envelopes and examples aligned with runtime behavior.
+    - Ensure every public route has full request/response/error envelopes and examples aligned with runtime behavior.
 3. **Promote architecture rules from smoke checks to mandatory CI gates**
-   - Run boundary tests (controller/service + service/controller isolation) in CI as required checks.
+    - Run boundary tests (controller/service + service/controller isolation) in CI as required checks.
 4. **Add integration regression pack for critical payment paths**
-   - Verify create/start/finalize/refund contract semantics across HTTP + persistence layers with deterministic fixtures.
+    - Verify create/start/finalize/refund contract semantics across HTTP + persistence layers with deterministic
+      fixtures.
 5. **Operational closure**
-   - Finalize runbook/README updates for error taxonomy, idempotency behavior, and recovery procedures.
+    - Finalize runbook/README updates for error taxonomy, idempotency behavior, and recovery procedures.
 
 If executed as small reviewable commits, this is roughly **1-2 sprints** depending on CI/setup depth.

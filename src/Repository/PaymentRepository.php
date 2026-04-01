@@ -8,12 +8,13 @@ namespace App\Repository;
 use App\Entity\Payment;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class PaymentRepository implements PaymentRepositoryInterface
+final readonly class PaymentRepository implements PaymentRepositoryInterface
 {
-    public function __construct(private readonly EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em)
     {
     }
 
@@ -57,11 +58,15 @@ final class PaymentRepository implements PaymentRepositoryInterface
             return [];
         }
 
-        $rows = $this->em->getConnection()->fetchFirstColumn(
-            'SELECT id FROM payment WHERE status IN (?) ORDER BY updated_at ASC LIMIT ?',
-            [$normalized, $limit],
-            [ArrayParameterType::STRING, ParameterType::INTEGER],
-        );
+        $rows = [];
+        try {
+            $rows = $this->em->getConnection()->fetchFirstColumn(
+                'SELECT id FROM payment WHERE status IN (?) ORDER BY updated_at ASC LIMIT ?',
+                [$normalized, $limit],
+                [ArrayParameterType::STRING, ParameterType::INTEGER],
+            );
+        } catch (Exception $e) {
+        }
 
         return array_values(array_map(static fn (mixed $id): string => (string) $id, $rows));
     }

@@ -1,21 +1,50 @@
-version: '3.8'
 services:
   app:
-    image: php:8.4-cli
+    build:
+      context: ../..
+      dockerfile: deploy/docker/Dockerfile
     working_dir: /app
+    command: ["php", "-S", "0.0.0.0:8000", "-t", "public", "public/index.php"]
     volumes:
-      - .:/app
-      - payment_infra:/app/var
-    command: php -S 0.0.0.0:8000 -t public
-    ports:
-      - '8000:8000'
-  pg:
-    image: postgres:15
+      - ../..:/app
+      - composer-cache:/tmp/composer-cache
     environment:
-      POSTGRES_PASSWORD: app
-      POSTGRES_USER: app
-      POSTGRES_DB: payment
+      APP_ENV: dev
+      APP_DEBUG: 1
+      APP_SECRET: devsecret
+      DATABASE_URL: pgsql://app:app@pg:5432/payment
+      INFRA_URL: sqlite:///%kernel.project_dir%/var/payment.app.sqlite
+      REDIS_URL: redis://redis:6379/0
+      IDEM_TTL: 86400
+      OIDC_DISABLED: 1
+      PAYMENT_BOOTSTRAP_SCHEMA: 1
+      COMPOSER_CACHE_DIR: /tmp/composer-cache
+    depends_on:
+      pg:
+        condition: service_healthy
+      redis:
+        condition: service_started
     ports:
-      - '5432:5432'
+      - "8005:8000"
+
+  pg:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: payment
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d payment"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+      - ../../deploy/docker/postgres-init.sql:/docker-entrypoint-initdb.d/10-payment-test.sql:ro
+
+  redis:
+    image: redis:7-alpine
+
 volumes:
-  payment_infra:
+  composer-cache:
+  pg-data:

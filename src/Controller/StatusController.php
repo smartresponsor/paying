@@ -12,12 +12,13 @@ use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
-final class StatusController implements StatusControllerInterface
+final readonly class StatusController implements StatusControllerInterface
 {
     public function __construct(
-        private readonly ProjectionLagServiceInterface $projectionLag,
-        private readonly LoggerInterface $logger,
+        private ProjectionLagServiceInterface $projectionLag,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -36,7 +37,7 @@ final class StatusController implements StatusControllerInterface
     public function status(): JsonResponse
     {
         try {
-            return new JsonResponse($this->projectionLag->snapshot(), JsonResponse::HTTP_OK);
+            return new JsonResponse($this->projectionLag->snapshot(), Response::HTTP_OK);
         } catch (\Throwable $e) {
             $this->logger->warning('Unable to calculate payment status projection lag.', ['exception' => $e]);
 
@@ -44,7 +45,7 @@ final class StatusController implements StatusControllerInterface
                 'updatedAtData' => '',
                 'updatedAtInfra' => '',
                 'projectionLagMs' => 0,
-            ], JsonResponse::HTTP_OK);
+            ], Response::HTTP_OK);
         }
     }
 }

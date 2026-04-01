@@ -1,4 +1,5 @@
 # Payment — RC bundle (E1–E17)
+
 - Canon layers & mirrors enforced; strict_types; namespaces normalized.
 - Entity (ULID), Repository, Projection, CLI.
 - Provider router & adapters (internal/stripe/adyen), webhook verifier + mappers.

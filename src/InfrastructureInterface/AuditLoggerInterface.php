@@ -7,6 +7,5 @@ namespace App\InfrastructureInterface;
 
 interface AuditLoggerInterface
 {
-    /** @param array<string, mixed> $context */
     public function log(string $action, array $context = []): void;
 }

@@ -8,9 +8,9 @@ namespace App\Infrastructure\Fixture;
 use Random\Engine\Mt19937;
 use Random\Randomizer;
 
-final class PaymentFixtureFaker
+final readonly class PaymentFixtureFaker
 {
-    private readonly Randomizer $randomizer;
+    private Randomizer $randomizer;
 
     public function __construct(int $seed = 1001)
     {

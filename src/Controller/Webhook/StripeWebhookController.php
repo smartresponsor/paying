@@ -12,15 +12,16 @@ use App\ServiceInterface\WebhookIngestServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-final class StripeWebhookController
+final readonly class StripeWebhookController
 {
     public function __construct(
-        private readonly StripeSignatureValidator $validator,
-        private readonly StripeEventNormalizer $normalizer,
-        private readonly JsonSchemaValidator $schema,
-        private readonly WebhookIngestServiceInterface $webhookIngestService,
-        private readonly LoggerInterface $paymentAuditLogger,
+        private StripeSignatureValidator $validator,
+        private StripeEventNormalizer $normalizer,
+        private JsonSchemaValidator $schema,
+        private WebhookIngestServiceInterface $webhookIngestService,
+        private LoggerInterface $paymentAuditLogger,
     ) {
     }
 
@@ -29,15 +30,15 @@ final class StripeWebhookController
         $sig = $request->headers->get('Stripe-Signature');
         $payload = $request->getContent();
         if (!$this->validator->isValid($payload, $sig)) {
-            return new JsonResponse(['error' => 'invalid-signature'], JsonResponse::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'invalid-signature'], Response::HTTP_BAD_REQUEST);
         }
         $data = json_decode($payload, true) ?? [];
         if (!$this->schema->validate($data, ['id', 'type'])) {
-            return new JsonResponse(['error' => 'invalid-payload'], JsonResponse::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'invalid-payload'], Response::HTTP_BAD_REQUEST);
         }
         $externalId = (string) ($data['id'] ?? '');
         if ('' === $externalId) {
-            return new JsonResponse(['error' => 'invalid-id'], JsonResponse::HTTP_BAD_REQUEST);
+            return new JsonResponse(['error' => 'invalid-id'], Response::HTTP_BAD_REQUEST);
         }
 
         $normalized = $this->normalizer->normalize($data);
@@ -45,7 +46,7 @@ final class StripeWebhookController
         $ingested = $this->webhookIngestService->ingest('stripe', $externalId, $normalized, $routingKey);
 
         if ('duplicate' === $ingested['status']) {
-            return new JsonResponse(['status' => 'duplicate'], JsonResponse::HTTP_OK);
+            return new JsonResponse(['status' => 'duplicate'], Response::HTTP_OK);
         }
 
         $this->paymentAuditLogger->info('Stripe webhook accepted', [
@@ -55,6 +56,6 @@ final class StripeWebhookController
             'routingKey' => $routingKey,
         ]);
 
-        return new JsonResponse(['status' => 'queued', 'outbox_id' => $ingested['outboxId']], JsonResponse::HTTP_OK);
+        return new JsonResponse(['status' => 'queued', 'outbox_id' => $ingested['outboxId']], Response::HTTP_OK);
     }
 }

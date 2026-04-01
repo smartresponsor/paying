@@ -32,7 +32,6 @@ The latest run is mirrored to:
 
 - `var/report/local/latest/`
 
-
 ## Exit mode
 
 - `composer pipeline:local` and `composer pipeline:local:full` are non-strict.

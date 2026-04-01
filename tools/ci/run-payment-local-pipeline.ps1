@@ -16,51 +16,70 @@ $reportRoot = Join-Path $reportBase $timestamp
 $latestRoot = Join-Path $reportBase 'latest'
 $logRoot = Join-Path $reportRoot 'logs'
 New-Item -ItemType Directory -Force -Path $logRoot | Out-Null
-if (Test-Path $latestRoot) { Remove-Item -Recurse -Force $latestRoot }
+if (Test-Path $latestRoot)
+{
+    Remove-Item -Recurse -Force $latestRoot
+}
 New-Item -ItemType Directory -Force -Path $latestRoot | Out-Null
 
 $steps = New-Object System.Collections.Generic.List[object]
 foreach ($item in @(
-    @{ Name = 'install-preflight'; Command = 'composer install:preflight' },
-    @{ Name = 'lint'; Command = 'composer lint' },
-    @{ Name = 'lint-yaml'; Command = 'composer lint:yaml' },
-    @{ Name = 'lint-container'; Command = 'composer lint:container' },
-    @{ Name = 'cs-check'; Command = 'composer cs:check-quiet' },
-    @{ Name = 'stan'; Command = 'composer stan:runtime-target' },
-    @{ Name = 'docs-phpdoc-check'; Command = 'composer docs:phpdoc:check' },
-    @{ Name = 'test-bootstrap-reset'; Command = 'composer test:bootstrap:reset' },
-    @{ Name = 'test'; Command = 'composer test' },
-    @{ Name = 'test-ui-playwright'; Command = 'composer test:ui:playwright' }
-)) { $steps.Add([pscustomobject]$item) }
-if ($IncludeSmokes) {
-    foreach ($item in @(
-        @{ Name = 'smoke-runtime'; Command = 'composer smoke:runtime' },
-        @{ Name = 'smoke-fixtures'; Command = 'composer smoke:fixtures' },
-        @{ Name = 'smoke-container'; Command = 'composer smoke:container' },
-        @{ Name = 'smoke-doctrine'; Command = 'composer smoke:doctrine' }
-    )) { $steps.Add([pscustomobject]$item) }
+@{ Name = 'install-preflight'; Command = 'composer install:preflight' },
+@{ Name = 'lint'; Command = 'composer lint' },
+@{ Name = 'lint-yaml'; Command = 'composer lint:yaml' },
+@{ Name = 'lint-container'; Command = 'composer lint:container' },
+@{ Name = 'cs-check'; Command = 'composer cs:check-quiet' },
+@{ Name = 'stan'; Command = 'composer stan:runtime-target' },
+@{ Name = 'docs-phpdoc-check'; Command = 'composer docs:phpdoc:check' },
+@{ Name = 'test-bootstrap-reset'; Command = 'composer test:bootstrap:reset' },
+@{ Name = 'test'; Command = 'composer test' },
+@{ Name = 'test-ui-playwright'; Command = 'composer test:ui:playwright' }
+))
+{
+    $steps.Add([pscustomobject]$item)
 }
-if ($IncludeReports) {
+if ($IncludeSmokes)
+{
     foreach ($item in @(
-        @{ Name = 'report-route-inventory'; Command = 'composer report:route-inventory' },
-        @{ Name = 'report-runtime-proof'; Command = 'composer report:runtime-proof' }
-    )) { $steps.Add([pscustomobject]$item) }
+    @{ Name = 'smoke-runtime'; Command = 'composer smoke:runtime' },
+    @{ Name = 'smoke-fixtures'; Command = 'composer smoke:fixtures' },
+    @{ Name = 'smoke-container'; Command = 'composer smoke:container' },
+    @{ Name = 'smoke-doctrine'; Command = 'composer smoke:doctrine' }
+    ))
+    {
+        $steps.Add([pscustomobject]$item)
+    }
 }
-if ($IncludeSecurity) {
+if ($IncludeReports)
+{
     foreach ($item in @(
-        @{ Name = 'security-composer-audit'; Command = 'composer security:composer-audit' },
-        @{ Name = 'security-importmap-audit'; Command = 'composer security:importmap-audit' },
-        @{ Name = 'security-gitleaks'; Command = 'composer security:gitleaks' },
-        @{ Name = 'security-semgrep-ce'; Command = 'composer security:semgrep-ce' },
-        @{ Name = 'test-security'; Command = 'composer test:security' }
-    )) { $steps.Add([pscustomobject]$item) }
+    @{ Name = 'report-route-inventory'; Command = 'composer report:route-inventory' },
+    @{ Name = 'report-runtime-proof'; Command = 'composer report:runtime-proof' }
+    ))
+    {
+        $steps.Add([pscustomobject]$item)
+    }
+}
+if ($IncludeSecurity)
+{
+    foreach ($item in @(
+    @{ Name = 'security-composer-audit'; Command = 'composer security:composer-audit' },
+    @{ Name = 'security-importmap-audit'; Command = 'composer security:importmap-audit' },
+    @{ Name = 'security-gitleaks'; Command = 'composer security:gitleaks' },
+    @{ Name = 'security-semgrep-ce'; Command = 'composer security:semgrep-ce' },
+    @{ Name = 'test-security'; Command = 'composer test:security' }
+    ))
+    {
+        $steps.Add([pscustomobject]$item)
+    }
 }
 
 $results = New-Object System.Collections.Generic.List[object]
 $pipelineStart = Get-Date
 $overallSuccess = $true
 
-foreach ($step in $steps) {
+foreach ($step in $steps)
+{
     $safeName = $step.Name -replace '[^a-zA-Z0-9._-]', '-'
     $logFile = Join-Path $logRoot ($safeName + '.log')
     $cmdFile = Join-Path $logRoot ($safeName + '.cmd.txt')
@@ -71,9 +90,11 @@ foreach ($step in $steps) {
     $previousErrorActionPreference = $ErrorActionPreference
     $previousNativePreference = $null
     $restoreNativePreference = $false
-    try {
+    try
+    {
         $ErrorActionPreference = 'Continue'
-        if (Get-Variable -Name PSNativeCommandUseErrorActionPreference -ErrorAction SilentlyContinue) {
+        if (Get-Variable -Name PSNativeCommandUseErrorActionPreference -ErrorAction SilentlyContinue)
+        {
             $previousNativePreference = $PSNativeCommandUseErrorActionPreference
             $restoreNativePreference = $true
             $PSNativeCommandUseErrorActionPreference = $false
@@ -81,18 +102,33 @@ foreach ($step in $steps) {
 
         cmd.exe /d /c $step.Command 2>&1 | Tee-Object -FilePath $logFile
         $exitCode = $LASTEXITCODE
-        if ($null -eq $exitCode) { $exitCode = 0 }
-    } catch {
+        if ($null -eq $exitCode)
+        {
+            $exitCode = 0
+        }
+    }
+    catch
+    {
         $_ | Out-String | Tee-Object -FilePath $logFile -Append | Out-Null
         $exitCode = 1
-    } finally {
+    }
+    finally
+    {
         $ErrorActionPreference = $previousErrorActionPreference
-        if ($restoreNativePreference) {
+        if ($restoreNativePreference)
+        {
             $PSNativeCommandUseErrorActionPreference = $previousNativePreference
         }
     }
     $durationMs = [int]((Get-Date) - $stepStart).TotalMilliseconds
-    $status = if ($exitCode -eq 0) { 'passed' } else { 'failed' }
+    $status = if ($exitCode -eq 0)
+    {
+        'passed'
+    }
+    else
+    {
+        'failed'
+    }
     $results.Add([pscustomobject]@{
         name = [string]$step.Name
         command = [string]$step.Command
@@ -102,12 +138,18 @@ foreach ($step in $steps) {
         log = [string]('logs/' + $safeName + '.log')
         command_file = [string]('logs/' + $safeName + '.cmd.txt')
     })
-    if ($exitCode -eq 0) {
+    if ($exitCode -eq 0)
+    {
         Write-Host ('[PASS] ' + $step.Name)
-    } else {
+    }
+    else
+    {
         Write-Host ('[FAIL] ' + $step.Name + ' (exit ' + $exitCode + ')')
         $overallSuccess = $false
-        if ($FailOnErrors) { break }
+        if ($FailOnErrors)
+        {
+            break
+        }
     }
 }
 
@@ -117,7 +159,18 @@ $summary.Add('# Payment local pipeline report')
 $summary.Add('')
 $summary.Add('- Timestamp: ' + $timestamp)
 $summary.Add('- Report root: `' + $reportRoot + '`')
-$summary.Add('- Result: ' + ($(if ($overallSuccess) { 'PASSED' } elseif ($FailOnErrors) { 'FAILED' } else { 'PASSED_WITH_ISSUES' })))
+$summary.Add('- Result: ' + ($( if ($overallSuccess)
+{
+    'PASSED'
+}
+elseif ($FailOnErrors)
+{
+    'FAILED'
+}
+else
+{
+    'PASSED_WITH_ISSUES'
+} )))
 $summary.Add('- Duration ms: ' + $durationTotalMs)
 $summary.Add('- Include smokes: ' + $IncludeSmokes.IsPresent)
 $summary.Add('- Include reports: ' + $IncludeReports.IsPresent)
@@ -126,13 +179,25 @@ $summary.Add('- Fail on errors: ' + $FailOnErrors.IsPresent)
 $summary.Add('')
 $summary.Add('| Step | Status | Exit | Duration ms | Log |')
 $summary.Add('|---|---:|---:|---:|---|')
-foreach ($result in $results) {
+foreach ($result in $results)
+{
     $summary.Add('| ' + $result.name + ' | ' + $result.status + ' | ' + $result.exit_code + ' | ' + $result.duration_ms + ' | `' + $result.log + '` |')
 }
 $summaryPath = Join-Path $reportRoot 'summary.md'
 Set-Content -Path $summaryPath -Value $summary -Encoding UTF8
 
-$pipelineStatus = if ($overallSuccess) { 'passed' } elseif ($FailOnErrors) { 'failed' } else { 'passed_with_issues' }
+$pipelineStatus = if ($overallSuccess)
+{
+    'passed'
+}
+elseif ($FailOnErrors)
+{
+    'failed'
+}
+else
+{
+    'passed_with_issues'
+}
 $reportObject = [pscustomobject]@{
     pipeline = 'payment-local'
     timestamp = [string]$timestamp
@@ -154,5 +219,8 @@ Write-Host ''
 Write-Host ('Report root: ' + $reportRoot)
 Write-Host ('Summary: ' + $summaryPath)
 Write-Host ('JSON: ' + $reportJsonPath)
-if ($FailOnErrors -and -not $overallSuccess) { exit 1 }
+if ($FailOnErrors -and -not$overallSuccess)
+{
+    exit 1
+}
 exit 0

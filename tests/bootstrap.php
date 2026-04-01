@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -50,7 +51,7 @@ $extractDeclaredSymbol = static function (string $pathname): ?string {
             $namespace = '';
             for ($j = $index + 1; $j < $count; ++$j) {
                 $part = $tokens[$j];
-                if (is_string($part) && (';' === $part || '{' === $part)) {
+                if (';' === $part || '{' === $part) {
                     break;
                 }
                 if (is_array($part) && in_array($part[0], [T_STRING, T_NAME_QUALIFIED, T_NS_SEPARATOR], true)) {
@@ -196,7 +197,7 @@ if (!is_file($autoload)) {
     exit(1);
 }
 
-require $autoload;
+require $projectDir.'/config/bootstrap.php';
 
 if (class_exists(\Symfony\Component\Dotenv\Dotenv::class)) {
     (new \Symfony\Component\Dotenv\Dotenv())->bootEnv($projectDir.'/.env');
@@ -213,7 +214,7 @@ $resolveSqlitePath = static function (?string $url, string $projectDir): ?string
     }
 
     $path = substr($resolved, strlen('sqlite:///'));
-    if (false === $path || '' === $path) {
+    if ('' === $path) {
         return null;
     }
 

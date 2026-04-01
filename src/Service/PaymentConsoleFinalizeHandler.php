@@ -12,11 +12,11 @@ use App\ServiceInterface\ProviderGuardInterface;
 use App\ValueObject\PaymentFinalizePayload;
 use Symfony\Component\Uid\Ulid;
 
-final class PaymentConsoleFinalizeHandler implements PaymentConsoleFinalizeHandlerInterface
+final readonly class PaymentConsoleFinalizeHandler implements PaymentConsoleFinalizeHandlerInterface
 {
     public function __construct(
-        private readonly PaymentRepositoryInterface $repo,
-        private readonly ProviderGuardInterface $guard,
+        private PaymentRepositoryInterface $repo,
+        private ProviderGuardInterface $guard,
     ) {
     }
 

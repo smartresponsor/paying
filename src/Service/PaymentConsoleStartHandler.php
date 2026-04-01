@@ -9,9 +9,9 @@ use App\Entity\Payment;
 use App\ServiceInterface\PaymentConsoleStartHandlerInterface;
 use App\ServiceInterface\PaymentStartServiceInterface;
 
-final class PaymentConsoleStartHandler implements PaymentConsoleStartHandlerInterface
+final readonly class PaymentConsoleStartHandler implements PaymentConsoleStartHandlerInterface
 {
-    public function __construct(private readonly PaymentStartServiceInterface $paymentStartService)
+    public function __construct(private PaymentStartServiceInterface $paymentStartService)
     {
     }
 

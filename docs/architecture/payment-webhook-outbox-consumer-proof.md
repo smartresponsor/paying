@@ -50,4 +50,5 @@ The following remain separate release-hardening concerns:
 
 ## Why this matters
 
-This closes the largest remaining behavioral gap after the API Platform evacuation: the component now has owned proof for the most important asynchronous business seam, not only for HTTP/UI/CLI entry points.
+This closes the largest remaining behavioral gap after the API Platform evacuation: the component now has owned proof
+for the most important asynchronous business seam, not only for HTTP/UI/CLI entry points.

@@ -8,9 +8,9 @@ services:
 
     _instanceof:
         App\ServiceInterface\EventMapperInterface:
-            tags: ['payment.event_mapper']
+            tags: [ 'payment.event_mapper' ]
         App\ServiceInterface\Gateway\PaymentGatewayInterface:
-            tags: ['payment.gateway']
+            tags: [ 'payment.gateway' ]
 
     App\:
         resource: '../src/'
@@ -27,13 +27,13 @@ services:
     App\ServiceInterface\ProviderGuardInterface: '@App\Service\ProviderGuard'
     App\ServiceInterface\PaymentServiceInterface: '@App\Service\PaymentService'
     App\ServiceInterface\IdempotencyStoreInterface:
-        factory: ['@App\Service\IdempotencyStoreFactory', 'create']
+        factory: [ '@App\Service\IdempotencyStoreFactory', 'create' ]
 
 
     App\Controller\:
         resource: '../src/Controller/'
         public: true
-        tags: ['controller.service_arguments']
+        tags: [ 'controller.service_arguments' ]
 
 
     App\Service\ProviderRouter:
@@ -88,7 +88,7 @@ services:
 
     App\Controller\WebhookController:
         public: true
-        tags: ['controller.service_arguments']
+        tags: [ 'controller.service_arguments' ]
         arguments:
             $mappers: !tagged_iterator payment.event_mapper
 
@@ -97,13 +97,13 @@ services:
 
     App\Controller\Webhook\StripeWebhookController:
         public: true
-        tags: ['controller.service_arguments']
+        tags: [ 'controller.service_arguments' ]
         arguments:
             $paymentAuditLogger: '@payment_audit.logger'
 
     App\Controller\Webhook\PayPalWebhookController:
         public: true
-        tags: ['controller.service_arguments']
+        tags: [ 'controller.service_arguments' ]
         arguments:
             $paymentAuditLogger: '@payment_audit.logger'
 

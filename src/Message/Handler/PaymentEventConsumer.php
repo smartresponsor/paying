@@ -11,11 +11,11 @@ use App\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler(fromTransport: 'payment_events_in')]
-final class PaymentEventConsumer
+final readonly class PaymentEventConsumer
 {
     public function __construct(
-        private readonly PaymentReconciliationServiceInterface $svc,
-        private readonly ?OrderPaymentSyncInterface $orderPaymentSync = null,
+        private PaymentReconciliationServiceInterface $svc,
+        private ?OrderPaymentSyncInterface $orderPaymentSync = null,
     ) {
     }
 

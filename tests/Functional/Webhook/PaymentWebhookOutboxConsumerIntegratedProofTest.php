@@ -20,10 +20,12 @@ use App\Service\Webhook\PayPalEventNormalizer;
 use App\Service\Webhook\PayPalSignatureValidator;
 use App\Service\Webhook\StripeEventNormalizer;
 use App\Service\Webhook\StripeSignatureValidator;
+use App\Service\WebhookIngestService;
 use App\ServiceInterface\Order\OrderPaymentSyncInterface;
 use App\ServiceInterface\WebhookVerifierInterface;
 use App\ValueObject\PaymentStatus;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +50,7 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
             new StripeSignatureValidator($this->createAlwaysValidVerifier()),
             new StripeEventNormalizer(),
             new JsonSchemaValidator(),
-            new \App\Service\WebhookIngestService($em),
+            new WebhookIngestService($em),
             new NullLogger(),
         );
 
@@ -69,10 +71,13 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
             ],
         ];
 
-        $request = new Request([], [], [], [], [], [
-            'CONTENT_TYPE' => 'application/json',
-            'HTTP_Stripe-Signature' => 't=1,v1=dummy',
-        ], json_encode($payload, JSON_THROW_ON_ERROR));
+        try {
+            $request = new Request([], [], [], [], [], [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_Stripe-Signature' => 't=1,v1=dummy',
+            ], json_encode($payload, JSON_THROW_ON_ERROR));
+        } catch (\JsonException $e) {
+        }
 
         $response = $controller($request);
         self::assertSame(200, $response->getStatusCode());
@@ -83,7 +88,7 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
         self::assertSame($paymentId, $state->outbox[0]->payload()['paymentId'] ?? null);
 
         $processor = new PaymentOutboxProcessor($em, $transport, new NullLogger());
-        self::assertSame(1, $processor->process(10, false));
+        self::assertSame(1, $processor->process(10));
         self::assertSame('published', $state->outbox[0]->status());
         self::assertCount(1, $transport->envelopes);
 
@@ -118,7 +123,7 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
             new PayPalSignatureValidator($this->createAlwaysValidVerifier()),
             new PayPalEventNormalizer(),
             new JsonSchemaValidator(),
-            new \App\Service\WebhookIngestService($em),
+            new WebhookIngestService($em),
             new NullLogger(),
         );
 
@@ -142,10 +147,13 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
             ],
         ];
 
-        $request = new Request([], [], [], [], [], [
-            'CONTENT_TYPE' => 'application/json',
-            'HTTP_paypal-transmission-id' => 'tx_1',
-        ], json_encode($payload, JSON_THROW_ON_ERROR));
+        try {
+            $request = new Request([], [], [], [], [], [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_paypal-transmission-id' => 'tx_1',
+            ], json_encode($payload, JSON_THROW_ON_ERROR));
+        } catch (\JsonException $e) {
+        }
 
         $response = $controller($request);
         self::assertSame(200, $response->getStatusCode());
@@ -155,7 +163,7 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
         self::assertSame($paymentId, $state->outbox[0]->payload()['paymentId'] ?? null);
 
         $processor = new PaymentOutboxProcessor($em, $transport, new NullLogger());
-        self::assertSame(1, $processor->process(10, false));
+        self::assertSame(1, $processor->process(10));
         self::assertSame('published', $state->outbox[0]->status());
         self::assertCount(1, $transport->envelopes);
 
@@ -181,14 +189,12 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
     private function createWebhookEntityManager(): array
     {
         $state = new class {
-            /** @var array<int, PaymentWebhookLog> */
             public array $logs = [];
-            /** @var array<int, PaymentOutboxMessage> */
             public array $outbox = [];
         };
 
         $logRepo = new class($state) {
-            public function __construct(private object $state)
+            public function __construct(private readonly object $state)
             {
             }
 
@@ -206,45 +212,63 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
         };
 
         $outboxRepo = new class($state) {
-            public function __construct(private object $state)
+            public function __construct(private readonly object $state)
             {
             }
 
+            /**
+             * @return __anonymous@8691
+             */
             public function createQueryBuilder(string $alias): object
             {
                 $state = $this->state;
 
                 return new class($state) {
-                    public function __construct(private object $state)
+                    public function __construct(private readonly object $state)
                     {
                     }
 
+                    /**
+                     * @return __anonymous@8691
+                     */
                     public function where(string $condition): self
                     {
                         return $this;
                     }
 
+                    /**
+                     * @return __anonymous@8691
+                     */
                     public function orWhere(string $condition): self
                     {
                         return $this;
                     }
 
+                    /**
+                     * @return __anonymous@8691
+                     */
                     public function setParameter(string $key, mixed $value): self
                     {
                         return $this;
                     }
 
+                    /**
+                     * @return __anonymous@8691
+                     */
                     public function setMaxResults(int $limit): self
                     {
                         return $this;
                     }
 
+                    /**
+                     * @return __anonymous@9610
+                     */
                     public function getQuery(): object
                     {
                         $state = $this->state;
 
                         return new class($state) {
-                            public function __construct(private object $state)
+                            public function __construct(private readonly object $state)
                             {
                             }
 
@@ -258,7 +282,10 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
             }
         };
 
-        $em = $this->createMock(EntityManagerInterface::class);
+        try {
+            $em = $this->createMock(EntityManagerInterface::class);
+        } catch (Exception $e) {
+        }
         $em->method('persist')->willReturnCallback(static function (object $entity) use ($state): void {
             if ($entity instanceof PaymentWebhookLog) {
                 $state->logs[] = $entity;
@@ -279,11 +306,9 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
         return [$em, $state];
     }
 
-    /** @param array<string, Payment> $storage */
     private function createPaymentRepository(array $storage): PaymentRepositoryInterface
     {
         return new class($storage) implements PaymentRepositoryInterface {
-            /** @param array<string, Payment> $storage */
             public function __construct(private array $storage)
             {
             }
@@ -330,7 +355,6 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
     private function createOrderSyncSpy(): OrderPaymentSyncInterface
     {
         return new class implements OrderPaymentSyncInterface {
-            /** @var list<array<int, string|int|null>> */
             public array $events = [];
 
             public function onPaymentCaptured(string $orderId, string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null): void
@@ -353,7 +377,6 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
     private function createTransport(): TransportInterface
     {
         return new class implements TransportInterface {
-            /** @var list<Envelope> */
             public array $envelopes = [];
 
             public function send(Envelope $envelope): Envelope

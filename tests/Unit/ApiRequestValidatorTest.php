@@ -10,6 +10,7 @@ use App\ServiceInterface\ValidationErrorMapperInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -22,6 +23,12 @@ final class ApiRequestValidatorTest extends TestCase
 
     private ApiRequestValidator $service;
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     protected function setUp(): void
     {
         $this->validator = $this->createMock(ValidatorInterface::class);
@@ -47,6 +54,12 @@ final class ApiRequestValidatorTest extends TestCase
         self::assertNull($this->service->validate($dto));
     }
 
+    /**
+     * @throws \JsonException
+     */
+    /**
+     * @throws \JsonException
+     */
     public function testValidateReturnsUnprocessableEntityResponseWhenDtoHasViolations(): void
     {
         $dto = new \stdClass();
@@ -70,7 +83,7 @@ final class ApiRequestValidatorTest extends TestCase
         $response = $this->service->validate($dto);
 
         self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertSame(JsonResponse::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
+        self::assertSame(Response::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
         self::assertSame(['errors' => $errors], json_decode((string) $response->getContent(), true, 512, JSON_THROW_ON_ERROR));
     }
 }

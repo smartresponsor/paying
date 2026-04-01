@@ -8,12 +8,18 @@ namespace App\Service;
 use App\ServiceInterface\CircuitBreakerInterface;
 use Doctrine\DBAL\Connection;
 
-class CircuitBreaker implements CircuitBreakerInterface
+readonly class CircuitBreaker implements CircuitBreakerInterface
 {
-    public function __construct(private readonly Connection $data, private readonly int $threshold = 5, private readonly int $cooldownSec = 60)
+    public function __construct(private Connection $data, private int $threshold = 5, private int $cooldownSec = 60)
     {
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function isOpen(string $key): bool
     {
         $row = $this->data->fetchAssociative('SELECT failure_count, retry_at FROM payment_circuit WHERE key = :k', ['k' => $key]);
@@ -29,11 +35,23 @@ class CircuitBreaker implements CircuitBreakerInterface
         return false;
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function recordSuccess(string $key): void
     {
         $this->data->executeStatement('DELETE FROM payment_circuit WHERE key = :k', ['k' => $key]);
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function recordFailure(string $key): void
     {
         $row = $this->data->fetchAssociative('SELECT failure_count FROM payment_circuit WHERE key = :k', ['k' => $key]);
