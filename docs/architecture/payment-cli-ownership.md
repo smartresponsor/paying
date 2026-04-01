@@ -17,12 +17,13 @@ The Payment component owns the following operational CLI surfaces:
 ## Ownership rule
 
 These commands belong to the Payment application layer and are part of the supported operational contour.
-They are expected to remain wired through Symfony console registration and should be covered by smoke-level registration tests.
+They are expected to remain wired through Symfony console registration and should be covered by smoke-level registration
+tests.
 
 ## Non-owned contour
 
-Legacy `src/Api/*` classes are no longer part of the active runtime/service graph and are not part of the owned CLI/API contour.
-
+Legacy `src/Api/*` classes are no longer part of the active runtime/service graph and are not part of the owned CLI/API
+contour.
 
 ## Execution smoke
 

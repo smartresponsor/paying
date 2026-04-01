@@ -1,14 +1,12 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Service\Webhook;
 
 final class StripeEventNormalizer
 {
-    /** @param array<string, mixed> $payload */
     public function routingKey(array $payload): string
     {
         return match ((string) ($payload['type'] ?? '')) {
@@ -20,8 +18,6 @@ final class StripeEventNormalizer
     }
 
     /**
-     * @param array<string, mixed> $payload
-     *
      * @return array<string, mixed>
      */
     public function normalize(array $payload): array
@@ -63,7 +59,6 @@ final class StripeEventNormalizer
         ];
     }
 
-    /** @param array<string, mixed> $object */
     private function extractAmountMinor(array $object): int
     {
         foreach (['amount_received', 'amount_total', 'amount_capturable', 'amount'] as $field) {
@@ -75,9 +70,6 @@ final class StripeEventNormalizer
         return 0;
     }
 
-    /**
-     * @param list<mixed> $values
-     */
     private function firstNonEmpty(array $values): ?string
     {
         foreach ($values as $value) {

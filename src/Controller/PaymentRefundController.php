@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -9,23 +9,26 @@ use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentRefundRequestDto;
 use App\ControllerInterface\PaymentRefundControllerInterface;
 use App\Service\PaymentNotFoundException;
+use App\ServiceInterface\ApiErrorResponseFactoryInterface;
+use App\ServiceInterface\ApiJsonBodyDecoderInterface;
+use App\ServiceInterface\ApiRequestValidatorInterface;
 use App\ServiceInterface\RefundServiceInterface;
-use App\ServiceInterface\ValidationErrorMapperInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final class PaymentRefundController implements PaymentRefundControllerInterface
+final readonly class PaymentRefundController implements PaymentRefundControllerInterface
 {
     public function __construct(
-        private readonly RefundServiceInterface $refundService,
-        private readonly ValidatorInterface $validator,
-        private readonly ValidationErrorMapperInterface $validationErrorMapper,
-        private readonly LoggerInterface $logger,
+        private RefundServiceInterface $refundService,
+        private ApiErrorResponseFactoryInterface $errorResponseFactory,
+        private ApiJsonBodyDecoderInterface $jsonBodyDecoder,
+        private ApiRequestValidatorInterface $requestValidator,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -58,21 +61,21 @@ final class PaymentRefundController implements PaymentRefundControllerInterface
     public function refund(string $id, Request $request): JsonResponse
     {
         if (!Ulid::isValid($id)) {
-            return new JsonResponse(['error' => 'payment-not-found'], JsonResponse::HTTP_NOT_FOUND);
+            return $this->errorResponseFactory->paymentNotFound();
         }
 
-        $data = json_decode($request->getContent(), true);
-        if (!is_array($data)) {
-            return new JsonResponse(['errors' => [['field' => 'body', 'message' => 'Invalid JSON body.']]], JsonResponse::HTTP_BAD_REQUEST);
+        $data = $this->jsonBodyDecoder->decode($request);
+        if (null === $data) {
+            return $this->errorResponseFactory->badJsonBody();
         }
 
         $dto = new PaymentRefundRequestDto();
         $dto->amount = (string) ($data['amount'] ?? '0.00');
         $dto->provider = (string) ($data['provider'] ?? 'internal');
 
-        $violations = $this->validator->validate($dto);
-        if (count($violations) > 0) {
-            return new JsonResponse(['errors' => $this->validationErrorMapper->toArray($violations)], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+        $validationResponse = $this->requestValidator->validate($dto);
+        if (null !== $validationResponse) {
+            return $validationResponse;
         }
 
         try {
@@ -83,7 +86,7 @@ final class PaymentRefundController implements PaymentRefundControllerInterface
                 'error' => $exception->getMessage(),
             ]);
 
-            return new JsonResponse(['error' => 'payment-not-found'], JsonResponse::HTTP_NOT_FOUND);
+            return $this->errorResponseFactory->paymentNotFound();
         }
 
         return new JsonResponse([
@@ -92,6 +95,6 @@ final class PaymentRefundController implements PaymentRefundControllerInterface
             'amount' => $payment->amount(),
             'currency' => $payment->currency(),
             'providerRef' => $payment->providerRef(),
-        ], JsonResponse::HTTP_OK);
+        ], Response::HTTP_OK);
     }
 }

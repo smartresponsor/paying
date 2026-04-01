@@ -1,5 +1,4 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
 declare(strict_types=1);
 
@@ -8,9 +7,9 @@ use PhpCsFixer\Finder;
 
 $finder = Finder::create()
     ->in([
-        __DIR__.'/src',
-        __DIR__.'/tests',
-        __DIR__.'/config',
+        __DIR__ . '/src',
+        __DIR__ . '/tests',
+        __DIR__ . '/config',
     ])
     ->exclude([
         'var',
@@ -18,6 +17,7 @@ $finder = Finder::create()
         'node_modules',
         'public/build',
     ])
+    ->notPath('reference.php')
     ->name('*.php');
 
 $config = new Config();
@@ -25,7 +25,7 @@ $config = new Config();
 $config
     ->setRiskyAllowed(true)
     ->setUsingCache(true)
-    ->setCacheFile(__DIR__.'/var/.php-cs-fixer.cache')
+    ->setCacheFile(__DIR__ . '/var/.php-cs-fixer.cache')
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
@@ -59,6 +59,7 @@ $config
         'no_php4_constructor' => false,
         'ordered_traits' => false,
         'no_homoglyph_names' => false,
+        'single_line_comment_style' => false,
     ])
     ->setFinder($finder);
 

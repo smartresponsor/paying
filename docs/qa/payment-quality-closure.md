@@ -12,7 +12,8 @@ This wave closes the repository-owned quality contour that was previously only p
 
 ## What this still does not close
 
-This wave does not prove a fully installed runtime by itself. The following still remain outside the scope of this closure step:
+This wave does not prove a fully installed runtime by itself. The following still remain outside the scope of this
+closure step:
 
 - `composer.lock` is still absent from the current slice
 - CI execution is defined but not proven from inside this archive

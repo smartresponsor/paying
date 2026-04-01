@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Infrastructure\Console;
@@ -30,6 +29,12 @@ class DlqReplayCommand extends Command
         $this->addArgument('limit', InputArgument::OPTIONAL, 'Max items to replay', '50');
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $limit = max(1, (int) $input->getArgument('limit'));

@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Tests\Unit;
@@ -18,6 +17,35 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 final class ScopeGuardSubscriberTest extends TestCase
 {
+    private ?string $originalOidcDisabled = null;
+
+    protected function setUp(): void
+    {
+        $this->originalOidcDisabled = $_ENV['OIDC_DISABLED'] ?? null;
+        unset($_ENV['OIDC_DISABLED']);
+        putenv('OIDC_DISABLED');
+    }
+
+    protected function tearDown(): void
+    {
+        if (null === $this->originalOidcDisabled) {
+            unset($_ENV['OIDC_DISABLED']);
+            putenv('OIDC_DISABLED');
+        } else {
+            $_ENV['OIDC_DISABLED'] = $this->originalOidcDisabled;
+            putenv('OIDC_DISABLED='.$this->originalOidcDisabled);
+        }
+
+        parent::tearDown();
+    }
+
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \ReflectionException
+     */
     public function testOnControllerLogsVerificationFailureAndReturnsUnauthorized(): void
     {
         $verifier = $this->createMock(TokenVerifierInterface::class);

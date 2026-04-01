@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Tests\Unit;
@@ -13,6 +12,17 @@ use PHPUnit\Framework\TestCase;
 
 final class ProjectionLagServiceTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testSnapshotBuildsLagFromDataAndInfraTimestamps(): void
     {
         $connection = $this->createMock(Connection::class);

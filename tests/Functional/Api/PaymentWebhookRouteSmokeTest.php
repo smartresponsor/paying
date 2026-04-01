@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Api;
@@ -18,7 +17,7 @@ final class PaymentWebhookRouteSmokeTest extends WebTestCase
 
     public function testGenericWebhookRouteIsWiredToControllerChain(): void
     {
-        $client = static::createClient();
+        $client = self::createClient();
         $client->request('POST', '/payment/webhook/stripe', [], [], [
             'CONTENT_TYPE' => 'application/json',
         ], '{}');

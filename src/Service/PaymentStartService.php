@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
@@ -14,11 +14,11 @@ use App\ValueObject\Money;
 use App\ValueObject\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 
-final class PaymentStartService implements PaymentStartServiceInterface
+final readonly class PaymentStartService implements PaymentStartServiceInterface
 {
     public function __construct(
-        private readonly ProviderGuardInterface $guard,
-        private readonly PaymentRepositoryInterface $repo,
+        private ProviderGuardInterface $guard,
+        private PaymentRepositoryInterface $repo,
     ) {
     }
 
@@ -29,11 +29,37 @@ final class PaymentStartService implements PaymentStartServiceInterface
         $payment = new Payment(new Ulid(), PaymentStatus::new, $money->toDecimalString(), $money->currency());
         $this->repo->save($payment);
 
-        $providerResult = $this->guard->start($provider, $payment, [
-            'idempotencyKey' => '' !== $idempotencyKey ? $idempotencyKey : (string) $payment->id(),
-            'projectId' => (string) $payment->id(),
-            'origin' => $origin,
-        ]);
+        return $this->startExistingPayment($payment, $provider, $idempotencyKey, $origin);
+    }
+
+    public function restart(string $paymentId, string $provider, string $idempotencyKey = '', string $origin = 'api'): PaymentStartResult
+    {
+        $existing = $this->repo->find($paymentId);
+        if (null === $existing) {
+            throw PaymentNotFoundException::byId($paymentId);
+        }
+
+        if ($existing->status() !== PaymentStatus::failed) {
+            throw new \InvalidArgumentException('Only failed payments can be restarted.');
+        }
+
+        return $this->startExistingPayment($existing, $provider, $idempotencyKey, $origin);
+    }
+
+    private function startExistingPayment(Payment $payment, string $provider, string $idempotencyKey, string $origin): PaymentStartResult
+    {
+        try {
+            $providerResult = $this->guard->start($provider, $payment, [
+                'idempotencyKey' => '' !== $idempotencyKey ? $idempotencyKey : (string) $payment->id(),
+                'projectId' => (string) $payment->id(),
+                'origin' => $origin,
+            ]);
+        } catch (\Throwable $exception) {
+            $payment->markFailed();
+            $this->repo->save($payment);
+
+            throw $exception;
+        }
 
         $providerRef = isset($providerResult['providerRef']) ? (string) $providerResult['providerRef'] : null;
         $payment->markProcessing($providerRef);

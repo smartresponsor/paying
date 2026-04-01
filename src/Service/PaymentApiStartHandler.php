@@ -1,39 +1,40 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Controller\Dto\PaymentStartRequestDto;
-use App\Entity\Payment;
+use App\ServiceInterface\IdempotencyServiceInterface;
 use App\ServiceInterface\PaymentApiStartHandlerInterface;
+use App\ServiceInterface\PaymentStartInput;
 use App\ServiceInterface\PaymentStartServiceInterface;
 
-final class PaymentApiStartHandler implements PaymentApiStartHandlerInterface
+final readonly class PaymentApiStartHandler implements PaymentApiStartHandlerInterface
 {
     public function __construct(
-        private readonly PaymentStartServiceInterface $paymentStartService,
-        private readonly IdempotencyService $idem,
+        private PaymentStartServiceInterface $paymentStartService,
+        private IdempotencyServiceInterface $idem,
     ) {
     }
 
-    public function handle(PaymentStartRequestDto $dto, string $idempotencyKey, string $payloadHash): array
+    /**
+     * @throws \JsonException
+     */
+    /**
+     * @throws \JsonException
+     */
+    public function handle(PaymentStartInput $input, string $idempotencyKey, string $payloadHash): array
     {
-        return $this->idem->execute($idempotencyKey, $payloadHash, function () use ($dto, $idempotencyKey): array {
-            $started = $this->paymentStartService->start($dto->provider, $dto->amount, $dto->currency, $idempotencyKey, 'api');
-            $payment = $started['payment'] ?? null;
-
-            if (!$payment instanceof Payment) {
-                throw new \RuntimeException('Payment start response does not contain payment entity.');
-            }
+        return $this->idem->execute($idempotencyKey, $payloadHash, function () use ($input, $idempotencyKey): array {
+            $started = $this->paymentStartService->start($input->provider, $input->amount, $input->currency, $idempotencyKey);
 
             return [
-                'payment' => (string) $payment->id(),
-                'provider' => $dto->provider,
-                'status' => $payment->status()->value,
-                'providerRef' => $started['providerRef'] ?? null,
-                'result' => $started['result'] ?? [],
+                'payment' => (string) $started->payment->id(),
+                'provider' => $input->provider,
+                'status' => $started->payment->status()->value,
+                'providerRef' => $started->providerRef,
+                'result' => $started->providerResult,
             ];
         });
     }

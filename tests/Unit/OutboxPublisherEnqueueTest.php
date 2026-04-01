@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Tests\Unit;
@@ -12,6 +11,13 @@ use PHPUnit\Framework\TestCase;
 
 final class OutboxPublisherEnqueueTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \JsonException
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testEnqueueWritesUnifiedPaymentOutboxMessageTable(): void
     {
         $connection = $this->createMock(Connection::class);

@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Message\Handler;
@@ -12,11 +11,11 @@ use App\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler(fromTransport: 'payment_events_in')]
-final class PaymentEventConsumer
+final readonly class PaymentEventConsumer
 {
     public function __construct(
-        private readonly PaymentReconciliationServiceInterface $svc,
-        private readonly ?OrderPaymentSyncInterface $orderPaymentSync = null,
+        private PaymentReconciliationServiceInterface $svc,
+        private ?OrderPaymentSyncInterface $orderPaymentSync = null,
     ) {
     }
 

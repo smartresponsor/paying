@@ -1,16 +1,15 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Service;
 
 use App\ServiceInterface\TokenVerifierInterface;
 
-class TokenVerifier implements TokenVerifierInterface
+readonly class TokenVerifier implements TokenVerifierInterface
 {
-    public function __construct(private readonly OidcJwksCache $jwks)
+    public function __construct(private OidcJwksCache $jwks)
     {
     }
 
@@ -60,10 +59,6 @@ class TokenVerifier implements TokenVerifierInterface
         return $payload;
     }
 
-    /**
-     * @param array<string, mixed> $claims
-     * @param list<string>         $required
-     */
     public function hasScopes(array $claims, array $required, bool $any = false): bool
     {
         $scopes = [];

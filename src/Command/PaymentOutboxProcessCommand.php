@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Command;
@@ -16,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'payment:outbox:process', description: 'Publish payment outbox messages to RabbitMQ')]
 class PaymentOutboxProcessCommand extends Command
 {
-    public function __construct(private PaymentOutboxProcessorInterface $processor)
+    public function __construct(private readonly PaymentOutboxProcessorInterface $processor)
     {
         parent::__construct();
     }

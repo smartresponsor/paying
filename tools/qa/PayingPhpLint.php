@@ -10,7 +10,7 @@ foreach ($roots as $root) {
     }
     $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root, FilesystemIterator::SKIP_DOTS));
     foreach ($it as $file) {
-        if ($file->isFile() && $file->getExtension() === 'php') {
+        if ($file->isFile() && 'php' === $file->getExtension()) {
             $files[] = $file->getPathname();
         }
     }
@@ -18,17 +18,17 @@ foreach ($roots as $root) {
 sort($files);
 $failed = [];
 foreach ($files as $file) {
-    $cmd = escapeshellarg(PHP_BINARY) . ' -l ' . escapeshellarg($file) . ' 2>&1';
+    $cmd = escapeshellarg(PHP_BINARY).' -l '.escapeshellarg($file).' 2>&1';
     exec($cmd, $output, $exitCode);
-    if ($exitCode !== 0) {
+    if (0 !== $exitCode) {
         $failed[$file] = implode(PHP_EOL, $output);
     }
     $output = [];
 }
-if ($failed !== []) {
+if ([] !== $failed) {
     foreach ($failed as $file => $message) {
-        fwrite(STDERR, '[FAIL] ' . $file . PHP_EOL . $message . PHP_EOL);
+        fwrite(STDERR, '[FAIL] '.$file.PHP_EOL.$message.PHP_EOL);
     }
     exit(1);
 }
-echo 'PHP lint passed for ' . count($files) . ' files.' . PHP_EOL;
+echo 'PHP lint passed for '.count($files).' files.'.PHP_EOL;

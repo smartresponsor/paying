@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit;
@@ -14,6 +14,12 @@ use Symfony\Component\Uid\Ulid;
 
 final class PaymentConsoleCreateHandlerTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testCreateDelegatesToPaymentService(): void
     {
         $payment = new Payment(new Ulid(), PaymentStatus::new, '10.00', 'USD');

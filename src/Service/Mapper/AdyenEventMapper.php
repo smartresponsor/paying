@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Service\Mapper;
@@ -15,7 +14,6 @@ class AdyenEventMapper implements EventMapperInterface
         return 'adyen';
     }
 
-    /** @param array<string, mixed> $payload */
     public function extractPaymentId(array $payload): ?string
     {
         if (isset($payload['additionalData']['merchantReference'])) {
@@ -28,7 +26,6 @@ class AdyenEventMapper implements EventMapperInterface
         return null;
     }
 
-    /** @param array<string, mixed> $payload */
     public function mapStatus(array $payload): ?string
     {
         $eventCode = (string) ($payload['eventCode'] ?? '');

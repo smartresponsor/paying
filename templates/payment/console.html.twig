@@ -12,10 +12,12 @@
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
         <div>
             <h1 class="h3 mb-1">Payment Console</h1>
-            <p class="text-muted mb-0">Canonical operator UI for payment lifecycle, webhook visibility, and demo flow checks.</p>
+            <p class="text-muted mb-0">Canonical operator UI for payment lifecycle, webhook visibility, and demo flow
+                checks.</p>
         </div>
         <div class="d-flex gap-2">
-            <a class="btn btn-sm btn-outline-secondary" href="/api/docs" target="_blank" rel="noopener">Open API docs</a>
+            <a class="btn btn-sm btn-outline-secondary" href="/api/docs" target="_blank" rel="noopener">Open API
+                docs</a>
             <a class="btn btn-sm btn-outline-secondary" href="/status" target="_blank" rel="noopener">Status</a>
             <a class="btn btn-sm btn-outline-secondary" href="/metrics" target="_blank" rel="noopener">Metrics</a>
         </div>
@@ -23,7 +25,8 @@
 
     {% for label, messages in app.flashes %}
         {% for message in messages %}
-            <div class="alert alert-{{ label == 'danger' ? 'danger' : 'success' }} d-flex align-items-center" role="alert">
+            <div class="alert alert-{{ label == 'danger' ? 'danger' : 'success' }} d-flex align-items-center"
+                 role="alert">
                 <strong class="me-2">{{ label == 'danger' ? 'Error:' : 'Success:' }}</strong>
                 <span>{{ message }}</span>
             </div>
@@ -35,14 +38,16 @@
             <form method="get" action="{{ path('payment_console') }}" class="row g-2 align-items-end">
                 <div class="col-12 col-lg-5">
                     <label class="form-label mb-1" for="q">Search</label>
-                    <input id="q" name="q" type="text" class="form-control" value="{{ filters.q }}" placeholder="Payment ID / provider ref / currency / amount">
+                    <input id="q" name="q" type="text" class="form-control" value="{{ filters.q }}"
+                           placeholder="Payment ID / provider ref / currency / amount">
                 </div>
                 <div class="col-12 col-lg-3">
                     <label class="form-label mb-1" for="status">Status</label>
                     <select id="status" name="status" class="form-select">
                         {% set statuses = ['all', 'new', 'processing', 'completed', 'failed', 'refunded', 'canceled'] %}
                         {% for option in statuses %}
-                            <option value="{{ option }}" {{ filters.status == option ? 'selected' : '' }}>{{ option|title }}</option>
+                            <option
+                                value="{{ option }}" {{ filters.status == option ? 'selected' : '' }}>{{ option|title }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -59,12 +64,13 @@
             <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <h2 class="h5">Create payment</h2>
-                    <p class="text-muted small">Create aggregate (`POST /api/payments`) using operator-friendly form.</p>
+                    <p class="text-muted small">Create aggregate (`POST /api/payments`) using operator-friendly
+                        form.</p>
                     {{ form_start(create_form) }}
-                        {{ form_row(create_form.orderId) }}
-                        {{ form_row(create_form.amountMinor) }}
-                        {{ form_row(create_form.currency) }}
-                        <button class="btn btn-primary" type="submit">Create payment</button>
+                    {{ form_row(create_form.orderId) }}
+                    {{ form_row(create_form.amountMinor) }}
+                    {{ form_row(create_form.currency) }}
+                    <button class="btn btn-primary" type="submit">Create payment</button>
                     {{ form_end(create_form) }}
                 </div>
             </div>
@@ -73,12 +79,13 @@
             <div class="card shadow-sm h-100">
                 <div class="card-body">
                     <h2 class="h5">Start payment</h2>
-                    <p class="text-muted small">Run start flow (`POST /payment/start`) through currently supported providers.</p>
+                    <p class="text-muted small">Run start flow (`POST /payment/start`) through currently supported
+                        providers.</p>
                     {{ form_start(start_form) }}
-                        {{ form_row(start_form.amount) }}
-                        {{ form_row(start_form.currency) }}
-                        {{ form_row(start_form.provider) }}
-                        <button class="btn btn-primary" type="submit">Start payment</button>
+                    {{ form_row(start_form.amount) }}
+                    {{ form_row(start_form.currency) }}
+                    {{ form_row(start_form.provider) }}
+                    <button class="btn btn-primary" type="submit">Start payment</button>
                     {{ form_end(start_form) }}
                 </div>
             </div>
@@ -96,13 +103,13 @@
                     <div class="table-responsive">
                         <table class="table table-sm align-middle mb-0">
                             <thead>
-                                <tr>
-                                    <th scope="col">Payment ID</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Amount</th>
-                                    <th scope="col">Provider ref</th>
-                                    <th scope="col" class="text-end">Actions</th>
-                                </tr>
+                            <tr>
+                                <th scope="col">Payment ID</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Provider ref</th>
+                                <th scope="col" class="text-end">Actions</th>
+                            </tr>
                             </thead>
                             <tbody>
                             {% for payment in payments %}
@@ -112,12 +119,16 @@
                                     <td>{{ payment.amount }} {{ payment.currency }}</td>
                                     <td>{{ payment.providerRef ?: '—' }}</td>
                                     <td class="text-end">
-                                        <a class="btn btn-sm btn-outline-primary" href="{{ path('payment_console', {payment: payment.id, q: filters.q, status: filters.status}) }}">Open card</a>
+                                        <a class="btn btn-sm btn-outline-primary"
+                                           href="{{ path('payment_console', {payment: payment.id, q: filters.q, status: filters.status}) }}">Open
+                                            card</a>
                                     </td>
                                 </tr>
                             {% else %}
                                 <tr>
-                                    <td colspan="5" class="text-muted">No payments match the active filter. Adjust filters or create/start a payment.</td>
+                                    <td colspan="5" class="text-muted">No payments match the active filter. Adjust
+                                        filters or create/start a payment.
+                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -129,16 +140,17 @@
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h2 class="h5">Webhook / event visibility</h2>
-                    <p class="text-muted small mb-3">Recent events{{ selected_payment ? ' for payment ' ~ selected_payment.id : '' }}.</p>
+                    <p class="text-muted small mb-3">Recent
+                        events{{ selected_payment ? ' for payment ' ~ selected_payment.id : '' }}.</p>
                     <div class="table-responsive">
                         <table class="table table-sm align-middle mb-0">
                             <thead>
-                                <tr>
-                                    <th scope="col">Provider</th>
-                                    <th scope="col">External event</th>
-                                    <th scope="col">State</th>
-                                    <th scope="col">Received at</th>
-                                </tr>
+                            <tr>
+                                <th scope="col">Provider</th>
+                                <th scope="col">External event</th>
+                                <th scope="col">State</th>
+                                <th scope="col">Received at</th>
+                            </tr>
                             </thead>
                             <tbody>
                             {% for event in webhook_events %}
@@ -169,7 +181,8 @@
                             <dt class="col-5 text-muted">Payment ID</dt>
                             <dd class="col-7"><code>{{ selected_payment.id }}</code></dd>
                             <dt class="col-5 text-muted">Status</dt>
-                            <dd class="col-7"><span class="badge text-bg-light border">{{ selected_payment.status }}</span></dd>
+                            <dd class="col-7"><span
+                                    class="badge text-bg-light border">{{ selected_payment.status }}</span></dd>
                             <dt class="col-5 text-muted">Amount</dt>
                             <dd class="col-7">{{ selected_payment.amount }} {{ selected_payment.currency }}</dd>
                             <dt class="col-5 text-muted">Provider ref</dt>
@@ -178,7 +191,8 @@
                             <dd class="col-7">{{ selected_payment.updatedAt }}</dd>
                         </dl>
                     {% else %}
-                        <p class="text-muted mb-0">Select a payment from the list to view details and prefill actions.</p>
+                        <p class="text-muted mb-0">Select a payment from the list to view details and prefill
+                            actions.</p>
                     {% endif %}
                 </div>
             </div>
@@ -188,12 +202,12 @@
                     <h2 class="h5">Finalize payment</h2>
                     <p class="text-muted small">Matches `POST /payment/finalize/{id}` behavior.</p>
                     {{ form_start(finalize_form) }}
-                        {{ form_row(finalize_form.paymentId) }}
-                        {{ form_row(finalize_form.provider) }}
-                        {{ form_row(finalize_form.providerRef) }}
-                        {{ form_row(finalize_form.gatewayTransactionId) }}
-                        {{ form_row(finalize_form.status) }}
-                        <button class="btn btn-primary" type="submit">Finalize payment</button>
+                    {{ form_row(finalize_form.paymentId) }}
+                    {{ form_row(finalize_form.provider) }}
+                    {{ form_row(finalize_form.providerRef) }}
+                    {{ form_row(finalize_form.gatewayTransactionId) }}
+                    {{ form_row(finalize_form.status) }}
+                    <button class="btn btn-primary" type="submit">Finalize payment</button>
                     {{ form_end(finalize_form) }}
                 </div>
             </div>
@@ -203,10 +217,10 @@
                     <h2 class="h5">Refund payment</h2>
                     <p class="text-muted small">Matches `POST /api/payments/{id}/refund` behavior.</p>
                     {{ form_start(refund_form) }}
-                        {{ form_row(refund_form.paymentId) }}
-                        {{ form_row(refund_form.amount) }}
-                        {{ form_row(refund_form.provider) }}
-                        <button class="btn btn-outline-primary" type="submit">Refund payment</button>
+                    {{ form_row(refund_form.paymentId) }}
+                    {{ form_row(refund_form.amount) }}
+                    {{ form_row(refund_form.provider) }}
+                    <button class="btn btn-outline-primary" type="submit">Refund payment</button>
                     {{ form_end(refund_form) }}
                 </div>
             </div>

@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Fixture;
@@ -13,6 +12,7 @@ use App\Infrastructure\Fixture\PaymentWebhookLogFixture;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\Mapping\ClassMetadata;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
 final class PaymentFixtureDatasetSmokeTest extends TestCase
@@ -28,7 +28,10 @@ final class PaymentFixtureDatasetSmokeTest extends TestCase
     private function persistCount(object $fixture): int
     {
         $count = 0;
-        $manager = $this->createMock(EntityManagerInterface::class);
+        try {
+            $manager = $this->createMock(EntityManagerInterface::class);
+        } catch (Exception $e) {
+        }
         $manager->expects(self::any())
             ->method('persist')
             ->willReturnCallback(static function () use (&$count): void {
@@ -36,7 +39,7 @@ final class PaymentFixtureDatasetSmokeTest extends TestCase
             });
         $manager->expects(self::once())->method('flush');
         $manager->method('getClassMetadata')->willReturnCallback(function (string $class): ClassMetadata {
-            $metadata = $this->createStub(ClassMetadata::class);
+            $metadata = static::createStub(ClassMetadata::class);
             $metadata->method('getName')->willReturn($class);
 
             return $metadata;

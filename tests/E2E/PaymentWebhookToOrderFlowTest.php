@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Tests\E2E;
@@ -20,15 +19,24 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\TransportInterface;
+use Symfony\Component\Uid\Ulid;
 
 final class PaymentWebhookToOrderFlowTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testWebhookCapturedGoesThroughOutboxAndConsumer(): void
     {
         $repo = new class {
-            /** @var list<PaymentOutboxMessage> */
             public array $storage = [];
 
+            /**
+             * @return __anonymous@1214
+             */
             public function createQueryBuilder(string $alias): object
             {
                 $self = $this;
@@ -38,26 +46,41 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
                     {
                     }
 
+                    /**
+                     * @return __anonymous@1214
+                     */
                     public function where(string $condition): self
                     {
                         return $this;
                     }
 
+                    /**
+                     * @return __anonymous@1214
+                     */
                     public function orWhere(string $condition): self
                     {
                         return $this;
                     }
 
+                    /**
+                     * @return __anonymous@1214
+                     */
                     public function setParameter(string $key, mixed $value): self
                     {
                         return $this;
                     }
 
+                    /**
+                     * @return __anonymous@1214
+                     */
                     public function setMaxResults(int $limit): self
                     {
                         return $this;
                     }
 
+                    /**
+                     * @return __anonymous@2129
+                     */
                     public function getQuery(): object
                     {
                         $self = $this->self;
@@ -91,7 +114,6 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
         $repo->storage[] = $outboxMessage;
 
         $transport = new class implements TransportInterface {
-            /** @var list<Envelope> */
             public array $envelopes = [];
 
             public function send(Envelope $envelope): Envelope
@@ -116,17 +138,16 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
         };
 
         $processor = new PaymentOutboxProcessor($em, $transport, new NullLogger());
-        $published = $processor->process(10, false);
+        $published = $processor->process(10);
         self::assertSame(1, $published);
         self::assertSame('published', $outboxMessage->status());
         self::assertSame(1, $outboxMessage->attempts());
 
         $sync = new NullOrderPaymentSync(new NullLogger());
-        $payment = new Payment(new \Symfony\Component\Uid\Ulid('01HK153X000000000000000000'), PaymentStatus::processing, '50.00', 'USD');
+        $payment = new Payment(new Ulid('01HK153X000000000000000000'), PaymentStatus::processing, '50.00', 'USD');
         $saved = [];
 
         $payments = new class($payment, $saved) implements PaymentRepositoryInterface {
-            /** @var list<Payment> */
             public array $saved = [];
 
             public function __construct(private readonly Payment $payment, array $saved)

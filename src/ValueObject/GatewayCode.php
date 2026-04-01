@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\ValueObject;
@@ -10,7 +9,7 @@ final class GatewayCode
 {
     private const ALLOWED = ['stripe', 'paypal', 'authorize'];
 
-    public function __construct(private string $value)
+    public function __construct(private readonly string $value)
     {
         if (!in_array($value, self::ALLOWED, true)) {
             throw new \InvalidArgumentException('Unsupported gateway code: '.$value);
