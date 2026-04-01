@@ -27,10 +27,11 @@ final readonly class PaymentApiStartHandler implements PaymentApiStartHandlerInt
     public function handle(PaymentStartInput $input, string $idempotencyKey, string $payloadHash): array
     {
         return $this->idem->execute($idempotencyKey, $payloadHash, function () use ($input, $idempotencyKey): array {
-            $started = $this->paymentStartService->start($input->provider, $input->amount, $input->currency, $idempotencyKey);
+            $started = $this->paymentStartService->start($input->orderId, $input->provider, $input->amount, $input->currency, $idempotencyKey);
 
             return [
                 'payment' => (string) $started->payment->id(),
+                'orderId' => $started->payment->orderId(),
                 'provider' => $input->provider,
                 'status' => $started->payment->status()->value,
                 'providerRef' => $started->providerRef,

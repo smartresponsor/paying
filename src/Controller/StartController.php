@@ -44,8 +44,9 @@ final readonly class StartController implements StartControllerInterface
     #[OA\RequestBody(
         required: true,
         content: new OA\JsonContent(
-            required: ['amount', 'currency', 'provider'],
+            required: ['orderId', 'amount', 'currency', 'provider'],
             properties: [
+                new OA\Property(property: 'orderId', type: 'string', example: 'order-1001'),
                 new OA\Property(property: 'amount', type: 'string', example: '50.00'),
                 new OA\Property(property: 'currency', type: 'string', example: 'USD'),
                 new OA\Property(property: 'provider', type: 'string', example: 'internal'),
@@ -62,6 +63,7 @@ final readonly class StartController implements StartControllerInterface
         }
 
         $dto = new PaymentStartRequestDto();
+        $dto->orderId = (string) ($data['orderId'] ?? '');
         $dto->amount = (string) ($data['amount'] ?? '0.00');
         $dto->currency = strtoupper((string) ($data['currency'] ?? 'USD'));
         $dto->provider = (string) ($data['provider'] ?? 'internal');
@@ -73,7 +75,7 @@ final readonly class StartController implements StartControllerInterface
 
         $key = (string) $request->headers->get('Idempotency-Key', '');
         $payloadHash = hash('sha256', $request->getContent());
-        $result = $this->startHandler->handle(new PaymentStartInput($dto->provider, $dto->amount, $dto->currency), $key, $payloadHash);
+        $result = $this->startHandler->handle(new PaymentStartInput($dto->orderId, $dto->provider, $dto->amount, $dto->currency), $key, $payloadHash);
 
         return new JsonResponse($result, Response::HTTP_OK);
     }
