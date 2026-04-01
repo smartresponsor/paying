@@ -32,6 +32,7 @@ final class PaymentStartType extends AbstractType
                 'choices' => [
                     'Internal' => 'internal',
                     'Stripe' => 'stripe',
+                    'PayPal' => 'paypal',
                 ],
             ]);
     }

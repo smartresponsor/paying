@@ -20,6 +20,6 @@ final class PaymentStartRequestDto
     public string $currency = 'USD';
 
     #[Assert\NotBlank]
-    #[Assert\Choice(choices: ['internal', 'stripe'])]
+    #[Assert\Choice(choices: ['internal', 'stripe', 'paypal'])]
     public string $provider = 'internal';
 }
