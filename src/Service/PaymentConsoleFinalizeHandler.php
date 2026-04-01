@@ -24,7 +24,7 @@ final readonly class PaymentConsoleFinalizeHandler implements PaymentConsoleFina
         string $paymentId,
         string $provider,
         ?string $providerRef,
-        ?string $gatewayTransactionId,
+        ?string $providerTransactionId,
         ?string $status,
     ): ?Payment {
         $payment = $this->repo->find($paymentId);
@@ -34,7 +34,7 @@ final readonly class PaymentConsoleFinalizeHandler implements PaymentConsoleFina
 
         $payload = new PaymentFinalizePayload(
             $providerRef ?? '',
-            $gatewayTransactionId ?? '',
+            $providerTransactionId ?? '',
             $status ?? '',
         );
 

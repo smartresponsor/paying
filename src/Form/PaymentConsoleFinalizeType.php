@@ -30,8 +30,8 @@ final class PaymentConsoleFinalizeType extends AbstractType
                 'label' => 'Provider ref',
                 'required' => false,
             ])
-            ->add('gatewayTransactionId', TextType::class, [
-                'label' => 'Gateway transaction ID',
+            ->add('providerTransactionId', TextType::class, [
+                'label' => 'Provider transaction ID',
                 'required' => false,
             ])
             ->add('status', ChoiceType::class, [

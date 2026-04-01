@@ -13,7 +13,7 @@ interface PaymentConsoleFinalizeHandlerInterface
         string $paymentId,
         string $provider,
         ?string $providerRef,
-        ?string $gatewayTransactionId,
+        ?string $providerTransactionId,
         ?string $status,
     ): ?Payment;
 }

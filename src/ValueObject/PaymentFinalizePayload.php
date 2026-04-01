@@ -9,7 +9,7 @@ final readonly class PaymentFinalizePayload
 {
     public function __construct(
         private string $providerRef,
-        private string $gatewayTransactionId,
+        private string $providerTransactionId,
         private string $status,
     ) {
     }
@@ -19,7 +19,7 @@ final readonly class PaymentFinalizePayload
     {
         return array_filter([
             'providerRef' => $this->providerRef,
-            'gatewayTransactionId' => $this->gatewayTransactionId,
+            'providerTransactionId' => $this->providerTransactionId,
             'status' => $this->status,
         ], static fn (string $value): bool => '' !== $value);
     }

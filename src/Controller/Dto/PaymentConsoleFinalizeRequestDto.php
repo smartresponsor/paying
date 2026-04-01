@@ -23,7 +23,7 @@ final class PaymentConsoleFinalizeRequestDto
     public string $providerRef = '';
 
     #[Assert\Length(max: 64)]
-    public string $gatewayTransactionId = '';
+    public string $providerTransactionId = '';
 
     #[Assert\Length(max: 32)]
     public string $status = '';

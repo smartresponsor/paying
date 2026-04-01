@@ -48,17 +48,7 @@ final class PaymentConsoleController extends AbstractController
         $createForm = $this->createForm(PaymentCreateType::class, new PaymentCreateRequestDto(), [
             'action' => $this->generateUrl('payment_console_create'),
         ]);
-
-        $startDto = new PaymentStartRequestDto();
-        $startDto->provider = 'internal';
-        if (null !== $consoleView['selectedPayment']) {
-            $selectedPayment = $consoleView['selectedPayment'];
-            $startDto->orderId = (string) ($selectedPayment['orderId'] ?? '');
-            $startDto->currency = (string) ($selectedPayment['currency'] ?? 'USD');
-            $startDto->provider = $this->resolveProvider((string) ($selectedPayment['providerRef'] ?? ''));
-        }
-
-        $startForm = $this->createForm(PaymentStartType::class, $startDto, [
+        $startForm = $this->createForm(PaymentStartType::class, new PaymentStartRequestDto(), [
             'action' => $this->generateUrl('payment_console_start'),
         ]);
 
@@ -145,7 +135,7 @@ final class PaymentConsoleController extends AbstractController
             $dto->paymentId,
             $dto->provider,
             $dto->providerRef,
-            $dto->gatewayTransactionId,
+            $dto->providerTransactionId,
             $dto->status,
         );
         if (null === $payment) {
