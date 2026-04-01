@@ -1,0 +1,66 @@
+{
+  "title": "Payment Operations",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Failed Payments",
+      "gridPos": {"x": 0, "y": 0, "w": 6, "h": 4},
+      "targets": [
+        {"expr": "payment_failure_total", "refId": "A"}
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Retry Exhausted",
+      "gridPos": {"x": 6, "y": 0, "w": 6, "h": 4},
+      "targets": [
+        {"expr": "payment_retry_exhausted_total", "refId": "A"}
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Projection Lag (ms)",
+      "gridPos": {"x": 12, "y": 0, "w": 6, "h": 4},
+      "targets": [
+        {"expr": "payment_projection_lag_ms", "refId": "A"}
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Provider Failure Rate",
+      "gridPos": {"x": 0, "y": 4, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "sum by (provider, operation) (rate(payment_provider_failure_total[5m]))", "refId": "A"}
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Provider Success Rate",
+      "gridPos": {"x": 12, "y": 4, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "sum by (provider, operation) (rate(payment_provider_success_total[5m]))", "refId": "A"}
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Provider Latency Avg (ms)",
+      "gridPos": {"x": 0, "y": 12, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "payment_provider_duration_ms_avg", "refId": "A"}
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Retry Attempts",
+      "gridPos": {"x": 12, "y": 12, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "rate(payment_retry_attempts_total[5m])", "refId": "A"},
+        {"expr": "rate(payment_retry_exhausted_total[5m])", "refId": "B"}
+      ]
+    }
+  ]
+}
