@@ -1,17 +1,23 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Infrastructure;
 
 use App\ServiceInterface\IdempotencyStoreInterface;
+use Redis;
 
 class RedisIdempotencyStore implements IdempotencyStoreInterface
 {
     private \Redis $redis;
 
+    /**
+     * @throws \RedisException
+     */
+    /**
+     * @throws \RedisException
+     */
     public function __construct(string $url)
     {
         $parts = parse_url($url);
@@ -35,6 +41,12 @@ class RedisIdempotencyStore implements IdempotencyStoreInterface
         }
     }
 
+    /**
+     * @throws \RedisException
+     */
+    /**
+     * @throws \RedisException
+     */
     public function get(string $key): ?string
     {
         $val = $this->redis->get($key);
@@ -42,6 +54,12 @@ class RedisIdempotencyStore implements IdempotencyStoreInterface
         return false === $val ? null : (string) $val;
     }
 
+    /**
+     * @throws \RedisException
+     */
+    /**
+     * @throws \RedisException
+     */
     public function put(string $key, string $value, int $ttlSec): void
     {
         $this->redis->set($key, $value, $ttlSec);

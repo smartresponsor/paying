@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -9,22 +9,26 @@ use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentFinalizeRequestDto;
 use App\ControllerInterface\FinalizeControllerInterface;
 use App\RepositoryInterface\PaymentRepositoryInterface;
+use App\ServiceInterface\ApiErrorResponseFactoryInterface;
+use App\ServiceInterface\ApiJsonBodyDecoderInterface;
+use App\ServiceInterface\ApiRequestValidatorInterface;
 use App\ServiceInterface\ProviderGuardInterface;
-use App\ServiceInterface\ValidationErrorMapperInterface;
+use App\ValueObject\PaymentFinalizePayload;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-final class FinalizeController implements FinalizeControllerInterface
+final readonly class FinalizeController implements FinalizeControllerInterface
 {
     public function __construct(
-        private readonly ProviderGuardInterface $guard,
-        private readonly PaymentRepositoryInterface $repo,
-        private readonly ValidatorInterface $validator,
-        private readonly ValidationErrorMapperInterface $validationErrorMapper,
+        private ProviderGuardInterface $guard,
+        private PaymentRepositoryInterface $repo,
+        private ApiErrorResponseFactoryInterface $errorResponseFactory,
+        private ApiJsonBodyDecoderInterface $jsonBodyDecoder,
+        private ApiRequestValidatorInterface $requestValidator,
     ) {
     }
 
@@ -57,6 +61,10 @@ final class FinalizeController implements FinalizeControllerInterface
     #[Security(name: 'Bearer')]
     public function finalize(string $id, Request $request): JsonResponse
     {
+        if (!Ulid::isValid($id)) {
+            return $this->errorResponseFactory->paymentNotFound();
+        }
+
         $data = $this->jsonBodyDecoder->decode($request, true);
         if (null === $data) {
             return $this->errorResponseFactory->badJsonBody();
@@ -68,9 +76,9 @@ final class FinalizeController implements FinalizeControllerInterface
         $dto->gatewayTransactionId = (string) ($data['gatewayTransactionId'] ?? '');
         $dto->status = (string) ($data['status'] ?? '');
 
-        $violations = $this->validator->validate($dto);
-        if (count($violations) > 0) {
-            return new JsonResponse(['errors' => $this->validationErrorMapper->toArray($violations)], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+        $validationResponse = $this->requestValidator->validate($dto);
+        if (null !== $validationResponse) {
+            return $validationResponse;
         }
 
         $existing = $this->repo->find($id);
@@ -88,6 +96,6 @@ final class FinalizeController implements FinalizeControllerInterface
             'id' => (string) $existing->id(),
             'status' => $existing->status()->value,
             'providerRef' => $existing->providerRef(),
-        ], JsonResponse::HTTP_OK);
+        ], Response::HTTP_OK);
     }
 }

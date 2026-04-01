@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Infrastructure;
@@ -9,13 +8,15 @@ namespace App\Infrastructure;
 use App\InfrastructureInterface\AuditLoggerInterface;
 use Doctrine\DBAL\Connection;
 
-class AuditLogger implements AuditLoggerInterface
+readonly class AuditLogger implements AuditLoggerInterface
 {
-    public function __construct(private readonly Connection $data)
+    public function __construct(private Connection $data)
     {
     }
 
-    /** @param array<string, mixed> $context */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function log(string $action, array $context = []): void
     {
         $this->data->insert('payment_audit', [

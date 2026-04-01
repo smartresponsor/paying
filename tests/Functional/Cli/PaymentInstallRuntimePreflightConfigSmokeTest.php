@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Cli;
@@ -10,6 +9,9 @@ use PHPUnit\Framework\TestCase;
 
 final class PaymentInstallRuntimePreflightConfigSmokeTest extends TestCase
 {
+    /**
+     * @throws \JsonException
+     */
     public function testInstallPreflightScriptsAndDocsArePresent(): void
     {
         $root = dirname(__DIR__, 3);

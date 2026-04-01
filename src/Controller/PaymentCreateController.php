@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -8,20 +8,23 @@ namespace App\Controller;
 use App\Attribute\RequireScope;
 use App\Controller\Dto\PaymentCreateRequestDto;
 use App\ControllerInterface\PaymentCreateControllerInterface;
+use App\ServiceInterface\ApiErrorResponseFactoryInterface;
+use App\ServiceInterface\ApiJsonBodyDecoderInterface;
+use App\ServiceInterface\ApiRequestValidatorInterface;
 use App\ServiceInterface\PaymentServiceInterface;
-use App\ServiceInterface\ValidationErrorMapperInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\Response;
 
-final class PaymentCreateController implements PaymentCreateControllerInterface
+final readonly class PaymentCreateController implements PaymentCreateControllerInterface
 {
     public function __construct(
-        private readonly PaymentServiceInterface $paymentService,
-        private readonly ValidatorInterface $validator,
-        private readonly ValidationErrorMapperInterface $validationErrorMapper,
+        private PaymentServiceInterface $paymentService,
+        private ApiErrorResponseFactoryInterface $errorResponseFactory,
+        private ApiJsonBodyDecoderInterface $jsonBodyDecoder,
+        private ApiRequestValidatorInterface $requestValidator,
     ) {
     }
 
@@ -74,9 +77,9 @@ final class PaymentCreateController implements PaymentCreateControllerInterface
         $dto->amountMinor = (int) ($data['amountMinor'] ?? 0);
         $dto->currency = strtoupper((string) ($data['currency'] ?? 'USD'));
 
-        $violations = $this->validator->validate($dto);
-        if (count($violations) > 0) {
-            return new JsonResponse(['errors' => $this->validationErrorMapper->toArray($violations)], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+        $validationResponse = $this->requestValidator->validate($dto);
+        if (null !== $validationResponse) {
+            return $validationResponse;
         }
 
         $payment = $this->paymentService->create($dto->orderId, $dto->amountMinor, $dto->currency);
@@ -86,6 +89,6 @@ final class PaymentCreateController implements PaymentCreateControllerInterface
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),
             'currency' => $payment->currency(),
-        ], JsonResponse::HTTP_CREATED);
+        ], Response::HTTP_CREATED);
     }
 }

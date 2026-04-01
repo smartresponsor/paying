@@ -1,14 +1,15 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit;
 
-use App\Controller\Dto\PaymentStartRequestDto;
 use App\Entity\Payment;
-use App\Service\IdempotencyService;
 use App\Service\PaymentApiStartHandler;
+use App\Service\PaymentStartResult;
+use App\ServiceInterface\IdempotencyServiceInterface;
+use App\ServiceInterface\PaymentStartInput;
 use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
@@ -16,12 +17,16 @@ use Symfony\Component\Uid\Ulid;
 
 final class PaymentApiStartHandlerTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \JsonException
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testHandleReturnsApiPayloadViaIdempotencyGate(): void
     {
-        $dto = new PaymentStartRequestDto();
-        $dto->provider = 'internal';
-        $dto->amount = '12.50';
-        $dto->currency = 'USD';
+        $input = new PaymentStartInput('internal', '12.50', 'USD');
 
         $payment = new Payment(new Ulid(), PaymentStatus::processing, '12.50', 'USD');
 
@@ -30,13 +35,9 @@ final class PaymentApiStartHandlerTest extends TestCase
             ->expects(self::once())
             ->method('start')
             ->with('internal', '12.50', 'USD', 'idem-1', 'api')
-            ->willReturn([
-                'payment' => $payment,
-                'providerRef' => 'ref-1',
-                'result' => ['ok' => true],
-            ]);
+            ->willReturn(new PaymentStartResult($payment, 'ref-1', ['ok' => true]));
 
-        $idem = $this->createMock(IdempotencyService::class);
+        $idem = $this->createMock(IdempotencyServiceInterface::class);
         $idem
             ->expects(self::once())
             ->method('execute')
@@ -44,7 +45,7 @@ final class PaymentApiStartHandlerTest extends TestCase
             ->willReturnCallback(static fn (string $key, string $hash, callable $callback): array => $callback());
 
         $handler = new PaymentApiStartHandler($startService, $idem);
-        $result = $handler->handle($dto, 'idem-1', 'hash-1');
+        $result = $handler->handle($input, 'idem-1', 'hash-1');
 
         self::assertSame((string) $payment->id(), $result['payment']);
         self::assertSame('internal', $result['provider']);

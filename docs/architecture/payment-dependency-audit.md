@@ -4,14 +4,16 @@
 
 ## Purpose
 
-This document records the factual dependency mismatch of the current `Paying-20-Payment` slice and defines the target dependency graph for the next hardening phase.
+This document records the factual dependency mismatch of the current `Paying-20-Payment` slice and defines the target
+dependency graph for the next hardening phase.
 
 ## Declared runtime packages today
 
 From `composer.json`:
 
 - PHP 8.4
-- Symfony runtime / framework / console / http-foundation / routing / uid / workflow / dependency-injection / config / yaml / rate-limiter
+- Symfony runtime / framework / console / http-foundation / routing / uid / workflow / dependency-injection / config /
+  yaml / rate-limiter
 - Doctrine ORM / DoctrineBundle / MigrationsBundle
 
 ## Declared dev packages today
@@ -80,7 +82,8 @@ Observed in:
 - `tests/Functional/Api/PaymentCreateEndpointTest.php`
 - `tests/E2E/Kernel/StripeWebhookKernelFlowTest.php`
 
-**Target action:** add the missing framework testing stack as needed, commonly `symfony/browser-kit` and `symfony/css-selector` for functional tests.
+**Target action:** add the missing framework testing stack as needed, commonly `symfony/browser-kit`
+and `symfony/css-selector` for functional tests.
 
 ### Monolog / PSR logging runtime
 
@@ -92,7 +95,8 @@ Observed imports:
 
 - `Psr\Log\LoggerInterface`
 
-**Target action:** add `psr/log` explicitly if not already pulled transitively, and add `symfony/monolog-bundle` if Monolog service wiring remains the canonical logger source.
+**Target action:** add `psr/log` explicitly if not already pulled transitively, and add `symfony/monolog-bundle` if
+Monolog service wiring remains the canonical logger source.
 
 ### API Platform transitional usage
 
@@ -107,7 +111,8 @@ Observed in:
 - `src/Api/Resource/*`
 - `src/Api/Processor/*`
 
-**Target action:** do **not** reinforce this dependency. Evacuate API Platform code instead and replace it with explicit Symfony controllers plus Nelmio documentation.
+**Target action:** do **not** reinforce this dependency. Evacuate API Platform code instead and replace it with explicit
+Symfony controllers plus Nelmio documentation.
 
 ### Nelmio / OpenAPI documentation contour
 

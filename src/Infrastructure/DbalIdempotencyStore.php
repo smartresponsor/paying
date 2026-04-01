@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Infrastructure;
@@ -9,12 +8,18 @@ namespace App\Infrastructure;
 use App\ServiceInterface\IdempotencyStoreInterface;
 use Doctrine\DBAL\Connection;
 
-class DbalIdempotencyStore implements IdempotencyStoreInterface
+readonly class DbalIdempotencyStore implements IdempotencyStoreInterface
 {
-    public function __construct(private readonly Connection $data)
+    public function __construct(private Connection $data)
     {
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function get(string $key): ?string
     {
         $row = $this->data->fetchAssociative('SELECT value, expires_at FROM payment_idempotency WHERE key = :k', ['k' => $key]);
@@ -30,6 +35,12 @@ class DbalIdempotencyStore implements IdempotencyStoreInterface
         return (string) $row['value'];
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function put(string $key, string $value, int $ttlSec): void
     {
         $exp = (new \DateTimeImmutable("+{$ttlSec} seconds"))->format('Y-m-d H:i:s');
@@ -40,6 +51,12 @@ class DbalIdempotencyStore implements IdempotencyStoreInterface
         );
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function purgeExpired(): int
     {
         return (int) $this->data->executeStatement('DELETE FROM payment_idempotency WHERE expires_at < NOW()');

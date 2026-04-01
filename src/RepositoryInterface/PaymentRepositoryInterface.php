@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\RepositoryInterface;
@@ -20,8 +19,6 @@ interface PaymentRepositoryInterface
     public function listRecent(int $limit = 10): array;
 
     /**
-     * @param list<string> $statuses
-     *
      * @return list<string>
      */
     public function listIdsByStatuses(array $statuses, int $limit = 100): array;

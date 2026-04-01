@@ -5,7 +5,7 @@ declare(strict_types=1);
 $entities = glob('src/Entity/*.php') ?: [];
 $failures = [];
 foreach ($entities as $entity) {
-    $contents = (string) file_get_contents($entity);
+    $contents = (string)file_get_contents($entity);
     if (!str_contains($contents, '#[ORM\\Entity')) {
         $failures[] = $entity;
     }

@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Unit;
@@ -16,6 +16,12 @@ use Symfony\Component\Uid\Ulid;
 
 final class RefundServiceTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testRefundThrowsTypedNotFoundException(): void
     {
         $repo = new class implements PaymentRepositoryInterface {
@@ -45,9 +51,15 @@ final class RefundServiceTest extends TestCase
         $service = new RefundService($guard, $repo);
 
         $this->expectException(PaymentNotFoundException::class);
-        $service->refund(new Ulid(), '10.00', 'internal');
+        $service->refund(new Ulid(), '10.00');
     }
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testRefundSyncsResolvedPaymentAndPersists(): void
     {
         $existing = new Payment(new Ulid(), PaymentStatus::processing, '10.00', 'USD');
@@ -89,7 +101,7 @@ final class RefundServiceTest extends TestCase
             ->willReturn($resolved);
 
         $service = new RefundService($guard, $repo);
-        $result = $service->refund(new Ulid(), '10.00', 'internal');
+        $result = $service->refund(new Ulid(), '10.00');
 
         self::assertSame($existing, $result);
         self::assertSame(PaymentStatus::refunded, $result->status());

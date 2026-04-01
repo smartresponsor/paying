@@ -13,6 +13,12 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 final class ScopeGuardSubscriberTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testRequestWithoutBearerTokenReturnsUnauthorizedBeforeControllerInstantiation(): void
     {
         unset($_ENV['OIDC_DISABLED']);

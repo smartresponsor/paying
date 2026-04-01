@@ -3,7 +3,8 @@
 ## Purpose
 
 The Payment component owns an operational CLI contour that must remain executable even when HTTP/UI flows evolve.
-This smoke layer is intentionally lightweight: it proves command execution contracts, operator output, and command-level ownership without requiring full external infrastructure.
+This smoke layer is intentionally lightweight: it proves command execution contracts, operator output, and command-level
+ownership without requiring full external infrastructure.
 
 ## Covered commands
 
@@ -22,11 +23,13 @@ The current smoke coverage now includes:
 
 ### Registration proof
 
-`tests/Functional/Cli/PaymentCommandRegistrationTest.php` proves that the owned Payment commands are registered in the Symfony console application.
+`tests/Functional/Cli/PaymentCommandRegistrationTest.php` proves that the owned Payment commands are registered in the
+Symfony console application.
 
 ### Execution proof
 
-`tests/Functional/Cli/PaymentCommandExecutionSmokeTest.php` covers command execution for projection, outbox, and reconciliation flows.
+`tests/Functional/Cli/PaymentCommandExecutionSmokeTest.php` covers command execution for projection, outbox, and
+reconciliation flows.
 
 `tests/Functional/Cli/PaymentOperationalCommandExecutionSmokeTest.php` covers command execution for:
 
@@ -37,24 +40,15 @@ The current smoke coverage now includes:
 `tests/Functional/Cli/PaymentLifecycleCommandExecutionSmokeTest.php` covers command execution for:
 
 - business create flow
+- business start flow
 - business finalize flow
+- business refund flow
 
 These tests prove:
 
 - the command can execute successfully;
 - the command delegates to its owned seam or service;
 - the command prints operator-facing output in the expected shape.
-
-## Not yet covered
-
-The following lifecycle actions still benefit from dedicated execution smoke coverage:
-
-- `payment:lifecycle:run --action=start`
-- `payment:lifecycle:run --action=refund`
-
-The following command is registration- and execution-covered, but still benefits from deeper behavioral thresholds:
-
-- `payment:gate:slo`
 
 ## Ownership note
 

@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
@@ -9,9 +9,9 @@ use App\Entity\Payment;
 use App\ServiceInterface\PaymentConsoleCreateHandlerInterface;
 use App\ServiceInterface\PaymentServiceInterface;
 
-final class PaymentConsoleCreateHandler implements PaymentConsoleCreateHandlerInterface
+final readonly class PaymentConsoleCreateHandler implements PaymentConsoleCreateHandlerInterface
 {
-    public function __construct(private readonly PaymentServiceInterface $paymentService)
+    public function __construct(private PaymentServiceInterface $paymentService)
     {
     }
 

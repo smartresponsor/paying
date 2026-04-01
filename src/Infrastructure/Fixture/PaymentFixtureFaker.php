@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Infrastructure\Fixture;
@@ -8,9 +8,9 @@ namespace App\Infrastructure\Fixture;
 use Random\Engine\Mt19937;
 use Random\Randomizer;
 
-final class PaymentFixtureFaker
+final readonly class PaymentFixtureFaker
 {
-    private readonly Randomizer $randomizer;
+    private Randomizer $randomizer;
 
     public function __construct(int $seed = 1001)
     {

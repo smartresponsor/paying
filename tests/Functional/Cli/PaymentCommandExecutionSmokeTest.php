@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Cli;
@@ -22,6 +21,12 @@ use Symfony\Component\Uid\Ulid;
 
 final class PaymentCommandExecutionSmokeTest extends TestCase
 {
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testProjectionSyncCommandExecutesAndPrintsSyncedCount(): void
     {
         $sync = $this->createMock(ProjectionSyncInterface::class);
@@ -37,6 +42,12 @@ final class PaymentCommandExecutionSmokeTest extends TestCase
         self::assertStringContainsString('Synced: 7', $tester->getDisplay());
     }
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testProjectionRebuildCommandExecutesAndPrintsRebuiltCount(): void
     {
         $sync = $this->createMock(ProjectionSyncInterface::class);
@@ -75,6 +86,12 @@ final class PaymentCommandExecutionSmokeTest extends TestCase
         self::assertStringContainsString('Published: 2', $tester->getDisplay());
     }
 
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
     public function testReconcileRunCommandExecutesForAllReturnedProcessingIds(): void
     {
         $payment = $this->createConfiguredMock(Payment::class, []);

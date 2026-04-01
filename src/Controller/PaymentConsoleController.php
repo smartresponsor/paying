@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -14,16 +14,15 @@ use App\Form\PaymentConsoleFinalizeType;
 use App\Form\PaymentConsoleRefundType;
 use App\Form\PaymentCreateType;
 use App\Form\PaymentStartType;
+use App\ServiceInterface\PaymentConsoleCreateHandlerInterface;
 use App\ServiceInterface\PaymentConsoleFinalizeHandlerInterface;
 use App\ServiceInterface\PaymentConsoleReadModelInterface;
-use App\ServiceInterface\PaymentConsoleCreateHandlerInterface;
-use App\ServiceInterface\PaymentConsoleStartHandlerInterface;
 use App\ServiceInterface\PaymentConsoleRefundHandlerInterface;
+use App\ServiceInterface\PaymentConsoleStartHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class PaymentConsoleController extends AbstractController
 {
@@ -47,10 +46,10 @@ final class PaymentConsoleController extends AbstractController
         );
 
         $createForm = $this->createForm(PaymentCreateType::class, new PaymentCreateRequestDto(), [
-            'action' => $this->generateUrl('payment_console_create', [], UrlGeneratorInterface::ABSOLUTE_PATH),
+            'action' => $this->generateUrl('payment_console_create'),
         ]);
         $startForm = $this->createForm(PaymentStartType::class, new PaymentStartRequestDto(), [
-            'action' => $this->generateUrl('payment_console_start', [], UrlGeneratorInterface::ABSOLUTE_PATH),
+            'action' => $this->generateUrl('payment_console_start'),
         ]);
 
         $finalizeDto = new PaymentConsoleFinalizeRequestDto();
@@ -61,10 +60,10 @@ final class PaymentConsoleController extends AbstractController
         }
 
         $finalizeForm = $this->createForm(PaymentConsoleFinalizeType::class, $finalizeDto, [
-            'action' => $this->generateUrl('payment_console_finalize', [], UrlGeneratorInterface::ABSOLUTE_PATH),
+            'action' => $this->generateUrl('payment_console_finalize'),
         ]);
         $refundForm = $this->createForm(PaymentConsoleRefundType::class, $refundDto, [
-            'action' => $this->generateUrl('payment_console_refund', [], UrlGeneratorInterface::ABSOLUTE_PATH),
+            'action' => $this->generateUrl('payment_console_refund'),
         ]);
 
         return $this->render('payment/console.html.twig', [

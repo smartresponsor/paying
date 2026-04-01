@@ -1,7 +1,6 @@
 <?php
 
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace App\Infrastructure;
@@ -9,6 +8,7 @@ namespace App\Infrastructure;
 use App\InfrastructureInterface\OutboxPublisherInterface;
 use App\InfrastructureInterface\PublisherTransportInterface;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 
 class OutboxWorker
 {
@@ -51,22 +51,27 @@ class OutboxWorker
                     continue;
                 }
 
-                $this->data->executeStatement(
-                    'UPDATE payment_outbox_message SET status = :status, attempts = :attempts, last_error = :lastError WHERE id = :id',
-                    [
-                        'status' => 'failed',
-                        'attempts' => $attempts,
-                        'lastError' => $reason,
-                        'id' => $id,
-                    ],
-                );
+                try {
+                    $this->data->executeStatement(
+                        'UPDATE payment_outbox_message SET status = :status, attempts = :attempts, last_error = :lastError WHERE id = :id',
+                        [
+                            'status' => 'failed',
+                            'attempts' => $attempts,
+                            'lastError' => $reason,
+                            'id' => $id,
+                        ],
+                    );
+                } catch (Exception $e) {
+                }
             }
         }
 
         return $count;
     }
 
-    /** @return list<array<string, mixed>> */
+    /**
+     * @return list<array<string, mixed>>
+     */
     private function loadRows(int $limit, bool $retryFailed): array
     {
         $statuses = $retryFailed ? ['pending', 'failed'] : ['pending'];
@@ -76,7 +81,11 @@ class OutboxWorker
             max(1, $limit),
         );
 
-        return $this->data->fetchAllAssociative($sql);
+        try {
+            return $this->data->fetchAllAssociative($sql);
+        } catch (Exception $e) {
+            return [];
+        }
     }
 
     private function quoteStatus(string $status): string

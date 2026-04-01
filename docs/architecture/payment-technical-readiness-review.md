@@ -63,7 +63,8 @@ The component has all the structural pieces:
 - outbox message/publisher/worker
 - consumer and reconciliation
 
-However, the current slice still lacks one decisive integrated proof that executes the full chain from incoming webhook through normalized outbox message into consumer-driven payment mutation.
+However, the current slice still lacks one decisive integrated proof that executes the full chain from incoming webhook
+through normalized outbox message into consumer-driven payment mutation.
 
 ### 3. Quality gates are present as intent, but not closed as an operational system
 
@@ -89,7 +90,8 @@ The current slice already has strong engineering docs, but still lacks:
 
 - phpDocumentor project configuration
 - explicit DocBlock coverage plan enforced in code review
-- a final post-hardening README that explains boot, migrate, load fixtures, run smoke, and inspect docs as one canonical journey
+- a final post-hardening README that explains boot, migrate, load fixtures, run smoke, and inspect docs as one canonical
+  journey
 
 ## Risk-based next priorities
 

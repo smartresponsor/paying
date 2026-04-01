@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
@@ -14,7 +14,7 @@ use Symfony\Component\Uid\Ulid;
 
 final class PaymentService implements PaymentServiceInterface
 {
-    public function __construct(private PaymentRepositoryInterface $repo)
+    public function __construct(private readonly PaymentRepositoryInterface $repo)
     {
     }
 

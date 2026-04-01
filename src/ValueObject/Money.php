@@ -1,6 +1,6 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\ValueObject;
@@ -23,6 +23,17 @@ final readonly class Money
     public static function fromMinor(int $amountMinor, string $currency): self
     {
         return new self($amountMinor, $currency);
+    }
+
+    public static function fromDecimalString(string $amount, string $currency): self
+    {
+        if (1 !== preg_match('/^\d+(\.\d{2})$/', $amount)) {
+            throw new \InvalidArgumentException('Amount must be in decimal format like 10.00.');
+        }
+
+        [$major, $minor] = explode('.', $amount, 2);
+
+        return new self(((int) $major * 100) + (int) $minor, $currency);
     }
 
     public function amountMinor(): int
