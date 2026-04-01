@@ -5,18 +5,17 @@ declare(strict_types=1);
 
 namespace App\Message\Handler;
 
-use App\Entity\Payment;
 use App\Message\Command\PaymentCreateCommand;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\Gateway\PaymentGatewayInterface;
-use App\ValueObject\PaymentStatus;
+use App\ServiceInterface\PaymentServiceInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Uid\Ulid;
 
 #[AsMessageHandler]
 final readonly class PaymentCreateHandler
 {
     public function __construct(
+        private PaymentServiceInterface $paymentService,
         private PaymentRepositoryInterface $repo,
         /** @var iterable<PaymentGatewayInterface> */
         private iterable $gateways,
@@ -25,12 +24,7 @@ final readonly class PaymentCreateHandler
 
     public function __invoke(PaymentCreateCommand $command): void
     {
-        $payment = new Payment(
-            new Ulid(),
-            PaymentStatus::new,
-            number_format($command->amountMinor / 100, 2, '.', ''),
-            $command->currency,
-        );
+        $payment = $this->paymentService->create($command->orderId, $command->amountMinor, $command->currency);
 
         $gateway = $this->selectGateway($command->gatewayCode);
         $providerRef = $gateway->authorize((string) $payment->id(), $command->amountMinor, $command->currency);
