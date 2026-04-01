@@ -9,11 +9,14 @@ use App\InfrastructureInterface\PaymentProjectionRepositoryInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;
+use Psr\Log\LoggerInterface;
 
 readonly class PaymentProjectionRepository implements PaymentProjectionRepositoryInterface
 {
-    public function __construct(private Connection $infra)
-    {
+    public function __construct(
+        private Connection $infra,
+        private LoggerInterface $logger,
+    ) {
     }
 
     /**
@@ -21,17 +24,18 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
      */
     public function findById(string $id): ?array
     {
-        $row = false;
-
         try {
             $row = $this->infra->fetchAssociative(
-                'SELECT id, amount, currency, status, updated_at FROM payment_projection WHERE id = :id',
+                'SELECT id, order_id, amount, currency, status, provider_ref, updated_at FROM payment_projection WHERE id = :id',
                 ['id' => $id],
             );
         } catch (Exception $e) {
+            $this->logger->error('Failed to fetch payment projection by ID.', ['id' => $id, 'exception' => $e]);
+
+            throw $e;
         }
 
-        return $row ?: null;
+        return $ow ?: null;
     }
 
     /**
@@ -41,54 +45,50 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
     {
         try {
             return $this->infra->fetchAllAssociative(
-                'SELECT id, amount, currency, status, updated_at FROM payment_projection WHERE status = :st ORDER BY updated_at DESC LIMIT :lim',
+                'SELECT id, order_id, amount, currency, status, provider_ref, updated_at FROM payment_projection WHERE status = :st ORDER BY updated_at DESC LIMIT :lim',
                 ['st' => $status, 'lim' => $limit],
                 ['st' => ParameterType::STRING, 'lim' => ParameterType::INTEGER],
             );
         } catch (Exception $e) {
-            return [];
+            $this->logger->error('Failed to list payment projections by status.', ['status' => $status, 'limit' => $limit, 'exception' => $e]);
+
+            throw $e;
         }
     }
 
     public function upsert(array $row): void
     {
-        try {
-            $this->infra->transactional(function (Connection $connection) use ($row): void {
-                $id = (string) ($row['id'] ?? '');
-                if ('' === $id) {
-                    throw new \InvalidArgumentException('Projection row id is required.');
-                }
+        $this->infra->transactional(function (Connection $connection) use ($row): void {
+            $id = (string) ($row['id'] ?? '');
+            if ('' === $id) {
+                throw new \InvalidArgumentException('Projection row id is required.');
+            }
 
-                $payload = [
-                    'amount' => (string) ($row['amount'] ?? '0.00'),
-                    'currency' => (string) ($row['currency'] ?? ''),
-                    'status' => (string) ($row['status'] ?? ''),
-                    'updated_at' => (string) ($row['updated_at'] ?? ''),
-                ];
+            $payload = [
+                'order_id' => (string) ($row['order_id'] ?? ($row['orderId'] ?? '')),
+                'amount' => (string) ($row['amount'] ?? '0.00'),
+                'currency' => (string) ($row['currency'] ?? ''),
+                'status' => (string) ($row['status'] ?? ''),
+                'provider_ref' => isset($row['provider_ref']) ? (string) $row['provider_ref'] : isset($row['providerRef']) ? (string) $row['providerRef'] : null,
+                'updated_at' => (string) ($row['updated_at'] ?? ''),
+            ];
 
-                $updated = 0;
-                try {
-                    $updated = $connection->update('payment_projection', $payload, ['id' => $id]);
-                } catch (Exception $e) {
-                }
-                if (0 === $updated) {
-                    try {
-                        $connection->insert('payment_projection', ['id' => $id] + $payload);
-                    } catch (Exception $e) {
-                    }
-                }
-            });
-        } catch (\Throwable $e) {
-        }
+            $updated = $connection->update('payment_projection', $payload, ['id' => $id]);
+
+            if (0 === $updated) {
+                $connection->insert('payment_projection', ['id' => $id] + $payload);
+            }
+        });
     }
 
     public function maxUpdatedAt(): ?string
     {
-        $row = false;
-
         try {
             $row = $this->infra->fetchOne('SELECT MAX(updated_at) FROM payment_projection');
         } catch (Exception $e) {
+            $this->logger->error('Failed to read payment projection max updated_at.', ['exception' => $e]);
+
+            throw $e;
         }
 
         return $row ? (string) $row : null;
@@ -96,11 +96,12 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
 
     public function watermark(): ?string
     {
-        $row = false;
-
         try {
             $row = $this->infra->fetchOne("SELECT value FROM payment_projection_meta WHERE name = 'watermark'");
         } catch (Exception $e) {
+            $this->logger->error('Failed to read payment projection watermark.', ['exception' => $e]);
+
+            throw $e;
         }
 
         return $row ? (string) $row : null;
@@ -108,17 +109,10 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
 
     public function saveWatermark(string $ts): void
     {
-        $updated = 0;
+        $updated = $this->infra->update('payment_projection_meta', ['value' => $ts], ['name' => 'watermark']);
 
-        try {
-            $updated = $this->infra->update('payment_projection_meta', ['value' => $ts], ['name' => 'watermark']);
-        } catch (Exception $e) {
-        }
         if (0 === $updated) {
-            try {
-                $this->infra->insert('payment_projection_meta', ['name' => 'watermark', 'value' => $ts]);
-            } catch (Exception $e) {
-            }
+            $this->infra->insert('payment_projection_meta', ['name' => 'watermark', 'value' => $ts]);
         }
     }
 }

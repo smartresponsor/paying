@@ -29,7 +29,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
 
         $filteredPayments = array_values(array_filter(
             $paymentRows,
-            fn (array $payment): bool => $this->matchStatus($payment, $normalizedStatus) && $this->matchQuery($payment, $normalizedQuery)
+            fn (array $payment): bool => $this->matchStatus($payment, $normalizedStatus) && $this->matchQuery($payment, $normalizedQuery),
         ));
 
         $selectedPayment = $this->resolveSelectedPayment($filteredPayments, $selectedPaymentId);
@@ -45,7 +45,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
         ];
     }
 
-    /** @param array{id: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string} $payment */
+    /** @param array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string} $payment */
     private function matchStatus(array $payment, string $status): bool
     {
         if ('all' === $status) {
@@ -55,7 +55,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
         return $payment['status'] === $status;
     }
 
-    /** @param array{id: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string} $payment */
+    /** @param array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string} $payment */
     private function matchQuery(array $payment, string $query): bool
     {
         if ('' === $query) {
@@ -64,6 +64,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
 
         $candidate = strtolower(implode(' ', [
             (string) $payment['id'],
+            (string) $payment['orderId'],
             (string) $payment['providerRef'],
             (string) $payment['currency'],
             (string) $payment['amount'],
@@ -73,7 +74,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
     }
 
     /**
-     * @return array{id: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string}|null
+     * @return array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string}|null
      */
     private function resolveSelectedPayment(array $filteredPayments, string $selectedPaymentId): ?array
     {
@@ -122,11 +123,12 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
         return $events;
     }
 
-    /** @return array{id: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string} */
+    /** @return array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string} */
     private function toPaymentRow(Payment $payment): array
     {
         return [
             'id' => (string) $payment->id(),
+            'orderId' => $payment->orderId(),
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),
             'currency' => $payment->currency(),
