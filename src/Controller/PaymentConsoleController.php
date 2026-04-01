@@ -106,7 +106,7 @@ final class PaymentConsoleController extends AbstractController
             return $this->invalidFormRedirect('Start payment form is invalid.');
         }
 
-        $payment = $this->startHandler->start($dto->provider, $dto->amount, $dto->currency);
+        $payment = $this->startHandler->start($dto->orderId, $dto->provider, $dto->amount, $dto->currency);
 
         $this->addFlash('success', sprintf('Payment %s started via %s.', (string) $payment->id(), $dto->provider));
 

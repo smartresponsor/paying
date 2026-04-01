@@ -15,8 +15,8 @@ final readonly class PaymentConsoleStartHandler implements PaymentConsoleStartHa
     {
     }
 
-    public function start(string $provider, string $amount, string $currency): Payment
+    public function start(string $orderId, string $provider, string $amount, string $currency): Payment
     {
-        return $this->paymentStartService->start($provider, $amount, $currency, '', 'payment-console')->payment;
+        return $this->paymentStartService->start($orderId, $provider, $amount, $currency, '', 'payment-console')->payment;
     }
 }
