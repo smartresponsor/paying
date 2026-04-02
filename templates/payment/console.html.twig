@@ -39,7 +39,7 @@
                 <div class="col-12 col-lg-5">
                     <label class="form-label mb-1" for="q">Search</label>
                     <input id="q" name="q" type="text" class="form-control" value="{{ filters.q }}"
-                           placeholder="Payment ID / provider ref / currency / amount">
+                           placeholder="Payment ID / order ID / provider ref / currency / amount">
                 </div>
                 <div class="col-12 col-lg-3">
                     <label class="form-label mb-1" for="status">Status</label>
@@ -82,6 +82,7 @@
                     <p class="text-muted small">Run start flow (`POST /payment/start`) through currently supported
                         providers.</p>
                     {{ form_start(start_form) }}
+                    {{ form_row(start_form.orderId) }}
                     {{ form_row(start_form.amount) }}
                     {{ form_row(start_form.currency) }}
                     {{ form_row(start_form.provider) }}
@@ -105,6 +106,7 @@
                             <thead>
                             <tr>
                                 <th scope="col">Payment ID</th>
+                                <th scope="col">Order ID</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Amount</th>
                                 <th scope="col">Provider ref</th>
@@ -115,6 +117,7 @@
                             {% for payment in payments %}
                                 <tr>
                                     <td><code>{{ payment.id }}</code></td>
+                                    <td><code>{{ payment.orderId }}</code></td>
                                     <td><span class="badge text-bg-light border">{{ payment.status }}</span></td>
                                     <td>{{ payment.amount }} {{ payment.currency }}</td>
                                     <td>{{ payment.providerRef ?: '—' }}</td>
@@ -126,7 +129,7 @@
                                 </tr>
                             {% else %}
                                 <tr>
-                                    <td colspan="5" class="text-muted">No payments match the active filter. Adjust
+                                    <td colspan="6" class="text-muted">No payments match the active filter. Adjust
                                         filters or create/start a payment.
                                     </td>
                                 </tr>
@@ -180,6 +183,8 @@
                         <dl class="row mb-0 small">
                             <dt class="col-5 text-muted">Payment ID</dt>
                             <dd class="col-7"><code>{{ selected_payment.id }}</code></dd>
+                            <dt class="col-5 text-muted">Order ID</dt>
+                            <dd class="col-7"><code>{{ selected_payment.orderId }}</code></dd>
                             <dt class="col-5 text-muted">Status</dt>
                             <dd class="col-7"><span
                                     class="badge text-bg-light border">{{ selected_payment.status }}</span></dd>
@@ -205,7 +210,7 @@
                     {{ form_row(finalize_form.paymentId) }}
                     {{ form_row(finalize_form.provider) }}
                     {{ form_row(finalize_form.providerRef) }}
-                    {{ form_row(finalize_form.gatewayTransactionId) }}
+                    {{ form_row(finalize_form.providerTransactionId) }}
                     {{ form_row(finalize_form.status) }}
                     <button class="btn btn-primary" type="submit">Finalize payment</button>
                     {{ form_end(finalize_form) }}

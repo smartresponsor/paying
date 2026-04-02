@@ -18,6 +18,6 @@ final class PaymentConsoleRefundRequestDto
     public string $amount = '0.00';
 
     #[Assert\NotBlank]
-    #[Assert\Choice(choices: ['internal', 'stripe'])]
+    #[Assert\Choice(choices: ['internal', 'stripe', 'paypal'])]
     public string $provider = 'internal';
 }

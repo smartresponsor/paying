@@ -37,6 +37,7 @@ services:
             $providers:
                 internal: '@App\Service\InternalPaymentProvider'
                 stripe: '@App\Service\StripePaymentProvider'
+                paypal: '@App\Service\PayPalPaymentProvider'
 
     App\Service\StripePaymentProvider:
         arguments:

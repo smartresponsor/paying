@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CurrencyType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -18,6 +19,7 @@ final class PaymentStartType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('orderId', TextType::class, ['label' => 'Order ID'])
             ->add('amount', MoneyType::class, [
                 'label' => 'Amount',
                 'currency' => false,
@@ -30,6 +32,7 @@ final class PaymentStartType extends AbstractType
                 'choices' => [
                     'Internal' => 'internal',
                     'Stripe' => 'stripe',
+                    'PayPal' => 'paypal',
                 ],
             ]);
     }

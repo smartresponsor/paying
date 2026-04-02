@@ -55,8 +55,15 @@ final class PaymentConsoleController extends AbstractController
         $finalizeDto = new PaymentConsoleFinalizeRequestDto();
         $refundDto = new PaymentConsoleRefundRequestDto();
         if (null !== $consoleView['selectedPayment']) {
-            $finalizeDto->paymentId = (string) $consoleView['selectedPayment']['id'];
-            $refundDto->paymentId = (string) $consoleView['selectedPayment']['id'];
+            $selectedPayment = $consoleView['selectedPayment'];
+            $resolvedProvider = $this->resolveProvider((string) ($selectedPayment['providerRef'] ?? ''));
+
+            $finalizeDto->paymentId = (string) $selectedPayment['id'];
+            $finalizeDto->provider = $resolvedProvider;
+            $finalizeDto->providerRef = (string) ($selectedPayment['providerRef'] ?? '');
+
+            $refundDto->paymentId = (string) $selectedPayment['id'];
+            $refundDto->provider = $resolvedProvider;
         }
 
         $finalizeForm = $this->createForm(PaymentConsoleFinalizeType::class, $finalizeDto, [
@@ -106,7 +113,7 @@ final class PaymentConsoleController extends AbstractController
             return $this->invalidFormRedirect('Start payment form is invalid.');
         }
 
-        $payment = $this->startHandler->start($dto->provider, $dto->amount, $dto->currency);
+        $payment = $this->startHandler->start($dto->orderId, $dto->provider, $dto->amount, $dto->currency);
 
         $this->addFlash('success', sprintf('Payment %s started via %s.', (string) $payment->id(), $dto->provider));
 
@@ -128,7 +135,7 @@ final class PaymentConsoleController extends AbstractController
             $dto->paymentId,
             $dto->provider,
             $dto->providerRef,
-            $dto->gatewayTransactionId,
+            $dto->providerTransactionId,
             $dto->status,
         );
         if (null === $payment) {
@@ -173,5 +180,27 @@ final class PaymentConsoleController extends AbstractController
         $this->addFlash('danger', sprintf('Payment %s was not found.', $paymentId));
 
         return $this->redirectToRoute('payment_console');
+    }
+
+    private function resolveProvider(string $providerRef): string
+    {
+        $normalized = strtolower(trim($providerRef));
+        if ('' === $normalized) {
+            return 'internal';
+        }
+
+        if (str_starts_with($normalized, 'stripe_') || str_starts_with($normalized, 'cs_')) {
+            return 'stripe';
+        }
+
+        if (str_starts_with($normalized, 'paypal_')) {
+            return 'paypal';
+        }
+
+        if (str_starts_with($normalized, 'internal')) {
+            return 'internal';
+        }
+
+        return 'internal';
     }
 }
