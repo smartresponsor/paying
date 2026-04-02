@@ -7,6 +7,14 @@ namespace App\Message\Command;
 
 final class PaymentCreateCommand
 {
+    /**
+     * Canonical provider-oriented name for the create command.
+     *
+     * `gatewayCode` is intentionally preserved below as a backward-compatible alias
+     * for older producers and named-argument call sites.
+     */
+    public string $providerCode;
+
     public function __construct(
         public string $orderId,
         public int $amountMinor,
@@ -14,5 +22,6 @@ final class PaymentCreateCommand
         public string $gatewayCode,
         public ?string $idempotencyKey = null,
     ) {
+        $this->providerCode = $gatewayCode;
     }
 }
