@@ -1,5 +1,6 @@
 <?php
 
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Entity;
@@ -50,11 +51,58 @@ class Payment
         $this->updatedAt = $this->createdAt;
     }
 
+    #[ORM\PreUpdate]
+    public function touch(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
+    }
+
+    public function id(): Ulid
+    {
+        return $this->id;
+    }
+
+    public function orderId(): string
+    {
+        return $this->orderId;
+    }
+
+    public function status(): PaymentStatus
+    {
+        return $this->status;
+    }
+
+    public function amount(): string
+    {
+        return $this->amount;
+    }
+
+    public function currency(): string
+    {
+        return $this->currency;
+    }
+
+    public function providerRef(): ?string
+    {
+        return $this->providerRef;
+    }
+
+    public function createdAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function updatedAt(): \DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
     public function transitionTo(PaymentStatus $status): self
     {
         PaymentStatusTransitionPolicy::assertCanTransition($this->status, $status);
         $this->status = $status;
         $this->updatedAt = new \DateTimeImmutable();
+
         return $this;
     }
 
@@ -63,11 +111,20 @@ class Payment
         return $this->transitionTo($status);
     }
 
+    public function withProviderRef(?string $ref): self
+    {
+        $this->providerRef = $ref;
+        $this->updatedAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
     public function markProcessing(?string $providerRef = null): self
     {
         if (null !== $providerRef) {
             $this->providerRef = $providerRef;
         }
+
         return $this->transitionTo(PaymentStatus::processing);
     }
 
@@ -76,6 +133,7 @@ class Payment
         if (null !== $providerRef) {
             $this->providerRef = $providerRef;
         }
+
         return $this->transitionTo(PaymentStatus::completed);
     }
 
@@ -84,6 +142,7 @@ class Payment
         if (null !== $providerRef) {
             $this->providerRef = $providerRef;
         }
+
         return $this->transitionTo(PaymentStatus::failed);
     }
 
@@ -92,6 +151,7 @@ class Payment
         if (null !== $providerRef) {
             $this->providerRef = $providerRef;
         }
+
         return $this->transitionTo(PaymentStatus::refunded);
     }
 
@@ -100,6 +160,7 @@ class Payment
         $this->amount = $payment->amount();
         $this->currency = $payment->currency();
         $this->providerRef = $payment->providerRef();
+
         return $this->transitionTo($payment->status());
     }
 }
