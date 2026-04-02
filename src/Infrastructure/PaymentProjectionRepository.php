@@ -19,9 +19,6 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
     ) {
     }
 
-    /**
-     * @return array<string, scalar|null>|null
-     */
     public function findById(string $id): ?array
     {
         try {
@@ -31,16 +28,12 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
             );
         } catch (Exception $e) {
             $this->logger->error('Failed to fetch payment projection by ID.', ['id' => $id, 'exception' => $e]);
-
             throw $e;
         }
 
-        return $ow ?: null;
+        return $row ?: null;
     }
 
-    /**
-     * @return list<array<string, scalar|null>>
-     */
     public function listByStatus(string $status, int $limit = 100): array
     {
         try {
@@ -51,7 +44,6 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
             );
         } catch (Exception $e) {
             $this->logger->error('Failed to list payment projections by status.', ['status' => $status, 'limit' => $limit, 'exception' => $e]);
-
             throw $e;
         }
     }
@@ -87,7 +79,6 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
             $row = $this->infra->fetchOne('SELECT MAX(updated_at) FROM payment_projection');
         } catch (Exception $e) {
             $this->logger->error('Failed to read payment projection max updated_at.', ['exception' => $e]);
-
             throw $e;
         }
 
@@ -100,7 +91,6 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
             $row = $this->infra->fetchOne("SELECT value FROM payment_projection_meta WHERE name = 'watermark'");
         } catch (Exception $e) {
             $this->logger->error('Failed to read payment projection watermark.', ['exception' => $e]);
-
             throw $e;
         }
 

@@ -18,9 +18,6 @@ readonly class ProjectionSync implements ProjectionSyncInterface
     ) {
     }
 
-    /**
-     * @throws \Doctrine\DBAL\Exception
-     */
     public function sync(int $limit = 500): int
     {
         $wm = $this->infra->watermark() ?? '1970-01-01 00:00:00';
@@ -46,15 +43,13 @@ readonly class ProjectionSync implements ProjectionSyncInterface
         }
 
         if ($n > 0) {
-            $this->infra->saveWatermark(string(end($rows)['updated_at']));
+            $last = end($rows);
+            $this->infra->saveWatermark((string) $last['updated_at']);
         }
 
         return $n;
     }
 
-    /**
-     * @throws \Doctrine\DBAL\Exception
-     */
     public function rebuild(int $batch = 1000): int
     {
         $off = 0;
@@ -81,7 +76,8 @@ readonly class ProjectionSync implements ProjectionSyncInterface
                 ++$n;
             }
             $off += $batch;
-            $this->infra->saveWatermark(string(end($rows)['updated_at']));
+            $last = end($rows);
+            $this->infra->saveWatermark((string) $last['updated_at']);
         }
 
         return $n;

@@ -41,6 +41,9 @@ final class PaymentLifecycleCommand extends Command
         $this->addOption('provider', null, InputOption::VALUE_OPTIONAL, '', 'internal');
         $this->addOption('origin', null, InputOption::VALUE_OPTIONAL, '', 'cli');
         $this->addOption('idempotency-key', null, InputOption::VALUE_OPTIONAL, '', '');
+        $this->addOption('provider-ref', null, InputOption::VALUE_OPTIONAL, '', '');
+        $this->addOption('provider-transaction-id', null, InputOption::VALUE_OPTIONAL, '', '');
+        $this->addOption('status', null, InputOption::VALUE_OPTIONAL, '', '');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -69,45 +72,42 @@ final class PaymentLifecycleCommand extends Command
         }
 
         $payment = $this->paymentService->create($orderId, $amountMinor, $currency);
-        try {
-            $this->writeResult($output, [
-                'action' => 'create',
-                'id' => (string) $payment->id(),
-                'status' => $payment->status()->value,
-                'amount' => $payment->amount(),
-                'currency' => $payment->currency(),
-            ]);
-        } catch (\Exception $e) {
-        }
+        $this->writeResult($output, [
+            'action' => 'create',
+            'id' => (string) $payment->id(),
+            'orderId' => $payment->orderId(),
+            'status' => $payment->status()->value,
+            'amount' => $payment->amount(),
+            'currency' => $payment->currency(),
+        ]);
 
         return Command::SUCCESS;
     }
 
     private function runStart(InputInterface $input, OutputInterface $output): int
     {
+        $orderId = trim((string) $input->getOption('order-id'));
         $provider = trim((string) $input->getOption('provider'));
         $amount = trim((string) $input->getOption('amount'));
         $currency = strtoupper(trim((string) $input->getOption('currency')));
         $idempotencyKey = trim((string) $input->getOption('idempotency-key'));
         $origin = trim((string) $input->getOption('origin'));
 
-        if ('' === $provider || '' === $amount || '' === $currency) {
-            $output->writeln('<error>start requires --provider, --amount, and --currency.</error>');
+        if ('' === $orderId || '' === $provider || '' === $amount || '' === $currency) {
+            $output->writeln('<error>start requires --order-id, --provider, --amount, and --currency.</error>');
 
             return Command::INVALID;
         }
 
-        $started = $this->paymentStartService->start($provider, $amount, $currency, $idempotencyKey, $origin);
+        $started = $this->paymentStartService->start($orderId, $provider, $amount, $currency, $idempotencyKey, $origin);
         $payment = $started->payment;
-        try {
-            $this->writeResult($output, [
-                'action' => 'start',
-                'id' => (string) $payment->id(),
-                'status' => $payment->status()->value,
-                'providerRef' => $started->providerRef,
-            ]);
-        } catch (\Exception $e) {
-        }
+        $this->writeResult($output, [
+            'action' => 'start',
+            'id' => (string) $payment->id(),
+            'orderId' => $payment->orderId(),
+            'status' => $payment->status()->value,
+            'providerRef' => $started->providerRef,
+        ]);
 
         return Command::SUCCESS;
     }
@@ -117,26 +117,22 @@ final class PaymentLifecycleCommand extends Command
         $paymentId = trim((string) $input->getOption('payment-id'));
         $provider = trim((string) $input->getOption('provider'));
 
-        if ('start' === $action) {
-            $paymentId = (string) $input->getOption('payment-id');
+        if (!Ulid::isValid($paymentId) || '' === $provider) {
+            $output->writeln('<error>finalize requires --payment-id (ULID) and --provider.</error>');
 
-            if ('' !== $paymentId && Ulid::isValid($paymentId)) {
-                $result = $this->paymentStartService->restart(
-                    $paymentId,
-                    (string) $input->getOption('provider'),
-                    (string) $input->getOption('idempotency-key'),
-                    (string) $input->getOption('origin')
-                );
+            return Command::INVALID;
+        }
 
-                $output->writeln(json_encode(['action' => 'start', 'mode' => 'restart', 'id' => (string) $result->payment->id()]));
+        $existing = $this->paymentRepository->find($paymentId);
+        if (null === $existing) {
+            $output->writeln(sprintf('<error>Payment %s was not found.</error>', $paymentId));
 
-                return Command::SUCCESS;
-            }
+            return Command::FAILURE;
         }
 
         $payload = array_filter([
             'providerRef' => trim((string) $input->getOption('provider-ref')),
-            'gatewayTransactionId' => trim((string) $input->getOption('gateway-transaction-id')),
+            'providerTransactionId' => trim((string) $input->getOption('provider-transaction-id')),
             'status' => trim((string) $input->getOption('status')),
         ], static fn (mixed $value): bool => is_string($value) && '' !== $value);
 
@@ -144,15 +140,13 @@ final class PaymentLifecycleCommand extends Command
         $existing->syncFrom($resolved);
         $this->paymentRepository->save($existing);
 
-        try {
-            $this->writeResult($output, [
-                'action' => 'finalize',
-                'id' => (string) $existing->id(),
-                'status' => $existing->status()->value,
-                'providerRef' => $existing->providerRef(),
-            ]);
-        } catch (\Exception $e) {
-        }
+        $this->writeResult($output, [
+            'action' => 'finalize',
+            'id' => (string) $existing->id(),
+            'orderId' => $existing->orderId(),
+            'status' => $existing->status()->value,
+            'providerRef' => $existing->providerRef(),
+        ]);
 
         return Command::SUCCESS;
     }
@@ -171,23 +165,21 @@ final class PaymentLifecycleCommand extends Command
 
         try {
             $payment = $this->refundService->refund(new Ulid($paymentId), $amount, $provider);
-        } catch (\RuntimeException $exception) {
+        } catch (\RuntimeException) {
             $output->writeln(sprintf('<error>Payment %s was not found.</error>', $paymentId));
 
             return Command::FAILURE;
         }
 
-        try {
-            $this->writeResult($output, [
-                'action' => 'refund',
-                'id' => (string) $payment->id(),
-                'status' => $payment->status()->value,
-                'amount' => $payment->amount(),
-                'currency' => $payment->currency(),
-                'providerRef' => $payment->providerRef(),
-            ]);
-        } catch (\Exception $e) {
-        }
+        $this->writeResult($output, [
+            'action' => 'refund',
+            'id' => (string) $payment->id(),
+            'orderId' => $payment->orderId(),
+            'status' => $payment->status()->value,
+            'amount' => $payment->amount(),
+            'currency' => $payment->currency(),
+            'providerRef' => $payment->providerRef(),
+        ]);
 
         return Command::SUCCESS;
     }
@@ -201,9 +193,6 @@ final class PaymentLifecycleCommand extends Command
 
     private function writeResult(OutputInterface $output, array $payload): void
     {
-        try {
-            $output->writeln((string) json_encode($payload, JSON_THROW_ON_ERROR));
-        } catch (\JsonException $e) {
-        }
+        $output->writeln((string) json_encode($payload, JSON_THROW_ON_ERROR));
     }
 }
