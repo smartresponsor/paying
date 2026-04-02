@@ -97,6 +97,16 @@ class Payment
         return $this->updatedAt;
     }
 
+    public function isTerminal(): bool
+    {
+        return in_array($this->status, [
+            PaymentStatus::completed,
+            PaymentStatus::failed,
+            PaymentStatus::canceled,
+            PaymentStatus::refunded,
+        ], true);
+    }
+
     public function transitionTo(PaymentStatus $status): self
     {
         PaymentStatusTransitionPolicy::assertCanTransition($this->status, $status);

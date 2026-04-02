@@ -1,6 +1,7 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+// idempotent finalize controller
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -41,13 +42,26 @@ final readonly class FinalizeController implements FinalizeControllerInterface
             return $this->errorResponseFactory->paymentNotFound();
         }
 
+        $existing = $this->repo->find($id);
+        if (null === $existing) {
+            return $this->errorResponseFactory->paymentNotFound();
+        }
+
+        if ($existing->isTerminal()) {
+            return new JsonResponse([
+                'id' => (string) $existing->id(),
+                'status' => $existing->status()->value,
+                'providerRef' => $existing->providerRef(),
+            ], Response::HTTP_OK);
+        }
+
         $data = $this->jsonBodyDecoder->decode($request, true);
         if (null === $data) {
             return $this->errorResponseFactory->badJsonBody();
         }
 
         $dto = new PaymentFinalizeRequestDto();
-        $dto->provider = (string) ($data['provider'] ?? $request->query->get('provider', 'internal'));
+        $dto->provider = (string) ($data['provider'] ?? 'internal');
         $dto->providerRef = (string) ($data['providerRef'] ?? '');
         $dto->providerTransactionId = (string) ($data['providerTransactionId'] ?? '');
         $dto->status = (string) ($data['status'] ?? '');
@@ -55,11 +69,6 @@ final readonly class FinalizeController implements FinalizeControllerInterface
         $validationResponse = $this->requestValidator->validate($dto);
         if (null !== $validationResponse) {
             return $validationResponse;
-        }
-
-        $existing = $this->repo->find($id);
-        if (null === $existing) {
-            return $this->errorResponseFactory->paymentNotFound();
         }
 
         $payload = new PaymentFinalizePayload($dto->providerRef, $dto->providerTransactionId, $dto->status);
