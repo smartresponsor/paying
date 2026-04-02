@@ -1,8 +1,0 @@
-doctrine:
-  dbal:
-    default_connection: data
-    connections:
-      data:
-        url: '%env(resolve:DATABASE_URL)%'
-      infra:
-        url: '%env(resolve:INFRA_URL)%'

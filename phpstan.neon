@@ -1,8 +1,0 @@
-parameters:
-  level: 7
-  ignoreErrors:
-    - identifier: missingType.iterableValue
-  paths:
-    - src
-  parallel:
-    maximumNumberOfProcesses: 1

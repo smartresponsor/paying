@@ -1,9 +1,0 @@
-framework:
-    test: true
-    profiler:
-        collect: false
-        collect_serializer_data: true
-    property_info:
-        with_constructor_extractor: false
-    session:
-        storage_factory_id: session.storage.factory.mock_file
