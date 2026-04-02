@@ -33,31 +33,7 @@ final readonly class FinalizeController implements FinalizeControllerInterface
     }
 
     #[RequireScope(['payment:write'])]
-    #[OA\Post(
-        path: '/payment/finalize/{id}',
-        summary: 'Finalize a payment flow for an existing payment aggregate.',
-        tags: ['Payment'],
-        responses: [
-            new OA\Response(response: 200, description: 'Payment finalized.'),
-            new OA\Response(response: 401, description: 'Missing or invalid bearer token.'),
-            new OA\Response(response: 403, description: 'Missing payment:write scope.'),
-            new OA\Response(response: 404, description: 'Payment not found.'),
-            new OA\Response(response: 422, description: 'Validation failed.'),
-        ],
-    )]
-    #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string'))]
-    #[OA\RequestBody(
-        required: false,
-        content: new OA\JsonContent(
-            properties: [
-                new OA\Property(property: 'provider', type: 'string', example: 'internal'),
-                new OA\Property(property: 'providerRef', type: 'string', example: 'stripe_pi_123'),
-                new OA\Property(property: 'gatewayTransactionId', type: 'string', example: 'txn_123'),
-                new OA\Property(property: 'status', type: 'string', example: 'completed'),
-            ],
-            type: 'object',
-        ),
-    )]
+    #[OA\Post(path: '/payment/finalize/{id}')]
     #[Security(name: 'Bearer')]
     public function finalize(string $id, Request $request): JsonResponse
     {
@@ -73,7 +49,7 @@ final readonly class FinalizeController implements FinalizeControllerInterface
         $dto = new PaymentFinalizeRequestDto();
         $dto->provider = (string) ($data['provider'] ?? $request->query->get('provider', 'internal'));
         $dto->providerRef = (string) ($data['providerRef'] ?? '');
-        $dto->gatewayTransactionId = (string) ($data['gatewayTransactionId'] ?? '');
+        $dto->providerTransactionId = (string) ($data['providerTransactionId'] ?? '');
         $dto->status = (string) ($data['status'] ?? '');
 
         $validationResponse = $this->requestValidator->validate($dto);
@@ -86,7 +62,7 @@ final readonly class FinalizeController implements FinalizeControllerInterface
             return $this->errorResponseFactory->paymentNotFound();
         }
 
-        $payload = new PaymentFinalizePayload($dto->providerRef, $dto->gatewayTransactionId, $dto->status);
+        $payload = new PaymentFinalizePayload($dto->providerRef, $dto->providerTransactionId, $dto->status);
 
         $resolved = $this->guard->finalize($dto->provider, new Ulid($id), $payload->toProviderPayload());
         $existing->syncFrom($resolved);

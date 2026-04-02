@@ -12,14 +12,14 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 final class PaymentFinalizeRequestDto
 {
     #[Assert\NotBlank]
-    #[Assert\Choice(choices: ['internal', 'stripe'])]
+    #[Assert\Choice(choices: ['internal', 'stripe', 'paypal'])]
     public string $provider = 'internal';
 
     #[Assert\Length(max: 128)]
     public string $providerRef = '';
 
     #[Assert\Length(max: 64)]
-    public string $gatewayTransactionId = '';
+    public string $providerTransactionId = '';
 
     #[Assert\Length(max: 32)]
     public string $status = '';
