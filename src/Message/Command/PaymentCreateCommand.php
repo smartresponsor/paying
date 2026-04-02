@@ -24,4 +24,9 @@ final class PaymentCreateCommand
     ) {
         $this->providerCode = $gatewayCode;
     }
+
+    public function canonicalProviderCode(): string
+    {
+        return '' !== trim($this->providerCode) ? $this->providerCode : $this->gatewayCode;
+    }
 }
