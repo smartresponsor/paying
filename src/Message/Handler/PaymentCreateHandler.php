@@ -23,7 +23,7 @@ final readonly class PaymentCreateHandler
 
         $this->paymentStartService->start(
             $command->orderId,
-            $this->normalizeProvider($command->providerCode),
+            $this->normalizeProvider($command->canonicalProviderCode()),
             $money->toDecimalString(),
             $money->currency(),
             $command->idempotencyKey ?? '',
