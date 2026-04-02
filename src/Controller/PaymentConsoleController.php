@@ -24,6 +24,19 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Operator-facing controller for the payment console.
+ *
+ * The console aggregates several workflows in one screen:
+ * - create a payment aggregate
+ * - start a provider flow
+ * - finalize an existing payment
+ * - refund an existing payment
+ * - inspect recent payment and webhook state through the read model
+ *
+ * The controller itself stays transport-oriented and delegates all payment
+ * mutations to dedicated handlers.
+ */
 final class PaymentConsoleController extends AbstractController
 {
     public function __construct(
@@ -35,6 +48,10 @@ final class PaymentConsoleController extends AbstractController
     ) {
     }
 
+    /**
+     * Renders the console screen with current filters, recent payments, and
+     * operator action forms.
+     */
     #[RequireScope(['payment:read'])]
     public function console(Request $request): Response
     {
@@ -48,7 +65,17 @@ final class PaymentConsoleController extends AbstractController
         $createForm = $this->createForm(PaymentCreateType::class, new PaymentCreateRequestDto(), [
             'action' => $this->generateUrl('payment_console_create'),
         ]);
-        $startForm = $this->createForm(PaymentStartType::class, new PaymentStartRequestDto(), [
+
+        $startDto = new PaymentStartRequestDto();
+        $startDto->provider = 'internal';
+        if (null !== $consoleView['selectedPayment']) {
+            $selectedPayment = $consoleView['selectedPayment'];
+            $startDto->orderId = (string) ($selectedPayment['orderId'] ?? '');
+            $startDto->currency = (string) ($selectedPayment['currency'] ?? 'USD');
+            $startDto->provider = $this->resolveProvider((string) ($selectedPayment['providerRef'] ?? ''));
+        }
+
+        $startForm = $this->createForm(PaymentStartType::class, $startDto, [
             'action' => $this->generateUrl('payment_console_start'),
         ]);
 
@@ -85,6 +112,9 @@ final class PaymentConsoleController extends AbstractController
         ]);
     }
 
+    /**
+     * Handles payment aggregate creation from the operator console.
+     */
     #[RequireScope(['payment:write'])]
     public function create(Request $request): RedirectResponse
     {
@@ -102,6 +132,9 @@ final class PaymentConsoleController extends AbstractController
         return $this->redirectToRoute('payment_console', ['payment' => (string) $payment->id()]);
     }
 
+    /**
+     * Handles provider start flow from the operator console.
+     */
     #[RequireScope(['payment:write'])]
     public function start(Request $request): RedirectResponse
     {
@@ -120,6 +153,9 @@ final class PaymentConsoleController extends AbstractController
         return $this->redirectToRoute('payment_console', ['payment' => (string) $payment->id()]);
     }
 
+    /**
+     * Handles provider-side finalize flow from the console.
+     */
     #[RequireScope(['payment:write'])]
     public function finalize(Request $request): RedirectResponse
     {
@@ -147,6 +183,9 @@ final class PaymentConsoleController extends AbstractController
         return $this->redirectToRoute('payment_console', ['payment' => $dto->paymentId]);
     }
 
+    /**
+     * Handles refund flow from the operator console.
+     */
     #[RequireScope(['payment:write'])]
     public function refund(Request $request): RedirectResponse
     {
@@ -168,6 +207,9 @@ final class PaymentConsoleController extends AbstractController
         return $this->redirectToRoute('payment_console', ['payment' => (string) $payment->id()]);
     }
 
+    /**
+     * Redirects back to the console with an operator-visible validation error.
+     */
     private function invalidFormRedirect(string $message): RedirectResponse
     {
         $this->addFlash('danger', $message);
@@ -175,6 +217,9 @@ final class PaymentConsoleController extends AbstractController
         return $this->redirectToRoute('payment_console');
     }
 
+    /**
+     * Redirects back to the console when the requested payment does not exist.
+     */
     private function paymentNotFoundRedirect(string $paymentId): RedirectResponse
     {
         $this->addFlash('danger', sprintf('Payment %s was not found.', $paymentId));
@@ -182,6 +227,12 @@ final class PaymentConsoleController extends AbstractController
         return $this->redirectToRoute('payment_console');
     }
 
+    /**
+     * Resolves provider code from an already stored provider reference.
+     *
+     * This keeps console forms aligned with the persisted payment without asking
+     * operators to infer the provider manually.
+     */
     private function resolveProvider(string $providerRef): string
     {
         $normalized = strtolower(trim($providerRef));

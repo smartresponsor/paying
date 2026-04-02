@@ -1,6 +1,5 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Service;
@@ -11,6 +10,13 @@ use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\PaymentConsoleReadModelInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
+/**
+ * Read model used by the operator console.
+ *
+ * This class assembles a denormalized view of payments and related webhook
+ * events so that the UI layer can render complex state without additional
+ * queries or transformations.
+ */
 final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelInterface
 {
     public function __construct(
@@ -19,6 +25,16 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
     ) {
     }
 
+    /**
+     * Builds the console view state.
+     *
+     * @return array{
+     *     payments: list<array<string, mixed>>,
+     *     selectedPayment: ?array<string, mixed>,
+     *     events: list<array<string, mixed>>,
+     *     filters: array<string, string>
+     * }
+     */
     public function build(string $query, string $status, string $selectedPaymentId): array
     {
         $normalizedQuery = trim($query);
@@ -45,7 +61,9 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
         ];
     }
 
-    /** @param array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string} $payment */
+    /**
+     * Filters by status.
+     */
     private function matchStatus(array $payment, string $status): bool
     {
         if ('all' === $status) {
@@ -55,7 +73,9 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
         return $payment['status'] === $status;
     }
 
-    /** @param array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string} $payment */
+    /**
+     * Filters by search query.
+     */
     private function matchQuery(array $payment, string $query): bool
     {
         if ('' === $query) {
@@ -74,7 +94,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
     }
 
     /**
-     * @return array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string}|null
+     * Resolves selected payment row.
      */
     private function resolveSelectedPayment(array $filteredPayments, string $selectedPaymentId): ?array
     {
@@ -90,7 +110,9 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
         return $filteredPayments[0] ?? null;
     }
 
-    /** @return list<array{id: string, provider: string, externalEventId: string, status: string, receivedAt: string}> */
+    /**
+     * Collects recent webhook events.
+     */
     private function listWebhookEvents(string $paymentId): array
     {
         $logs = $this->em->getRepository(PaymentWebhookLog::class)->findBy([], ['receivedAt' => 'DESC'], 50);
@@ -123,7 +145,9 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
         return $events;
     }
 
-    /** @return array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string} */
+    /**
+     * Converts a payment entity into a UI-friendly row.
+     */
     private function toPaymentRow(Payment $payment): array
     {
         return [
