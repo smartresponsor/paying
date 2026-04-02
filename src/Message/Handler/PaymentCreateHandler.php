@@ -23,21 +23,21 @@ final readonly class PaymentCreateHandler
 
         $this->paymentStartService->start(
             $command->orderId,
-            $this->normalizeProvider($command->gatewayCode),
+            $this->normalizeProvider($command->canonicalProviderCode()),
             $money->toDecimalString(),
             $money->currency(),
             $command->idempotencyKey ?? '',
-            'messager-create',
+            'messenger-create',
         );
     }
 
-    private function normalizeProvider(string $code): string
+    private function normalizeProvider(string $providerCode): string
     {
-        $normalized = strtolower(trim($code));
+        $normalized = strtolower(trim($providerCode));
 
         return match ($normalized) {
             'stripe', 'paypal', 'internal' => $normalized,
-            default => throw new \RuntimeException('Payment provider not found: '.$code),
+            default => throw new \RuntimeException('Payment provider not found: '.$providerCode),
         };
     }
 }
