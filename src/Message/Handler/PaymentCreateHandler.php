@@ -10,6 +10,15 @@ use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ValueObject\Money;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+/**
+ * Message handler responsible for translating a create command into a start-service call.
+ *
+ * Responsibilities:
+ * - normalize amount and currency
+ * - resolve canonical provider identifier
+ * - pass execution to {@see PaymentStartServiceInterface}
+ * - provide a stable origin marker for observability
+ */
 #[AsMessageHandler]
 final readonly class PaymentCreateHandler
 {
@@ -17,6 +26,9 @@ final readonly class PaymentCreateHandler
     {
     }
 
+    /**
+     * Handles the message bus invocation.
+     */
     public function __invoke(PaymentCreateCommand $command): void
     {
         $money = Money::fromMinor($command->amountMinor, strtoupper($command->currency));
@@ -31,6 +43,11 @@ final readonly class PaymentCreateHandler
         );
     }
 
+    /**
+     * Normalizes and validates provider identifiers.
+     *
+     * @throws \RuntimeException When provider is not supported.
+     */
     private function normalizeProvider(string $providerCode): string
     {
         $normalized = strtolower(trim($providerCode));

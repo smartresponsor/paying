@@ -11,6 +11,13 @@ use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\RetryExecutorInterface;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Guard layer that wraps provider execution with retry, circuit breaker,
+ * and metrics instrumentation.
+ *
+ * This class is responsible for operational resilience and observability,
+ * not for business logic.
+ */
 readonly class ProviderGuard implements ProviderGuardInterface
 {
     public function __construct(
@@ -20,6 +27,9 @@ readonly class ProviderGuard implements ProviderGuardInterface
         private MetricInterface $metric,
     ) {}
 
+    /**
+     * Executes a start operation with resilience mechanisms.
+     */
     public function start(string $provider, Payment $payment, array $context = []): array
     {
         return $this->measure('start', $provider, function () use ($provider, $payment, $context) {
@@ -27,6 +37,9 @@ readonly class ProviderGuard implements ProviderGuardInterface
         });
     }
 
+    /**
+     * Executes finalize operation.
+     */
     public function finalize(string $provider, Ulid $id, array $payload = []): Payment
     {
         return $this->measure('finalize', $provider, function () use ($provider, $id, $payload) {
@@ -34,6 +47,9 @@ readonly class ProviderGuard implements ProviderGuardInterface
         });
     }
 
+    /**
+     * Executes refund operation.
+     */
     public function refund(string $provider, Ulid $id, string $amount): Payment
     {
         return $this->measure('refund', $provider, function () use ($provider, $id, $amount) {
@@ -41,6 +57,9 @@ readonly class ProviderGuard implements ProviderGuardInterface
         });
     }
 
+    /**
+     * Executes reconciliation operation.
+     */
     public function reconcile(string $provider, Ulid $id): Payment
     {
         return $this->measure('reconcile', $provider, function () use ($provider, $id) {
@@ -48,6 +67,11 @@ readonly class ProviderGuard implements ProviderGuardInterface
         });
     }
 
+    /**
+     * Wraps provider execution with retry, circuit breaker and metrics.
+     *
+     * @return mixed Provider result.
+     */
     private function measure(string $operation, string $provider, callable $fn): mixed
     {
         $key = 'provider:'.$provider;
