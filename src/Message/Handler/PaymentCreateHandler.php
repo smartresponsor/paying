@@ -27,7 +27,7 @@ final readonly class PaymentCreateHandler
             $money->toDecimalString(),
             $money->currency(),
             $command->idempotencyKey ?? '',
-            'messager-create',
+            'messenger-create',
         );
     }
 
