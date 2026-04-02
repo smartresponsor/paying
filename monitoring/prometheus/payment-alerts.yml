@@ -1,0 +1,43 @@
+groups:
+  - name: payment-platform
+    interval: 30s
+    rules:
+      - alert: PaymentFailureRateHigh
+        expr: payment_failure_total > 0 and (payment_failure_total / clamp_min(payment_success_total + payment_failure_total, 1)) > 0.02
+        for: 5m
+        labels:
+          severity: warning
+          team: payments
+        annotations:
+          summary: "Payment failure rate is above 2%"
+          description: "The payment platform is reporting a sustained failure rate above the warning threshold."
+
+      - alert: PaymentRetryExhaustedDetected
+        expr: payment_retry_exhausted_total > 0
+        for: 2m
+        labels:
+          severity: critical
+          team: payments
+        annotations:
+          summary: "Retry exhaustion detected"
+          description: "At least one payment flow exhausted all retries and requires operator review."
+
+      - alert: ProviderLatencyHigh
+        expr: max by (provider, operation) (payment_provider_duration_ms_avg) > 1500
+        for: 10m
+        labels:
+          severity: warning
+          team: payments
+        annotations:
+          summary: "Provider latency is elevated"
+          description: "A payment provider operation has exceeded the average latency threshold of 1500ms."
+
+      - alert: ProviderFailureSpike
+        expr: max by (provider, operation) (payment_provider_failure_total) > 10
+        for: 5m
+        labels:
+          severity: critical
+          team: payments
+        annotations:
+          summary: "Provider failure spike detected"
+          description: "A provider or operation has accumulated more than 10 failures and may be unhealthy."

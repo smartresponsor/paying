@@ -1,0 +1,96 @@
+{
+  "title": "Payment Platform Overview",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "tags": ["payment", "platform", "sre"],
+  "templating": {
+    "list": [
+      {
+        "name": "provider",
+        "type": "query",
+        "label": "Provider",
+        "datasource": "Prometheus",
+        "refresh": 1,
+        "query": "label_values(payment_provider_success_total, provider)",
+        "includeAll": true,
+        "multi": true,
+        "current": {"text": "All", "value": "$__all"}
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Payment Success Total",
+      "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+      "datasource": "Prometheus",
+      "targets": [{"expr": "payment_success_total", "refId": "A"}]
+    },
+    {
+      "type": "stat",
+      "title": "Payment Failure Total",
+      "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
+      "datasource": "Prometheus",
+      "targets": [{"expr": "payment_failure_total", "refId": "A"}]
+    },
+    {
+      "type": "stat",
+      "title": "Retry Attempts",
+      "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
+      "datasource": "Prometheus",
+      "targets": [{"expr": "payment_retry_attempts_total", "refId": "A"}]
+    },
+    {
+      "type": "stat",
+      "title": "Retry Exhausted",
+      "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
+      "datasource": "Prometheus",
+      "targets": [{"expr": "payment_retry_exhausted_total", "refId": "A"}]
+    },
+    {
+      "type": "timeseries",
+      "title": "Provider Success Rate",
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum by (provider, operation) (payment_provider_success_total{provider=~\"$provider\"})",
+          "legendFormat": "{{provider}} {{operation}} success",
+          "refId": "A"
+        },
+        {
+          "expr": "sum by (provider, operation) (payment_provider_failure_total{provider=~\"$provider\"})",
+          "legendFormat": "{{provider}} {{operation}} failure",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Provider Duration Avg (ms)",
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "payment_provider_duration_ms_avg{provider=~\"$provider\"}",
+          "legendFormat": "{{provider}} {{operation}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "title": "Operational Snapshot",
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 12},
+      "datasource": "Prometheus",
+      "targets": [
+        {"expr": "payment_success_total", "format": "table", "instant": true, "refId": "A"},
+        {"expr": "payment_failure_total", "format": "table", "instant": true, "refId": "B"},
+        {"expr": "payment_retry_attempts_total", "format": "table", "instant": true, "refId": "C"},
+        {"expr": "payment_retry_exhausted_total", "format": "table", "instant": true, "refId": "D"}
+      ]
+    }
+  ]
+}
