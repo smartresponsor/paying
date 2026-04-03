@@ -2,7 +2,7 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="./phpunit.xsd"
          bootstrap="tests/bootstrap.php"
-         cacheDirectory="var/phpunit"
+         cacheDirectory=".codex-tmp/phpunit"
          colors="true"
          beStrictAboutTestsThatDoNotTestAnything="false">
     <php>
@@ -12,6 +12,7 @@
         <server name="APP_SECRET" value="payment_test_secret" force="true"/>
         <server name="DATABASE_URL" value="sqlite:///%kernel.project_dir%/var/payment.test.data.sqlite" force="true"/>
         <server name="INFRA_URL" value="sqlite:///%kernel.project_dir%/var/payment.test.infra.sqlite" force="true"/>
+        <server name="PAYMENT_TEST_CACHE_DIR" value="%kernel.project_dir%/.codex-tmp/cache/test" force="true"/>
     </php>
     <testsuites>
         <testsuite name="unit">

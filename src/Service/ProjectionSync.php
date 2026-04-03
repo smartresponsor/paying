@@ -46,7 +46,10 @@ readonly class ProjectionSync implements ProjectionSyncInterface
         }
 
         if ($n > 0) {
-            $this->infra->saveWatermark(string(end($rows)['updated_at']));
+            $lastRow = end($rows);
+            if (is_array($lastRow) && isset($lastRow['updated_at'])) {
+                $this->infra->saveWatermark((string) $lastRow['updated_at']);
+            }
         }
 
         return $n;
@@ -81,7 +84,10 @@ readonly class ProjectionSync implements ProjectionSyncInterface
                 ++$n;
             }
             $off += $batch;
-            $this->infra->saveWatermark(string(end($rows)['updated_at']));
+            $lastRow = end($rows);
+            if (is_array($lastRow) && isset($lastRow['updated_at'])) {
+                $this->infra->saveWatermark((string) $lastRow['updated_at']);
+            }
         }
 
         return $n;

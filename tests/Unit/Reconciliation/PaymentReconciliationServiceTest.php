@@ -26,6 +26,11 @@ final class PaymentReconciliationServiceTest extends TestCase
                 return null;
             }
 
+            public function findByOrderId(string $orderId): ?Payment
+            {
+                return null;
+            }
+
             public function listRecent(int $limit = 10): array
             {
                 return [];

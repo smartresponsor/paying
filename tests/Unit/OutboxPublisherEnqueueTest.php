@@ -8,6 +8,7 @@ namespace App\Tests\Unit;
 use App\Infrastructure\OutboxPublisher;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 final class OutboxPublisherEnqueueTest extends TestCase
 {
@@ -34,7 +35,7 @@ final class OutboxPublisherEnqueueTest extends TestCase
                 }),
             );
 
-        $publisher = new OutboxPublisher($connection);
+        $publisher = new OutboxPublisher($connection, new NullLogger());
         $publisher->enqueue('payment.captured', ['paymentId' => '01TESTPAYMENT']);
     }
 }

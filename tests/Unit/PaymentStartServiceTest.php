@@ -9,7 +9,7 @@ use App\Entity\Payment;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\Service\PaymentStartService;
 use App\ServiceInterface\ProviderGuardInterface;
-use PHPUnit\Framework\MockObject\Exception;
+use App\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
@@ -27,27 +27,67 @@ final class PaymentStartServiceTest extends TestCase
                 ++$this->saveCount;
             }
 
-            public function find(string $id): ?Payment { return null; }
-            public function listRecent(int $limit = 10): array { return []; }
-            public function listIdsByStatuses(array $statuses, int $limit = 100): array { return []; }
+            public function find(string $id): ?Payment
+            {
+                return null;
+            }
+
+            public function findByOrderId(string $orderId): ?Payment
+            {
+                return null;
+            }
+
+            public function listRecent(int $limit = 10): array
+            {
+                return [];
+            }
+
+            public function listIdsByStatuses(array $statuses, int $limit = 100): array
+            {
+                return [];
+            }
         };
 
         $guard = new class implements ProviderGuardInterface {
-            public function start(string $provider, Payment $payment, array $context = []): array { return ['providerRef' => 'provider-ref-123']; }
-            public function finalize(string $provider, Ulid $id, array $payload = []): Payment { throw new \RuntimeException(); }
-            public function refund(string $provider, Ulid $id, string $amount): Payment { throw new \RuntimeException(); }
-            public function reconcile(string $provider, Ulid $id): Payment { throw new \RuntimeException(); }
-        };
+            /** @var array<string, mixed> */
+            public array $receivedContext = [];
 
-            /**
-             * @return string[]
-             */
             public function start(string $provider, Payment $payment, array $context = []): array
             {
                 $this->receivedContext = $context;
 
+                return ['providerRef' => 'provider-ref-123'];
+            }
+
+            public function finalize(string $provider, Ulid $id, array $payload = []): Payment
+            {
+                throw new \RuntimeException('not used');
+            }
+
+            public function refund(string $provider, Ulid $id, string $amount): Payment
+            {
+                throw new \RuntimeException('not used');
+            }
+
+            public function reconcile(string $provider, Ulid $id): Payment
+            {
+                throw new \RuntimeException('not used');
+            }
+        };
+
+        $service = new PaymentStartService($guard, $repo);
+        $started = $service->start('order-1001', 'internal', '10.00', 'usd', '', 'payment-console');
+        $payment = $started->payment;
+
         self::assertSame(2, $repo->saveCount);
-        self::assertSame('processing', $started->payment->status()->value);
+        self::assertSame($payment, $repo->saved);
+        self::assertSame('processing', $payment->status()->value);
+        self::assertSame('provider-ref-123', $started->providerRef);
+        self::assertSame('USD', $payment->currency());
+        self::assertSame('order-1001', $payment->orderId());
+        self::assertSame('payment-console', $guard->receivedContext['origin']);
+        self::assertSame((string) $payment->id(), $guard->receivedContext['idempotencyKey']);
+        self::assertSame((string) $payment->id(), $guard->receivedContext['projectId']);
     }
 
     public function testStartMarksPaymentFailedOnProviderError(): void
@@ -62,38 +102,48 @@ final class PaymentStartServiceTest extends TestCase
                 $this->last = $payment;
             }
 
-            public function find(string $id): ?Payment { return null; }
-            public function listRecent(int $limit = 10): array { return []; }
-            public function listIdsByStatuses(array $statuses, int $limit = 100): array { return []; }
+            public function find(string $id): ?Payment
+            {
+                return null;
+            }
+
+            public function findByOrderId(string $orderId): ?Payment
+            {
+                return null;
+            }
+
+            public function listRecent(int $limit = 10): array
+            {
+                return [];
+            }
+
+            public function listIdsByStatuses(array $statuses, int $limit = 100): array
+            {
+                return [];
+            }
         };
 
-        /** @var ProviderGuardInterface&MockObject $guard */
         $guard = $this->createMock(ProviderGuardInterface::class);
         $guard->method('start')->willThrowException(new \RuntimeException('fail'));
 
         $service = new PaymentStartService($guard, $repo);
-        $started = $service->start('internal', '10.00', 'usd', '', 'payment-console');
-        $payment = $started->payment;
+
+        try {
+            $service->start('order-1001', 'internal', '10.00', 'usd', '', 'payment-console');
+            self::fail('Expected provider exception to be rethrown.');
+        } catch (\RuntimeException $exception) {
+            self::assertSame('fail', $exception->getMessage());
+        }
 
         self::assertSame(2, $repo->saveCount);
-        self::assertSame($payment, $repo->saved);
-        self::assertSame('processing', $payment->status()->value);
-        self::assertSame('provider-ref-123', $started->providerRef);
-        self::assertSame('USD', $payment->currency());
-        self::assertSame('payment-console', $guard->receivedContext['origin']);
-        self::assertArrayHasKey('idempotencyKey', $guard->receivedContext);
+        self::assertNotNull($repo->last);
+        self::assertSame(PaymentStatus::failed, $repo->last->status());
     }
 
     public function testStartRejectsInvalidAmountFormat(): void
     {
-        try {
-            $repo = $this->createMock(PaymentRepositoryInterface::class);
-        } catch (Exception $e) {
-        }
-        try {
-            $guard = $this->createMock(ProviderGuardInterface::class);
-        } catch (Exception $e) {
-        }
+        $repo = $this->createMock(PaymentRepositoryInterface::class);
+        $guard = $this->createMock(ProviderGuardInterface::class);
 
         $repo->expects(self::never())->method('save');
         $guard->expects(self::never())->method('start');
@@ -103,6 +153,6 @@ final class PaymentStartServiceTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Amount must be in decimal format like 10.00.');
 
-        $service->start('internal', '10', 'USD');
+        $service->start('order-1001', 'internal', '10', 'USD');
     }
 }

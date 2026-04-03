@@ -19,7 +19,7 @@ final class RetryExecutorTest extends TestCase
         $metric = $this->createMock(MetricInterface::class);
         $metric->expects(self::exactly(2))->method('incRetryAttempt');
 
-        $executor = new RetryExecutor(3, 0, 1.0, 0, 0, $metric);
+        $executor = new RetryExecutor($metric, 3, 0, 1.0, 0, 0);
 
         $result = $executor->execute(function () use (&$calls) {
             ++$calls;
@@ -39,7 +39,7 @@ final class RetryExecutorTest extends TestCase
         $metric = $this->createMock(MetricInterface::class);
         $metric->expects(self::once())->method('incRetryExhausted');
 
-        $executor = new RetryExecutor(2, 0, 1.0, 0, 0, $metric);
+        $executor = new RetryExecutor($metric, 2, 0, 1.0, 0, 0);
 
         $this->expectException(\RuntimeException::class);
 

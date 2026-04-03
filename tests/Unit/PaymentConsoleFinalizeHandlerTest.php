@@ -33,6 +33,11 @@ final class PaymentConsoleFinalizeHandlerTest extends TestCase
                 return null;
             }
 
+            public function findByOrderId(string $orderId): ?Payment
+            {
+                return null;
+            }
+
             public function listRecent(int $limit = 10): array
             {
                 return [];
@@ -80,6 +85,11 @@ final class PaymentConsoleFinalizeHandlerTest extends TestCase
                 return $this->existing;
             }
 
+            public function findByOrderId(string $orderId): ?Payment
+            {
+                return null;
+            }
+
             public function listRecent(int $limit = 10): array
             {
                 return [];
@@ -98,7 +108,7 @@ final class PaymentConsoleFinalizeHandlerTest extends TestCase
             ->with(
                 'internal',
                 self::isInstanceOf(Ulid::class),
-                ['providerRef' => 'ref-1', 'gatewayTransactionId' => 'gw-1', 'status' => 'completed'],
+                ['providerRef' => 'ref-1', 'providerTransactionId' => 'gw-1', 'status' => 'completed'],
             )
             ->willReturn($resolved);
 

@@ -10,13 +10,14 @@ use App\ServiceInterface\RetryExecutorInterface;
 readonly class RetryExecutor implements RetryExecutorInterface
 {
     public function __construct(
+        private MetricInterface $metric,
         private int $maxAttempts = 3,
         private int $baseMs = 50,
         private float $multiplier = 2.0,
         private int $maxSleepMs = 1000,
         private int $jitterMs = 0,
-        private MetricInterface $metric,
-    ) {}
+    ) {
+    }
 
     public function execute(callable $callable): mixed
     {

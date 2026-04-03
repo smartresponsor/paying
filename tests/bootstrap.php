@@ -179,17 +179,19 @@ $deleteDirectoryTree = static function (string $directory): void {
 
     foreach ($iterator as $item) {
         if ($item->isDir()) {
-            rmdir($item->getPathname());
+            @rmdir($item->getPathname());
             continue;
         }
 
-        unlink($item->getPathname());
+        @unlink($item->getPathname());
     }
 
-    rmdir($directory);
+    @rmdir($directory);
 };
 
-$deleteDirectoryTree($projectDir.'/var/cache/test');
+$testCacheDir = (string) ($_SERVER['PAYMENT_TEST_CACHE_DIR'] ?? $_ENV['PAYMENT_TEST_CACHE_DIR'] ?? $projectDir.'/var/cache/test');
+$testCacheDir = str_replace('%kernel.project_dir%', $projectDir, $testCacheDir);
+$deleteDirectoryTree($testCacheDir);
 
 $autoload = $projectDir.'/vendor/autoload.php';
 if (!is_file($autoload)) {
@@ -199,8 +201,8 @@ if (!is_file($autoload)) {
 
 require $projectDir.'/config/bootstrap.php';
 
-if (class_exists(\Symfony\Component\Dotenv\Dotenv::class)) {
-    (new \Symfony\Component\Dotenv\Dotenv())->bootEnv($projectDir.'/.env');
+if (class_exists(Symfony\Component\Dotenv\Dotenv::class)) {
+    (new Symfony\Component\Dotenv\Dotenv())->bootEnv($projectDir.'/.env');
 }
 
 $resolveSqlitePath = static function (?string $url, string $projectDir): ?string {
@@ -244,8 +246,9 @@ if ('test' === ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null)) {
     $infraPath = $resolveSqlitePath($_SERVER['INFRA_URL'] ?? $_ENV['INFRA_URL'] ?? null, $projectDir);
 
     if (null !== $dataPath) {
+        @unlink($dataPath);
         $ensureSqliteSchema($dataPath, [
-            'CREATE TABLE IF NOT EXISTS payment (id VARCHAR(26) NOT NULL PRIMARY KEY, status VARCHAR(16) NOT NULL, amount NUMERIC(14,2) NOT NULL, currency VARCHAR(3) NOT NULL, provider_ref VARCHAR(128) DEFAULT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL)',
+            'CREATE TABLE IF NOT EXISTS payment (id VARCHAR(26) NOT NULL PRIMARY KEY, order_id VARCHAR(128) NOT NULL, status VARCHAR(16) NOT NULL, amount NUMERIC(14,2) NOT NULL, currency VARCHAR(3) NOT NULL, provider_ref VARCHAR(128) DEFAULT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL)',
             'CREATE UNIQUE INDEX IF NOT EXISTS uniq_payment_id ON payment (id)',
             'CREATE INDEX IF NOT EXISTS idx_payment_status_updated_at ON payment (status, updated_at)',
             'CREATE TABLE IF NOT EXISTS payment_transaction (id VARCHAR(36) NOT NULL PRIMARY KEY, payment_id VARCHAR(26) NOT NULL, gateway_transaction_id VARCHAR(64) NOT NULL, type VARCHAR(16) NOT NULL, amount_minor INTEGER NOT NULL, occurred_at DATETIME NOT NULL)',
@@ -266,8 +269,9 @@ if ('test' === ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null)) {
     }
 
     if (null !== $infraPath) {
+        @unlink($infraPath);
         $ensureSqliteSchema($infraPath, [
-            'CREATE TABLE IF NOT EXISTS payment_projection (id VARCHAR(26) NOT NULL PRIMARY KEY, status VARCHAR(16) NOT NULL, amount NUMERIC(14,2) NOT NULL, currency VARCHAR(3) NOT NULL, provider_ref VARCHAR(128) DEFAULT NULL, updated_at DATETIME NOT NULL)',
+            'CREATE TABLE IF NOT EXISTS payment_projection (id VARCHAR(26) NOT NULL PRIMARY KEY, order_id VARCHAR(128) NOT NULL, status VARCHAR(16) NOT NULL, amount NUMERIC(14,2) NOT NULL, currency VARCHAR(3) NOT NULL, provider_ref VARCHAR(128) DEFAULT NULL, updated_at DATETIME NOT NULL)',
             'CREATE INDEX IF NOT EXISTS idx_payment_projection_status ON payment_projection (status)',
             'CREATE INDEX IF NOT EXISTS idx_payment_projection_updated_at ON payment_projection (updated_at)',
             'CREATE TABLE IF NOT EXISTS payment_projection_meta (name VARCHAR(64) NOT NULL PRIMARY KEY, value TEXT NOT NULL)',

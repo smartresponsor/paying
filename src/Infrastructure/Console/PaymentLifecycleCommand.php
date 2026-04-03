@@ -41,6 +41,9 @@ final class PaymentLifecycleCommand extends Command
         $this->addOption('provider', null, InputOption::VALUE_OPTIONAL, '', 'internal');
         $this->addOption('origin', null, InputOption::VALUE_OPTIONAL, '', 'cli');
         $this->addOption('idempotency-key', null, InputOption::VALUE_OPTIONAL, '', '');
+        $this->addOption('provider-ref', null, InputOption::VALUE_OPTIONAL);
+        $this->addOption('gateway-transaction-id', null, InputOption::VALUE_OPTIONAL);
+        $this->addOption('status', null, InputOption::VALUE_OPTIONAL);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -85,19 +88,20 @@ final class PaymentLifecycleCommand extends Command
 
     private function runStart(InputInterface $input, OutputInterface $output): int
     {
+        $orderId = trim((string) $input->getOption('order-id'));
         $provider = trim((string) $input->getOption('provider'));
         $amount = trim((string) $input->getOption('amount'));
         $currency = strtoupper(trim((string) $input->getOption('currency')));
         $idempotencyKey = trim((string) $input->getOption('idempotency-key'));
         $origin = trim((string) $input->getOption('origin'));
 
-        if ('' === $provider || '' === $amount || '' === $currency) {
-            $output->writeln('<error>start requires --provider, --amount, and --currency.</error>');
+        if ('' === $orderId || '' === $provider || '' === $amount || '' === $currency) {
+            $output->writeln('<error>start requires --order-id, --provider, --amount, and --currency.</error>');
 
             return Command::INVALID;
         }
 
-        $started = $this->paymentStartService->start($provider, $amount, $currency, $idempotencyKey, $origin);
+        $started = $this->paymentStartService->start($orderId, $provider, $amount, $currency, $idempotencyKey, $origin);
         $payment = $started->payment;
         try {
             $this->writeResult($output, [
@@ -116,22 +120,17 @@ final class PaymentLifecycleCommand extends Command
     {
         $paymentId = trim((string) $input->getOption('payment-id'));
         $provider = trim((string) $input->getOption('provider'));
+        if (!Ulid::isValid($paymentId) || '' === $provider) {
+            $output->writeln('<error>finalize requires --payment-id (ULID) and --provider.</error>');
 
-        if ('start' === $action) {
-            $paymentId = (string) $input->getOption('payment-id');
+            return Command::INVALID;
+        }
 
-            if ('' !== $paymentId && Ulid::isValid($paymentId)) {
-                $result = $this->paymentStartService->restart(
-                    $paymentId,
-                    (string) $input->getOption('provider'),
-                    (string) $input->getOption('idempotency-key'),
-                    (string) $input->getOption('origin')
-                );
+        $existing = $this->paymentRepository->find($paymentId);
+        if (null === $existing) {
+            $output->writeln(sprintf('<error>Payment %s was not found.</error>', $paymentId));
 
-                $output->writeln(json_encode(['action' => 'start', 'mode' => 'restart', 'id' => (string) $result->payment->id()]));
-
-                return Command::SUCCESS;
-            }
+            return Command::FAILURE;
         }
 
         $payload = array_filter([

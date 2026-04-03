@@ -1,0 +1,179 @@
+<?php //App.Controller.Dto.PaymentStartRequestDto
+
+return [PHP_INT_MAX, new class() implements \Symfony\Component\Cache\Traits\CachedValueInterface { public function getValue(): mixed { return \Symfony\Component\VarExporter\Internal\Hydrator::hydrate(
+    $o = [
+        (($f = &\Symfony\Component\VarExporter\Internal\Registry::$factories)['Symfony\\Component\\Validator\\Mapping\\ClassMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\ClassMetadata'))(),
+        ($f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'] ?? \Symfony\Component\VarExporter\Internal\Registry::f('Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'))(),
+        clone (($p = &\Symfony\Component\VarExporter\Internal\Registry::$prototypes)['Symfony\\Component\\Validator\\Constraints\\NotBlank'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\NotBlank')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Regex'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Regex')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Currency'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Currency')),
+        $f['Symfony\\Component\\Validator\\Mapping\\PropertyMetadata'](),
+        clone $p['Symfony\\Component\\Validator\\Constraints\\NotBlank'],
+        clone ($p['Symfony\\Component\\Validator\\Constraints\\Choice'] ?? \Symfony\Component\VarExporter\Internal\Registry::p('Symfony\\Component\\Validator\\Constraints\\Choice')),
+    ],
+    null,
+    [
+        'Symfony\\Component\\Validator\\Mapping\\ClassMetadata' => [
+            'members' => [
+                [
+                    'orderId' => [
+                        $o[1],
+                    ],
+                    'amount' => [
+                        $o[3],
+                    ],
+                    'currency' => [
+                        $o[6],
+                    ],
+                    'provider' => [
+                        $o[8],
+                    ],
+                ],
+            ],
+            'name' => [
+                'App\\Controller\\Dto\\PaymentStartRequestDto',
+            ],
+            'properties' => [
+                [
+                    'orderId' => $o[1],
+                    'amount' => $o[3],
+                    'currency' => $o[6],
+                    'provider' => $o[8],
+                ],
+            ],
+            'defaultGroup' => [
+                'PaymentStartRequestDto',
+            ],
+        ],
+        'Symfony\\Component\\Validator\\Mapping\\GenericMetadata' => [
+            'constraints' => [
+                1 => [
+                    $o[2],
+                ],
+                3 => [
+                    $o[4],
+                    $o[5],
+                ],
+                6 => [
+                    $o[7],
+                ],
+                8 => [
+                    $o[9],
+                    $o[10],
+                ],
+            ],
+            'constraintsByGroup' => [
+                1 => [
+                    'Default' => [
+                        $o[2],
+                    ],
+                    'PaymentStartRequestDto' => [
+                        $o[2],
+                    ],
+                ],
+                3 => [
+                    'Default' => [
+                        $o[4],
+                        $o[5],
+                    ],
+                    'PaymentStartRequestDto' => [
+                        $o[4],
+                        $o[5],
+                    ],
+                ],
+                6 => [
+                    'Default' => [
+                        $o[7],
+                    ],
+                    'PaymentStartRequestDto' => [
+                        $o[7],
+                    ],
+                ],
+                8 => [
+                    'Default' => [
+                        $o[9],
+                        $o[10],
+                    ],
+                    'PaymentStartRequestDto' => [
+                        $o[9],
+                        $o[10],
+                    ],
+                ],
+            ],
+        ],
+        'Symfony\\Component\\Validator\\Mapping\\MemberMetadata' => [
+            'class' => [
+                1 => 'App\\Controller\\Dto\\PaymentStartRequestDto',
+                3 => 'App\\Controller\\Dto\\PaymentStartRequestDto',
+                6 => 'App\\Controller\\Dto\\PaymentStartRequestDto',
+                8 => 'App\\Controller\\Dto\\PaymentStartRequestDto',
+            ],
+            'name' => [
+                1 => 'orderId',
+                3 => 'amount',
+                6 => 'currency',
+                8 => 'provider',
+            ],
+            'property' => [
+                1 => 'orderId',
+                3 => 'amount',
+                6 => 'currency',
+                8 => 'provider',
+            ],
+        ],
+        'stdClass' => [
+            'payload' => [
+                2 => null,
+                4 => null,
+                null,
+                7 => null,
+                9 => null,
+                null,
+            ],
+            'groups' => [
+                2 => [
+                    'Default',
+                    'PaymentStartRequestDto',
+                ],
+                4 => [
+                    'Default',
+                    'PaymentStartRequestDto',
+                ],
+                [
+                    'Default',
+                    'PaymentStartRequestDto',
+                ],
+                7 => [
+                    'Default',
+                    'PaymentStartRequestDto',
+                ],
+                9 => [
+                    'Default',
+                    'PaymentStartRequestDto',
+                ],
+                [
+                    'Default',
+                    'PaymentStartRequestDto',
+                ],
+            ],
+            'message' => [
+                5 => 'Use decimal amount format like 50.00.',
+            ],
+            'pattern' => [
+                5 => '/^\\d+(\\.\\d{2})$/',
+            ],
+            'choices' => [
+                10 => [
+                    'internal',
+                    'stripe',
+                    'paypal',
+                ],
+            ],
+        ],
+    ],
+    $o[0],
+    []
+); } }];

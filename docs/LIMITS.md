@@ -2,8 +2,7 @@
 
 ## Not yet market-grade
 
-- Provider orchestration is implemented only for `internal` and `stripe` in `ProviderRouter`.
-- PayPal support is webhook ingest + gateway internals, not a full routed provider lifecycle.
+- Provider orchestration is implemented for `internal`, `stripe`, and `paypal` in `ProviderRouter`.
 - Adyen support is signature verification / event mapping level only.
 
 ## Multi-tenant limitations
@@ -20,7 +19,7 @@
 ## Provider limitations
 
 - Current provider matrix is asymmetric across surfaces:
-  - Router lifecycle: `internal`, `stripe`
+  - Router lifecycle: `internal`, `stripe`, `paypal`
   - Dedicated webhook endpoints: `stripe`, `paypal`
   - Generic verifier signatures: `stripe`, `adyen`
 

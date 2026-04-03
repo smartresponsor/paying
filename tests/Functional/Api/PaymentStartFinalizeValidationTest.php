@@ -60,7 +60,7 @@ final class PaymentStartFinalizeValidationTest extends WebTestCase
             [],
             ['CONTENT_TYPE' => 'application/json'],
             (string) json_encode([
-                'provider' => 'paypal',
+                'provider' => 'bogus',
             ]),
         );
 

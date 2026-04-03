@@ -26,7 +26,7 @@ final class PaymentApiStartHandlerTest extends TestCase
      */
     public function testHandleReturnsApiPayloadViaIdempotencyGate(): void
     {
-        $input = new PaymentStartInput('internal', '12.50', 'USD');
+        $input = new PaymentStartInput('order-2001', 'internal', '12.50', 'USD');
 
         $payment = new Payment(new Ulid(), PaymentStatus::processing, '12.50', 'USD');
 
@@ -34,7 +34,7 @@ final class PaymentApiStartHandlerTest extends TestCase
         $startService
             ->expects(self::once())
             ->method('start')
-            ->with('internal', '12.50', 'USD', 'idem-1', 'api')
+            ->with('order-2001', 'internal', '12.50', 'USD', 'idem-1', 'api')
             ->willReturn(new PaymentStartResult($payment, 'ref-1', ['ok' => true]));
 
         $idem = $this->createMock(IdempotencyServiceInterface::class);

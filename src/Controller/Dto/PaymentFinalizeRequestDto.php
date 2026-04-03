@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 final class PaymentFinalizeRequestDto
 {
     #[Assert\NotBlank]
-    #[Assert\Choice(choices: ['internal', 'stripe'])]
+    #[Assert\Choice(choices: ['internal', 'stripe', 'paypal'])]
     public string $provider = 'internal';
 
     #[Assert\Length(max: 128)]

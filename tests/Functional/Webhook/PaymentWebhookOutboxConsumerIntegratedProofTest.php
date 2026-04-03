@@ -323,6 +323,11 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
                 return $this->storage[$id] ?? null;
             }
 
+            public function findByOrderId(string $orderId): ?Payment
+            {
+                return null;
+            }
+
             public function listRecent(int $limit = 10): array
             {
                 return array_slice(array_values($this->storage), 0, $limit);

@@ -14,6 +14,16 @@ class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
+    public function getCacheDir(): string
+    {
+        $configured = $_SERVER['PAYMENT_TEST_CACHE_DIR'] ?? $_ENV['PAYMENT_TEST_CACHE_DIR'] ?? null;
+        if ('test' === $this->environment && is_string($configured) && '' !== trim($configured)) {
+            return str_replace('%kernel.project_dir%', $this->getProjectDir(), $configured);
+        }
+
+        return parent::getCacheDir();
+    }
+
     protected function configureContainer(ContainerConfigurator $container): void
     {
         $container->import('../config/{packages}/*.yaml');

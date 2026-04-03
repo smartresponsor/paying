@@ -53,6 +53,11 @@ final class PaymentConsoleReadModelTest extends TestCase
                 return null;
             }
 
+            public function findByOrderId(string $orderId): ?Payment
+            {
+                return null;
+            }
+
             public function listRecent(int $limit = 10): array
             {
                 return array_slice($this->payments, 0, $limit);
@@ -119,6 +124,11 @@ final class PaymentConsoleReadModelTest extends TestCase
                     }
                 }
 
+                return null;
+            }
+
+            public function findByOrderId(string $orderId): ?Payment
+            {
                 return null;
             }
 

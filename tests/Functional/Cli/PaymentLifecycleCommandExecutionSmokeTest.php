@@ -71,7 +71,7 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
         $paymentStartService = $this->createMock(PaymentStartServiceInterface::class);
         $paymentStartService->expects(self::once())
             ->method('start')
-            ->with('stripe', '50.00', 'USD', 'idem-123', 'cli')
+            ->with('order-1002', 'stripe', '50.00', 'USD', 'idem-123', 'cli')
             ->willReturn($started);
 
         $command = new PaymentLifecycleCommand(
@@ -86,6 +86,7 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
 
         self::assertSame(Command::SUCCESS, $tester->execute([
             '--action' => 'start',
+            '--order-id' => 'order-1002',
             '--provider' => 'stripe',
             '--amount' => '50.00',
             '--currency' => 'usd',

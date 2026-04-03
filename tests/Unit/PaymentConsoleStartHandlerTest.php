@@ -27,11 +27,11 @@ final class PaymentConsoleStartHandlerTest extends TestCase
         $startService
             ->expects(self::once())
             ->method('start')
-            ->with('internal', '12.50', 'USD', '', 'payment-console')
+            ->with('order-3001', 'internal', '12.50', 'USD', '', 'payment-console')
             ->willReturn(new PaymentStartResult($payment, null, []));
 
         $handler = new PaymentConsoleStartHandler($startService);
 
-        self::assertSame($payment, $handler->start('internal', '12.50', 'USD'));
+        self::assertSame($payment, $handler->start('order-3001', 'internal', '12.50', 'USD'));
     }
 }

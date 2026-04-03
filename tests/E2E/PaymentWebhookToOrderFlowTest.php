@@ -165,6 +165,11 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
                 return 'pay_1' === $id ? $this->payment : null;
             }
 
+            public function findByOrderId(string $orderId): ?Payment
+            {
+                return null;
+            }
+
             public function listRecent(int $limit = 10): array
             {
                 return [];

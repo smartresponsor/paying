@@ -30,7 +30,7 @@ Canonical documentation package:
 
 ### Real provider support (current truth)
 
-- Payment provider router (start/finalize/refund/reconcile): `internal`, `stripe`.
+- Payment provider router (start/finalize/refund/reconcile): `internal`, `stripe`, `paypal`.
 - Dedicated webhook ingest endpoints: `stripe`, `paypal`.
 - Generic webhook verifier supports signatures for `stripe`, `adyen`; unknown providers can be allowed only via env
   flag.

@@ -52,7 +52,7 @@ readonly class OutboxPublisher implements OutboxPublisherInterface
                 ['id' => $id],
             );
         } catch (Exception $e) {
-            $this->logger->error('Failed to load outbox message for DLQ move.', ['id' => $id, 'exception' => $e^]);
+            $this->logger->error('Failed to load outbox message for DLQ move.', ['id' => $id, 'exception' => $e]);
 
             throw new OutboxOperationException('Unable to read outbox message for DLQ move.', 0, $e);
         }

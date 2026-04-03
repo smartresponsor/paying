@@ -10,6 +10,7 @@ use App\InfrastructureInterface\OutboxPublisherInterface;
 use App\InfrastructureInterface\PublisherTransportInterface;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 
 final class OutboxWorkerRetryTest extends TestCase
 {
@@ -55,7 +56,7 @@ final class OutboxWorkerRetryTest extends TestCase
 
         $publisher->expects(self::never())->method('moveToDlq');
 
-        $worker = new OutboxWorker($connection, $transport, $publisher);
+        $worker = new OutboxWorker($connection, $transport, $publisher, new NullLogger());
         self::assertSame(0, $worker->run(10));
     }
 }

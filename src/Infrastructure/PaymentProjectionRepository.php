@@ -35,7 +35,7 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
             throw $e;
         }
 
-        return $ow ?: null;
+        return false !== $row ? $row : null;
     }
 
     /**
@@ -69,7 +69,9 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
                 'amount' => (string) ($row['amount'] ?? '0.00'),
                 'currency' => (string) ($row['currency'] ?? ''),
                 'status' => (string) ($row['status'] ?? ''),
-                'provider_ref' => isset($row['provider_ref']) ? (string) $row['provider_ref'] : isset($row['providerRef']) ? (string) $row['providerRef'] : null,
+                'provider_ref' => isset($row['provider_ref'])
+                    ? (string) $row['provider_ref']
+                    : (isset($row['providerRef']) ? (string) $row['providerRef'] : null),
                 'updated_at' => (string) ($row['updated_at'] ?? ''),
             ];
 

@@ -34,6 +34,11 @@ final class RefundServiceTest extends TestCase
                 return null;
             }
 
+            public function findByOrderId(string $orderId): ?Payment
+            {
+                return null;
+            }
+
             public function listRecent(int $limit = 10): array
             {
                 return [];
@@ -80,6 +85,11 @@ final class RefundServiceTest extends TestCase
             public function find(string $id): ?Payment
             {
                 return $this->existing;
+            }
+
+            public function findByOrderId(string $orderId): ?Payment
+            {
+                return null;
             }
 
             public function listRecent(int $limit = 10): array

@@ -11,6 +11,27 @@ function paymentDefaultDescriptorSpec(): array
 }
 
 /**
+ * @param array<string, string>|null $env
+ * @return array<string, string>
+ */
+function paymentBuildProcessEnv(?array $env = null, ?string $workingDirectory = null): array
+{
+    $resolved = $env ?? $_ENV;
+    $projectDir = $workingDirectory ?? getcwd();
+    $tmpDir = ($projectDir ?: getcwd()).DIRECTORY_SEPARATOR.'.codex-tmp';
+
+    if (!is_dir($tmpDir) && !mkdir($tmpDir, 0777, true) && !is_dir($tmpDir)) {
+        return $resolved;
+    }
+
+    $resolved['TMP'] = $tmpDir;
+    $resolved['TEMP'] = $tmpDir;
+    $resolved['TMPDIR'] = $tmpDir;
+
+    return $resolved;
+}
+
+/**
  * @param list<string> $command
  * @param array<string, string>|null $env
  */
@@ -21,7 +42,7 @@ function paymentRunProcess(array $command, ?string $workingDirectory = null, ?ar
         paymentDefaultDescriptorSpec(),
         $pipes,
         $workingDirectory ?? getcwd(),
-        $env ?? $_ENV,
+        paymentBuildProcessEnv($env, $workingDirectory),
     );
 
     if (!is_resource($process)) {
@@ -60,7 +81,7 @@ function paymentShouldUseDockerRuntime(array $requiredExtensions, ?string $cache
         }
     }
 
-    return null !== $cacheDir && is_dir($cacheDir) && !is_writable($cacheDir);
+    return false;
 }
 
 function paymentComposeFile(string $projectDir): string
@@ -93,4 +114,3 @@ function paymentResolvePortFile(string $projectDir): string
 {
     return $projectDir.'/var/run/payment-local-server.port';
 }
-

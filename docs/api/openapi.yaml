@@ -72,7 +72,7 @@ components:
           example: USD
         provider:
           type: string
-          enum: [ internal, stripe ]
+          enum: [ internal, stripe, paypal ]
     CreatePaymentRequest:
       type: object
       required: [ orderId, amountMinor, currency ]
@@ -96,7 +96,7 @@ components:
           example: "10.00"
         provider:
           type: string
-          enum: [ internal, stripe ]
+          enum: [ internal, stripe, paypal ]
 paths:
   /payment/start:
     post:
