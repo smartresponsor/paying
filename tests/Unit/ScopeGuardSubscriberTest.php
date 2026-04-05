@@ -41,9 +41,6 @@ final class ScopeGuardSubscriberTest extends TestCase
 
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
-     */
-    /**
-     * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \ReflectionException
      */
     public function testOnControllerLogsVerificationFailureAndReturnsUnauthorized(): void

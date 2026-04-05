@@ -126,3 +126,8 @@ Thumbs.db
 !/.gitattributes
 !/.php-cs-fixer.cache
 !/var/metrics/
+/.codex-tmp/
+/var/phpunit/
+/var/report/local/
+/var/report/inspection/
+/var/payment-create-endpoint-error.txt
