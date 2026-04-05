@@ -5,9 +5,9 @@ This document defines the repository-owned bootstrap contour for a deterministic
 ## Owned inputs
 
 - `.env.test`
-- `config/packages/test/framework.yaml`
-- `config/packages/test/doctrine.yaml`
-- `config/packages/test/messenger.yaml`
+- `config/packages/test/payment_framework.yaml`
+- `config/packages/test/payment_doctrine.yaml`
+- `config/packages/test/payment_messenger.yaml`
 - `composer test:bootstrap* scripts`
 - `tools/runtime/payment_test_bootstrap.sh`
 - `tools/runtime/payment_test_bootstrap.ps1`

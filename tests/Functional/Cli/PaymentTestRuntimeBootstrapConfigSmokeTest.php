@@ -23,17 +23,17 @@ final class PaymentTestRuntimeBootstrapConfigSmokeTest extends TestCase
         self::assertArrayHasKey('test:bootstrap:fixtures', $scripts);
 
         self::assertFileExists(dirname(__DIR__, 3).'/.env.test');
-        self::assertFileExists(dirname(__DIR__, 3).'/config/packages/test/framework.yaml');
-        self::assertFileExists(dirname(__DIR__, 3).'/config/packages/test/doctrine.yaml');
-        self::assertFileExists(dirname(__DIR__, 3).'/config/packages/test/messenger.yaml');
+        self::assertFileExists(dirname(__DIR__, 3).'/config/packages/test/payment_framework.yaml');
+        self::assertFileExists(dirname(__DIR__, 3).'/config/packages/test/payment_doctrine.yaml');
+        self::assertFileExists(dirname(__DIR__, 3).'/config/packages/test/payment_messenger.yaml');
         self::assertFileExists(dirname(__DIR__, 3).'/tools/runtime/payment_test_bootstrap.sh');
         self::assertFileExists(dirname(__DIR__, 3).'/tools/runtime/payment_test_bootstrap.ps1');
     }
 
     public function testTestDoctrineAndMessengerOverridesUseDeterministicLocalRuntime(): void
     {
-        $doctrine = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/test/doctrine.yaml');
-        $messenger = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/test/messenger.yaml');
+        $doctrine = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/test/payment_doctrine.yaml');
+        $messenger = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/test/payment_messenger.yaml');
 
         self::assertStringContainsString("url: '%env(resolve:DATABASE_URL)%'", $doctrine);
         self::assertStringContainsString("url: '%env(resolve:INFRA_URL)%'", $doctrine);
