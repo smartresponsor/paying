@@ -1,5 +1,17 @@
 # Payment (Smartresponsor)
 
+[![Quality CI](https://github.com/smartresponsor/paying/actions/workflows/payment-quality.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-quality.yaml)
+[![Pages](https://github.com/smartresponsor/paying/actions/workflows/payment-pages.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-pages.yaml)
+[![Release](https://github.com/smartresponsor/paying/actions/workflows/payment-release.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-release.yaml)
+[![Latest Release](https://img.shields.io/github/v/release/smartresponsor/paying?display_name=tag)](https://github.com/smartresponsor/paying/releases)
+
+Owner-facing GitHub entrypoints:
+
+- Actions: <https://github.com/smartresponsor/paying/actions>
+- Releases: <https://github.com/smartresponsor/paying/releases>
+- Tags: <https://github.com/smartresponsor/paying/tags>
+- Pages: <https://smartresponsor.github.io/paying/>
+
 Canonical documentation package:
 
 - [INSTALL](docs/INSTALL.md)
