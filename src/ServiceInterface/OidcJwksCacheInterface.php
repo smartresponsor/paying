@@ -7,6 +7,6 @@ namespace App\ServiceInterface;
 
 interface OidcJwksCacheInterface
 {
-    /** @return array{keys?: list<array<string, mixed>>} */
+    /** @return array{keys: list<array{n: string, e: string, kty?: string, kid?: string}>} */
     public function get(): array;
 }

@@ -17,18 +17,28 @@ final readonly class DlqService implements DlqServiceInterface
     }
 
     /**
+     * @return list<array{id: int, outbox_id: string, topic: string, reason: string, created_at: string}>
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function list(): array
     {
-        return $this->data->fetchAllAssociative(
+        $rows = $this->data->fetchAllAssociative(
             'SELECT id, outbox_id, topic, reason, created_at FROM payment_dlq ORDER BY id DESC LIMIT 200',
+        );
+
+        return array_map(
+            static fn (array $row): array => [
+                'id' => (int) $row['id'],
+                'outbox_id' => (string) $row['outbox_id'],
+                'topic' => (string) $row['topic'],
+                'reason' => (string) $row['reason'],
+                'created_at' => (string) $row['created_at'],
+            ],
+            $rows,
         );
     }
 
-    /**
-     * @throws \Doctrine\DBAL\Exception
-     */
     /**
      * @throws \Doctrine\DBAL\Exception
      */

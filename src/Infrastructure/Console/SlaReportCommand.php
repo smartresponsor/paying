@@ -28,9 +28,6 @@ class SlaReportCommand extends Command
     /**
      * @throws \JsonException
      */
-    /**
-     * @throws \JsonException
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $win = (string) $input->getArgument('window');

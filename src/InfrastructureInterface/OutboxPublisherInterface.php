@@ -7,6 +7,7 @@ namespace App\InfrastructureInterface;
 
 interface OutboxPublisherInterface
 {
+    /** @param array<string, mixed> $payload */
     public function enqueue(string $topic, array $payload): void;
 
     public function moveToDlq(string $id, string $reason): void;

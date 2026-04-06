@@ -19,14 +19,14 @@ final readonly class PaymentApiStartHandler implements PaymentApiStartHandlerInt
     }
 
     /**
-     * @throws \JsonException
-     */
-    /**
+     * @return array{payment: string, orderId: string, provider: string, status: string, providerRef: string|null, result: array<string, mixed>}
+     *
      * @throws \JsonException
      */
     public function handle(PaymentStartInput $input, string $idempotencyKey, string $payloadHash): array
     {
-        return $this->idem->execute($idempotencyKey, $payloadHash, function () use ($input, $idempotencyKey): array {
+        /** @var array{payment: string, orderId: string, provider: string, status: string, providerRef: string|null, result: array<string, mixed>} $response */
+        $response = $this->idem->execute($idempotencyKey, $payloadHash, function () use ($input, $idempotencyKey): array {
             $started = $this->paymentStartService->start($input->orderId, $input->provider, $input->amount, $input->currency, $idempotencyKey);
 
             return [
@@ -38,5 +38,7 @@ final readonly class PaymentApiStartHandler implements PaymentApiStartHandlerInt
                 'result' => $started->providerResult,
             ];
         });
+
+        return $response;
     }
 }

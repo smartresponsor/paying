@@ -32,9 +32,6 @@ class DlqReplayCommand extends Command
     /**
      * @throws \Doctrine\DBAL\Exception
      */
-    /**
-     * @throws \Doctrine\DBAL\Exception
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $limit = max(1, (int) $input->getArgument('limit'));

@@ -18,14 +18,15 @@ readonly class SlaReporter implements SlaReporterInterface
     /** @return array{window: string, total: int, completed: int, failed: int, canceled: int, refunded: int, successRate: float} */
     public function since(string $isoInterval): array
     {
-        $interval = $isoInterval;
+        $interval = trim($isoInterval);
+        $window = '' !== $interval ? $interval : '1 day';
         $sql = 'SELECT status, COUNT(*) AS c FROM payment WHERE updated_at >= (NOW() - CAST(:iso AS INTERVAL)) GROUP BY status';
         $map = ['completed' => 0, 'failed' => 0, 'canceled' => 0, 'refunded' => 0];
 
         try {
-            $rows = $this->data->fetchAllAssociative($sql, ['iso' => '1 day']);
+            $rows = $this->data->fetchAllAssociative($sql, ['iso' => $window]);
         } catch (\Throwable $e) {
-            $this->logger->warning('Unable to read payment SLA report rows.', ['exception' => $e, 'window' => $interval]);
+            $this->logger->warning('Unable to read payment SLA report rows.', ['exception' => $e, 'window' => $window]);
             $rows = [];
         }
 
@@ -46,7 +47,7 @@ readonly class SlaReporter implements SlaReporterInterface
         $success = $total > 0 ? ($completed / $total) * 100.0 : 100.0;
 
         return [
-            'window' => $isoInterval,
+            'window' => $window,
             'total' => $total,
             'completed' => $completed,
             'failed' => $failed,

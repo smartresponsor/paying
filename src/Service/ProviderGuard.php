@@ -8,18 +8,25 @@ use App\Entity\Payment;
 use App\ServiceInterface\CircuitBreakerInterface;
 use App\ServiceInterface\MetricInterface;
 use App\ServiceInterface\ProviderGuardInterface;
+use App\ServiceInterface\ProviderRouterInterface;
 use App\ServiceInterface\RetryExecutorInterface;
 use Symfony\Component\Uid\Ulid;
 
 readonly class ProviderGuard implements ProviderGuardInterface
 {
     public function __construct(
-        private ProviderRouter $router,
+        private ProviderRouterInterface $router,
         private RetryExecutorInterface $retry,
         private CircuitBreakerInterface $breaker,
         private MetricInterface $metric,
-    ) {}
+    ) {
+    }
 
+    /**
+     * @param array<string, mixed> $context
+     *
+     * @return array{provider: string, paymentId: string, accepted?: bool, status?: string, providerRef?: string|null, checkoutUrl?: string, result?: array<string, mixed>}
+     */
     public function start(string $provider, Payment $payment, array $context = []): array
     {
         return $this->measure('start', $provider, function () use ($provider, $payment, $context) {
@@ -27,6 +34,7 @@ readonly class ProviderGuard implements ProviderGuardInterface
         });
     }
 
+    /** @param array<string, mixed> $payload */
     public function finalize(string $provider, Ulid $id, array $payload = []): Payment
     {
         return $this->measure('finalize', $provider, function () use ($provider, $id, $payload) {

@@ -7,6 +7,8 @@ namespace App\ServiceInterface;
 
 interface PaymentApiStartHandlerInterface
 {
-    /** @return array<string, mixed> */
+    /**
+     * @return array{payment: string, orderId: string, provider: string, status: string, providerRef: string|null, result: array<string, mixed>}
+     */
     public function handle(PaymentStartInput $input, string $idempotencyKey, string $payloadHash): array;
 }

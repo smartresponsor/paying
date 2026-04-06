@@ -11,10 +11,13 @@ use Symfony\Component\Uid\Ulid;
 interface ProviderGuardInterface
 {
     /**
-     * @return array<string, mixed>
+     * @param array<string, mixed> $context
+     *
+     * @return array{provider: string, paymentId: string, accepted?: bool, status?: string, providerRef?: string|null, checkoutUrl?: string, result?: array<string, mixed>}
      */
     public function start(string $provider, Payment $payment, array $context = []): array;
 
+    /** @param array<string, mixed> $payload */
     public function finalize(string $provider, Ulid $id, array $payload = []): Payment;
 
     public function refund(string $provider, Ulid $id, string $amount): Payment;

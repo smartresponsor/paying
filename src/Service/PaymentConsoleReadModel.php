@@ -19,6 +19,14 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
     ) {
     }
 
+    /**
+     * @return array{
+     *     payments: list<array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string}>,
+     *     selectedPayment: array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string}|null,
+     *     events: list<array{id: string, provider: string, externalEventId: string, status: string, receivedAt: string}>,
+     *     filters: array{q: string, status: string}
+     * }
+     */
     public function build(string $query, string $status, string $selectedPaymentId): array
     {
         $normalizedQuery = trim($query);
@@ -74,6 +82,8 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
     }
 
     /**
+     * @param list<array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string}> $filteredPayments
+     *
      * @return array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string}|null
      */
     private function resolveSelectedPayment(array $filteredPayments, string $selectedPaymentId): ?array

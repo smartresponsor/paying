@@ -5,28 +5,29 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\ServiceInterface\OidcJwksCacheInterface;
 use App\ServiceInterface\TokenVerifierInterface;
 
 readonly class TokenVerifier implements TokenVerifierInterface
 {
-    public function __construct(private OidcJwksCache $jwks)
+    public function __construct(private OidcJwksCacheInterface $jwks)
     {
     }
 
-    /** @return array<string, mixed> */
+    /** @return array<string, bool|int|float|string|list<string>|null> */
     public function verify(string $jwt): array
     {
         [$headerEncoded, $payloadEncoded, $signatureEncoded] = $this->split($jwt);
         $header = $this->json($this->b64($headerEncoded));
-        $payload = $this->json($this->b64($payloadEncoded));
+        $payload = $this->normalizeClaims($this->json($this->b64($payloadEncoded)));
         $signature = $this->b64bin($signatureEncoded);
 
-        $algorithm = (string) ($header['alg'] ?? '');
+        $algorithm = isset($header['alg']) && is_string($header['alg']) ? $header['alg'] : '';
         if ('RS256' !== $algorithm) {
             throw new \RuntimeException('alg-not-supported');
         }
 
-        $keyId = (string) ($header['kid'] ?? '');
+        $keyId = isset($header['kid']) && is_string($header['kid']) ? $header['kid'] : '';
         $jwk = $this->findKey($keyId);
         $pem = $this->jwkToPem($jwk);
         $verified = \openssl_verify($headerEncoded.'.'.$payloadEncoded, $signature, $pem, OPENSSL_ALGO_SHA256);
@@ -35,15 +36,16 @@ readonly class TokenVerifier implements TokenVerifierInterface
         }
 
         $now = time();
-        if (isset($payload['exp']) && (int) $payload['exp'] < $now) {
+        if (isset($payload['exp']) && is_int($payload['exp']) && $payload['exp'] < $now) {
             throw new \RuntimeException('jwt-expired');
         }
-        if (isset($payload['nbf']) && (int) $payload['nbf'] > $now) {
+        if (isset($payload['nbf']) && is_int($payload['nbf']) && $payload['nbf'] > $now) {
             throw new \RuntimeException('jwt-not-before');
         }
 
         $issuer = (string) ($_ENV['OIDC_ISS'] ?? '');
-        if ('' !== $issuer && (string) ($payload['iss'] ?? '') !== $issuer) {
+        $payloadIssuer = isset($payload['iss']) && is_string($payload['iss']) ? $payload['iss'] : '';
+        if ('' !== $issuer && $payloadIssuer !== $issuer) {
             throw new \RuntimeException('iss-mismatch');
         }
 
@@ -59,6 +61,7 @@ readonly class TokenVerifier implements TokenVerifierInterface
         return $payload;
     }
 
+    /** @param array<string, bool|int|float|string|list<string>|null> $claims */
     public function hasScopes(array $claims, array $required, bool $any = false): bool
     {
         $scopes = [];
@@ -81,56 +84,15 @@ readonly class TokenVerifier implements TokenVerifierInterface
     private function findKey(string $kid): array
     {
         $jwks = $this->jwks->get();
-        $keys = $jwks['keys'] ?? [];
+        $keys = $jwks['keys'];
         foreach ($keys as $key) {
-            if (!is_array($key)) {
-                continue;
-            }
-
-            $normalized = [
-                'n' => (string) ($key['n'] ?? ''),
-                'e' => (string) ($key['e'] ?? ''),
-            ];
-
-            $keyId = trim((string) ($key['kid'] ?? ''));
-            if ('' !== $keyId) {
-                $normalized['kid'] = $keyId;
-            }
-
-            $kty = trim((string) ($key['kty'] ?? ''));
-            if ('' !== $kty) {
-                $normalized['kty'] = $kty;
-            }
-
-            if ('' !== $normalized['n'] && '' !== $normalized['e'] && $keyId === $kid) {
-                return $normalized;
+            if (($key['kid'] ?? '') === $kid) {
+                return $key;
             }
         }
 
-        if ('' === $kid) {
-            foreach ($keys as $key) {
-                if (!is_array($key)) {
-                    continue;
-                }
-
-                $normalized = [
-                    'n' => (string) ($key['n'] ?? ''),
-                    'e' => (string) ($key['e'] ?? ''),
-                ];
-                if ('' !== $normalized['n'] && '' !== $normalized['e']) {
-                    $keyId = trim((string) ($key['kid'] ?? ''));
-                    if ('' !== $keyId) {
-                        $normalized['kid'] = $keyId;
-                    }
-
-                    $kty = trim((string) ($key['kty'] ?? ''));
-                    if ('' !== $kty) {
-                        $normalized['kty'] = $kty;
-                    }
-
-                    return $normalized;
-                }
-            }
+        if ('' === $kid && isset($keys[0])) {
+            return $keys[0];
         }
 
         throw new \RuntimeException('kid-not-found');
@@ -139,8 +101,8 @@ readonly class TokenVerifier implements TokenVerifierInterface
     /** @param array{n: string, e: string, kty?: string, kid?: string} $jwk */
     private function jwkToPem(array $jwk): string
     {
-        $n = $this->b64bin((string) $jwk['n']);
-        $e = $this->b64bin((string) $jwk['e']);
+        $n = $this->b64bin($jwk['n']);
+        $e = $this->b64bin($jwk['e']);
         $bn = $this->derInt($n);
         $be = $this->derInt($e);
         $sequence = "\x30".$this->derLen(strlen($bn) + strlen($be)).$bn.$be;
@@ -190,6 +152,43 @@ readonly class TokenVerifier implements TokenVerifierInterface
         }
 
         return $decoded;
+    }
+
+    /**
+     * @param array<string, mixed> $claims
+     *
+     * @return array<string, bool|int|float|string|list<string>|null>
+     */
+    private function normalizeClaims(array $claims): array
+    {
+        $normalized = [];
+
+        foreach ($claims as $key => $value) {
+            if (is_bool($value) || is_int($value) || is_float($value) || is_string($value) || null === $value) {
+                $normalized[(string) $key] = $value;
+                continue;
+            }
+
+            if (is_array($value)) {
+                $stringList = [];
+                $isStringList = true;
+
+                foreach ($value as $item) {
+                    if (!is_string($item)) {
+                        $isStringList = false;
+                        break;
+                    }
+
+                    $stringList[] = $item;
+                }
+
+                if ($isStringList) {
+                    $normalized[(string) $key] = $stringList;
+                }
+            }
+        }
+
+        return $normalized;
     }
 
     private function b64(string $value): string

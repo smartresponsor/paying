@@ -7,5 +7,6 @@ namespace App\InfrastructureInterface;
 
 interface PublisherTransportInterface
 {
+    /** @param array<string, mixed> $payload */
     public function publish(string $topic, array $payload): void;
 }

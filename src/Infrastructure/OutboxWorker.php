@@ -14,7 +14,7 @@ use Psr\Log\LoggerInterface;
 
 class OutboxWorker
 {
-    private const MAX_ATTEMPTS = 3;
+    private const int MAX_ATTEMPTS = 3;
 
     public function __construct(
         private readonly Connection $data,
@@ -30,10 +30,10 @@ class OutboxWorker
         $count = 0;
 
         foreach ($rows as $row) {
-            $payload = json_decode((string) $row['payload'], true) ?? [];
-            $attempts = ((int) ($row['attempts'] ?? 0)) + 1;
-            $routingKey = (string) ($row['routing_key'] ?? $row['type']);
-            $id = (string) $row['id'];
+            $payload = json_decode($row['payload'], true) ?? [];
+            $attempts = $row['attempts'] + 1;
+            $routingKey = null !== $row['routing_key'] && '' !== $row['routing_key'] ? $row['routing_key'] : $row['type'];
+            $id = $row['id'];
 
             try {
                 $this->transport->publish($routingKey, $payload);
@@ -86,19 +86,25 @@ class OutboxWorker
     }
 
     /**
-     * @return list<array<string, mixed>>
+     * @return list<array{
+     *     id: string,
+     *     type: string,
+     *     payload: string,
+     *     attempts: int,
+     *     routing_key: string|null
+     * }>
      */
     private function loadRows(int $limit, bool $retryFailed): array
     {
         $statuses = $retryFailed ? ['pending', 'failed'] : ['pending'];
         $sql = sprintf(
-            'SELECT * FROM payment_outbox_message WHERE status IN (%s) ORDER BY occurred_at ASC LIMIT %d',
+            'SELECT id, type, payload, attempts, routing_key FROM payment_outbox_message WHERE status IN (%s) ORDER BY occurred_at ASC LIMIT %d',
             implode(', ', array_map(fn (string $status): string => $this->quoteStatus($status), $statuses)),
             max(1, $limit),
         );
 
         try {
-            return $this->data->fetchAllAssociative($sql);
+            $rows = $this->data->fetchAllAssociative($sql);
         } catch (Exception $e) {
             $this->logger->error('Failed to load outbox messages.', [
                 'limit' => $limit,
@@ -108,6 +114,17 @@ class OutboxWorker
 
             throw new OutboxOperationException('Unable to load outbox messages.', 0, $e);
         }
+
+        return array_map(
+            static fn (array $row): array => [
+                'id' => (string) $row['id'],
+                'type' => (string) $row['type'],
+                'payload' => (string) $row['payload'],
+                'attempts' => (int) ($row['attempts'] ?? 0),
+                'routing_key' => array_key_exists('routing_key', $row) && null !== $row['routing_key'] ? (string) $row['routing_key'] : null,
+            ],
+            $rows,
+        );
     }
 
     private function quoteStatus(string $status): string

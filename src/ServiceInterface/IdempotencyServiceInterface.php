@@ -11,9 +11,21 @@ interface IdempotencyServiceInterface
 {
     public function keyFor(Request $req): string;
 
-    /** @return array<string, mixed> */
+    /**
+     * @template T of array<string, mixed>
+     *
+     * @param callable(): T $producer
+     *
+     * @return T
+     */
     public function once(Request $req, callable $producer): array;
 
-    /** @return array<string, mixed> */
+    /**
+     * @template T of array<string, mixed>
+     *
+     * @param callable(): T $producer
+     *
+     * @return T
+     */
     public function execute(string $key, string $payloadHash, callable $producer): array;
 }

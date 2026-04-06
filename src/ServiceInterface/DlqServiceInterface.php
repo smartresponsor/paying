@@ -8,7 +8,7 @@ namespace App\ServiceInterface;
 interface DlqServiceInterface
 {
     /**
-     * @return list<array<string, mixed>>
+     * @return list<array{id: int, outbox_id: string, topic: string, reason: string, created_at: string}>
      */
     public function list(): array;
 

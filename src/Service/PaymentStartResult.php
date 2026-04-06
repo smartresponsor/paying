@@ -9,6 +9,7 @@ use App\Entity\Payment;
 
 final readonly class PaymentStartResult
 {
+    /** @param array<string, mixed> $providerResult */
     public function __construct(
         public Payment $payment,
         public ?string $providerRef,

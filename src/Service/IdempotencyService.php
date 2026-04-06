@@ -26,7 +26,11 @@ readonly class IdempotencyService implements IdempotencyServiceInterface
     }
 
     /**
-     * @return array<string, mixed>
+     * @template T of array<string, mixed>
+     *
+     * @param callable(): T $producer
+     *
+     * @return T
      *
      * @throws \JsonException
      */
@@ -36,7 +40,11 @@ readonly class IdempotencyService implements IdempotencyServiceInterface
     }
 
     /**
-     * @return array<string, mixed>
+     * @template T of array<string, mixed>
+     *
+     * @param callable(): T $producer
+     *
+     * @return T
      *
      * @throws \JsonException
      */
@@ -45,11 +53,13 @@ readonly class IdempotencyService implements IdempotencyServiceInterface
         $cacheKey = 'payment:idem:direct:'.$key.':'.$payloadHash;
         $cached = $this->store->get($cacheKey);
         if (null !== $cached) {
-            $decoded = json_decode($cached, true);
+            /** @var T $decoded */
+            $decoded = json_decode($cached, true, 512, JSON_THROW_ON_ERROR);
 
-            return is_array($decoded) ? $decoded : [];
+            return $decoded;
         }
 
+        /** @var T $result */
         $result = $producer();
         $this->store->put($cacheKey, json_encode($result, JSON_THROW_ON_ERROR), $this->ttlSec);
 

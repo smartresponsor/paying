@@ -7,8 +7,9 @@ namespace App\ServiceInterface;
 
 interface TokenVerifierInterface
 {
-    /** @return array<string, mixed> */
+    /** @return array<string, bool|int|float|string|list<string>|null> */
     public function verify(string $jwt): array;
 
+    /** @param array<string, bool|int|float|string|list<string>|null> $claims */
     public function hasScopes(array $claims, array $required, bool $any = false): bool;
 }

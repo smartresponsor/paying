@@ -17,6 +17,11 @@ final readonly class WebhookIngestService implements WebhookIngestServiceInterfa
     {
     }
 
+    /**
+     * @param array<string, mixed> $normalized
+     *
+     * @return array{status: 'duplicate'|'queued', outboxId: string|null}
+     */
     public function ingest(string $provider, string $externalId, array $normalized, string $routingKey): array
     {
         $repo = $this->em->getRepository(PaymentWebhookLog::class);

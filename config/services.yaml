@@ -72,6 +72,7 @@ services:
 
     App\ServiceInterface\WebhookVerifierInterface: '@App\Service\WebhookVerifier'
     App\ServiceInterface\TokenVerifierInterface: '@App\Service\TokenVerifier'
+    App\ServiceInterface\OidcJwksCacheInterface: '@App\Service\OidcJwksCache'
     App\ServiceInterface\ValidationErrorMapperInterface: '@App\Service\ValidationErrorMapper'
     App\ServiceInterface\ApiErrorResponseFactoryInterface: '@App\Service\ApiErrorResponseFactory'
     App\ServiceInterface\ApiJsonBodyDecoderInterface: '@App\Service\ApiJsonBodyDecoder'
