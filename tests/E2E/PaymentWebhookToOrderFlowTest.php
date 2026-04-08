@@ -21,12 +21,16 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the payment webhook to order flow scenario within the payment e2e test surface.
+ */
 final class PaymentWebhookToOrderFlowTest extends TestCase
 {
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     /**
+     * Verifies that webhook captured goes through outbox and consumer.
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testWebhookCapturedGoesThroughOutboxAndConsumer(): void
@@ -35,6 +39,7 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
             public array $storage = [];
 
             /**
+             * Implements the create query builder behavior required by the local test double or scenario helper.
              * @return __anonymous@1214
              */
             public function createQueryBuilder(string $alias): object
@@ -47,6 +52,7 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
                     }
 
                     /**
+                     * Implements the where behavior required by the local test double or scenario helper.
                      * @return __anonymous@1214
                      */
                     public function where(string $condition): self
@@ -55,6 +61,7 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
                     }
 
                     /**
+                     * Implements the or where behavior required by the local test double or scenario helper.
                      * @return __anonymous@1214
                      */
                     public function orWhere(string $condition): self
@@ -63,6 +70,7 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
                     }
 
                     /**
+                     * Implements the set parameter behavior required by the local test double or scenario helper.
                      * @return __anonymous@1214
                      */
                     public function setParameter(string $key, mixed $value): self
@@ -71,6 +79,7 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
                     }
 
                     /**
+                     * Implements the set max results behavior required by the local test double or scenario helper.
                      * @return __anonymous@1214
                      */
                     public function setMaxResults(int $limit): self
@@ -79,6 +88,7 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
                     }
 
                     /**
+                     * Implements the get query behavior required by the local test double or scenario helper.
                      * @return __anonymous@2129
                      */
                     public function getQuery(): object
@@ -90,6 +100,9 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
                             {
                             }
 
+                            /**
+                             * Implements the get result behavior required by the local test double used in this scenario.
+                             */
                             public function getResult(): array
                             {
                                 return $this->self->storage;
@@ -116,6 +129,9 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
         $transport = new class implements TransportInterface {
             public array $envelopes = [];
 
+            /**
+             * Implements the send behavior required by the local test double used in this scenario.
+             */
             public function send(Envelope $envelope): Envelope
             {
                 $this->envelopes[] = $envelope;
@@ -123,15 +139,24 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
                 return $envelope;
             }
 
+            /**
+             * Implements the get behavior required by the local test double used in this scenario.
+             */
             public function get(): iterable
             {
                 return $this->envelopes;
             }
 
+            /**
+             * Implements the ack behavior required by the local test double used in this scenario.
+             */
             public function ack(Envelope $envelope): void
             {
             }
 
+            /**
+             * Implements the reject behavior required by the local test double used in this scenario.
+             */
             public function reject(Envelope $envelope): void
             {
             }
@@ -155,26 +180,41 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
                 $this->saved = $saved;
             }
 
+            /**
+             * Implements the save behavior required by the local test double used in this scenario.
+             */
             public function save(Payment $payment): void
             {
                 $this->saved[] = $payment;
             }
 
+            /**
+             * Implements the find behavior required by the local test double used in this scenario.
+             */
             public function find(string $id): ?Payment
             {
                 return 'pay_1' === $id ? $this->payment : null;
             }
 
+            /**
+             * Implements the find by order id behavior required by the local test double used in this scenario.
+             */
             public function findByOrderId(string $orderId): ?Payment
             {
                 return null;
             }
 
+            /**
+             * Implements the list recent behavior required by the local test double used in this scenario.
+             */
             public function listRecent(int $limit = 10): array
             {
                 return [];
             }
 
+            /**
+             * Implements the list ids by statuses behavior required by the local test double used in this scenario.
+             */
             public function listIdsByStatuses(array $statuses, int $limit = 100): array
             {
                 return [];

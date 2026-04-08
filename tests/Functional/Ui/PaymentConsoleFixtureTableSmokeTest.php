@@ -11,6 +11,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the payment console fixture table smoke scenario within the payment ui test surface.
+ */
 final class PaymentConsoleFixtureTableSmokeTest extends WebTestCase
 {
     private ?string $originalOidcDisabled = null;
@@ -35,6 +38,9 @@ final class PaymentConsoleFixtureTableSmokeTest extends WebTestCase
         parent::tearDown();
     }
 
+    /**
+     * Verifies that console lists recently persisted payments.
+     */
     public function testConsoleListsRecentlyPersistedPayments(): void
     {
         $client = self::createClient();

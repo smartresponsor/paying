@@ -7,8 +7,13 @@ namespace App\ServiceInterface;
 
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Defines the contract for the api json body decoder interface payment service boundary.
+ */
 interface ApiJsonBodyDecoderInterface
 {
-    /** @return array<string, mixed>|null */
+    /**
+     * Decodes the incoming payload needed by the decode workflow.
+     */
     public function decode(Request $request, bool $allowEmptyObject = false): ?array;
 }

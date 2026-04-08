@@ -12,6 +12,9 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Processes pending payment outbox messages in worker-driven runtime flows.
+ */
 class OutboxWorker
 {
     private const int MAX_ATTEMPTS = 3;
@@ -24,6 +27,9 @@ class OutboxWorker
     ) {
     }
 
+    /**
+     * Runs one outbox publish pass and returns the number of successfully published items.
+     */
     public function run(int $limit = 100, bool $retryFailed = false): int
     {
         $rows = $this->loadRows($limit, $retryFailed);

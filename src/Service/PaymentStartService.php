@@ -14,6 +14,9 @@ use App\ValueObject\Money;
 use App\ValueObject\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Provides the payment start service service used by the payment lifecycle and operator-facing flows.
+ */
 final readonly class PaymentStartService implements PaymentStartServiceInterface
 {
     public function __construct(
@@ -22,6 +25,9 @@ final readonly class PaymentStartService implements PaymentStartServiceInterface
     ) {
     }
 
+    /**
+     * Executes the start operation for the current payment workflow.
+     */
     public function start(string $orderId, string $provider, string $amount, string $currency, string $idempotencyKey = '', string $origin = 'api'): PaymentStartResult
     {
         $money = Money::fromDecimalString($amount, strtoupper($currency));
@@ -32,6 +38,9 @@ final readonly class PaymentStartService implements PaymentStartServiceInterface
         return $this->startExistingPayment($payment, $provider, $idempotencyKey, $origin);
     }
 
+    /**
+     * Provides the restart behavior for the payment start service component.
+     */
     public function restart(string $paymentId, string $provider, string $idempotencyKey = '', string $origin = 'api'): PaymentStartResult
     {
         $existing = $this->repo->find($paymentId);

@@ -8,14 +8,16 @@ namespace App\Infrastructure;
 use App\ServiceInterface\IdempotencyStoreInterface;
 use Redis;
 
+/**
+ * Stores payment idempotency keys in Redis-backed operational state.
+ */
 class RedisIdempotencyStore implements IdempotencyStoreInterface
 {
     private \Redis $redis;
 
     /**
-     * @throws \RedisException
-     */
-    /**
+     * Boots the Redis-backed idempotency store from the supplied DSN.
+     *
      * @throws \RedisException
      */
     public function __construct(string $url)
@@ -42,9 +44,8 @@ class RedisIdempotencyStore implements IdempotencyStoreInterface
     }
 
     /**
-     * @throws \RedisException
-     */
-    /**
+     * Loads a stored idempotency value when the key is present and not expired.
+     *
      * @throws \RedisException
      */
     public function get(string $key): ?string
@@ -55,9 +56,8 @@ class RedisIdempotencyStore implements IdempotencyStoreInterface
     }
 
     /**
-     * @throws \RedisException
-     */
-    /**
+     * Stores or refreshes an idempotency value with a new expiration window.
+     *
      * @throws \RedisException
      */
     public function put(string $key, string $value, int $ttlSec): void
@@ -65,6 +65,9 @@ class RedisIdempotencyStore implements IdempotencyStoreInterface
         $this->redis->set($key, $value, $ttlSec);
     }
 
+    /**
+     * Returns zero because Redis expiration is enforced natively.
+     */
     public function purgeExpired(): int
     {
         // Redis handles expiration automatically

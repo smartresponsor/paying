@@ -14,12 +14,33 @@ Owner-facing GitHub entrypoints:
 
 Canonical documentation package:
 
+Documentation surfaces are intentionally split:
+
+- Antora producer pages: `docs/antora.yml` + `docs/modules/ROOT/pages/`
+- Nelmio/OpenAPI HTTP contract generation: runtime publication via `/api/docs`, `/api/docs.json`, `/api/docs.yaml`
+- Swagger UI: browser-facing viewer for the Nelmio/OpenAPI contract, not a separate documentation system
+- Exported OpenAPI artifact: `docs/api/openapi.yaml`
+- Doctum generated code reference: `doctum.php` -> `docs/generated/doctum/`
+
+Canonical narrative entry set:
+
 - [INSTALL](docs/INSTALL.md)
 - [ARCHITECTURE](docs/ARCHITECTURE.md)
 - [OPERATIONS](docs/OPERATIONS.md)
 - [API](docs/API.md)
 - [LIMITS](docs/LIMITS.md)
 - [PROOF_PACK](docs/PROOF_PACK.md)
+
+Antora producer entry pages mirror that split and stay intentionally thin:
+
+- `docs/modules/ROOT/pages/index.adoc`
+- `docs/modules/ROOT/pages/architecture.adoc`
+- `docs/modules/ROOT/pages/install.adoc`
+- `docs/modules/ROOT/pages/operations.adoc`
+- `docs/modules/ROOT/pages/limits.adoc`
+- `docs/modules/ROOT/pages/proof-pack.adoc`
+- `docs/modules/ROOT/pages/api.adoc`
+- `docs/modules/ROOT/pages/code-reference.adoc`
 
 ## Honest portrait
 

@@ -12,7 +12,7 @@ Provide deterministic pre-install checks before claiming installed-runtime proof
 - `composer install:proof:checklist`
 - `composer runtime:preflight:sh`
 - `composer runtime:preflight:ps1`
-- `composer docs:phpdoc:check`
+- `composer docs:doctum:check`
 
 ## What these checks prove
 

@@ -1,0 +1,33 @@
+name: Payment Quality
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, intl, pdo, pdo_sqlite, sqlite3, dom, xml, ctype, iconv
+          tools: composer:v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install PHP dependencies
+        run: composer install --prefer-dist --no-interaction
+      - name: Install Node dependencies
+        run: npm ci
+      - name: Lint + CS
+        run: composer qa:style
+      - name: Static analysis
+        run: composer qa:static
+      - name: Semantic DocBlock report
+        run: composer docs:docblock:check
+      - name: Unit + functional tests
+        run: composer test

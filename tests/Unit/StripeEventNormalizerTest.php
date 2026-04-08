@@ -8,8 +8,14 @@ namespace App\Tests\Unit;
 use App\Service\Webhook\StripeEventNormalizer;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the stripe event normalizer scenario within the payment unit test surface.
+ */
 final class StripeEventNormalizerTest extends TestCase
 {
+    /**
+     * Verifies that normalize builds consumer payload.
+     */
     public function testNormalizeBuildsConsumerPayload(): void
     {
         $normalizer = new StripeEventNormalizer();

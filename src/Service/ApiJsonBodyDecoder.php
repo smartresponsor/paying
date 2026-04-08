@@ -8,8 +8,14 @@ namespace App\Service;
 use App\ServiceInterface\ApiJsonBodyDecoderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Provides the api json body decoder service used by the payment lifecycle and operator-facing flows.
+ */
 final class ApiJsonBodyDecoder implements ApiJsonBodyDecoderInterface
 {
+    /**
+     * Decodes the incoming payload needed by the decode workflow.
+     */
     public function decode(Request $request, bool $allowEmptyObject = false): ?array
     {
         $content = $request->getContent();

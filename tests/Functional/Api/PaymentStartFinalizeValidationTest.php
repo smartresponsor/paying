@@ -7,6 +7,9 @@ namespace App\Tests\Functional\Api;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Exercises the payment start finalize validation scenario within the payment api test surface.
+ */
 final class PaymentStartFinalizeValidationTest extends WebTestCase
 {
     private ?string $originalOidcDisabled = null;
@@ -31,6 +34,9 @@ final class PaymentStartFinalizeValidationTest extends WebTestCase
         parent::tearDown();
     }
 
+    /**
+     * Verifies that start payment returns unprocessable entity for invalid payload.
+     */
     public function testStartPaymentReturnsUnprocessableEntityForInvalidPayload(): void
     {
         $client = self::createClient();
@@ -50,6 +56,9 @@ final class PaymentStartFinalizeValidationTest extends WebTestCase
         self::assertSame(422, $client->getResponse()->getStatusCode());
     }
 
+    /**
+     * Verifies that finalize payment returns unprocessable entity for unknown provider.
+     */
     public function testFinalizePaymentReturnsUnprocessableEntityForUnknownProvider(): void
     {
         $client = self::createClient();

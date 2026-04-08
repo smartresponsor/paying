@@ -11,8 +11,14 @@ use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Seeds payment method reference data for local development and tests.
+ */
 final class PaymentMethodFixture extends Fixture implements FixtureGroupInterface
 {
+    /**
+     * Loads fixture records into the persistence layer.
+     */
     public function load(ObjectManager $manager): void
     {
         foreach (['card', 'paypal', 'bank_transfer'] as $code) {
@@ -25,6 +31,8 @@ final class PaymentMethodFixture extends Fixture implements FixtureGroupInterfac
     }
 
     /**
+     * Returns the fixture group names that enable this seed set.
+     *
      * @return string[]
      */
     public static function getGroups(): array

@@ -8,6 +8,9 @@ namespace App\Infrastructure;
 use App\InfrastructureInterface\AuditLoggerInterface;
 use Doctrine\DBAL\Connection;
 
+/**
+ * Persists payment audit records for operator and system-visible lifecycle actions.
+ */
 readonly class AuditLogger implements AuditLoggerInterface
 {
     public function __construct(private Connection $data)
@@ -15,6 +18,8 @@ readonly class AuditLogger implements AuditLoggerInterface
     }
 
     /**
+     * Writes a payment audit entry to the operational database.
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function log(string $action, array $context = []): void

@@ -11,6 +11,9 @@ use App\ValueObject\PaymentStatus;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the payment console submit flow scenario within the payment ui test surface.
+ */
 final class PaymentConsoleSubmitFlowTest extends WebTestCase
 {
     private ?string $originalOidcDisabled = null;
@@ -35,6 +38,9 @@ final class PaymentConsoleSubmitFlowTest extends WebTestCase
         parent::tearDown();
     }
 
+    /**
+     * Verifies that console create and start forms redirect with success flash.
+     */
     public function testConsoleCreateAndStartFormsRedirectWithSuccessFlash(): void
     {
         $client = self::createClient();
@@ -70,6 +76,9 @@ final class PaymentConsoleSubmitFlowTest extends WebTestCase
         self::assertMatchesRegularExpression('/Payment [0-9A-HJKMNP-TV-Z]{26} started via internal\./', $content);
     }
 
+    /**
+     * Verifies that console finalize and refund forms mutate existing fixture backed payment.
+     */
     public function testConsoleFinalizeAndRefundFormsMutateExistingFixtureBackedPayment(): void
     {
         $client = self::createClient();
@@ -121,6 +130,9 @@ final class PaymentConsoleSubmitFlowTest extends WebTestCase
         self::assertSame('refunded', $refreshed->status()->value);
     }
 
+    /**
+     * Verifies that console selection prefills finalize and refund payment id fields.
+     */
     public function testConsoleSelectionPrefillsFinalizeAndRefundPaymentIdFields(): void
     {
         $client = self::createClient();

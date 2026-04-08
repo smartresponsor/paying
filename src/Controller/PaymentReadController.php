@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Returns read-side snapshots for individual payment aggregates.
+ */
 final readonly class PaymentReadController implements PaymentReadControllerInterface
 {
     public function __construct(private PaymentRepositoryInterface $repo)
@@ -48,6 +51,9 @@ final readonly class PaymentReadController implements PaymentReadControllerInter
     )]
     #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string'))]
     #[Security(name: 'Bearer')]
+    /**
+     * Reads and serializes a single payment aggregate by identifier.
+     */
     public function read(string $id): JsonResponse
     {
         if (!Ulid::isValid($id)) {

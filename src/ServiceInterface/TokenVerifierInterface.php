@@ -5,11 +5,18 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface;
 
+/**
+ * Defines the contract for the token verifier interface payment service boundary.
+ */
 interface TokenVerifierInterface
 {
-    /** @return array<string, bool|int|float|string|list<string>|null> */
+    /**
+     * Verifies the input handled by the verify workflow.
+     */
     public function verify(string $jwt): array;
 
-    /** @param array<string, bool|int|float|string|list<string>|null> $claims */
+    /**
+     * Determines whether the has scopes condition is currently satisfied.
+     */
     public function hasScopes(array $claims, array $required, bool $any = false): bool;
 }

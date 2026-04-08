@@ -7,6 +7,9 @@ namespace App\Service;
 use App\ServiceInterface\MetricInterface;
 use App\ServiceInterface\RetryExecutorInterface;
 
+/**
+ * Provides the retry executor service used by the payment lifecycle and operator-facing flows.
+ */
 readonly class RetryExecutor implements RetryExecutorInterface
 {
     public function __construct(
@@ -19,6 +22,9 @@ readonly class RetryExecutor implements RetryExecutorInterface
     ) {
     }
 
+    /**
+     * Provides the execute behavior for the retry executor component.
+     */
     public function execute(callable $callable): mixed
     {
         $attempt = 1;

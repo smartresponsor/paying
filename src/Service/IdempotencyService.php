@@ -9,12 +9,18 @@ use App\ServiceInterface\IdempotencyServiceInterface;
 use App\ServiceInterface\IdempotencyStoreInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Provides the idempotency service service used by the payment lifecycle and operator-facing flows.
+ */
 readonly class IdempotencyService implements IdempotencyServiceInterface
 {
     public function __construct(private IdempotencyStoreInterface $store, private int $ttlSec = 86400)
     {
     }
 
+    /**
+     * Provides the key for behavior for the idempotency service component.
+     */
     public function keyFor(Request $req): string
     {
         $h = (string) $req->headers->get('Idempotency-Key', '');
@@ -26,12 +32,11 @@ readonly class IdempotencyService implements IdempotencyServiceInterface
     }
 
     /**
+     * Executes the once operation for the current payment workflow.
+     *
      * @template T of array<string, mixed>
-     *
      * @param callable(): T $producer
-     *
      * @return T
-     *
      * @throws \JsonException
      */
     public function once(Request $req, callable $producer): array
@@ -40,12 +45,11 @@ readonly class IdempotencyService implements IdempotencyServiceInterface
     }
 
     /**
+     * Executes the execute operation for the current payment workflow.
+     *
      * @template T of array<string, mixed>
-     *
      * @param callable(): T $producer
-     *
      * @return T
-     *
      * @throws \JsonException
      */
     public function execute(string $key, string $payloadHash, callable $producer): array

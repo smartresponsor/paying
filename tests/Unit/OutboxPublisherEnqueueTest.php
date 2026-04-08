@@ -10,6 +10,9 @@ use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
+/**
+ * Exercises the outbox publisher enqueue scenario within the payment unit test surface.
+ */
 final class OutboxPublisherEnqueueTest extends TestCase
 {
     /**
@@ -17,6 +20,7 @@ final class OutboxPublisherEnqueueTest extends TestCase
      * @throws \JsonException
      */
     /**
+     * Verifies that enqueue writes unified payment outbox message table.
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testEnqueueWritesUnifiedPaymentOutboxMessageTable(): void

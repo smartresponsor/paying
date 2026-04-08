@@ -145,7 +145,7 @@ Fixtures are required by the next phase, but no fixture bundle/tooling is yet ex
 - `symfony/browser-kit`
 - `symfony/css-selector`
 - `doctrine/doctrine-fixtures-bundle`
-- `phpdocumentor/phpdocumentor`
+- `code-lts/doctum` or external Doctum PHAR (outside the runtime dependency graph)
 
 ## Immediate rule
 

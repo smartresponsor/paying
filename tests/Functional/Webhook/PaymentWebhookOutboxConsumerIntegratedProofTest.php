@@ -33,8 +33,14 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the payment webhook outbox consumer integrated proof scenario within the payment webhook test surface.
+ */
 final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
 {
+    /**
+     * Verifies that stripe webhook queues publishes and captures payment.
+     */
     public function testStripeWebhookQueuesPublishesAndCapturesPayment(): void
     {
         $payment = new Payment(new Ulid(), PaymentStatus::new, '50.00', 'USD');
@@ -108,6 +114,9 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
         ], $orderSync->events);
     }
 
+    /**
+     * Verifies that pay pal webhook queues publishes and refunds payment.
+     */
     public function testPayPalWebhookQueuesPublishesAndRefundsPayment(): void
     {
         $payment = new Payment(new Ulid(), PaymentStatus::completed, '50.00', 'USD');
@@ -198,6 +207,9 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
             {
             }
 
+            /**
+             * Provides the find one by behavior required by this test scenario.
+             */
             public function findOneBy(array $criteria): ?PaymentWebhookLog
             {
                 foreach ($this->state->logs as $log) {
@@ -217,6 +229,7 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
             }
 
             /**
+             * Implements the create query builder behavior required by the local test double or scenario helper.
              * @return __anonymous@8691
              */
             public function createQueryBuilder(string $alias): object
@@ -229,6 +242,7 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
                     }
 
                     /**
+                     * Implements the where behavior required by the local test double or scenario helper.
                      * @return __anonymous@8691
                      */
                     public function where(string $condition): self
@@ -237,6 +251,7 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
                     }
 
                     /**
+                     * Implements the or where behavior required by the local test double or scenario helper.
                      * @return __anonymous@8691
                      */
                     public function orWhere(string $condition): self
@@ -245,6 +260,7 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
                     }
 
                     /**
+                     * Implements the set parameter behavior required by the local test double or scenario helper.
                      * @return __anonymous@8691
                      */
                     public function setParameter(string $key, mixed $value): self
@@ -253,6 +269,7 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
                     }
 
                     /**
+                     * Implements the set max results behavior required by the local test double or scenario helper.
                      * @return __anonymous@8691
                      */
                     public function setMaxResults(int $limit): self
@@ -261,6 +278,7 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
                     }
 
                     /**
+                     * Implements the get query behavior required by the local test double or scenario helper.
                      * @return __anonymous@9610
                      */
                     public function getQuery(): object
@@ -272,6 +290,9 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
                             {
                             }
 
+                            /**
+                             * Implements the get result behavior required by the local test double used in this scenario.
+                             */
                             public function getResult(): array
                             {
                                 return $this->state->outbox;
@@ -313,26 +334,41 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
             {
             }
 
+            /**
+             * Implements the save behavior required by the local test double used in this scenario.
+             */
             public function save(Payment $payment): void
             {
                 $this->storage[$payment->id()->toRfc4122()] = $payment;
             }
 
+            /**
+             * Implements the find behavior required by the local test double used in this scenario.
+             */
             public function find(string $id): ?Payment
             {
                 return $this->storage[$id] ?? null;
             }
 
+            /**
+             * Implements the find by order id behavior required by the local test double used in this scenario.
+             */
             public function findByOrderId(string $orderId): ?Payment
             {
                 return null;
             }
 
+            /**
+             * Implements the list recent behavior required by the local test double used in this scenario.
+             */
             public function listRecent(int $limit = 10): array
             {
                 return array_slice(array_values($this->storage), 0, $limit);
             }
 
+            /**
+             * Implements the list ids by statuses behavior required by the local test double used in this scenario.
+             */
             public function listIdsByStatuses(array $statuses, int $limit = 100): array
             {
                 $result = [];
@@ -350,6 +386,9 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
     private function createAlwaysValidVerifier(): WebhookVerifierInterface
     {
         return new class implements WebhookVerifierInterface {
+            /**
+             * Provides the verify behavior required by this test scenario.
+             */
             public function verify(string $provider, string $raw, array $headers): bool
             {
                 return true;
@@ -362,16 +401,25 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
         return new class implements OrderPaymentSyncInterface {
             public array $events = [];
 
+            /**
+             * Provides the on payment captured behavior required by this test scenario.
+             */
             public function onPaymentCaptured(string $orderId, string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null): void
             {
                 $this->events[] = ['captured', $orderId, $paymentId, $amountMinor, $currency, $gatewayTxId];
             }
 
+            /**
+             * Provides the on payment refunded behavior required by this test scenario.
+             */
             public function onPaymentRefunded(string $orderId, string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null, ?string $reason = null): void
             {
                 $this->events[] = ['refunded', $orderId, $paymentId, $amountMinor, $currency, $gatewayTxId, $reason];
             }
 
+            /**
+             * Provides the on payment failed behavior required by this test scenario.
+             */
             public function onPaymentFailed(string $orderId, string $paymentId, string $errorCode, ?string $message = null): void
             {
                 $this->events[] = ['failed', $orderId, $paymentId, $errorCode, $message];
@@ -384,6 +432,9 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
         return new class implements TransportInterface {
             public array $envelopes = [];
 
+            /**
+             * Implements the send behavior required by the local test double used in this scenario.
+             */
             public function send(Envelope $envelope): Envelope
             {
                 $this->envelopes[] = $envelope;
@@ -391,15 +442,24 @@ final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
                 return $envelope;
             }
 
+            /**
+             * Implements the get behavior required by the local test double used in this scenario.
+             */
             public function get(): iterable
             {
                 return $this->envelopes;
             }
 
+            /**
+             * Implements the ack behavior required by the local test double used in this scenario.
+             */
             public function ack(Envelope $envelope): void
             {
             }
 
+            /**
+             * Implements the reject behavior required by the local test double used in this scenario.
+             */
             public function reject(Envelope $envelope): void
             {
             }

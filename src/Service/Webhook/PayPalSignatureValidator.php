@@ -7,12 +7,18 @@ namespace App\Service\Webhook;
 
 use App\ServiceInterface\WebhookVerifierInterface;
 
+/**
+ * Provides the pay pal signature validator step for webhook validation and normalization flows.
+ */
 final readonly class PayPalSignatureValidator
 {
     public function __construct(private WebhookVerifierInterface $verifier)
     {
     }
 
+    /**
+     * Determines whether the is valid condition is currently satisfied.
+     */
     public function isValid(string $payload, array $headers): bool
     {
         return $this->verifier->verify('paypal', $payload, $headers);

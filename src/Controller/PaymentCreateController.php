@@ -18,6 +18,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Creates new payment aggregates through the public HTTP API.
+ */
 final readonly class PaymentCreateController implements PaymentCreateControllerInterface
 {
     public function __construct(
@@ -66,6 +69,9 @@ final readonly class PaymentCreateController implements PaymentCreateControllerI
         ),
     )]
     #[Security(name: 'Bearer')]
+    /**
+     * Validates the create request body and persists a newly created payment aggregate.
+     */
     public function create(Request $request): JsonResponse
     {
         $data = $this->jsonBodyDecoder->decode($request);

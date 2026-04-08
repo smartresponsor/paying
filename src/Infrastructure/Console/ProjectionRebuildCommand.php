@@ -12,6 +12,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Rebuilds payment read models from persisted payment state.
+ */
 #[AsCommand(name: 'payment:projection:rebuild', description: 'Rebuild full payment projection')]
 class ProjectionRebuildCommand extends Command
 {

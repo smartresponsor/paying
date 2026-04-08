@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Operations</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f6f8fa; color: #1f2328; }
+    .layout { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    nav { background: #fff; border: 1px solid #d0d7de; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+    nav ul { margin: 0; padding-left: 20px; }
+    article { background: #fff; border: 1px solid #d0d7de; border-radius: 12px; padding: 24px; }
+    pre { overflow-x: auto; background: #f6f8fa; padding: 12px; border-radius: 8px; }
+    code { font-family: Consolas, monospace; }
+    a { color: #0969da; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav>
+      <strong>Payment docs</strong>
+      <ul><li><a href="index.html">index</a></li><li><a href="INSTALL.html">INSTALL</a></li><li><a href="ARCHITECTURE.html">ARCHITECTURE</a></li><li><a href="OPERATIONS.html">OPERATIONS</a></li><li><a href="API.html">API</a></li><li><a href="LIMITS.html">LIMITS</a></li><li><a href="PROOF_PACK.html">PROOF_PACK</a></li><li><a href="release/runtime-baseline.html">runtime-baseline</a></li></ul>
+    </nav>
+    <article><h1>OPERATIONS</h1>
+<h2>Install preflight</h2>
+<pre><code>composer install:preflight
+# or
+bash tools/runtime/payment_install_preflight.sh</code></pre>
+<h2>Bootstrap / reset</h2>
+<p>Test bootstrap (reset + migrate + fixtures):</p>
+<pre><code>composer test:bootstrap</code></pre>
+<p>Manual equivalent (SQLite test topology):</p>
+<pre><code>rm -f var/payment.test.data.sqlite var/payment.test.infra.sqlite
+php bin/console doctrine:migrations:migrate --env=test --no-interaction
+php bin/console doctrine:fixtures:load --env=test --group=payment --no-interaction</code></pre>
+<p>Manual equivalent (PostgreSQL user-data topology, local or Docker):</p>
+<pre><code>export DATABASE_URL=&quot;pgsql://app:app@127.0.0.1:5432/payment_test&quot;
+# or in docker-compose app container:
+# export DATABASE_URL=&quot;pgsql://app:app@pg:5432/payment_test&quot;
+composer test:bootstrap</code></pre>
+<h2>Tests and QA</h2>
+<pre><code>composer test
+composer test:unit
+composer test:functional
+composer test:e2e
+npm install
+npx playwright install --with-deps chromium
+npm run test:playwright
+composer qa:style
+composer qa:static
+composer qa:test
+composer qa:smoke
+composer qa:report</code></pre>
+<h2>Pipeline</h2>
+<p>Local pipeline:</p>
+<pre><code>composer pipeline:local:sh</code></pre>
+<p>Includes Playwright Chromium UI run (`composer test:ui:playwright`), so ensure Node dependencies and browser are</p>
+<p>installed before running the pipeline.</p>
+<p>Full/strict contour (smokes + reports + fail-on-errors):</p>
+<pre><code>bash tools/ci/run-payment-local-pipeline.sh --include-smokes --include-reports --fail-on-errors</code></pre>
+<h2>Reconciliation walkthrough</h2>
+<p>1. Start or finalize a payment.</p>
+<p>2. Deliver a webhook (`/webhook/stripe` or `/webhook/paypal`).</p>
+<p>3. Process outbox:</p>
+<pre><code>   php bin/console payment:outbox:process --limit=50 --retry</code></pre>
+<p>4. (Optional) consume transport:</p>
+<pre><code>   php bin/console messenger:consume payment_events_in -vv</code></pre>
+<p>5. Validate payment state via `GET /api/payments/{id}` and UI payment card.</p>
+<h2>Webhook log walkthrough</h2>
+<p>1. POST a valid webhook payload to provider endpoint.</p>
+<p>2. Verify dedupe/status behavior in `payment_webhook_log` and UI webhook visibility table.</p>
+<p>3. Re-send same event ID and confirm duplicate behavior (no double processing).</p>
+<h2>Outbox / DLQ / retry proof</h2>
+<p>1. Trigger event ingestion.</p>
+<p>2. Run outbox processor command.</p>
+<p>3. Check `/payment/dlq` list endpoint for failed items.</p>
+<p>4. Replay selected item:</p>
+<pre><code>   curl -X POST http://localhost:8000/payment/dlq/replay/{id}</code></pre>
+<p>5. Re-run outbox processor with `--retry` and validate state.</p>
+<h2>SLA and report commands</h2>
+<pre><code>composer report:runtime-proof
+composer report:route-inventory
+composer install:proof:checklist
+composer proof:pack:sh</code></pre>
+<h2>Canonical proof pack</h2>
+<p>Use `docs/PROOF_PACK.md` for the single RC readiness flow and artifact contract.</p></article>
+  </div>
+</body>
+</html>

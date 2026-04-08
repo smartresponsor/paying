@@ -10,13 +10,22 @@ use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ValueObject\Money;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+/**
+ * Handles the payment create handler workflow inside the payment messenger pipeline.
+ */
 #[AsMessageHandler]
+/**
+ * Handles the payment create handler workflow inside the payment messenger pipeline.
+ */
 final readonly class PaymentCreateHandler
 {
     public function __construct(private PaymentStartServiceInterface $paymentStartService)
     {
     }
 
+    /**
+     * Executes the message handling workflow for the current payment transport message.
+     */
     public function __invoke(PaymentCreateCommand $command): void
     {
         $money = Money::fromMinor($command->amountMinor, strtoupper($command->currency));

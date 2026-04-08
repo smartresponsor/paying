@@ -5,8 +5,13 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface;
 
+/**
+ * Defines the contract for the sla reporter interface payment service boundary.
+ */
 interface SlaReporterInterface
 {
-    /** @return array{window: string, total: int, completed: int, failed: int, canceled: int, refunded: int, successRate: float} */
+    /**
+     * Returns the value exposed by the since accessor.
+     */
     public function since(string $isoInterval): array;
 }

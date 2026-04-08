@@ -5,10 +5,10 @@
 This wave closes the repository-owned quality contour that was previously only partially present:
 
 - `friendsofphp/php-cs-fixer` is now declared in `composer.json`
-- `phpDocumentor` is now declared in `composer.json`
-- `phpdoc.dist.xml` now defines the internal documentation entry point
+- Doctum is now the canonical generated code-reference surface for the repository
+- `doctum.php` now defines the internal code-reference entry point
 - `.github/workflows/payment-quality.yaml` now defines a repository-owned CI quality baseline
-- Composer scripts now expose a single `qa` entry point and phpDocumentor/OpenAPI document checks
+- Composer scripts now expose a single `qa` entry point and Doctum/OpenAPI document checks
 
 ## What this still does not close
 
@@ -17,7 +17,7 @@ closure step:
 
 - `composer.lock` is still absent from the current slice
 - CI execution is defined but not proven from inside this archive
-- phpDocumentor output generation is configured but not executed in this repository snapshot
+- Doctum output generation is configured but not executed in this repository snapshot
 
 ## Owned quality entry points
 
@@ -27,7 +27,7 @@ closure step:
 - `composer stan`
 - `composer cs`
 - `composer test`
-- `composer docs:phpdoc`
+- `composer docs:doctum`
 - `composer docs:openapi:lint`
 
 ## Release-hardening meaning

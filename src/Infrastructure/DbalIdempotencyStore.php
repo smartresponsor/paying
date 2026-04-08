@@ -8,6 +8,9 @@ namespace App\Infrastructure;
 use App\ServiceInterface\IdempotencyStoreInterface;
 use Doctrine\DBAL\Connection;
 
+/**
+ * Stores payment idempotency keys in the relational operational database.
+ */
 readonly class DbalIdempotencyStore implements IdempotencyStoreInterface
 {
     public function __construct(private Connection $data)
@@ -15,9 +18,8 @@ readonly class DbalIdempotencyStore implements IdempotencyStoreInterface
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
-     */
-    /**
+     * Loads a stored idempotency value when the key is present and not expired.
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function get(string $key): ?string
@@ -36,9 +38,8 @@ readonly class DbalIdempotencyStore implements IdempotencyStoreInterface
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
-     */
-    /**
+     * Stores or refreshes an idempotency value with a new expiration window.
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function put(string $key, string $value, int $ttlSec): void
@@ -52,9 +53,8 @@ readonly class DbalIdempotencyStore implements IdempotencyStoreInterface
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
-     */
-    /**
+     * Removes expired idempotency records and returns the affected row count.
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function purgeExpired(): int

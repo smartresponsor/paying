@@ -12,6 +12,9 @@ use App\ServiceInterface\ProviderRouterInterface;
 use App\ServiceInterface\RetryExecutorInterface;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Provides the provider guard service used by the payment lifecycle and operator-facing flows.
+ */
 readonly class ProviderGuard implements ProviderGuardInterface
 {
     public function __construct(
@@ -23,8 +26,9 @@ readonly class ProviderGuard implements ProviderGuardInterface
     }
 
     /**
-     * @param array<string, mixed> $context
+     * Executes the start operation for the current payment workflow.
      *
+     * @param array<string, mixed> $context
      * @return array{provider: string, paymentId: string, accepted?: bool, status?: string, providerRef?: string|null, checkoutUrl?: string, result?: array<string, mixed>}
      */
     public function start(string $provider, Payment $payment, array $context = []): array
@@ -34,7 +38,9 @@ readonly class ProviderGuard implements ProviderGuardInterface
         });
     }
 
-    /** @param array<string, mixed> $payload */
+    /**
+     * Executes the finalize operation for the current payment workflow.
+     */
     public function finalize(string $provider, Ulid $id, array $payload = []): Payment
     {
         return $this->measure('finalize', $provider, function () use ($provider, $id, $payload) {
@@ -42,6 +48,9 @@ readonly class ProviderGuard implements ProviderGuardInterface
         });
     }
 
+    /**
+     * Executes the refund operation for the current payment workflow.
+     */
     public function refund(string $provider, Ulid $id, string $amount): Payment
     {
         return $this->measure('refund', $provider, function () use ($provider, $id, $amount) {
@@ -49,6 +58,9 @@ readonly class ProviderGuard implements ProviderGuardInterface
         });
     }
 
+    /**
+     * Executes the reconcile operation for the current payment workflow.
+     */
     public function reconcile(string $provider, Ulid $id): Payment
     {
         return $this->measure('reconcile', $provider, function () use ($provider, $id) {

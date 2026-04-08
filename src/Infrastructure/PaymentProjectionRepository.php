@@ -11,6 +11,9 @@ use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Persists and queries payment projection records for read-side use cases.
+ */
 readonly class PaymentProjectionRepository implements PaymentProjectionRepositoryInterface
 {
     public function __construct(
@@ -20,6 +23,8 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
     }
 
     /**
+     * Loads a payment projection by its identifier.
+     *
      * @return array<string, scalar|null>|null
      */
     public function findById(string $id): ?array
@@ -39,6 +44,8 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
     }
 
     /**
+     * Lists payment projections filtered by their current status.
+     *
      * @return list<array<string, scalar|null>>
      */
     public function listByStatus(string $status, int $limit = 100): array
@@ -56,6 +63,9 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
         }
     }
 
+    /**
+     * Creates or updates a payment projection snapshot.
+     */
     public function upsert(array $row): void
     {
         $this->infra->transactional(function (Connection $connection) use ($row): void {
@@ -83,6 +93,9 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
         });
     }
 
+    /**
+     * Returns the latest projection update timestamp currently stored.
+     */
     public function maxUpdatedAt(): ?string
     {
         try {
@@ -96,6 +109,9 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
         return $row ? (string) $row : null;
     }
 
+    /**
+     * Returns the stored projection watermark value.
+     */
     public function watermark(): ?string
     {
         try {
@@ -109,6 +125,9 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
         return $row ? (string) $row : null;
     }
 
+    /**
+     * Stores the latest processed projection watermark value.
+     */
     public function saveWatermark(string $ts): void
     {
         $updated = $this->infra->update('payment_projection_meta', ['value' => $ts], ['name' => 'watermark']);

@@ -7,6 +7,9 @@ namespace App\Controller\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Carries validated refund payload data for the public payment API.
+ */
 final class PaymentRefundRequestDto
 {
     #[Assert\NotBlank]

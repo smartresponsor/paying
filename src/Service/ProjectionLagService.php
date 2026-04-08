@@ -9,6 +9,9 @@ use App\InfrastructureInterface\PaymentProjectionRepositoryInterface;
 use App\ServiceInterface\ProjectionLagServiceInterface;
 use Doctrine\DBAL\Connection;
 
+/**
+ * Provides the projection lag service service used by the payment lifecycle and operator-facing flows.
+ */
 final readonly class ProjectionLagService implements ProjectionLagServiceInterface
 {
     public function __construct(
@@ -18,6 +21,8 @@ final readonly class ProjectionLagService implements ProjectionLagServiceInterfa
     }
 
     /**
+     * Executes the snapshot operation for the current payment workflow.
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function snapshot(): array

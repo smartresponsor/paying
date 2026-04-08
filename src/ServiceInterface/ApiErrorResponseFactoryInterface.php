@@ -7,9 +7,18 @@ namespace App\ServiceInterface;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * Defines the contract for the api error response factory interface payment service boundary.
+ */
 interface ApiErrorResponseFactoryInterface
 {
+    /**
+     * Provides the bad json body behavior for the api error response factory interface component.
+     */
     public function badJsonBody(): JsonResponse;
 
+    /**
+     * Provides the payment not found behavior for the api error response factory interface component.
+     */
     public function paymentNotFound(): JsonResponse;
 }

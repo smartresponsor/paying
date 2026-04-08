@@ -1,0 +1,19 @@
+= Code Reference
+
+Generated code reference is intentionally kept separate from owner-facing narrative docs.
+
+== Canonical generator
+
+Doctum is the generated code-reference surface for `src/`.
+
+* Configuration: `doctum.php`
+* Runtime helper: `tools/runtime/payment_doctum.sh`
+* Runtime helper (PowerShell): `tools/runtime/payment_doctum.ps1`
+* Tool presence check: `tools/ci/doctum-check.php`
+* Generated output target: `docs/generated/doctum/`
+
+The generated code reference is not treated as the primary narrative documentation layer. Antora should link to this surface conceptually while keeping ownership, governance, architecture, install, and operations documentation hand-written.
+
+== Publishing posture
+
+Doctum output should be published as a separate generated artifact or mounted surface from the central documentation ecosystem, rather than copied into Antora pages.

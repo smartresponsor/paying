@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Handles Stripe webhook callbacks and normalizes them into the payment runtime.
+ */
 final readonly class StripeWebhookController
 {
     public function __construct(
@@ -25,6 +28,9 @@ final readonly class StripeWebhookController
     ) {
     }
 
+    /**
+     * Verifies and processes an inbound Stripe webhook request.
+     */
     public function __invoke(Request $request): JsonResponse
     {
         $sig = $request->headers->get('Stripe-Signature');

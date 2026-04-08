@@ -15,12 +15,16 @@ use App\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the payment api start handler scenario within the payment unit test surface.
+ */
 final class PaymentApiStartHandlerTest extends TestCase
 {
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     /**
+     * Verifies that handle returns api payload via idempotency gate.
      * @throws \JsonException
      * @throws \PHPUnit\Framework\MockObject\Exception
      */

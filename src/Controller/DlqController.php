@@ -11,6 +11,9 @@ use App\ServiceInterface\DlqServiceInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Exposes operator endpoints for inspecting and replaying dead-lettered payment messages.
+ */
 final readonly class DlqController implements DlqControllerInterface
 {
     public function __construct(private DlqServiceInterface $dlqService)
@@ -19,12 +22,18 @@ final readonly class DlqController implements DlqControllerInterface
 
     #[RequireScope(['payment:admin'])]
     #[RequireScope(['payment:read'])]
+    /**
+     * Returns the current dead-letter queue snapshot for payment operators.
+     */
     public function list(): JsonResponse
     {
         return new JsonResponse(['items' => $this->dlqService->list()], Response::HTTP_OK);
     }
 
     #[RequireScope(['payment:admin'])]
+    /**
+     * Replays a single dead-lettered message back into the payment processing flow.
+     */
     public function replay(int $id): JsonResponse
     {
         if (!$this->dlqService->replay($id)) {

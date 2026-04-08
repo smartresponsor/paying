@@ -9,6 +9,9 @@ use App\Event\PaymentEvent;
 use App\Service\Metric;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * Collects lightweight payment metrics from kernel and domain events.
+ */
 readonly class MetricSubscriber implements EventSubscriberInterface
 {
     public function __construct(private Metric $metrics)
@@ -16,6 +19,8 @@ readonly class MetricSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Returns the Symfony event subscriptions exposed by this subscriber.
+     *
      * @return string[]
      */
     public static function getSubscribedEvents(): array
@@ -26,11 +31,17 @@ readonly class MetricSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * Records a successful payment event in the metrics collector.
+     */
     public function onSuccess(PaymentEvent $e): void
     {
         $this->metrics->incSuccess();
     }
 
+    /**
+     * Records a failed payment event in the metrics collector.
+     */
     public function onFailure(PaymentEvent $e): void
     {
         $this->metrics->incFailure();

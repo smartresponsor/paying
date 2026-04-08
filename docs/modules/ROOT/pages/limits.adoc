@@ -1,0 +1,11 @@
+= Limits
+
+This page is the Antora entry point for explicit limits, assumptions, and current non-goals.
+
+== Canonical repo-local source
+
+* `docs/LIMITS.md`
+
+== Role in the documentation split
+
+Limits stay in the hand-written narrative layer. They should not be mixed into generated HTTP contract artifacts or generated code reference output.

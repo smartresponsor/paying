@@ -5,6 +5,9 @@ declare(strict_types=1);
 
 namespace App\Message\Event;
 
+/**
+ * Represents the payment transport message notification emitted by the payment messaging layer.
+ */
 final readonly class PaymentTransportMessage
 {
     public function __construct(

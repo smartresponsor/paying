@@ -13,6 +13,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Runs the payment outbox publishing loop from the console surface.
+ */
 #[AsCommand(name: 'payment:outbox:run', description: 'Publish outbox entries')]
 class OutboxRunCommand extends Command
 {

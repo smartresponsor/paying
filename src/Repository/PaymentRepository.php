@@ -14,6 +14,9 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Persists and reloads payment records for the payment repository workflow boundary.
+ */
 final readonly class PaymentRepository implements PaymentRepositoryInterface
 {
     public function __construct(
@@ -22,12 +25,18 @@ final readonly class PaymentRepository implements PaymentRepositoryInterface
     ) {
     }
 
+    /**
+     * Executes the save operation for the current payment workflow.
+     */
     public function save(Payment $payment): void
     {
         $this->em->persist($payment);
         $this->em->flush();
     }
 
+    /**
+     * Looks up payment data through the find query path.
+     */
     public function find(string $id): ?Payment
     {
         $payment = $this->em->find(Payment::class, $id);
@@ -42,6 +51,9 @@ final readonly class PaymentRepository implements PaymentRepositoryInterface
         return $payment;
     }
 
+    /**
+     * Looks up payment data through the find by order id query path.
+     */
     public function findByOrderId(string $orderId): ?Payment
     {
         $payment = $this->em->getRepository(Payment::class)->findOneBy(['orderId' => $orderId]);
@@ -56,6 +68,9 @@ final readonly class PaymentRepository implements PaymentRepositoryInterface
         return $payment;
     }
 
+    /**
+     * Returns the collection assembled by the list recent query path.
+     */
     public function listRecent(int $limit = 10): array
     {
         $limit = max(1, $limit);
@@ -65,6 +80,9 @@ final readonly class PaymentRepository implements PaymentRepositoryInterface
         return array_values(array_filter($payments, static fn (mixed $payment): bool => $payment instanceof Payment));
     }
 
+    /**
+     * Returns the collection assembled by the list ids by statuses query path.
+     */
     public function listIdsByStatuses(array $statuses, int $limit = 100): array
     {
         $normalized = array_values(array_unique(array_filter(array_map(

@@ -21,6 +21,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Accepts refund requests for existing payment aggregates through the HTTP API.
+ */
 final readonly class PaymentRefundController implements PaymentRefundControllerInterface
 {
     public function __construct(
@@ -58,6 +61,9 @@ final readonly class PaymentRefundController implements PaymentRefundControllerI
         ),
     )]
     #[Security(name: 'Bearer')]
+    /**
+     * Validates the refund request and applies the provider-specific refund transition.
+     */
     public function refund(string $id, Request $request): JsonResponse
     {
         if (!Ulid::isValid($id)) {

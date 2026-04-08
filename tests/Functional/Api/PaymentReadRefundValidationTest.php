@@ -7,6 +7,9 @@ namespace App\Tests\Functional\Api;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Exercises the payment read refund validation scenario within the payment api test surface.
+ */
 final class PaymentReadRefundValidationTest extends WebTestCase
 {
     private ?string $originalOidcDisabled = null;
@@ -31,6 +34,9 @@ final class PaymentReadRefundValidationTest extends WebTestCase
         parent::tearDown();
     }
 
+    /**
+     * Verifies that read payment returns not found for invalid ulid.
+     */
     public function testReadPaymentReturnsNotFoundForInvalidUlid(): void
     {
         $client = self::createClient();
@@ -39,6 +45,9 @@ final class PaymentReadRefundValidationTest extends WebTestCase
         self::assertSame(404, $client->getResponse()->getStatusCode());
     }
 
+    /**
+     * Verifies that refund payment returns unprocessable entity for invalid payload.
+     */
     public function testRefundPaymentReturnsUnprocessableEntityForInvalidPayload(): void
     {
         $client = self::createClient();

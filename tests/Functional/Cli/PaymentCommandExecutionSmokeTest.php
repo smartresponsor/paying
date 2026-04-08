@@ -19,12 +19,16 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the payment command execution smoke scenario within the payment cli test surface.
+ */
 final class PaymentCommandExecutionSmokeTest extends TestCase
 {
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     /**
+     * Verifies that projection sync command executes and prints synced count.
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testProjectionSyncCommandExecutesAndPrintsSyncedCount(): void
@@ -46,6 +50,7 @@ final class PaymentCommandExecutionSmokeTest extends TestCase
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     /**
+     * Verifies that projection rebuild command executes and prints rebuilt count.
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testProjectionRebuildCommandExecutesAndPrintsRebuiltCount(): void
@@ -63,6 +68,9 @@ final class PaymentCommandExecutionSmokeTest extends TestCase
         self::assertStringContainsString('Rebuilt: 11', $tester->getDisplay());
     }
 
+    /**
+     * Verifies that outbox run command executes with retry failed flag.
+     */
     public function testOutboxRunCommandExecutesWithRetryFailedFlag(): void
     {
         /** @var OutboxWorker&MockObject $worker */
@@ -90,6 +98,7 @@ final class PaymentCommandExecutionSmokeTest extends TestCase
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     /**
+     * Verifies that reconcile run command executes for all returned processing ids.
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testReconcileRunCommandExecutesForAllReturnedProcessingIds(): void

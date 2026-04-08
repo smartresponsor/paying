@@ -9,6 +9,12 @@ use App\ValueObject\PaymentStatus;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Stores the canonical payment aggregate snapshot used across the operational lifecycle.
+ *
+ * The entity tracks order identity, monetary data, provider correlation, and the current status
+ * that downstream services rely on for orchestration and reporting.
+ */
 #[ORM\Entity]
 #[ORM\Table(name: 'payment')]
 #[ORM\HasLifecycleCallbacks]
@@ -50,52 +56,82 @@ class Payment
         $this->updatedAt = $this->createdAt;
     }
 
+    /**
+     * Refreshes the update timestamp before Doctrine persists an in-place change.
+     */
     #[ORM\PreUpdate]
     public function touch(): void
     {
         $this->updatedAt = new \DateTimeImmutable();
     }
 
+    /**
+     * Returns the stable payment identifier used across repository and transport boundaries.
+     */
     public function id(): Ulid
     {
         return $this->id;
     }
 
+    /**
+     * Returns the upstream order identifier associated with the payment.
+     */
     public function orderId(): string
     {
         return $this->orderId;
     }
 
+    /**
+     * Returns the current lifecycle status used by orchestration and reporting flows.
+     */
     public function status(): PaymentStatus
     {
         return $this->status;
     }
 
+    /**
+     * Returns the normalized decimal amount captured for the payment.
+     */
     public function amount(): string
     {
         return $this->amount;
     }
 
+    /**
+     * Returns the ISO currency code used for the payment amount.
+     */
     public function currency(): string
     {
         return $this->currency;
     }
 
+    /**
+     * Returns the external provider reference when the payment has been correlated upstream.
+     */
     public function providerRef(): ?string
     {
         return $this->providerRef;
     }
 
+    /**
+     * Returns the creation timestamp for audit and ordering purposes.
+     */
     public function createdAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
 
+    /**
+     * Returns the most recent mutation timestamp for the payment snapshot.
+     */
     public function updatedAt(): \DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
+    /**
+     * Applies a new lifecycle status and refreshes the modification timestamp.
+     */
     public function withStatus(PaymentStatus $status): self
     {
         $this->status = $status;
@@ -104,6 +140,9 @@ class Payment
         return $this;
     }
 
+    /**
+     * Applies a provider reference received from the upstream payment processor.
+     */
     public function withProviderRef(?string $ref): self
     {
         $this->providerRef = $ref;
@@ -112,6 +151,9 @@ class Payment
         return $this;
     }
 
+    /**
+     * Marks the payment as being processed and optionally attaches the provider reference.
+     */
     public function markProcessing(?string $providerRef = null): self
     {
         if (null !== $providerRef) {
@@ -121,6 +163,9 @@ class Payment
         return $this->withStatus(PaymentStatus::processing);
     }
 
+    /**
+     * Marks the payment as completed and optionally stores the upstream provider reference.
+     */
     public function markCompleted(?string $providerRef = null): self
     {
         if (null !== $providerRef) {
@@ -130,6 +175,9 @@ class Payment
         return $this->withStatus(PaymentStatus::completed);
     }
 
+    /**
+     * Marks the payment as failed and optionally stores the provider-side correlation reference.
+     */
     public function markFailed(?string $providerRef = null): self
     {
         if (null !== $providerRef) {
@@ -139,6 +187,9 @@ class Payment
         return $this->withStatus(PaymentStatus::failed);
     }
 
+    /**
+     * Marks the payment as refunded and optionally stores the provider-side correlation reference.
+     */
     public function markRefunded(?string $providerRef = null): self
     {
         if (null !== $providerRef) {
@@ -148,6 +199,9 @@ class Payment
         return $this->withStatus(PaymentStatus::refunded);
     }
 
+    /**
+     * Synchronizes the mutable payment snapshot from another instance of the same aggregate.
+     */
     public function syncFrom(self $payment): self
     {
         $this->amount = $payment->amount();

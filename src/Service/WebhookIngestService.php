@@ -11,6 +11,9 @@ use App\ServiceInterface\WebhookIngestServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Provides the webhook ingest service service used by the payment lifecycle and operator-facing flows.
+ */
 final readonly class WebhookIngestService implements WebhookIngestServiceInterface
 {
     public function __construct(private EntityManagerInterface $em)
@@ -18,8 +21,9 @@ final readonly class WebhookIngestService implements WebhookIngestServiceInterfa
     }
 
     /**
-     * @param array<string, mixed> $normalized
+     * Executes the ingest operation for the current payment workflow.
      *
+     * @param array<string, mixed> $normalized
      * @return array{status: 'duplicate'|'queued', outboxId: string|null}
      */
     public function ingest(string $provider, string $externalId, array $normalized, string $routingKey): array

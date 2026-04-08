@@ -33,5 +33,9 @@
 
 ## Canonical API contract source
 
-- OpenAPI source: `docs/api/openapi.yaml`.
-- Nelmio UI and JSON routes above are the runtime contract publication points.
+- NelmioApiDocBundle is the canonical HTTP contract generator for this repository.
+- Swagger UI is the browser-facing viewer for that contract and must remain only a presentation layer, not a separate documentation system.
+- Exported OpenAPI source of truth: `docs/api/openapi.yaml`.
+- Runtime publication points: `/api/docs`, `/api/docs.json`, `/api/docs.yaml`.
+- Antora is the owner/manual documentation entry surface for this repository.
+- Doctum is the separate generated code-reference surface for `src/`; it must not be mixed into the HTTP contract narrative.

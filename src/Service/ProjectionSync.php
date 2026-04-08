@@ -10,6 +10,9 @@ use App\ServiceInterface\ProjectionSyncInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 
+/**
+ * Provides the projection sync service used by the payment lifecycle and operator-facing flows.
+ */
 readonly class ProjectionSync implements ProjectionSyncInterface
 {
     public function __construct(
@@ -19,6 +22,8 @@ readonly class ProjectionSync implements ProjectionSyncInterface
     }
 
     /**
+     * Executes the sync operation for the current payment workflow.
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function sync(int $limit = 500): int
@@ -56,6 +61,8 @@ readonly class ProjectionSync implements ProjectionSyncInterface
     }
 
     /**
+     * Executes the rebuild operation for the current payment workflow.
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function rebuild(int $batch = 1000): int

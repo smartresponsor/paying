@@ -13,10 +13,16 @@ use Symfony\Component\Panther\PantherTestCase;
 use Symfony\Component\Process\Exception\LogicException as ProcessLogicException;
 
 if (class_exists(PantherTestCase::class)) {
+    /**
+     * Exercises the payment console panther flow base scenario within the payment ui test surface.
+     */
     abstract class PaymentConsolePantherFlowTestBase extends PantherTestCase
     {
     }
 } else {
+    /**
+     * Exercises the payment console panther flow base scenario within the payment ui test surface.
+     */
     abstract class PaymentConsolePantherFlowTestBase extends TestCase
     {
         protected static function createPantherClient(): never
@@ -26,6 +32,9 @@ if (class_exists(PantherTestCase::class)) {
     }
 }
 
+/**
+ * Exercises the payment console panther flow scenario within the payment ui test surface.
+ */
 final class PaymentConsolePantherFlowTest extends PaymentConsolePantherFlowTestBase
 {
     private const SQLITE_TEST_DATABASE_URL = 'sqlite:///%kernel.project_dir%/var/payment.test.data.sqlite';
@@ -65,6 +74,9 @@ final class PaymentConsolePantherFlowTest extends PaymentConsolePantherFlowTestB
         parent::tearDown();
     }
 
+    /**
+     * Verifies that finalize shows business error for missing payment.
+     */
     public function testFinalizeShowsBusinessErrorForMissingPayment(): void
     {
         $externalBaseUri = $_ENV['PANTHER_EXTERNAL_BASE_URI'] ?? getenv('PANTHER_EXTERNAL_BASE_URI') ?: null;

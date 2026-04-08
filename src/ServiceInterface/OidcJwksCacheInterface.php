@@ -5,8 +5,13 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface;
 
+/**
+ * Defines the contract for the oidc jwks cache interface payment service boundary.
+ */
 interface OidcJwksCacheInterface
 {
-    /** @return array{keys: list<array{n: string, e: string, kty?: string, kid?: string}>} */
+    /**
+     * Returns the value exposed by the get accessor.
+     */
     public function get(): array;
 }

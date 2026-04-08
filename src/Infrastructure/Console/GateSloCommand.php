@@ -13,6 +13,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Reports payment quality gate and SLO posture from stored operational data.
+ */
 #[AsCommand(name: 'payment:gate:slo', description: 'Fail non-zero failures; print metrics')]
 class GateSloCommand extends Command
 {

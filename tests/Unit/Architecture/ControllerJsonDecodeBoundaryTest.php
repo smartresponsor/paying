@@ -7,8 +7,14 @@ namespace App\Tests\Unit\Architecture;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the controller json decode boundary scenario within the payment architecture test surface.
+ */
 final class ControllerJsonDecodeBoundaryTest extends TestCase
 {
+    /**
+     * Verifies that top level controllers do not use raw json decode.
+     */
     public function testTopLevelControllersDoNotUseRawJsonDecode(): void
     {
         $controllerFiles = glob(__DIR__.'/../../../src/Controller/*.php') ?: [];

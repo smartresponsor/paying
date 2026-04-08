@@ -8,8 +8,14 @@ namespace App\Service;
 use App\ServiceInterface\ValidationErrorMapperInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
+/**
+ * Provides the validation error mapper service used by the payment lifecycle and operator-facing flows.
+ */
 final class ValidationErrorMapper implements ValidationErrorMapperInterface
 {
+    /**
+     * Provides the to array behavior for the validation error mapper component.
+     */
     public function toArray(ConstraintViolationListInterface $violations): array
     {
         $errors = [];

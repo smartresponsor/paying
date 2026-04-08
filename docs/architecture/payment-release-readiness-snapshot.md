@@ -42,7 +42,7 @@ The current Payment slice is no longer a cleanup candidate. It is now an App-own
 2. Stronger container smoke around `lint:container` and bundle wiring in a fully installed environment.
 3. Broader behavioural proof for webhook -> outbox -> consumer -> reconciliation in one continuous integration path.
 4. Wider UI proof for operator-only read/diagnostic pages beyond the console baseline.
-5. phpDocumentor/DocBlock refresh for the latest post-API-Platform architecture.
+5. Doctum/DocBlock refresh for the latest post-API-Platform architecture.
 6. Final documentation pass that consolidates README, architecture docs, and operational runbooks.
 
 ## Recommended next phase
@@ -61,7 +61,7 @@ However, three gaps remain the main blockers before any stronger readiness claim
 
 1. fixture/bootstrap execution proof is not yet closed;
 2. webhook -> outbox -> consumer is still not proved as one integrated vertical;
-3. the QA/documentation toolchain is still incomplete because the slice has no CI, no composer lock, no phpDocumentor
+3. the QA/documentation toolchain is still incomplete because the slice has no CI, no composer lock, and no canonical Doctum surface
    config, and no installed php-cs-fixer package.
 
 See also:
@@ -85,7 +85,7 @@ readiness review, while still leaving installed-runtime proof as a release-harde
 Quality/documentation closure is now materially stronger than in earlier waves:
 
 - repository-owned CI workflow exists
-- phpDocumentor is declared and configured
+- Doctum is declared/configured as the canonical generated code-reference surface
 - coding-standard tool dependency is declared
 - a single `composer qa` entry point exists
 

@@ -8,6 +8,9 @@ namespace App\Service;
 use App\ServiceInterface\PaymentProviderInterface;
 use App\ServiceInterface\ProviderRouterInterface;
 
+/**
+ * Provides the provider router service used by the payment lifecycle and operator-facing flows.
+ */
 final class ProviderRouter implements ProviderRouterInterface
 {
     /** @var array<string, PaymentProviderInterface> */
@@ -27,6 +30,9 @@ final class ProviderRouter implements ProviderRouterInterface
         $this->providers = $resolvedProviders;
     }
 
+    /**
+     * Provides the for behavior for the provider router component.
+     */
     public function for(string $provider): PaymentProviderInterface
     {
         if (!isset($this->providers[$provider])) {

@@ -7,6 +7,9 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Represents a configured payment method code exposed by the component.
+ */
 #[ORM\Entity]
 #[ORM\Table(name: 'payment_method')]
 class PaymentMethod
@@ -24,11 +27,17 @@ class PaymentMethod
         $this->code = $code;
     }
 
+    /**
+     * Returns the stable payment-method identifier used in persistence.
+     */
     public function id(): string
     {
         return $this->id;
     }
 
+    /**
+     * Returns the short method code used by UI and orchestration layers.
+     */
     public function code(): string
     {
         return $this->code;

@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * Provides the api request validator service used by the payment lifecycle and operator-facing flows.
+ */
 final readonly class ApiRequestValidator implements ApiRequestValidatorInterface
 {
     public function __construct(
@@ -19,6 +22,9 @@ final readonly class ApiRequestValidator implements ApiRequestValidatorInterface
     ) {
     }
 
+    /**
+     * Validates the incoming payload for the validate workflow.
+     */
     public function validate(object $dto): ?JsonResponse
     {
         $violations = $this->validator->validate($dto);

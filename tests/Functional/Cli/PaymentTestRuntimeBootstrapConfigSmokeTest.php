@@ -7,9 +7,13 @@ namespace App\Tests\Functional\Cli;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the payment runtime bootstrap config smoke scenario within the payment cli test surface.
+ */
 final class PaymentTestRuntimeBootstrapConfigSmokeTest extends TestCase
 {
     /**
+     * Verifies that owned test bootstrap scripts and configs are present.
      * @throws \JsonException
      */
     public function testOwnedTestBootstrapScriptsAndConfigsArePresent(): void
@@ -30,6 +34,9 @@ final class PaymentTestRuntimeBootstrapConfigSmokeTest extends TestCase
         self::assertFileExists(dirname(__DIR__, 3).'/tools/runtime/payment_test_bootstrap.ps1');
     }
 
+    /**
+     * Verifies that test doctrine and messenger overrides use deterministic local runtime.
+     */
     public function testTestDoctrineAndMessengerOverridesUseDeterministicLocalRuntime(): void
     {
         $doctrine = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/test/payment_doctrine.yaml');

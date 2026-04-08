@@ -10,6 +10,9 @@ use App\Service\ProjectionLagService;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the projection lag service scenario within the payment unit test surface.
+ */
 final class ProjectionLagServiceTest extends TestCase
 {
     /**
@@ -20,6 +23,7 @@ final class ProjectionLagServiceTest extends TestCase
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     /**
+     * Verifies that snapshot builds lag from data and infra timestamps.
      * @throws \Doctrine\DBAL\Exception
      * @throws \PHPUnit\Framework\MockObject\Exception
      */

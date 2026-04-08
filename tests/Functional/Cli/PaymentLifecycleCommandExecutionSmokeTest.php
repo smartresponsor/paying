@@ -21,8 +21,14 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the payment lifecycle command execution smoke scenario within the payment cli test surface.
+ */
 final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
 {
+    /**
+     * Verifies that create action delegates to payment service and prints json.
+     */
     public function testCreateActionDelegatesToPaymentServiceAndPrintsJson(): void
     {
         $payment = new Payment(new Ulid('01ARZ3NDEKTSV4RRFFQ69G5FAV'), PaymentStatus::new, '50.00', 'USD');
@@ -62,6 +68,9 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
         self::assertStringContainsString('"status":"new"', $display);
     }
 
+    /**
+     * Verifies that start action delegates to payment start service and prints json.
+     */
     public function testStartActionDelegatesToPaymentStartServiceAndPrintsJson(): void
     {
         $payment = new Payment(new Ulid('01ARZ3NDEKTSV4RRFFQ69G5FB0'), PaymentStatus::processing, '50.00', 'USD');
@@ -101,6 +110,9 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
         self::assertStringContainsString('"providerRef":"stripe_pi_123"', $display);
     }
 
+    /**
+     * Verifies that finalize action syncs existing payment and saves it.
+     */
     public function testFinalizeActionSyncsExistingPaymentAndSavesIt(): void
     {
         $paymentId = '01ARZ3NDEKTSV4RRFFQ69G5FAV';
@@ -166,6 +178,9 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
         self::assertStringContainsString('"providerRef":"stripe_pi_123"', $display);
     }
 
+    /**
+     * Verifies that refund action delegates to refund service and prints json.
+     */
     public function testRefundActionDelegatesToRefundServiceAndPrintsJson(): void
     {
         $paymentId = new Ulid('01ARZ3NDEKTSV4RRFFQ69G5FB1');

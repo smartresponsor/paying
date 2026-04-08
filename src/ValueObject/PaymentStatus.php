@@ -5,6 +5,9 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
+/**
+ * Represents the payment status value object used by the payment lifecycle and related contracts.
+ */
 enum PaymentStatus: string
 {
     case new = 'new';
@@ -15,7 +18,11 @@ enum PaymentStatus: string
     case canceled = 'canceled';
     case refunded = 'refunded';
 
-    /** @return list<string> */
+    /**
+     * Returns the list of allowed payment status values exposed by this enumeration-like object.
+     *
+     * @return list<string>
+     */
     public static function values(): array
     {
         return array_map(static fn (self $status): string => $status->value, self::cases());

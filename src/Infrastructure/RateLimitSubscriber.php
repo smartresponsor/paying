@@ -11,6 +11,9 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 
+/**
+ * Applies request-level payment rate limiting safeguards around HTTP entry points.
+ */
 readonly class RateLimitSubscriber implements EventSubscriberInterface
 {
     public function __construct(private RateLimiterFactory $paymentApiLimiter)
@@ -18,6 +21,8 @@ readonly class RateLimitSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Returns the Symfony event subscriptions exposed by this subscriber.
+     *
      * @return string[]
      */
     public static function getSubscribedEvents(): array
@@ -25,6 +30,9 @@ readonly class RateLimitSubscriber implements EventSubscriberInterface
         return [KernelEvents::REQUEST => 'onRequest'];
     }
 
+    /**
+     * Applies the configured API rate limit to payment HTTP requests.
+     */
     public function onRequest(RequestEvent $event): void
     {
         $req = $event->getRequest();

@@ -9,8 +9,14 @@ use App\ServiceInterface\MetricInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the retry executor scenario within the payment unit test surface.
+ */
 final class RetryExecutorTest extends TestCase
 {
+    /**
+     * Verifies that retries until success.
+     */
     public function testRetriesUntilSuccess(): void
     {
         $calls = 0;
@@ -33,6 +39,9 @@ final class RetryExecutorTest extends TestCase
         self::assertSame('ok', $result);
     }
 
+    /**
+     * Verifies that exhausted throws.
+     */
     public function testExhaustedThrows(): void
     {
         /** @var MetricInterface&MockObject $metric */

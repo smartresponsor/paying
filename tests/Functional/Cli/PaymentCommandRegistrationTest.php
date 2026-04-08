@@ -8,8 +8,14 @@ namespace App\Tests\Functional\Cli;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
+/**
+ * Exercises the payment command registration scenario within the payment cli test surface.
+ */
 final class PaymentCommandRegistrationTest extends KernelTestCase
 {
+    /**
+     * Verifies that payment operational commands are registered.
+     */
     public function testPaymentOperationalCommandsAreRegistered(): void
     {
         self::bootKernel();

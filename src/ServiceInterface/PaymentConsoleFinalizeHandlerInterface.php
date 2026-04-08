@@ -7,8 +7,14 @@ namespace App\ServiceInterface;
 
 use App\Entity\Payment;
 
+/**
+ * Defines the contract for the payment console finalize handler interface payment service boundary.
+ */
 interface PaymentConsoleFinalizeHandlerInterface
 {
+    /**
+     * Executes the finalize operation for the current payment workflow.
+     */
     public function finalize(
         string $paymentId,
         string $provider,

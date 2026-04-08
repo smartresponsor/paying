@@ -13,6 +13,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+/**
+ * Guards payment HTTP requests by checking required application scopes.
+ */
 readonly class ScopeGuardSubscriber implements EventSubscriberInterface
 {
     public function __construct(
@@ -22,6 +25,8 @@ readonly class ScopeGuardSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Returns the Symfony event subscriptions exposed by this subscriber.
+     *
      * @return string[]
      */
     public static function getSubscribedEvents(): array
@@ -30,9 +35,8 @@ readonly class ScopeGuardSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @throws \ReflectionException
-     */
-    /**
+     * Validates controller access before the payment action executes.
+     *
      * @throws \ReflectionException
      */
     public function onController(ControllerEvent $event): void

@@ -79,8 +79,8 @@
         "lint:yaml": "@php tools/ci/console-test-env.php lint:yaml config --parse-tags",
         "lint:container": "@php tools/ci/console-test-env.php lint:container",
         "docs:openapi:lint": "@php tools/php/php84.php tools/inspection/PaymentOpenApiLint.php",
-        "docs:phpdoc": "@php tools/php/php84.php tools/runtime/phpDocumentor.phar -c phpdoc.dist.xml",
-        "docs:phpdoc:check": "@php tools/ci/phpdoc-check.php",
+        "docs:docblock:report": "@php tools/php/php84.php tools/inspection/PaymentSemanticDocBlockReport.php",
+        "docs:docblock:check": "@docs:docblock:report",
         "security:composer-audit": "composer audit --locked --no-interaction --format=plain",
         "security:importmap-audit": "@php tools/ci/console-test-env.php importmap:audit --no-interaction",
         "security:gitleaks": "gitleaks git --config=.gitleaks.toml --redact --exit-code 1",
@@ -146,6 +146,8 @@
         "pipeline:local:strict": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1 -IncludeSmokes -IncludeReports -IncludeSecurity -FailOnErrors",
         "report:local:latest": "@php tools/ci/report-local-latest.php",
         "proof:pack:sh": "bash tools/ci/run-payment-proof-pack.sh",
-        "proof:pack": "bash tools/ci/run-payment-proof-pack.sh"
+        "proof:pack": "bash tools/ci/run-payment-proof-pack.sh",
+        "docs:doctum": "@php tools/php/php84.php tools/runtime/doctum.phar update doctum.php --force",
+        "docs:doctum:check": "@php tools/ci/doctum-check.php"
     }
 }

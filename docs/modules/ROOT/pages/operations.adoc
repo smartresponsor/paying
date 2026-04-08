@@ -1,0 +1,17 @@
+= Operations
+
+This page is the Antora entry point for operational and manual-run documentation.
+
+== Canonical repo-local source
+
+* `docs/OPERATIONS.md`
+
+== Related operational materials
+
+* `docs/PROOF_PACK.md`
+* `docs/qa/payment-quality-gates.md`
+* `docs/qa/payment-local-pipeline-reporting.md`
+* `tools/ci/run-payment-local-pipeline.sh`
+* `tools/ci/run-payment-local-pipeline.ps1`
+
+Operational narrative stays separate from generated surfaces such as OpenAPI and Doctum.

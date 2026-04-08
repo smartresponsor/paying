@@ -12,6 +12,9 @@ use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Publishes queued payment outbox messages to the configured transport boundary.
+ */
 readonly class OutboxPublisher implements OutboxPublisherInterface
 {
     public function __construct(
@@ -20,6 +23,9 @@ readonly class OutboxPublisher implements OutboxPublisherInterface
     ) {
     }
 
+    /**
+     * Queues a transport message for asynchronous publication.
+     */
     public function enqueue(string $topic, array $payload): void
     {
         try {
@@ -44,6 +50,9 @@ readonly class OutboxPublisher implements OutboxPublisherInterface
         }
     }
 
+    /**
+     * Moves a failed transport message into the dead-letter queue.
+     */
     public function moveToDlq(string $id, string $reason): void
     {
         try {

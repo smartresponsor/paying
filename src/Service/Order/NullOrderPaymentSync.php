@@ -8,22 +8,34 @@ namespace App\Service\Order;
 use App\ServiceInterface\Order\OrderPaymentSyncInterface;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Provides the null order payment sync service used by the payment lifecycle and operator-facing flows.
+ */
 final class NullOrderPaymentSync implements OrderPaymentSyncInterface
 {
     public function __construct(private readonly LoggerInterface $logger)
     {
     }
 
+    /**
+     * Provides the on payment captured behavior for the null order payment sync component.
+     */
     public function onPaymentCaptured(string $orderId, string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null): void
     {
         $this->logger->info('Order payment sync: captured', compact('orderId', 'paymentId', 'amountMinor', 'currency', 'gatewayTxId'));
     }
 
+    /**
+     * Provides the on payment refunded behavior for the null order payment sync component.
+     */
     public function onPaymentRefunded(string $orderId, string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null, ?string $reason = null): void
     {
         $this->logger->info('Order payment sync: refunded', compact('orderId', 'paymentId', 'amountMinor', 'currency', 'gatewayTxId', 'reason'));
     }
 
+    /**
+     * Provides the on payment failed behavior for the null order payment sync component.
+     */
     public function onPaymentFailed(string $orderId, string $paymentId, string $errorCode, ?string $message = null): void
     {
         $this->logger->warning('Order payment sync: failed', compact('orderId', 'paymentId', 'errorCode', 'message'));

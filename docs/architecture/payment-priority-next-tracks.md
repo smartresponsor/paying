@@ -33,7 +33,7 @@ This is the final track after installed proof and docs consolidation.
 Target deliverables:
 
 - wider installed-runtime smoke around operator pages and diagnostics;
-- selective phpDocumentor/DocBlock enrichment where ownership is still thin;
+- selective Doctum/DocBlock enrichment where ownership is still thin;
 - final QA gate tuning.
 
 ## Why this order

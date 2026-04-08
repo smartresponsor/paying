@@ -10,8 +10,14 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 
+/**
+ * Exercises the validation error mapper scenario within the payment unit test surface.
+ */
 final class ValidationErrorMapperTest extends TestCase
 {
+    /**
+     * Verifies that to array maps violations to error payload.
+     */
     public function testToArrayMapsViolationsToErrorPayload(): void
     {
         $violations = new ConstraintViolationList([
@@ -28,6 +34,9 @@ final class ValidationErrorMapperTest extends TestCase
         ], $errors);
     }
 
+    /**
+     * Verifies that to array returns stable order by field then message.
+     */
     public function testToArrayReturnsStableOrderByFieldThenMessage(): void
     {
         $violations = new ConstraintViolationList([

@@ -7,6 +7,9 @@ namespace App\Tests\Functional\Ui;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Exercises the payment console page scenario within the payment ui test surface.
+ */
 final class PaymentConsolePageTest extends WebTestCase
 {
     private ?string $originalOidcDisabled = null;
@@ -31,6 +34,9 @@ final class PaymentConsolePageTest extends WebTestCase
         parent::tearDown();
     }
 
+    /**
+     * Verifies that console page renders bootstrap smoke forms.
+     */
     public function testConsolePageRendersBootstrapSmokeForms(): void
     {
         $client = self::createClient();

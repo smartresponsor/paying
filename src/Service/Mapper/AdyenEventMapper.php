@@ -7,13 +7,22 @@ namespace App\Service\Mapper;
 
 use App\ServiceInterface\EventMapperInterface;
 
+/**
+ * Maps external provider payloads into the internal adyen event mapper payment representation.
+ */
 class AdyenEventMapper implements EventMapperInterface
 {
+    /**
+     * Provides the provider behavior for the adyen event mapper component.
+     */
     public function provider(): string
     {
         return 'adyen';
     }
 
+    /**
+     * Provides the extract payment id behavior for the adyen event mapper component.
+     */
     public function extractPaymentId(array $payload): ?string
     {
         if (isset($payload['additionalData']['merchantReference'])) {
@@ -26,6 +35,9 @@ class AdyenEventMapper implements EventMapperInterface
         return null;
     }
 
+    /**
+     * Provides the map status behavior for the adyen event mapper component.
+     */
     public function mapStatus(array $payload): ?string
     {
         $eventCode = (string) ($payload['eventCode'] ?? '');

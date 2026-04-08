@@ -12,6 +12,9 @@ use App\ServiceInterface\ProviderGuardInterface;
 use App\ValueObject\PaymentFinalizePayload;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Provides the payment console finalize handler service used by the payment lifecycle and operator-facing flows.
+ */
 final readonly class PaymentConsoleFinalizeHandler implements PaymentConsoleFinalizeHandlerInterface
 {
     public function __construct(
@@ -20,6 +23,9 @@ final readonly class PaymentConsoleFinalizeHandler implements PaymentConsoleFina
     ) {
     }
 
+    /**
+     * Provides the finalize behavior for the payment console finalize handler component.
+     */
     public function finalize(
         string $paymentId,
         string $provider,

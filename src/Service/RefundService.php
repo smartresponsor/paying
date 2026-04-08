@@ -11,6 +11,9 @@ use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\RefundServiceInterface;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Provides the refund service service used by the payment lifecycle and operator-facing flows.
+ */
 final readonly class RefundService implements RefundServiceInterface
 {
     public function __construct(
@@ -19,6 +22,9 @@ final readonly class RefundService implements RefundServiceInterface
     ) {
     }
 
+    /**
+     * Executes the refund operation for the current payment workflow.
+     */
     public function refund(Ulid $id, string $amount, string $provider = 'internal'): Payment
     {
         $existing = $this->repo->find((string) $id);

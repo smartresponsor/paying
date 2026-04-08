@@ -11,6 +11,9 @@ use App\ServiceInterface\RefundServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Provides the payment console refund handler service used by the payment lifecycle and operator-facing flows.
+ */
 final readonly class PaymentConsoleRefundHandler implements PaymentConsoleRefundHandlerInterface
 {
     public function __construct(
@@ -19,6 +22,9 @@ final readonly class PaymentConsoleRefundHandler implements PaymentConsoleRefund
     ) {
     }
 
+    /**
+     * Executes the refund operation for the current payment workflow.
+     */
     public function refund(string $paymentId, string $amount, string $provider): ?Payment
     {
         try {

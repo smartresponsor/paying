@@ -14,6 +14,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Reports payment projection freshness and read-model lag diagnostics.
+ */
 final readonly class StatusController implements StatusControllerInterface
 {
     public function __construct(
@@ -34,6 +37,9 @@ final readonly class StatusController implements StatusControllerInterface
         ],
     )]
     #[Security(name: 'Bearer')]
+    /**
+     * Returns the current projection lag snapshot for payment consumers and operators.
+     */
     public function status(): JsonResponse
     {
         try {

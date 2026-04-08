@@ -18,6 +18,9 @@ use Doctrine\DBAL\Connection;
  * signature-compatible with its own infrastructure interface so Symfony can
  * compile the container under Symfony 8 / PHP 8.4.
  */
+/**
+ * Implements the legacy payment response idempotency store used by older infrastructure paths.
+ */
 readonly class IdempotencyStore implements IdempotencyStoreInterface
 {
     public function __construct(private Connection $data)
@@ -25,6 +28,8 @@ readonly class IdempotencyStore implements IdempotencyStoreInterface
     }
 
     /**
+     * Loads a stored idempotent response payload for the supplied key.
+     *
      * @return array{response: array<string, mixed>|list<mixed>|scalar|null, hash: string}|null
      *
      * @throws \Doctrine\DBAL\Exception
@@ -47,6 +52,8 @@ readonly class IdempotencyStore implements IdempotencyStoreInterface
     }
 
     /**
+     * Stores a legacy idempotent response payload for the supplied key.
+     *
      * @throws \Doctrine\DBAL\Exception
      * @throws \JsonException
      */

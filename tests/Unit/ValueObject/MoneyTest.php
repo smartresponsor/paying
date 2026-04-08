@@ -8,8 +8,14 @@ namespace App\Tests\Unit\ValueObject;
 use App\ValueObject\Money;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the money scenario within the payment valueobject test surface.
+ */
 final class MoneyTest extends TestCase
 {
+    /**
+     * Verifies that from minor creates deterministic decimal amount.
+     */
     public function testFromMinorCreatesDeterministicDecimalAmount(): void
     {
         $money = Money::fromMinor(1234, 'USD');
@@ -19,6 +25,9 @@ final class MoneyTest extends TestCase
         self::assertSame('12.34', $money->toDecimalString());
     }
 
+    /**
+     * Verifies that from decimal string creates canonical money.
+     */
     public function testFromDecimalStringCreatesCanonicalMoney(): void
     {
         $money = Money::fromDecimalString('10.05', 'USD');
@@ -27,6 +36,9 @@ final class MoneyTest extends TestCase
         self::assertSame('10.05', $money->toDecimalString());
     }
 
+    /**
+     * Verifies that from minor rejects negative values.
+     */
     public function testFromMinorRejectsNegativeValues(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -35,6 +47,9 @@ final class MoneyTest extends TestCase
         Money::fromMinor(-1, 'USD');
     }
 
+    /**
+     * Verifies that from minor rejects invalid currency code.
+     */
     public function testFromMinorRejectsInvalidCurrencyCode(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -43,6 +58,9 @@ final class MoneyTest extends TestCase
         Money::fromMinor(100, 'usd');
     }
 
+    /**
+     * Verifies that from decimal string rejects invalid format.
+     */
     public function testFromDecimalStringRejectsInvalidFormat(): void
     {
         $this->expectException(\InvalidArgumentException::class);

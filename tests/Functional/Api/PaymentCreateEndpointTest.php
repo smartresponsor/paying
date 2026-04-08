@@ -7,6 +7,9 @@ namespace App\Tests\Functional\Api;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Exercises the payment create endpoint scenario within the payment api test surface.
+ */
 final class PaymentCreateEndpointTest extends WebTestCase
 {
     private ?string $originalOidcDisabled = null;
@@ -24,6 +27,9 @@ final class PaymentCreateEndpointTest extends WebTestCase
         parent::tearDown();
     }
 
+    /**
+     * Verifies that create payment requires bearer token.
+     */
     public function testCreatePaymentRequiresBearerToken(): void
     {
         unset($_ENV['OIDC_DISABLED']);
@@ -46,6 +52,9 @@ final class PaymentCreateEndpointTest extends WebTestCase
         self::assertSame(401, $client->getResponse()->getStatusCode());
     }
 
+    /**
+     * Verifies that create payment returns created when scope guard is disabled for functional smoke.
+     */
     public function testCreatePaymentReturnsCreatedWhenScopeGuardIsDisabledForFunctionalSmoke(): void
     {
         $this->originalOidcDisabled = $_ENV['OIDC_DISABLED'] ?? null;

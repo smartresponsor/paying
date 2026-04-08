@@ -7,8 +7,14 @@ namespace App\Tests\Unit\Architecture;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the controller service boundary scenario within the payment architecture test surface.
+ */
 final class ControllerServiceBoundaryTest extends TestCase
 {
+    /**
+     * Verifies that controllers use service interfaces instead of concrete services.
+     */
     public function testControllersUseServiceInterfacesInsteadOfConcreteServices(): void
     {
         $controllerFiles = glob(__DIR__.'/../../../src/Controller/*.php') ?: [];

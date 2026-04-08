@@ -132,3 +132,6 @@ Thumbs.db
 /var/report/local/
 /var/report/inspection/
 /var/payment-create-endpoint-error.txt
+
+/tools/runtime/doctum.phar
+/docs/generated/doctum/

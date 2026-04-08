@@ -7,6 +7,9 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Represents a configured payment gateway code that the component can route work through.
+ */
 #[ORM\Entity]
 #[ORM\Table(name: 'payment_gateway')]
 class PaymentGateway
@@ -24,11 +27,17 @@ class PaymentGateway
         $this->code = $code;
     }
 
+    /**
+     * Returns the stable gateway identifier used by persistence and integration layers.
+     */
     public function id(): string
     {
         return $this->id;
     }
 
+    /**
+     * Returns the short gateway code used for routing and selection.
+     */
     public function code(): string
     {
         return $this->code;

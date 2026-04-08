@@ -14,13 +14,22 @@ use App\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the payment create handler scenario within the payment handler test surface.
+ */
 final class PaymentCreateHandlerTest extends TestCase
 {
+    /**
+     * Verifies that invoke uses provider code alias and messenger origin.
+     */
     public function testInvokeUsesProviderCodeAliasAndMessengerOrigin(): void
     {
         $spy = new class() implements PaymentStartServiceInterface {
             public array $calls = [];
 
+            /**
+             * Provides the start behavior required by this test scenario.
+             */
             public function start(string $orderId, string $provider, string $amount, string $currency, string $idempotencyKey = '', string $origin = 'api'): PaymentStartResult
             {
                 $this->calls[] = [

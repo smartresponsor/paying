@@ -7,6 +7,9 @@ namespace App\Controller\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Carries validated start payload data for provider-backed payment flows.
+ */
 final class PaymentStartRequestDto
 {
     #[Assert\NotBlank]

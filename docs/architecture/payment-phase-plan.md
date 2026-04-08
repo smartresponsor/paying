@@ -49,5 +49,5 @@
 - update README
 - update API documentation
 - update internal architecture docs
-- update phpDocumentor/DocBlock coverage
+- update Doctum/DocBlock coverage
 - document runtime, fixtures, security, UI, CLI, and test flows

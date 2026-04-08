@@ -15,6 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
+/**
+ * Exercises the scope guard subscriber scenario within the payment unit test surface.
+ */
 final class ScopeGuardSubscriberTest extends TestCase
 {
     private ?string $originalOidcDisabled = null;
@@ -40,6 +43,7 @@ final class ScopeGuardSubscriberTest extends TestCase
     }
 
     /**
+     * Verifies that on controller logs verification failure and returns unauthorized.
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \ReflectionException
      */
@@ -79,9 +83,15 @@ final class ScopeGuardSubscriberTest extends TestCase
     }
 }
 
+/**
+ * Exercises the scope guard protected controller scenario within the payment unit test surface.
+ */
 final class ScopeGuardProtectedController
 {
     #[RequireScope(['payment:read'])]
+    /**
+     * Provides the secure behavior required by this test scenario.
+     */
     public function secure(): void
     {
     }

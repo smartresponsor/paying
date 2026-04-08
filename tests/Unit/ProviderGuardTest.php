@@ -16,8 +16,14 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the provider guard scenario within the payment unit test surface.
+ */
 final class ProviderGuardTest extends TestCase
 {
+    /**
+     * Verifies that start throws when circuit is open.
+     */
     public function testStartThrowsWhenCircuitIsOpen(): void
     {
         $breaker = $this->createMock(CircuitBreakerInterface::class);
@@ -34,24 +40,39 @@ final class ProviderGuardTest extends TestCase
         $guard->start('stripe', $this->dummyPayment());
     }
 
+    /**
+     * Verifies that start records success.
+     */
     public function testStartRecordsSuccess(): void
     {
         $provider = new class implements PaymentProviderInterface {
+            /**
+             * Provides the start behavior required by this test scenario.
+             */
             public function start(Payment $payment, array $context = []): array
             {
                 return ['providerRef' => 'ok'];
             }
 
+            /**
+             * Provides the finalize behavior required by this test scenario.
+             */
             public function finalize(Ulid $id, array $payload = []): Payment
             {
                 throw new \RuntimeException();
             }
 
+            /**
+             * Provides the refund behavior required by this test scenario.
+             */
             public function refund(Ulid $id, string $amount): Payment
             {
                 throw new \RuntimeException();
             }
 
+            /**
+             * Provides the reconcile behavior required by this test scenario.
+             */
             public function reconcile(Ulid $id): Payment
             {
                 throw new \RuntimeException();
@@ -80,24 +101,39 @@ final class ProviderGuardTest extends TestCase
         self::assertSame('ok', $result['providerRef']);
     }
 
+    /**
+     * Verifies that start records failure and rethrows.
+     */
     public function testStartRecordsFailureAndRethrows(): void
     {
         $provider = new class implements PaymentProviderInterface {
+            /**
+             * Provides the start behavior required by this test scenario.
+             */
             public function start(Payment $payment, array $context = []): array
             {
                 throw new \RuntimeException('boom');
             }
 
+            /**
+             * Provides the finalize behavior required by this test scenario.
+             */
             public function finalize(Ulid $id, array $payload = []): Payment
             {
                 throw new \RuntimeException();
             }
 
+            /**
+             * Provides the refund behavior required by this test scenario.
+             */
             public function refund(Ulid $id, string $amount): Payment
             {
                 throw new \RuntimeException();
             }
 
+            /**
+             * Provides the reconcile behavior required by this test scenario.
+             */
             public function reconcile(Ulid $id): Payment
             {
                 throw new \RuntimeException();

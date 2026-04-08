@@ -28,6 +28,8 @@ final class StripePaymentProvider implements PaymentProviderInterface
     }
 
     /**
+     * Executes the start operation for the current payment workflow.
+     *
      * @return array<string, mixed>
      */
     public function start(Payment $payment, array $context = []): array
@@ -44,22 +46,33 @@ final class StripePaymentProvider implements PaymentProviderInterface
         ];
     }
 
+    /**
+     * Provides the finalize behavior for the stripe payment provider component.
+     */
     public function finalize(Ulid $id, array $payload = []): Payment
     {
         return new Payment($id, PaymentStatus::completed, (string) ($payload['amount'] ?? '0.00'), (string) ($payload['currency'] ?? 'USD'));
     }
 
+    /**
+     * Executes the refund operation for the current payment workflow.
+     */
     public function refund(Ulid $id, string $amount): Payment
     {
         return new Payment($id, PaymentStatus::refunded, $amount, 'USD');
     }
 
+    /**
+     * Provides the reconcile behavior for the stripe payment provider component.
+     */
     public function reconcile(Ulid $id): Payment
     {
         return new Payment($id, PaymentStatus::processing, '0.00', 'USD');
     }
 
-    /** @return array{providerRef: string, checkoutUrl?: string|null} */
+    /**
+     * Executes the create operation for the current payment workflow.
+     */
     public function create(string $projectId, float $amount, string $currency, string $idempotencyKey): array
     {
         if (class_exists('\Stripe\StripeClient') && '' !== $this->secretKey) {
@@ -91,7 +104,9 @@ final class StripePaymentProvider implements PaymentProviderInterface
         return ['providerRef' => $reference];
     }
 
-    /** @return array{ok: bool, error?: string, event?: mixed, providerRef?: mixed, amount?: float, currency?: string, projectId?: mixed} */
+    /**
+     * Verifies the input handled by the verify webhook workflow.
+     */
     public function verifyWebhook(string $rawBody, string $signatureHeader): array
     {
         if ('' === $this->webhookSecret) {

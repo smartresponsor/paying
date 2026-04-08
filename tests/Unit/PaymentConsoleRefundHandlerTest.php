@@ -14,12 +14,16 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the payment console refund handler scenario within the payment unit test surface.
+ */
 final class PaymentConsoleRefundHandlerTest extends TestCase
 {
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     /**
+     * Verifies that refund returns payment on success.
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testRefundReturnsPaymentOnSuccess(): void
@@ -45,6 +49,7 @@ final class PaymentConsoleRefundHandlerTest extends TestCase
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     /**
+     * Verifies that refund returns null and logs on failure.
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testRefundReturnsNullAndLogsOnFailure(): void

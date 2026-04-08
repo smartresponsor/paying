@@ -11,12 +11,18 @@ use App\ServiceInterface\IdempotencyStoreInterface;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Provides the idempotency store factory service used by the payment lifecycle and operator-facing flows.
+ */
 readonly class IdempotencyStoreFactory
 {
     public function __construct(private Connection $data, private LoggerInterface $logger)
     {
     }
 
+    /**
+     * Provides the create behavior for the idempotency store factory component.
+     */
     public function create(): IdempotencyStoreInterface
     {
         $url = (string) ($_ENV['REDIS_URL'] ?? '');

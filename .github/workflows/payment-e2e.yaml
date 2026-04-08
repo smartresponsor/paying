@@ -1,0 +1,28 @@
+name: Payment E2E
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  playwright:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, intl, pdo, pdo_sqlite, sqlite3
+          tools: composer:v2
+      - name: Install PHP dependencies
+        run: composer install --prefer-dist --no-interaction
+      - name: Install Node dependencies
+        run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run Playwright suite
+        run: npm run test:playwright

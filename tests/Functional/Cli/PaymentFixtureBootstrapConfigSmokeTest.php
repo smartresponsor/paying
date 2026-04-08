@@ -7,9 +7,13 @@ namespace App\Tests\Functional\Cli;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the payment fixture bootstrap config smoke scenario within the payment cli test surface.
+ */
 final class PaymentFixtureBootstrapConfigSmokeTest extends TestCase
 {
     /**
+     * Verifies that composer owns payment fixture entry points.
      * @throws \JsonException
      */
     public function testComposerOwnsPaymentFixtureEntryPoints(): void
@@ -23,6 +27,9 @@ final class PaymentFixtureBootstrapConfigSmokeTest extends TestCase
         self::assertSame('@php tools/php/php84.php bin/console doctrine:fixtures:load --group=payment --append --no-interaction', $scripts['fixtures:payment:append']);
     }
 
+    /**
+     * Verifies that php unit bootstrap and readme mention fixture contour.
+     */
     public function testPhpUnitBootstrapAndReadmeMentionFixtureContour(): void
     {
         $root = dirname(__DIR__, 3);

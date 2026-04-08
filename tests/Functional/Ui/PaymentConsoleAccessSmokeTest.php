@@ -7,6 +7,9 @@ namespace App\Tests\Functional\Ui;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Exercises the payment console access smoke scenario within the payment ui test surface.
+ */
 final class PaymentConsoleAccessSmokeTest extends WebTestCase
 {
     private ?string $originalOidcDisabled = null;
@@ -31,6 +34,9 @@ final class PaymentConsoleAccessSmokeTest extends WebTestCase
         parent::tearDown();
     }
 
+    /**
+     * Verifies that payment console remains reachable when oidc is disabled for smoke.
+     */
     public function testPaymentConsoleRemainsReachableWhenOidcIsDisabledForSmoke(): void
     {
         $client = self::createClient();

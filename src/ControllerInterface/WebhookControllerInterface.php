@@ -8,7 +8,13 @@ namespace App\ControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Defines the generic provider webhook endpoint for the payment runtime.
+ */
 interface WebhookControllerInterface
 {
+    /**
+     * Processes a provider webhook request and returns the transport-level acknowledgment.
+     */
     public function webhook(string $provider, Request $request): Response;
 }

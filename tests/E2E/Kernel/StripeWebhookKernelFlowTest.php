@@ -7,12 +7,16 @@ namespace App\Tests\E2E\Kernel;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Exercises the stripe webhook kernel flow scenario within the payment kernel test surface.
+ */
 final class StripeWebhookKernelFlowTest extends WebTestCase
 {
     /**
      * @throws \JsonException
      */
     /**
+     * Verifies that end to end stripe webhook.
      * @throws \JsonException
      */
     public function testEndToEndStripeWebhook(): void

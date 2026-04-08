@@ -7,6 +7,9 @@ namespace App\Tests\Functional\Api;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Exercises the payment flow scope scenario within the payment api test surface.
+ */
 final class PaymentFlowScopeTest extends WebTestCase
 {
     protected function setUp(): void
@@ -15,6 +18,9 @@ final class PaymentFlowScopeTest extends WebTestCase
         putenv('OIDC_DISABLED');
     }
 
+    /**
+     * Verifies that start payment requires bearer token.
+     */
     public function testStartPaymentRequiresBearerToken(): void
     {
         $client = self::createClient();
@@ -34,6 +40,9 @@ final class PaymentFlowScopeTest extends WebTestCase
         self::assertSame(401, $client->getResponse()->getStatusCode());
     }
 
+    /**
+     * Verifies that finalize payment requires bearer token.
+     */
     public function testFinalizePaymentRequiresBearerToken(): void
     {
         $client = self::createClient();

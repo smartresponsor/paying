@@ -21,6 +21,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Finalizes an existing payment aggregate after the provider reports a terminal status.
+ */
 final readonly class FinalizeController implements FinalizeControllerInterface
 {
     public function __construct(
@@ -59,6 +62,9 @@ final readonly class FinalizeController implements FinalizeControllerInterface
         ),
     )]
     #[Security(name: 'Bearer')]
+    /**
+     * Validates the finalize payload, resolves the provider-specific transition, and persists the updated payment state.
+     */
     public function finalize(string $id, Request $request): JsonResponse
     {
         if (!Ulid::isValid($id)) {

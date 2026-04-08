@@ -69,7 +69,7 @@ The current slice now has integrated proof for:
 The current slice now owns:
 
 - Nelmio/OpenAPI routes;
-- phpDocumentor config;
+- Doctum config;
 - QA scripts;
 - a repository CI workflow;
 - release-readiness and quality-closure docs.

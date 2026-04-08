@@ -10,7 +10,13 @@ use App\ServiceInterface\Order\OrderPaymentSyncInterface;
 use App\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+/**
+ * Handles the payment event consumer workflow inside the payment messenger pipeline.
+ */
 #[AsMessageHandler(fromTransport: 'payment_events_in')]
+/**
+ * Handles the payment event consumer workflow inside the payment messenger pipeline.
+ */
 final readonly class PaymentEventConsumer
 {
     public function __construct(
@@ -19,6 +25,9 @@ final readonly class PaymentEventConsumer
     ) {
     }
 
+    /**
+     * Executes the message handling workflow for the current payment transport message.
+     */
     public function __invoke(PaymentTransportMessage $message): void
     {
         $type = trim($message->type);

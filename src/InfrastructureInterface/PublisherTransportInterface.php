@@ -5,8 +5,15 @@ declare(strict_types=1);
 
 namespace App\InfrastructureInterface;
 
+/**
+ * Defines the transport contract used by payment message publishers.
+ */
 interface PublisherTransportInterface
 {
-    /** @param array<string, mixed> $payload */
+    /**
+     * Publishes a serialized message to the configured transport.
+     *
+     * @param array<string, mixed> $payload
+     */
     public function publish(string $topic, array $payload): void;
 }

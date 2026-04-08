@@ -15,6 +15,9 @@ use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * Exercises the api request validator scenario within the payment unit test surface.
+ */
 final class ApiRequestValidatorTest extends TestCase
 {
     private ValidatorInterface&MockObject $validator;
@@ -36,6 +39,9 @@ final class ApiRequestValidatorTest extends TestCase
         $this->service = new ApiRequestValidator($this->validator, $this->validationErrorMapper);
     }
 
+    /**
+     * Verifies that validate returns null when dto has no violations.
+     */
     public function testValidateReturnsNullWhenDtoHasNoViolations(): void
     {
         $dto = new \stdClass();
@@ -58,6 +64,7 @@ final class ApiRequestValidatorTest extends TestCase
      * @throws \JsonException
      */
     /**
+     * Verifies that validate returns unprocessable entity response when dto has violations.
      * @throws \JsonException
      */
     public function testValidateReturnsUnprocessableEntityResponseWhenDtoHasViolations(): void

@@ -1,0 +1,25 @@
+= HTTP API
+
+This page is the Antora entry point for the HTTP contract surface.
+
+== Narrative API overview
+
+* `docs/API.md`
+* `docs/api/payment-cookbook.md`
+* `docs/api/security-oidc.md`
+
+== OpenAPI contract surface
+
+NelmioApiDocBundle remains the canonical HTTP contract generator for this repository. Swagger UI is the browser-facing viewer for that contract and must stay only a presentation layer.
+
+The machine-readable HTTP contract stays outside Antora narrative pages and remains the canonical generated artifact:
+
+* `docs/api/openapi.yaml`
+
+Runtime publication points are expected at:
+
+* `/api/docs`
+* `/api/docs.json`
+* `/api/docs.yaml`
+
+If Nelmio/OpenAPI is present, the contract should continue to be generated and served there rather than duplicated manually inside Antora.

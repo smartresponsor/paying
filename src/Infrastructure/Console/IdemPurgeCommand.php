@@ -11,6 +11,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Purges expired idempotency entries from the payment operational store.
+ */
 #[AsCommand(name: 'payment:idem:purge', description: 'Purge expired idempotency entries')]
 class IdemPurgeCommand extends Command
 {

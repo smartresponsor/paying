@@ -15,6 +15,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Processes generic provider webhooks, verifies signatures, and reconciles affected payment aggregates.
+ */
 final readonly class WebhookController implements WebhookControllerInterface
 {
     public function __construct(
@@ -26,6 +29,9 @@ final readonly class WebhookController implements WebhookControllerInterface
     ) {
     }
 
+    /**
+     * Verifies the provider callback payload and reconciles the referenced payment when possible.
+     */
     public function webhook(string $provider, Request $request): Response
     {
         try {

@@ -7,7 +7,13 @@ namespace App\ServiceInterface;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * Defines the contract for the api request validator interface payment service boundary.
+ */
 interface ApiRequestValidatorInterface
 {
+    /**
+     * Validates the incoming payload for the validate workflow.
+     */
     public function validate(object $dto): ?JsonResponse;
 }

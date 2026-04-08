@@ -8,8 +8,14 @@ namespace App\Tests\Unit\Infrastructure\Fixture;
 use App\Infrastructure\Fixture\PaymentFixtureFaker;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the payment fixture faker scenario within the payment fixture test surface.
+ */
 final class PaymentFixtureFakerTest extends TestCase
 {
+    /**
+     * Verifies that amounts and provider references are deterministic.
+     */
     public function testAmountsAndProviderReferencesAreDeterministic(): void
     {
         $first = new PaymentFixtureFaker();

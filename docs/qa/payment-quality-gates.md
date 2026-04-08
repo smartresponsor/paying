@@ -53,8 +53,8 @@ should turn tool presence into an actual executable release gate.
 The repository now contains the missing owned pieces that previously kept the quality contour open:
 
 - declared `friendsofphp/php-cs-fixer`
-- declared `phpdocumentor/phpdocumentor`
-- `phpdoc.dist.xml`
+- Doctum configuration: `doctum.php`
+- Doctum runtime helpers/checks under `tools/runtime/` and `tools/ci/`
 - `.github/workflows/payment-quality.yaml`
 - composer `qa` and documentation scripts
 

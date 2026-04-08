@@ -17,6 +17,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Exercises the finalize controller scenario within the payment unit test surface.
+ */
 final class FinalizeControllerTest extends TestCase
 {
     private ProviderGuardInterface&MockObject $guard;
@@ -54,6 +57,9 @@ final class FinalizeControllerTest extends TestCase
         );
     }
 
+    /**
+     * Verifies that finalize returns not found for invalid ulid before decoding or validation.
+     */
     public function testFinalizeReturnsNotFoundForInvalidUlidBeforeDecodingOrValidation(): void
     {
         $request = new Request();

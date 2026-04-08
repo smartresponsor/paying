@@ -15,8 +15,14 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the payment fixture dataset smoke scenario within the payment fixture test surface.
+ */
 final class PaymentFixtureDatasetSmokeTest extends TestCase
 {
+    /**
+     * Verifies that owned fixture datasets have expected persist counts.
+     */
     public function testOwnedFixtureDatasetsHaveExpectedPersistCounts(): void
     {
         self::assertSame(5, $this->persistCount(new PaymentFixture()));
@@ -45,6 +51,9 @@ final class PaymentFixtureDatasetSmokeTest extends TestCase
             return $metadata;
         });
         $unitOfWork = new class {
+            /**
+             * Provides the is in identity map behavior required by this test scenario.
+             */
             public function isInIdentityMap(object $entity): bool
             {
                 return false;

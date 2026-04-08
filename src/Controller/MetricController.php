@@ -12,6 +12,9 @@ use App\ServiceInterface\ProjectionLagServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Publishes payment metrics and projection lag telemetry for Prometheus-style scraping.
+ */
 final readonly class MetricController implements MetricControllerInterface
 {
     public function __construct(
@@ -22,6 +25,9 @@ final readonly class MetricController implements MetricControllerInterface
     }
 
     #[RequireScope(['payment:read'])]
+    /**
+     * Renders the text-based metrics payload for observability collectors.
+     */
     public function metrics(): Response
     {
         $text = $this->metrics->export();

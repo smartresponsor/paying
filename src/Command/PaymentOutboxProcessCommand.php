@@ -12,6 +12,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Runs the payment outbox publisher from the console for local operations and scheduled jobs.
+ *
+ * The command delegates batching and retry behavior to the outbox processor and reports the
+ * number of published messages back to the operator.
+ */
 #[AsCommand(name: 'payment:outbox:process', description: 'Publish payment outbox messages to RabbitMQ')]
 class PaymentOutboxProcessCommand extends Command
 {

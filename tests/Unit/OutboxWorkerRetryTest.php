@@ -12,12 +12,16 @@ use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
+/**
+ * Exercises the outbox worker retry scenario within the payment unit test surface.
+ */
 final class OutboxWorkerRetryTest extends TestCase
 {
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     /**
+     * Verifies that run marks failed before dlq threshold.
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testRunMarksFailedBeforeDlqThreshold(): void

@@ -12,7 +12,13 @@ use App\ValueObject\Money;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Handles the payment refund handler workflow inside the payment messenger pipeline.
+ */
 #[AsMessageHandler]
+/**
+ * Handles the payment refund handler workflow inside the payment messenger pipeline.
+ */
 final readonly class PaymentRefundHandler
 {
     public function __construct(
@@ -21,6 +27,9 @@ final readonly class PaymentRefundHandler
     ) {
     }
 
+    /**
+     * Executes the message handling workflow for the current payment transport message.
+     */
     public function __invoke(PaymentRefundCommand $command): void
     {
         $payment = $this->repo->find($command->paymentId);

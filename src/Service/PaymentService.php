@@ -12,12 +12,18 @@ use App\ValueObject\Money;
 use App\ValueObject\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Provides the payment service service used by the payment lifecycle and operator-facing flows.
+ */
 final class PaymentService implements PaymentServiceInterface
 {
     public function __construct(private readonly PaymentRepositoryInterface $paymentRepository)
     {
     }
 
+    /**
+     * Provides the create behavior for the payment service component.
+     */
     public function create(string $orderId, int $amountMinor, string $currency): Payment
     {
         $money = Money::fromMinor($amountMinor, strtoupper($currency));

@@ -12,6 +12,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Runs payment reconciliation routines from the console surface.
+ */
 #[AsCommand(name: 'payment:reconcile:run', description: 'Reconcile all processing payments')]
 class ReconcileRunCommand extends Command
 {

@@ -7,9 +7,13 @@ namespace App\Tests\Functional\Cli;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the payment install runtime preflight config smoke scenario within the payment cli test surface.
+ */
 final class PaymentInstallRuntimePreflightConfigSmokeTest extends TestCase
 {
     /**
+     * Verifies that install preflight scripts and docs are present.
      * @throws \JsonException
      */
     public function testInstallPreflightScriptsAndDocsArePresent(): void
@@ -28,6 +32,9 @@ final class PaymentInstallRuntimePreflightConfigSmokeTest extends TestCase
         self::assertFileExists($root.'/docs/architecture/payment-install-preflight-proof.md');
     }
 
+    /**
+     * Verifies that install preflight scripts reference owned runtime files.
+     */
     public function testInstallPreflightScriptsReferenceOwnedRuntimeFiles(): void
     {
         $root = dirname(__DIR__, 3);

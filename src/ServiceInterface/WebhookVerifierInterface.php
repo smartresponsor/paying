@@ -5,7 +5,13 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface;
 
+/**
+ * Defines the contract for the webhook verifier interface payment service boundary.
+ */
 interface WebhookVerifierInterface
 {
+    /**
+     * Verifies the input handled by the verify workflow.
+     */
     public function verify(string $provider, string $raw, array $headers): bool;
 }

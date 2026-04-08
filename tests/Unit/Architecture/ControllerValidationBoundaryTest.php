@@ -7,8 +7,14 @@ namespace App\Tests\Unit\Architecture;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the controller validation boundary scenario within the payment architecture test surface.
+ */
 final class ControllerValidationBoundaryTest extends TestCase
 {
+    /**
+     * Verifies that api controllers avoid direct validator and mapper imports.
+     */
     public function testApiControllersAvoidDirectValidatorAndMapperImports(): void
     {
         $controllerFiles = glob(__DIR__.'/../../../src/Controller/*.php') ?: [];
@@ -30,6 +36,9 @@ final class ControllerValidationBoundaryTest extends TestCase
         }
     }
 
+    /**
+     * Verifies that api controllers depend on shared request validator contract.
+     */
     public function testApiControllersDependOnSharedRequestValidatorContract(): void
     {
         $apiControllers = [

@@ -15,8 +15,14 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
+/**
+ * Exercises the payment gate slo command execution smoke scenario within the payment cli test surface.
+ */
 final class PaymentGateSloCommandExecutionSmokeTest extends TestCase
 {
+    /**
+     * Verifies that gate slo command prints metrics and succeeds when there are no failures.
+     */
     public function testGateSloCommandPrintsMetricsAndSucceedsWhenThereAreNoFailures(): void
     {
         /** @var Metric&MockObject $metric */
@@ -54,6 +60,9 @@ final class PaymentGateSloCommandExecutionSmokeTest extends TestCase
         self::assertStringContainsString('payment_failure_total 0', $tester->getDisplay());
     }
 
+    /**
+     * Verifies that gate slo command fails when metric reports failures.
+     */
     public function testGateSloCommandFailsWhenMetricReportsFailures(): void
     {
         /** @var Metric&MockObject $metric */

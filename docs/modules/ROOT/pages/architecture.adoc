@@ -1,0 +1,16 @@
+= Architecture
+
+This page is the Antora entry point for the repository architecture narrative.
+
+== Canonical repo-local source
+
+* `docs/ARCHITECTURE.md`
+
+== Supporting architecture deep dives
+
+* `docs/architecture/payment-access-matrix.md`
+* `docs/architecture/payment-phase-plan.md`
+* `docs/architecture/payment-release-readiness-portrait.md`
+* `docs/architecture/payment-technical-readiness-review.md`
+
+Use these materials for owner-facing architecture, governance, boundaries, readiness, and operational shape. Generated code reference remains outside the narrative architecture layer.

@@ -70,15 +70,15 @@ See also `docs/architecture/payment-install-preflight-proof.md`.
 
 ## Documentation tooling boundary
 
-`phpDocumentor` is intentionally no longer modeled as a Composer dependency of the Symfony application graph.
+`Doctum` is intentionally not modeled as a required Composer dependency of the Symfony application graph.
 For this repository, API/runtime dependencies and documentation generation dependencies are treated as separate
 contours.
 The owned docs execution path is PHAR-based via:
 
-- `composer docs:phpdoc`
-- `composer docs:phpdoc:check`
-- `tools/runtime/payment_phpdoc.sh`
-- `tools/runtime/payment_phpdoc.ps1`
+- `composer docs:doctum`
+- `composer docs:doctum:check`
+- `tools/runtime/payment_doctum.sh`
+- `tools/runtime/payment_doctum.ps1`
 
 This avoids cross-major Symfony dependency deadlocks inside the application install graph while preserving
 repository-owned documentation generation entry points.

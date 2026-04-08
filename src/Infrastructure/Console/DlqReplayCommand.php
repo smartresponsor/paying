@@ -14,6 +14,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Replays failed delivery items from the payment DLQ back into the outbox pipeline.
+ */
 #[AsCommand(name: 'payment:dlq:replay', description: 'Replay DLQ items back to outbox')]
 class DlqReplayCommand extends Command
 {

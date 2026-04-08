@@ -14,6 +14,9 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\TransportNamesStamp;
 use Symfony\Component\Messenger\Transport\TransportInterface;
 
+/**
+ * Provides the payment outbox processor service used by the payment lifecycle and operator-facing flows.
+ */
 final readonly class PaymentOutboxProcessor implements PaymentOutboxProcessorInterface
 {
     public function __construct(
@@ -23,6 +26,9 @@ final readonly class PaymentOutboxProcessor implements PaymentOutboxProcessorInt
     ) {
     }
 
+    /**
+     * Provides the process behavior for the payment outbox processor component.
+     */
     public function process(int $limit = 50, bool $retryFailed = false): int
     {
         $repo = $this->em->getRepository(PaymentOutboxMessage::class);

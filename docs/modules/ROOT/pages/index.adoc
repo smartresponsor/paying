@@ -1,0 +1,54 @@
+= Payment
+
+This repository exposes a minimal Antora producer surface for the central documentation ecosystem.
+
+== Documentation split
+
+The documentation model is intentionally split into distinct surfaces:
+
+* Antora pages for owner-facing narrative, governance, operations, and manual entry points.
+* OpenAPI for the HTTP contract surface.
+* Doctum for generated code reference based on `src/`.
+* Root-level GitHub-facing documents for repository entry, release, and change posture.
+
+This repository is a content producer only. Site assembly, UI, and central publishing logic stay outside this repository.
+
+== Antora entry points
+
+* xref:architecture.adoc[Architecture]
+* xref:install.adoc[Install]
+* xref:operations.adoc[Operations]
+* xref:limits.adoc[Limits]
+* xref:proof-pack.adoc[Proof Pack]
+* xref:api.adoc[HTTP API]
+* xref:code-reference.adoc[Code Reference]
+
+Antora pages in this repository act as stable entry points into the canonical repo-local source set rather than a second full documentation portal.
+
+== Canonical repo-local narratives
+
+The main hand-written repository narratives remain in Markdown and are treated as the canonical repo-local source set:
+
+* `docs/ARCHITECTURE.md`
+* `docs/INSTALL.md`
+* `docs/OPERATIONS.md`
+* `docs/API.md`
+* `docs/LIMITS.md`
+* `docs/PROOF_PACK.md`
+
+== Generated surfaces
+
+* OpenAPI source of truth: `docs/api/openapi.yaml`
+* Runtime OpenAPI publication points: `/api/docs`, `/api/docs.json`, `/api/docs.yaml`
+* Doctum configuration: `doctum.php`
+* Doctum generated output target: `docs/generated/doctum/`
+
+Generated artifacts should remain publishable as separate outputs and must not be merged into the hand-written Antora narrative layer.
+
+== GitHub-facing surface
+
+Repository-facing materials stay at the root and are not duplicated into Antora:
+
+* `README.md`
+* `CHANGELOG.md`
+* `RELEASE_NOTES.md`

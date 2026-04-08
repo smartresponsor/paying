@@ -7,6 +7,9 @@ namespace App\Controller\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Carries validated identifier input for reading a payment aggregate.
+ */
 final class PaymentReadRequestDto
 {
     #[Assert\NotBlank]

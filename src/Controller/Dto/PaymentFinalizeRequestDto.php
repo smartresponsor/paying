@@ -9,6 +9,9 @@ use App\ValueObject\PaymentStatus;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
+/**
+ * Carries validated finalize payload data for the public payment API.
+ */
 final class PaymentFinalizeRequestDto
 {
     #[Assert\NotBlank]
@@ -25,6 +28,9 @@ final class PaymentFinalizeRequestDto
     public string $status = '';
 
     #[Assert\Callback]
+    /**
+     * Rejects finalize requests that carry a payment status outside the supported enum set.
+     */
     public function validateStatus(ExecutionContextInterface $context): void
     {
         if ('' === $this->status) {

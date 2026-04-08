@@ -29,7 +29,7 @@ steps=(
   'lint-container|composer lint:container'
   'cs-check|composer cs:check-quiet'
   'stan|composer stan:runtime-target'
-  'docs-phpdoc-check|composer docs:phpdoc:check'
+  'docs-doctum-check|composer docs:doctum:check'
   'test-bootstrap-reset|composer test:bootstrap:reset'
   'test|composer test'
   'test-ui-playwright|composer test:ui:playwright'

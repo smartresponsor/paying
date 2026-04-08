@@ -5,8 +5,14 @@ declare(strict_types=1);
 
 namespace App\Service\Webhook;
 
+/**
+ * Provides the pay pal event normalizer step for webhook validation and normalization flows.
+ */
 final class PayPalEventNormalizer
 {
+    /**
+     * Provides the routing key behavior for the pay pal event normalizer component.
+     */
     public function routingKey(array $payload): string
     {
         return match ((string) ($payload['event_type'] ?? '')) {
@@ -18,6 +24,8 @@ final class PayPalEventNormalizer
     }
 
     /**
+     * Normalizes the provider payload handled by the normalize workflow.
+     *
      * @return array<string, mixed>
      */
     public function normalize(array $payload): array

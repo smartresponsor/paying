@@ -8,6 +8,9 @@ namespace App\Tests\Functional\Api;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the payment create start finalize vertical scenario within the payment api test surface.
+ */
 final class PaymentCreateStartFinalizeVerticalTest extends WebTestCase
 {
     private ?string $originalOidcDisabled = null;
@@ -32,6 +35,9 @@ final class PaymentCreateStartFinalizeVerticalTest extends WebTestCase
         parent::tearDown();
     }
 
+    /**
+     * Verifies that create start finalize read and refund vertical.
+     */
     public function testCreateStartFinalizeReadAndRefundVertical(): void
     {
         $client = self::createClient();

@@ -1,0 +1,16 @@
+= Proof Pack
+
+This page is the Antora entry point for proof-oriented operational evidence and local validation guidance.
+
+== Canonical repo-local source
+
+* `docs/PROOF_PACK.md`
+
+== Related quality and operational materials
+
+* `docs/qa/payment-quality-gates.md`
+* `docs/qa/payment-quality-closure.md`
+* `docs/qa/payment-local-pipeline-reporting.md`
+* `ops/release/checklist.md`
+
+Proof-oriented materials remain narrative and operator-facing. Generated surfaces such as OpenAPI and Doctum stay separate.

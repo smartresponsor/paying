@@ -12,30 +12,51 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the payment reconciliation service scenario within the payment reconciliation test surface.
+ */
 final class PaymentReconciliationServiceTest extends TestCase
 {
+    /**
+     * Verifies that on failed does not throw when payment missing.
+     */
     public function testOnFailedDoesNotThrowWhenPaymentMissing(): void
     {
         $repo = new class implements PaymentRepositoryInterface {
+            /**
+             * Implements the save behavior required by the local test double used in this scenario.
+             */
             public function save(Payment $payment): void
             {
             }
 
+            /**
+             * Implements the find behavior required by the local test double used in this scenario.
+             */
             public function find(string $id): ?Payment
             {
                 return null;
             }
 
+            /**
+             * Implements the find by order id behavior required by the local test double used in this scenario.
+             */
             public function findByOrderId(string $orderId): ?Payment
             {
                 return null;
             }
 
+            /**
+             * Implements the list recent behavior required by the local test double used in this scenario.
+             */
             public function listRecent(int $limit = 10): array
             {
                 return [];
             }
 
+            /**
+             * Implements the list ids by statuses behavior required by the local test double used in this scenario.
+             */
             public function listIdsByStatuses(array $statuses, int $limit = 100): array
             {
                 return [];

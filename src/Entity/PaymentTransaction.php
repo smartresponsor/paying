@@ -7,6 +7,9 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Stores a gateway-side transaction that belongs to a payment lifecycle.
+ */
 #[ORM\Entity]
 #[ORM\Table(name: 'payment_transaction')]
 class PaymentTransaction
@@ -40,31 +43,49 @@ class PaymentTransaction
         $this->occurredAt = new \DateTimeImmutable('now');
     }
 
+    /**
+     * Returns the stable transaction identifier.
+     */
     public function id(): string
     {
         return $this->id;
     }
 
+    /**
+     * Returns the identifier of the payment this transaction belongs to.
+     */
     public function paymentId(): string
     {
         return $this->paymentId;
     }
 
+    /**
+     * Returns the upstream gateway transaction identifier.
+     */
     public function gatewayTransactionId(): string
     {
         return $this->gatewayTransactionId;
     }
 
+    /**
+     * Returns the transaction type recorded for the payment event.
+     */
     public function type(): string
     {
         return $this->type;
     }
 
+    /**
+     * Returns the transaction amount in minor units.
+     */
     public function amountMinor(): int
     {
         return $this->amountMinor;
     }
 
+    /**
+     * Returns when the transaction occurred according to the component record.
+     */
     public function occurredAt(): \DateTimeImmutable
     {
         return $this->occurredAt;

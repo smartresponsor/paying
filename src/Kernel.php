@@ -10,10 +10,16 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
+/**
+ * Bootstraps the payment Symfony application and derives runtime-specific kernel paths.
+ */
 class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
+    /**
+     * Provides the get cache dir behavior for the kernel component.
+     */
     public function getCacheDir(): string
     {
         $configured = $_SERVER['PAYMENT_TEST_CACHE_DIR'] ?? $_ENV['PAYMENT_TEST_CACHE_DIR'] ?? null;

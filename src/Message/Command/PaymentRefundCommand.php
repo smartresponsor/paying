@@ -5,6 +5,9 @@ declare(strict_types=1);
 
 namespace App\Message\Command;
 
+/**
+ * Carries the payment refund command payload across messenger-driven payment workflows.
+ */
 final class PaymentRefundCommand
 {
     public function __construct(

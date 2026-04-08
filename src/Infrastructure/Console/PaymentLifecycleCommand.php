@@ -17,6 +17,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises payment lifecycle operations from the command line for demos and operator flows.
+ */
 #[AsCommand(name: 'payment:lifecycle:run')]
 final class PaymentLifecycleCommand extends Command
 {

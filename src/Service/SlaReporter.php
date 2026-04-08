@@ -9,13 +9,18 @@ use App\ServiceInterface\SlaReporterInterface;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Provides the sla reporter service used by the payment lifecycle and operator-facing flows.
+ */
 readonly class SlaReporter implements SlaReporterInterface
 {
     public function __construct(private Connection $data, private LoggerInterface $logger)
     {
     }
 
-    /** @return array{window: string, total: int, completed: int, failed: int, canceled: int, refunded: int, successRate: float} */
+    /**
+     * Returns the value exposed by the since accessor.
+     */
     public function since(string $isoInterval): array
     {
         $interval = trim($isoInterval);

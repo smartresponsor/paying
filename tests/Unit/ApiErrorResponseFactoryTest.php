@@ -9,8 +9,14 @@ use App\Service\ApiErrorResponseFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Exercises the api error response factory scenario within the payment unit test surface.
+ */
 final class ApiErrorResponseFactoryTest extends TestCase
 {
+    /**
+     * Verifies that bad json body returns stable payload.
+     */
     public function testBadJsonBodyReturnsStablePayload(): void
     {
         $factory = new ApiErrorResponseFactory();
@@ -24,6 +30,9 @@ final class ApiErrorResponseFactoryTest extends TestCase
         ], $payload);
     }
 
+    /**
+     * Verifies that payment not found returns stable payload.
+     */
     public function testPaymentNotFoundReturnsStablePayload(): void
     {
         $factory = new ApiErrorResponseFactory();

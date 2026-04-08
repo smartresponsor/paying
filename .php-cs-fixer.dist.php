@@ -41,6 +41,28 @@ $config
         ],
         'single_import_per_statement' => true,
 
+        // Preserve descriptive DocBlock narrative. Only type/signature-related
+        // portions may be adjusted manually; the fixer must not rewrite or
+        // downgrade semantic documentation into plain comments or strip tags.
+        'comment_to_phpdoc' => false,
+        'general_phpdoc_annotation_remove' => false,
+        'general_phpdoc_tag_rename' => false,
+        'no_superfluous_phpdoc_tags' => false,
+        'phpdoc_align' => false,
+        'phpdoc_line_span' => false,
+        'phpdoc_order' => false,
+        'phpdoc_order_by_value' => false,
+        'phpdoc_separation' => false,
+        'phpdoc_single_line_var_spacing' => false,
+        'phpdoc_summary' => false,
+        'phpdoc_to_comment' => false,
+        'phpdoc_trim' => false,
+        'phpdoc_trim_consecutive_blank_line_separation' => false,
+        'phpdoc_types' => false,
+        'phpdoc_types_order' => false,
+        'phpdoc_var_annotation_correct_order' => false,
+        'phpdoc_var_without_name' => false,
+
         // risky (category 1) — force OFF
         'no_unreachable_default_argument_value' => false,
         'logical_operators' => false,

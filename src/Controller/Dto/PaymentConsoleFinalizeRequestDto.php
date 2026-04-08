@@ -9,6 +9,9 @@ use App\ValueObject\PaymentStatus;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
+/**
+ * Carries validated finalize command input from the operator console workflow.
+ */
 final class PaymentConsoleFinalizeRequestDto
 {
     #[Assert\NotBlank]
@@ -29,6 +32,9 @@ final class PaymentConsoleFinalizeRequestDto
     public string $status = '';
 
     #[Assert\Callback]
+    /**
+     * Rejects console finalize requests that carry a payment status outside the supported enum set.
+     */
     public function validateStatus(ExecutionContextInterface $context): void
     {
         if ('' === $this->status) {

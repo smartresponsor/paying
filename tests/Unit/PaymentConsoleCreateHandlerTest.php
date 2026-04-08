@@ -12,12 +12,16 @@ use App\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the payment console create handler scenario within the payment unit test surface.
+ */
 final class PaymentConsoleCreateHandlerTest extends TestCase
 {
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     /**
+     * Verifies that create delegates to payment service.
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testCreateDelegatesToPaymentService(): void

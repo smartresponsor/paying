@@ -5,6 +5,9 @@ declare(strict_types=1);
 
 namespace App\Message\Command;
 
+/**
+ * Carries the payment create command payload across messenger-driven payment workflows.
+ */
 final class PaymentCreateCommand
 {
     /**
@@ -25,6 +28,9 @@ final class PaymentCreateCommand
         $this->providerCode = $gatewayCode;
     }
 
+    /**
+     * Returns the normalized value produced by the canonical provider code accessor.
+     */
     public function canonicalProviderCode(): string
     {
         return '' !== trim($this->providerCode) ? $this->providerCode : $this->gatewayCode;

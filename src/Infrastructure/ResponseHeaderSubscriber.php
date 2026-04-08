@@ -9,9 +9,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+/**
+ * Adds payment-related response headers for observability and client diagnostics.
+ */
 class ResponseHeaderSubscriber implements EventSubscriberInterface
 {
     /**
+     * Returns the Symfony event subscriptions exposed by this subscriber.
+     *
      * @return string[]
      */
     public static function getSubscribedEvents(): array
@@ -19,6 +24,9 @@ class ResponseHeaderSubscriber implements EventSubscriberInterface
         return [KernelEvents::RESPONSE => 'onResponse'];
     }
 
+    /**
+     * Applies the standard payment HTTP response headers to the outgoing response.
+     */
     public function onResponse(ResponseEvent $event): void
     {
         $resp = $event->getResponse();

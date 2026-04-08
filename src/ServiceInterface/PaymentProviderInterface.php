@@ -8,19 +8,31 @@ namespace App\ServiceInterface;
 use App\Entity\Payment;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Defines the contract for the payment provider interface payment service boundary.
+ */
 interface PaymentProviderInterface
 {
     /**
-     * @param array<string, mixed> $context
+     * Executes the start operation for the current payment workflow.
      *
+     * @param array<string, mixed> $context
      * @return array{provider: string, paymentId: string, accepted?: bool, status?: string, providerRef?: string|null, checkoutUrl?: string, result?: array<string, mixed>}
      */
     public function start(Payment $payment, array $context = []): array;
 
-    /** @param array<string, mixed> $payload */
+    /**
+     * Executes the finalize operation for the current payment workflow.
+     */
     public function finalize(Ulid $id, array $payload = []): Payment;
 
+    /**
+     * Executes the refund operation for the current payment workflow.
+     */
     public function refund(Ulid $id, string $amount): Payment;
 
+    /**
+     * Executes the reconcile operation for the current payment workflow.
+     */
     public function reconcile(Ulid $id): Payment;
 }

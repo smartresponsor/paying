@@ -13,35 +13,56 @@ use App\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the payment start service scenario within the payment unit test surface.
+ */
 final class PaymentStartServiceTest extends TestCase
 {
+    /**
+     * Verifies that start persists payment and updates status.
+     */
     public function testStartPersistsPaymentAndUpdatesStatus(): void
     {
         $repo = new class implements PaymentRepositoryInterface {
             public ?Payment $saved = null;
             public int $saveCount = 0;
 
+            /**
+             * Implements the save behavior required by the local test double used in this scenario.
+             */
             public function save(Payment $payment): void
             {
                 $this->saved = $payment;
                 ++$this->saveCount;
             }
 
+            /**
+             * Implements the find behavior required by the local test double used in this scenario.
+             */
             public function find(string $id): ?Payment
             {
                 return null;
             }
 
+            /**
+             * Implements the find by order id behavior required by the local test double used in this scenario.
+             */
             public function findByOrderId(string $orderId): ?Payment
             {
                 return null;
             }
 
+            /**
+             * Implements the list recent behavior required by the local test double used in this scenario.
+             */
             public function listRecent(int $limit = 10): array
             {
                 return [];
             }
 
+            /**
+             * Implements the list ids by statuses behavior required by the local test double used in this scenario.
+             */
             public function listIdsByStatuses(array $statuses, int $limit = 100): array
             {
                 return [];
@@ -52,6 +73,9 @@ final class PaymentStartServiceTest extends TestCase
             /** @var array<string, mixed> */
             public array $receivedContext = [];
 
+            /**
+             * Provides the start behavior required by this test scenario.
+             */
             public function start(string $provider, Payment $payment, array $context = []): array
             {
                 $this->receivedContext = $context;
@@ -59,16 +83,25 @@ final class PaymentStartServiceTest extends TestCase
                 return ['providerRef' => 'provider-ref-123'];
             }
 
+            /**
+             * Provides the finalize behavior required by this test scenario.
+             */
             public function finalize(string $provider, Ulid $id, array $payload = []): Payment
             {
                 throw new \RuntimeException('not used');
             }
 
+            /**
+             * Provides the refund behavior required by this test scenario.
+             */
             public function refund(string $provider, Ulid $id, string $amount): Payment
             {
                 throw new \RuntimeException('not used');
             }
 
+            /**
+             * Provides the reconcile behavior required by this test scenario.
+             */
             public function reconcile(string $provider, Ulid $id): Payment
             {
                 throw new \RuntimeException('not used');
@@ -90,33 +123,51 @@ final class PaymentStartServiceTest extends TestCase
         self::assertSame((string) $payment->id(), $guard->receivedContext['projectId']);
     }
 
+    /**
+     * Verifies that start marks payment failed on provider error.
+     */
     public function testStartMarksPaymentFailedOnProviderError(): void
     {
         $repo = new class implements PaymentRepositoryInterface {
             public int $saveCount = 0;
             public ?Payment $last = null;
 
+            /**
+             * Implements the save behavior required by the local test double used in this scenario.
+             */
             public function save(Payment $payment): void
             {
                 ++$this->saveCount;
                 $this->last = $payment;
             }
 
+            /**
+             * Implements the find behavior required by the local test double used in this scenario.
+             */
             public function find(string $id): ?Payment
             {
                 return null;
             }
 
+            /**
+             * Implements the find by order id behavior required by the local test double used in this scenario.
+             */
             public function findByOrderId(string $orderId): ?Payment
             {
                 return null;
             }
 
+            /**
+             * Implements the list recent behavior required by the local test double used in this scenario.
+             */
             public function listRecent(int $limit = 10): array
             {
                 return [];
             }
 
+            /**
+             * Implements the list ids by statuses behavior required by the local test double used in this scenario.
+             */
             public function listIdsByStatuses(array $statuses, int $limit = 100): array
             {
                 return [];
@@ -140,6 +191,9 @@ final class PaymentStartServiceTest extends TestCase
         self::assertSame(PaymentStatus::failed, $repo->last->status());
     }
 
+    /**
+     * Verifies that start rejects invalid amount format.
+     */
     public function testStartRejectsInvalidAmountFormat(): void
     {
         $repo = $this->createMock(PaymentRepositoryInterface::class);

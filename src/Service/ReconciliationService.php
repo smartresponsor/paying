@@ -11,6 +11,9 @@ use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\ReconciliationServiceInterface;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Provides the reconciliation service service used by the payment lifecycle and operator-facing flows.
+ */
 readonly class ReconciliationService implements ReconciliationServiceInterface
 {
     public function __construct(
@@ -19,6 +22,9 @@ readonly class ReconciliationService implements ReconciliationServiceInterface
     ) {
     }
 
+    /**
+     * Provides the reconcile behavior for the reconciliation service component.
+     */
     public function reconcile(Ulid $id, string $provider = 'internal'): Payment
     {
         $p = $this->guard->reconcile($provider, $id);
@@ -27,6 +33,9 @@ readonly class ReconciliationService implements ReconciliationServiceInterface
         return $p;
     }
 
+    /**
+     * Returns the collection assembled by the list processing ids query path.
+     */
     public function listProcessingIds(int $limit = 100): array
     {
         return $this->repo->listIdsByStatuses(['processing'], $limit);

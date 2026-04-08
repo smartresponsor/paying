@@ -8,13 +8,18 @@ namespace App\Service;
 use App\ServiceInterface\OidcJwksCacheInterface;
 use App\ServiceInterface\TokenVerifierInterface;
 
+/**
+ * Provides the token verifier service used by the payment lifecycle and operator-facing flows.
+ */
 readonly class TokenVerifier implements TokenVerifierInterface
 {
     public function __construct(private OidcJwksCacheInterface $jwks)
     {
     }
 
-    /** @return array<string, bool|int|float|string|list<string>|null> */
+    /**
+     * Verifies the input handled by the verify workflow.
+     */
     public function verify(string $jwt): array
     {
         [$headerEncoded, $payloadEncoded, $signatureEncoded] = $this->split($jwt);
@@ -61,7 +66,9 @@ readonly class TokenVerifier implements TokenVerifierInterface
         return $payload;
     }
 
-    /** @param array<string, bool|int|float|string|list<string>|null> $claims */
+    /**
+     * Determines whether the has scopes condition is currently satisfied.
+     */
     public function hasScopes(array $claims, array $required, bool $any = false): bool
     {
         $scopes = [];

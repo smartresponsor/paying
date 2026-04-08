@@ -7,7 +7,13 @@ namespace App\ControllerInterface;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * Defines the HTTP read endpoint for payment snapshots.
+ */
 interface PaymentReadControllerInterface
 {
+    /**
+     * Returns the serialized payment snapshot for the requested identifier.
+     */
     public function read(string $id): JsonResponse;
 }

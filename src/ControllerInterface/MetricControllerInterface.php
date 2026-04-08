@@ -7,7 +7,13 @@ namespace App\ControllerInterface;
 
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Defines the metrics endpoint exposed for payment observability.
+ */
 interface MetricControllerInterface
 {
+    /**
+     * Renders the module metrics payload for scraping systems.
+     */
     public function metrics(): Response;
 }

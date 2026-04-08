@@ -7,13 +7,22 @@ namespace App\Service\Mapper;
 
 use App\ServiceInterface\EventMapperInterface;
 
+/**
+ * Maps external provider payloads into the internal stripe event mapper payment representation.
+ */
 class StripeEventMapper implements EventMapperInterface
 {
+    /**
+     * Provides the provider behavior for the stripe event mapper component.
+     */
     public function provider(): string
     {
         return 'stripe';
     }
 
+    /**
+     * Provides the extract payment id behavior for the stripe event mapper component.
+     */
     public function extractPaymentId(array $payload): ?string
     {
         $object = $payload['data']['object'] ?? null;
@@ -27,6 +36,9 @@ class StripeEventMapper implements EventMapperInterface
         return null;
     }
 
+    /**
+     * Provides the map status behavior for the stripe event mapper component.
+     */
     public function mapStatus(array $payload): ?string
     {
         $type = (string) ($payload['type'] ?? '');

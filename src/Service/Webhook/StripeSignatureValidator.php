@@ -7,12 +7,18 @@ namespace App\Service\Webhook;
 
 use App\ServiceInterface\WebhookVerifierInterface;
 
+/**
+ * Provides the stripe signature validator step for webhook validation and normalization flows.
+ */
 final readonly class StripeSignatureValidator
 {
     public function __construct(private WebhookVerifierInterface $verifier)
     {
     }
 
+    /**
+     * Determines whether the is valid condition is currently satisfied.
+     */
     public function isValid(string $payload, ?string $signature): bool
     {
         return $this->verifier->verify('stripe', $payload, [

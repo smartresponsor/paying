@@ -10,6 +10,9 @@ use App\ServiceInterface\PaymentApiStartHandlerInterface;
 use App\ServiceInterface\PaymentStartInput;
 use App\ServiceInterface\PaymentStartServiceInterface;
 
+/**
+ * Provides the payment api start handler service used by the payment lifecycle and operator-facing flows.
+ */
 final readonly class PaymentApiStartHandler implements PaymentApiStartHandlerInterface
 {
     public function __construct(
@@ -19,8 +22,9 @@ final readonly class PaymentApiStartHandler implements PaymentApiStartHandlerInt
     }
 
     /**
-     * @return array{payment: string, orderId: string, provider: string, status: string, providerRef: string|null, result: array<string, mixed>}
+     * Executes the handle operation for the current payment workflow.
      *
+     * @return array{payment: string, orderId: string, provider: string, status: string, providerRef: string|null, result: array<string, mixed>}
      * @throws \JsonException
      */
     public function handle(PaymentStartInput $input, string $idempotencyKey, string $payloadHash): array

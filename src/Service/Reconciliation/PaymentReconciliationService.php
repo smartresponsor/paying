@@ -13,6 +13,9 @@ use App\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Provides the payment reconciliation service service used by the payment lifecycle and operator-facing flows.
+ */
 final class PaymentReconciliationService implements PaymentReconciliationServiceInterface
 {
     public function __construct(
@@ -21,6 +24,9 @@ final class PaymentReconciliationService implements PaymentReconciliationService
     ) {
     }
 
+    /**
+     * Provides the on captured behavior for the payment reconciliation service component.
+     */
     public function onCaptured(string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null): Payment
     {
         $p = $this->requirePayment($paymentId);
@@ -40,6 +46,9 @@ final class PaymentReconciliationService implements PaymentReconciliationService
         return $p;
     }
 
+    /**
+     * Provides the on refunded behavior for the payment reconciliation service component.
+     */
     public function onRefunded(string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null, ?string $reason = null): PaymentRefund
     {
         $p = $this->requirePayment($paymentId);
@@ -60,6 +69,9 @@ final class PaymentReconciliationService implements PaymentReconciliationService
         return $refund;
     }
 
+    /**
+     * Provides the on failed behavior for the payment reconciliation service component.
+     */
     public function onFailed(string $paymentId, string $errorCode, ?string $message = null): void
     {
         $p = $this->payments->find($paymentId);

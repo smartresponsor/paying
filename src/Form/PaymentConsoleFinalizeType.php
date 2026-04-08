@@ -12,8 +12,14 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Builds the operator console form for manual payment finalization requests.
+ */
 final class PaymentConsoleFinalizeType extends AbstractType
 {
+    /**
+     * Defines the form fields exposed by this form type.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -46,6 +52,9 @@ final class PaymentConsoleFinalizeType extends AbstractType
             ]);
     }
 
+    /**
+     * Registers the DTO binding and baseline form options for this type.
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

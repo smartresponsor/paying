@@ -7,6 +7,9 @@ namespace App\Service;
 
 use App\ServiceInterface\OidcJwksCacheInterface;
 
+/**
+ * Provides the oidc jwks cache service used by the payment lifecycle and operator-facing flows.
+ */
 class OidcJwksCache implements OidcJwksCacheInterface
 {
     private string $cacheFile;
@@ -18,7 +21,9 @@ class OidcJwksCache implements OidcJwksCacheInterface
         $this->ttl = (int) ($_ENV['OIDC_JWKS_TTL'] ?? $ttl);
     }
 
-    /** @return array{keys: list<array{n: string, e: string, kty?: string, kid?: string}>} */
+    /**
+     * Returns the value exposed by the get accessor.
+     */
     public function get(): array
     {
         $url = (string) ($_ENV['OIDC_JWKS_URL'] ?? '');

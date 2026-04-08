@@ -7,6 +7,9 @@ namespace App\Controller\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Captures validated input for creating a new payment aggregate.
+ */
 final class PaymentCreateRequestDto
 {
     #[Assert\NotBlank]

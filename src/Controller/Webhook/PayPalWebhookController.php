@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Handles PayPal webhook callbacks and normalizes them into the payment runtime.
+ */
 final readonly class PayPalWebhookController
 {
     public function __construct(
@@ -25,6 +28,9 @@ final readonly class PayPalWebhookController
     ) {
     }
 
+    /**
+     * Verifies and processes an inbound PayPal webhook request.
+     */
     public function __invoke(Request $request): JsonResponse
     {
         $payload = $request->getContent();

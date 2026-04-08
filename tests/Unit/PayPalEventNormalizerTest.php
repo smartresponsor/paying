@@ -8,8 +8,14 @@ namespace App\Tests\Unit;
 use App\Service\Webhook\PayPalEventNormalizer;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the pay pal event normalizer scenario within the payment unit test surface.
+ */
 final class PayPalEventNormalizerTest extends TestCase
 {
+    /**
+     * Verifies that normalize builds consumer payload.
+     */
     public function testNormalizeBuildsConsumerPayload(): void
     {
         $normalizer = new PayPalEventNormalizer();

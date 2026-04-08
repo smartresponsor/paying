@@ -10,6 +10,12 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Prints a concise demonstration of the payment E2E path for operators and local testers.
+ *
+ * The command documents the intended sequence between webhook ingestion, outbox publication,
+ * and message consumption without mutating runtime state.
+ */
 #[AsCommand(name: 'payment:e2e:demo', description: 'Demonstrates E2E flow: webhook -> outbox -> publish -> consume')]
 final class PaymentE2eDemoCommand extends Command
 {

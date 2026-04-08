@@ -82,13 +82,13 @@ But the current slice still has major operational gaps:
 - no documented green baseline output
 - no baseline/strictness strategy for PHPStan
 - no installed `friendsofphp/php-cs-fixer` package in `composer.json`
-- no phpDocumentor package/configuration in the slice yet
+- no Doctum producer/configuration in the slice yet
 
 ### 4. Documentation is improved, but still not complete against the target state
 
 The current slice already has strong engineering docs, but still lacks:
 
-- phpDocumentor project configuration
+- Doctum project configuration
 - explicit DocBlock coverage plan enforced in code review
 - a final post-hardening README that explains boot, migrate, load fixtures, run smoke, and inspect docs as one canonical
   journey
@@ -122,7 +122,7 @@ The next engineering-hardening step after proof contour is to close the operatio
 
 1. install missing QA/doc tooling in `composer.json`
 2. add CI workflow(s)
-3. add phpDocumentor config
+3. add Doctum config
 4. define and document a green pipeline
 
 ## Triage verdict

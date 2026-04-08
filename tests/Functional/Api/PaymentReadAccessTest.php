@@ -7,8 +7,14 @@ namespace App\Tests\Functional\Api;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Exercises the payment read access scenario within the payment api test surface.
+ */
 final class PaymentReadAccessTest extends WebTestCase
 {
+    /**
+     * Verifies that payment console requires bearer token.
+     */
     public function testPaymentConsoleRequiresBearerToken(): void
     {
         unset($_ENV['OIDC_DISABLED']);
@@ -20,6 +26,9 @@ final class PaymentReadAccessTest extends WebTestCase
         self::assertSame(401, $client->getResponse()->getStatusCode());
     }
 
+    /**
+     * Verifies that payment status requires bearer token.
+     */
     public function testPaymentStatusRequiresBearerToken(): void
     {
         unset($_ENV['OIDC_DISABLED']);

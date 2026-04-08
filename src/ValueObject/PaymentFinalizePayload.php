@@ -5,6 +5,9 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
+/**
+ * Represents the payment finalize payload value object used by the payment lifecycle and related contracts.
+ */
 final readonly class PaymentFinalizePayload
 {
     public function __construct(
@@ -14,7 +17,11 @@ final readonly class PaymentFinalizePayload
     ) {
     }
 
-    /** @return array<string, string> */
+    /**
+     * Builds the normalized provider payload expected by finalize operations and outbound integrations.
+     *
+     * @return array<string, string>
+     */
     public function toProviderPayload(): array
     {
         return array_filter([

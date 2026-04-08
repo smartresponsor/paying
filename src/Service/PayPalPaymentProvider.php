@@ -11,12 +11,18 @@ use App\ServiceInterface\PaymentProviderInterface;
 use App\ValueObject\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Provides the pay pal payment provider service used by the payment lifecycle and operator-facing flows.
+ */
 final readonly class PayPalPaymentProvider implements PaymentProviderInterface
 {
     public function __construct(private PayPalGateway $gateway)
     {
     }
 
+    /**
+     * Executes the start operation for the current payment workflow.
+     */
     public function start(Payment $payment, array $context = []): array
     {
         $amountMinor = (int) round(((float) $payment->amount()) * 100);
@@ -30,6 +36,9 @@ final readonly class PayPalPaymentProvider implements PaymentProviderInterface
         ];
     }
 
+    /**
+     * Provides the finalize behavior for the pay pal payment provider component.
+     */
     public function finalize(Ulid $id, array $payload = []): Payment
     {
         $payment = new Payment(
@@ -47,6 +56,9 @@ final readonly class PayPalPaymentProvider implements PaymentProviderInterface
         return $payment;
     }
 
+    /**
+     * Executes the refund operation for the current payment workflow.
+     */
     public function refund(Ulid $id, string $amount): Payment
     {
         $currency = 'USD';
@@ -56,6 +68,9 @@ final readonly class PayPalPaymentProvider implements PaymentProviderInterface
         return (new Payment($id, PaymentStatus::refunded, $amount, $currency))->withProviderRef($providerRef);
     }
 
+    /**
+     * Provides the reconcile behavior for the pay pal payment provider component.
+     */
     public function reconcile(Ulid $id): Payment
     {
         return (new Payment($id, PaymentStatus::processing, '0.00', 'USD'))->withProviderRef('paypal_reconcile_'.(string) $id);

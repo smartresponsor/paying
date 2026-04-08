@@ -12,8 +12,14 @@ use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Seeds representative payment aggregates for local development and test flows.
+ */
 final class PaymentFixture extends Fixture implements FixtureGroupInterface
 {
+    /**
+     * Loads fixture records into the persistence layer.
+     */
     public function load(ObjectManager $manager): void
     {
         $faker = new PaymentFixtureFaker();
@@ -39,6 +45,8 @@ final class PaymentFixture extends Fixture implements FixtureGroupInterface
     }
 
     /**
+     * Returns the fixture group names that enable this seed set.
+     *
      * @return string[]
      */
     public static function getGroups(): array

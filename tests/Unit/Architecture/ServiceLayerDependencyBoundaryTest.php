@@ -7,8 +7,14 @@ namespace App\Tests\Unit\Architecture;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the service layer dependency boundary scenario within the payment architecture test surface.
+ */
 final class ServiceLayerDependencyBoundaryTest extends TestCase
 {
+    /**
+     * Verifies that service and service interface do not depend on controller namespace.
+     */
     public function testServiceAndServiceInterfaceDoNotDependOnControllerNamespace(): void
     {
         $serviceFiles = [

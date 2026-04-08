@@ -5,6 +5,9 @@ declare(strict_types=1);
 
 namespace App\ServiceInterface;
 
+/**
+ * Defines the contract for the payment start input payment service boundary.
+ */
 final readonly class PaymentStartInput
 {
     public function __construct(

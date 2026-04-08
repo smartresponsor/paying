@@ -14,8 +14,14 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the payment console start handler scenario within the payment unit test surface.
+ */
 final class PaymentConsoleStartHandlerTest extends TestCase
 {
+    /**
+     * Verifies that start returns payment from start service.
+     */
     public function testStartReturnsPaymentFromStartService(): void
     {
         $payment = new Payment(new Ulid(), PaymentStatus::processing, '12.50', 'USD');

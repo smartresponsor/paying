@@ -11,6 +11,9 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * Exercises the payment finalize dto validation scenario within the payment unit test surface.
+ */
 final class PaymentFinalizeDtoValidationTest extends TestCase
 {
     private ValidatorInterface $validator;
@@ -22,6 +25,9 @@ final class PaymentFinalizeDtoValidationTest extends TestCase
             ->getValidator();
     }
 
+    /**
+     * Verifies that api finalize dto allows known status and empty status.
+     */
     public function testApiFinalizeDtoAllowsKnownStatusAndEmptyStatus(): void
     {
         $dto = new PaymentFinalizeRequestDto();
@@ -34,6 +40,9 @@ final class PaymentFinalizeDtoValidationTest extends TestCase
         self::assertCount(0, $this->validator->validate($dto));
     }
 
+    /**
+     * Verifies that api finalize dto rejects unknown status.
+     */
     public function testApiFinalizeDtoRejectsUnknownStatus(): void
     {
         $dto = new PaymentFinalizeRequestDto();
@@ -46,6 +55,9 @@ final class PaymentFinalizeDtoValidationTest extends TestCase
         self::assertSame('status', (string) $violations[0]->getPropertyPath());
     }
 
+    /**
+     * Verifies that console finalize dto rejects unknown status.
+     */
     public function testConsoleFinalizeDtoRejectsUnknownStatus(): void
     {
         $dto = new PaymentConsoleFinalizeRequestDto();

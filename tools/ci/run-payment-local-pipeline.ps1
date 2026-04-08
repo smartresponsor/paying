@@ -30,7 +30,7 @@ foreach ($item in @(
 @{ Name = 'lint-container'; Command = 'composer lint:container' },
 @{ Name = 'cs-check'; Command = 'composer cs:check-quiet' },
 @{ Name = 'stan'; Command = 'composer stan:runtime-target' },
-@{ Name = 'docs-phpdoc-check'; Command = 'composer docs:phpdoc:check' },
+@{ Name = 'docs-doctum-check'; Command = 'composer docs:doctum:check' },
 @{ Name = 'test-bootstrap-reset'; Command = 'composer test:bootstrap:reset' },
 @{ Name = 'test'; Command = 'composer test' },
 @{ Name = 'test-ui-playwright'; Command = 'composer test:ui:playwright' }

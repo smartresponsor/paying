@@ -7,6 +7,9 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Stores a refund record linked to a payment and its refunded amount.
+ */
 #[ORM\Entity]
 #[ORM\Table(name: 'payment_refund')]
 class PaymentRefund
@@ -40,31 +43,49 @@ class PaymentRefund
         $this->refundedAt = new \DateTimeImmutable('now');
     }
 
+    /**
+     * Returns the stable refund identifier.
+     */
     public function id(): string
     {
         return $this->id;
     }
 
+    /**
+     * Returns the identifier of the payment that this refund belongs to.
+     */
     public function paymentId(): string
     {
         return $this->paymentId;
     }
 
+    /**
+     * Returns the refunded amount in minor units for precise arithmetic.
+     */
     public function amountMinor(): int
     {
         return $this->amountMinor;
     }
 
+    /**
+     * Returns the ISO currency code for the refund amount.
+     */
     public function currency(): string
     {
         return $this->currency;
     }
 
+    /**
+     * Returns the business reason captured for the refund, when provided.
+     */
     public function reason(): ?string
     {
         return $this->reason;
     }
 
+    /**
+     * Returns when the refund record was created.
+     */
     public function refundedAt(): \DateTimeImmutable
     {
         return $this->refundedAt;

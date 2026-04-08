@@ -10,6 +10,9 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Provides the dlq service service used by the payment lifecycle and operator-facing flows.
+ */
 final readonly class DlqService implements DlqServiceInterface
 {
     public function __construct(private Connection $data)
@@ -17,8 +20,9 @@ final readonly class DlqService implements DlqServiceInterface
     }
 
     /**
-     * @return list<array{id: int, outbox_id: string, topic: string, reason: string, created_at: string}>
+     * Returns the collection assembled by the list query path.
      *
+     * @return list<array{id: int, outbox_id: string, topic: string, reason: string, created_at: string}>
      * @throws \Doctrine\DBAL\Exception
      */
     public function list(): array
@@ -40,6 +44,8 @@ final readonly class DlqService implements DlqServiceInterface
     }
 
     /**
+     * Executes the replay operation for the current payment workflow.
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function replay(int $id): bool

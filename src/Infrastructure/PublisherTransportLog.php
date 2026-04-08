@@ -7,8 +7,14 @@ namespace App\Infrastructure;
 
 use App\InfrastructureInterface\PublisherTransportInterface;
 
+/**
+ * Persists transport publish attempts for payment messaging observability.
+ */
 class PublisherTransportLog implements PublisherTransportInterface
 {
+    /**
+     * Publishes a serialized message to the configured transport log sink.
+     */
     public function publish(string $topic, array $payload): void
     {
         error_log('[outbox] topic='.$topic.' payload='.json_encode($payload));

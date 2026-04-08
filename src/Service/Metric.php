@@ -6,6 +6,9 @@ namespace App\Service;
 
 use App\ServiceInterface\MetricInterface;
 
+/**
+ * Provides the metric service used by the payment lifecycle and operator-facing flows.
+ */
 class Metric implements MetricInterface
 {
     private int $success = 0;
@@ -20,29 +23,56 @@ class Metric implements MetricInterface
     private array $providerFailure = [];
     private array $providerDuration = [];
 
+    /**
+     * Provides the inc success behavior for the metric component.
+     */
     public function incSuccess(): void { ++$this->success; }
+    /**
+     * Provides the inc failure behavior for the metric component.
+     */
     public function incFailure(): void { ++$this->failure; }
+    /**
+     * Provides the observe duration behavior for the metric component.
+     */
     public function observeDuration(float $ms): void { $this->sumMs += $ms; ++$this->countMs; }
 
+    /**
+     * Provides the inc provider success behavior for the metric component.
+     */
     public function incProviderSuccess(string $provider, string $operation): void
     {
         $this->providerSuccess[$provider][$operation] = ($this->providerSuccess[$provider][$operation] ?? 0) + 1;
     }
 
+    /**
+     * Provides the inc provider failure behavior for the metric component.
+     */
     public function incProviderFailure(string $provider, string $operation): void
     {
         $this->providerFailure[$provider][$operation] = ($this->providerFailure[$provider][$operation] ?? 0) + 1;
     }
 
+    /**
+     * Provides the observe provider duration behavior for the metric component.
+     */
     public function observeProviderDuration(string $provider, string $operation, float $ms): void
     {
         $this->providerDuration[$provider][$operation]['sum'] = ($this->providerDuration[$provider][$operation]['sum'] ?? 0) + $ms;
         $this->providerDuration[$provider][$operation]['count'] = ($this->providerDuration[$provider][$operation]['count'] ?? 0) + 1;
     }
 
+    /**
+     * Provides the inc retry attempt behavior for the metric component.
+     */
     public function incRetryAttempt(): void { ++$this->retryAttempts; }
+    /**
+     * Provides the inc retry exhausted behavior for the metric component.
+     */
     public function incRetryExhausted(): void { ++$this->retryExhausted; }
 
+    /**
+     * Provides the export behavior for the metric component.
+     */
     public function export(): string
     {
         $avg = $this->countMs ? ($this->sumMs / $this->countMs) : 0.0;

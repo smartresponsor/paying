@@ -14,12 +14,16 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Exercises the payment console read model scenario within the payment unit test surface.
+ */
 final class PaymentConsoleReadModelTest extends TestCase
 {
     /**
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     /**
+     * Verifies that build filters payments and prefills selected card.
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testBuildFiltersPaymentsAndPrefillsSelectedCard(): void
@@ -38,10 +42,16 @@ final class PaymentConsoleReadModelTest extends TestCase
             {
             }
 
+            /**
+             * Implements the save behavior required by the local test double used in this scenario.
+             */
             public function save(Payment $payment): void
             {
             }
 
+            /**
+             * Implements the find behavior required by the local test double used in this scenario.
+             */
             public function find(string $id): ?Payment
             {
                 foreach ($this->payments as $payment) {
@@ -53,16 +63,25 @@ final class PaymentConsoleReadModelTest extends TestCase
                 return null;
             }
 
+            /**
+             * Implements the find by order id behavior required by the local test double used in this scenario.
+             */
             public function findByOrderId(string $orderId): ?Payment
             {
                 return null;
             }
 
+            /**
+             * Implements the list recent behavior required by the local test double used in this scenario.
+             */
             public function listRecent(int $limit = 10): array
             {
                 return array_slice($this->payments, 0, $limit);
             }
 
+            /**
+             * Implements the list ids by statuses behavior required by the local test double used in this scenario.
+             */
             public function listIdsByStatuses(array $statuses, int $limit = 100): array
             {
                 return [];
@@ -75,6 +94,9 @@ final class PaymentConsoleReadModelTest extends TestCase
             {
             }
 
+            /**
+             * Provides the find by behavior required by this test scenario.
+             */
             public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null): array
             {
                 return array_slice($this->logs, 0, $limit ?? count($this->logs));
@@ -97,6 +119,7 @@ final class PaymentConsoleReadModelTest extends TestCase
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     /**
+     * Verifies that build falls back to first filtered payment when selection is missing.
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testBuildFallsBackToFirstFilteredPaymentWhenSelectionIsMissing(): void
@@ -112,10 +135,16 @@ final class PaymentConsoleReadModelTest extends TestCase
             {
             }
 
+            /**
+             * Implements the save behavior required by the local test double used in this scenario.
+             */
             public function save(Payment $payment): void
             {
             }
 
+            /**
+             * Implements the find behavior required by the local test double used in this scenario.
+             */
             public function find(string $id): ?Payment
             {
                 foreach ($this->payments as $payment) {
@@ -127,16 +156,25 @@ final class PaymentConsoleReadModelTest extends TestCase
                 return null;
             }
 
+            /**
+             * Implements the find by order id behavior required by the local test double used in this scenario.
+             */
             public function findByOrderId(string $orderId): ?Payment
             {
                 return null;
             }
 
+            /**
+             * Implements the list recent behavior required by the local test double used in this scenario.
+             */
             public function listRecent(int $limit = 10): array
             {
                 return array_slice($this->payments, 0, $limit);
             }
 
+            /**
+             * Implements the list ids by statuses behavior required by the local test double used in this scenario.
+             */
             public function listIdsByStatuses(array $statuses, int $limit = 100): array
             {
                 return [];
@@ -145,6 +183,9 @@ final class PaymentConsoleReadModelTest extends TestCase
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->method('getRepository')->willReturn(new class {
+            /**
+             * Provides the find by behavior required by this test scenario.
+             */
             public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null): array
             {
                 return [];

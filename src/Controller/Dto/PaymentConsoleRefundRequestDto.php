@@ -7,6 +7,9 @@ namespace App\Controller\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Carries validated refund command input submitted from the operator console.
+ */
 final class PaymentConsoleRefundRequestDto
 {
     #[Assert\NotBlank]

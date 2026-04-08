@@ -1,0 +1,16 @@
+= Install
+
+This page is the Antora entry point for installation and bootstrap guidance.
+
+== Canonical repo-local source
+
+* `docs/INSTALL.md`
+
+== Related runtime/install materials
+
+* `docs/architecture/payment-install-preflight-proof.md`
+* `docs/architecture/payment-installed-runtime-proof-track.md`
+* `tools/runtime/payment_install_preflight.sh`
+* `tools/runtime/payment_install_preflight.ps1`
+
+Narrative install guidance stays in Markdown. Antora provides the discoverable producer entry point for the central documentation ecosystem.

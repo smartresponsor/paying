@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Runtime Baseline</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f6f8fa; color: #1f2328; }
+    .layout { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    nav { background: #fff; border: 1px solid #d0d7de; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+    nav ul { margin: 0; padding-left: 20px; }
+    article { background: #fff; border: 1px solid #d0d7de; border-radius: 12px; padding: 24px; }
+    pre { overflow-x: auto; background: #f6f8fa; padding: 12px; border-radius: 8px; }
+    code { font-family: Consolas, monospace; }
+    a { color: #0969da; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav>
+      <strong>Payment docs</strong>
+      <ul><li><a href="index.html">index</a></li><li><a href="INSTALL.html">INSTALL</a></li><li><a href="ARCHITECTURE.html">ARCHITECTURE</a></li><li><a href="OPERATIONS.html">OPERATIONS</a></li><li><a href="API.html">API</a></li><li><a href="LIMITS.html">LIMITS</a></li><li><a href="PROOF_PACK.html">PROOF_PACK</a></li><li><a href="release/runtime-baseline.html">runtime-baseline</a></li></ul>
+    </nav>
+    <article><h1>Runtime baseline</h1>
+<h2>Current baseline</h2>
+<ul>
+<li>PHP 8.4 is the canonical runtime target.</li>
+<li>Symfony 8 is the canonical manifest target.</li>
+<li>`composer.json` is aligned to Symfony 8-only core constraints.</li>
+<li>`composer.lock` must be refreshed under Symfony 8 to prove installed-runtime parity.</li>
+</ul>
+<h2>Documentation split</h2>
+<ul>
+<li>Antora producer pages: owner/manual/governance/operations narrative entry layer.</li>
+<li>Nelmio/OpenAPI: canonical HTTP contract generation.</li>
+<li>Swagger UI: runtime viewer for the generated OpenAPI contract.</li>
+<li>Doctum: generated code-reference surface.</li>
+</ul>
+<h2>Release posture</h2>
+<p>A release candidate should only be tagged after:</p>
+<p>1. `composer.lock` is regenerated against Symfony 8.</p>
+<p>2. local QA lanes pass against the refreshed graph.</p>
+<p>3. GitHub Actions quality/security/pages/release lanes are green.</p></article>
+  </div>
+</body>
+</html>

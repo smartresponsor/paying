@@ -7,6 +7,9 @@ namespace App\Tests\Functional\Api;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Exercises the payment webhook route smoke scenario within the payment api test surface.
+ */
 final class PaymentWebhookRouteSmokeTest extends WebTestCase
 {
     protected function setUp(): void
@@ -15,6 +18,9 @@ final class PaymentWebhookRouteSmokeTest extends WebTestCase
         putenv('OIDC_DISABLED');
     }
 
+    /**
+     * Verifies that generic webhook route is wired to controller chain.
+     */
     public function testGenericWebhookRouteIsWiredToControllerChain(): void
     {
         $client = self::createClient();

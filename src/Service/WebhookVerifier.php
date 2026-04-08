@@ -7,8 +7,14 @@ namespace App\Service;
 
 use App\ServiceInterface\WebhookVerifierInterface;
 
+/**
+ * Provides the webhook verifier service used by the payment lifecycle and operator-facing flows.
+ */
 class WebhookVerifier implements WebhookVerifierInterface
 {
+    /**
+     * Provides the verify behavior for the webhook verifier component.
+     */
     public function verify(string $provider, string $raw, array $headers): bool
     {
         $prov = strtolower($provider);

@@ -7,9 +7,18 @@ namespace App\ControllerInterface;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+/**
+ * Defines the dead-letter queue management endpoints exposed by the payment module.
+ */
 interface DlqControllerInterface
 {
+    /**
+     * Returns the current dead-letter queue snapshot for operator review.
+     */
     public function list(): JsonResponse;
 
+    /**
+     * Replays a single dead-lettered entry back into the processing pipeline.
+     */
     public function replay(int $id): JsonResponse;
 }

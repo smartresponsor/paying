@@ -10,8 +10,14 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * Seeds webhook log records for local development and test scenarios.
+ */
 final class PaymentWebhookLogFixture extends Fixture implements FixtureGroupInterface
 {
+    /**
+     * Loads fixture records into the persistence layer.
+     */
     public function load(ObjectManager $manager): void
     {
         $definitions = [
@@ -37,6 +43,8 @@ final class PaymentWebhookLogFixture extends Fixture implements FixtureGroupInte
     }
 
     /**
+     * Returns the fixture group names that enable this seed set.
+     *
      * @return string[]
      */
     public static function getGroups(): array

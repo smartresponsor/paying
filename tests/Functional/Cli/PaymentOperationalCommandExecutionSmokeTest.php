@@ -18,8 +18,14 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
+/**
+ * Exercises the payment operational command execution smoke scenario within the payment cli test surface.
+ */
 final class PaymentOperationalCommandExecutionSmokeTest extends TestCase
 {
+    /**
+     * Verifies that dlq replay command replays rows and prints count.
+     */
     public function testDlqReplayCommandReplaysRowsAndPrintsCount(): void
     {
         /** @var Connection&MockObject $data */
@@ -67,6 +73,9 @@ final class PaymentOperationalCommandExecutionSmokeTest extends TestCase
         ], $enqueued);
     }
 
+    /**
+     * Verifies that idem purge command prints purged count.
+     */
     public function testIdemPurgeCommandPrintsPurgedCount(): void
     {
         try {
@@ -84,6 +93,9 @@ final class PaymentOperationalCommandExecutionSmokeTest extends TestCase
         self::assertStringContainsString('Purged: 4', $tester->getDisplay());
     }
 
+    /**
+     * Verifies that sla report command prints json report for window.
+     */
     public function testSlaReportCommandPrintsJsonReportForWindow(): void
     {
         /** @var SlaReporterInterface&MockObject $reporter */

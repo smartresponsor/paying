@@ -11,8 +11,14 @@ use App\Infrastructure\Fixture\PaymentMethodFixture;
 use App\Infrastructure\Fixture\PaymentWebhookLogFixture;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the payment fixtures grouping smoke scenario within the payment fixture test surface.
+ */
 final class PaymentFixturesGroupingSmokeTest extends TestCase
 {
+    /**
+     * Verifies that all owned payment fixtures belong to payment group.
+     */
     public function testAllOwnedPaymentFixturesBelongToPaymentGroup(): void
     {
         self::assertSame(['payment'], PaymentFixture::getGroups());

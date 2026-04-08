@@ -7,6 +7,9 @@ namespace App\Tests\Support;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 
+/**
+ * Exercises the doctrine schema reset scenario within the payment support test surface.
+ */
 final class DoctrineSchemaReset
 {
     /**
@@ -14,6 +17,7 @@ final class DoctrineSchemaReset
      * @throws \Doctrine\ORM\Tools\ToolsException
      */
     /**
+     * Implements the reset behavior required by the local test double or scenario helper.
      * @throws \Doctrine\DBAL\Exception
      * @throws \Doctrine\ORM\Tools\ToolsException
      */

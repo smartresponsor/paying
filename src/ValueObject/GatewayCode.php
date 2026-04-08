@@ -5,6 +5,9 @@ declare(strict_types=1);
 
 namespace App\ValueObject;
 
+/**
+ * Represents the gateway code value object used by the payment lifecycle and related contracts.
+ */
 final class GatewayCode
 {
     private const ALLOWED = ['stripe', 'paypal', 'authorize'];
@@ -16,11 +19,17 @@ final class GatewayCode
         }
     }
 
+    /**
+     * Returns the normalized scalar representation carried by this value object.
+     */
     public function value(): string
     {
         return $this->value;
     }
 
+    /**
+     * Returns the string representation used when the value object is rendered in logs or contracts.
+     */
     public function __toString(): string
     {
         return $this->value;

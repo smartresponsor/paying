@@ -19,6 +19,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Starts provider-backed payment flows for newly requested payment operations.
+ */
 final readonly class StartController implements StartControllerInterface
 {
     public function __construct(
@@ -55,6 +58,9 @@ final readonly class StartController implements StartControllerInterface
         ),
     )]
     #[Security(name: 'Bearer')]
+    /**
+     * Validates the start request body and dispatches the payment start transition.
+     */
     public function start(Request $request): JsonResponse
     {
         $data = $this->jsonBodyDecoder->decode($request);

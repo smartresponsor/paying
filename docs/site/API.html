@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Api</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f6f8fa; color: #1f2328; }
+    .layout { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    nav { background: #fff; border: 1px solid #d0d7de; border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+    nav ul { margin: 0; padding-left: 20px; }
+    article { background: #fff; border: 1px solid #d0d7de; border-radius: 12px; padding: 24px; }
+    pre { overflow-x: auto; background: #f6f8fa; padding: 12px; border-radius: 8px; }
+    code { font-family: Consolas, monospace; }
+    a { color: #0969da; }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav>
+      <strong>Payment docs</strong>
+      <ul><li><a href="index.html">index</a></li><li><a href="INSTALL.html">INSTALL</a></li><li><a href="ARCHITECTURE.html">ARCHITECTURE</a></li><li><a href="OPERATIONS.html">OPERATIONS</a></li><li><a href="API.html">API</a></li><li><a href="LIMITS.html">LIMITS</a></li><li><a href="PROOF_PACK.html">PROOF_PACK</a></li><li><a href="release/runtime-baseline.html">runtime-baseline</a></li></ul>
+    </nav>
+    <article><h1>API</h1>
+<h2>Canonical HTTP endpoints</h2>
+<h3>Core API</h3>
+<ul>
+<li>`POST /api/payments` — create payment</li>
+<li>`GET /api/payments/{id}` — read payment</li>
+<li>`POST /api/payments/{id}/refund` — refund payment</li>
+</ul>
+<h3>Lifecycle endpoints</h3>
+<ul>
+<li>`POST /payment/start` — start provider flow</li>
+<li>`POST /payment/finalize/{id}` — finalize payment</li>
+</ul>
+<h3>Webhooks</h3>
+<ul>
+<li>`POST /payment/webhook/{provider}` — generic webhook endpoint</li>
+<li>`POST /webhook/stripe` — Stripe-specific webhook ingest</li>
+<li>`POST /webhook/paypal` — PayPal-specific webhook ingest</li>
+</ul>
+<h3>Ops endpoints</h3>
+<ul>
+<li>`GET /status`</li>
+<li>`GET /metrics`</li>
+<li>`GET /payment/dlq`</li>
+<li>`POST /payment/dlq/replay/{id}`</li>
+</ul>
+<h3>API docs</h3>
+<ul>
+<li>`GET /api/docs`</li>
+<li>`GET /api/docs.json`</li>
+</ul>
+<h2>Canonical API contract source</h2>
+<ul>
+<li>NelmioApiDocBundle is the canonical HTTP contract generator for this repository.</li>
+<li>Swagger UI is the browser-facing viewer for that contract and must remain only a presentation layer, not a separate documentation system.</li>
+<li>Exported OpenAPI source of truth: `docs/api/openapi.yaml`.</li>
+<li>Runtime publication points: `/api/docs`, `/api/docs.json`, `/api/docs.yaml`.</li>
+<li>Antora is the owner/manual documentation entry surface for this repository.</li>
+<li>Doctum is the separate generated code-reference surface for `src/`; it must not be mixed into the HTTP contract narrative.</li>
+</ul></article>
+  </div>
+</body>
+</html>

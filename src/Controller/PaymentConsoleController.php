@@ -24,6 +24,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Serves the operator console for creating, starting, finalizing, and refunding payments from a single back-office workflow.
+ */
 final class PaymentConsoleController extends AbstractController
 {
     public function __construct(
@@ -36,6 +39,9 @@ final class PaymentConsoleController extends AbstractController
     }
 
     #[RequireScope(['payment:read'])]
+    /**
+     * Builds the console view model together with all command forms for the selected payment context.
+     */
     public function console(Request $request): Response
     {
         $selectedPaymentId = trim((string) $request->query->get('payment', ''));
@@ -86,6 +92,9 @@ final class PaymentConsoleController extends AbstractController
     }
 
     #[RequireScope(['payment:write'])]
+    /**
+     * Handles back-office payment creation requests submitted from the operator console.
+     */
     public function create(Request $request): RedirectResponse
     {
         $dto = new PaymentCreateRequestDto();
@@ -103,6 +112,9 @@ final class PaymentConsoleController extends AbstractController
     }
 
     #[RequireScope(['payment:write'])]
+    /**
+     * Starts a provider-backed payment flow from the operator console.
+     */
     public function start(Request $request): RedirectResponse
     {
         $dto = new PaymentStartRequestDto();
@@ -121,6 +133,9 @@ final class PaymentConsoleController extends AbstractController
     }
 
     #[RequireScope(['payment:write'])]
+    /**
+     * Finalizes the selected payment from the operator console and redirects back to the refreshed read model.
+     */
     public function finalize(Request $request): RedirectResponse
     {
         $dto = new PaymentConsoleFinalizeRequestDto();
@@ -148,6 +163,9 @@ final class PaymentConsoleController extends AbstractController
     }
 
     #[RequireScope(['payment:write'])]
+    /**
+     * Triggers a refund command for the selected payment from the operator console.
+     */
     public function refund(Request $request): RedirectResponse
     {
         $dto = new PaymentConsoleRefundRequestDto();

@@ -12,6 +12,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Produces console reports for payment SLA and latency indicators.
+ */
 #[AsCommand(name: 'payment:sla:report', description: 'Print SLA stats for window')]
 class SlaReportCommand extends Command
 {

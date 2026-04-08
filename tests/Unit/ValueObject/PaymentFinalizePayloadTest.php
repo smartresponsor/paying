@@ -8,8 +8,14 @@ namespace App\Tests\Unit\ValueObject;
 use App\ValueObject\PaymentFinalizePayload;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Exercises the payment finalize payload scenario within the payment valueobject test surface.
+ */
 final class PaymentFinalizePayloadTest extends TestCase
 {
+    /**
+     * Verifies that to provider payload filters empty values.
+     */
     public function testToProviderPayloadFiltersEmptyValues(): void
     {
         $payload = new PaymentFinalizePayload('ref-1', '', 'completed');

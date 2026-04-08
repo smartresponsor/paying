@@ -7,8 +7,13 @@ namespace App\ServiceInterface;
 
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
+/**
+ * Defines the contract for the validation error mapper interface payment service boundary.
+ */
 interface ValidationErrorMapperInterface
 {
-    /** @return array<int, array{field: string, message: string}> */
+    /**
+     * Provides the to array behavior for the validation error mapper interface component.
+     */
     public function toArray(ConstraintViolationListInterface $violations): array;
 }

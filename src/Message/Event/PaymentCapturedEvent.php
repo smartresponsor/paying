@@ -5,6 +5,9 @@ declare(strict_types=1);
 
 namespace App\Message\Event;
 
+/**
+ * Represents the payment captured event notification emitted by the payment messaging layer.
+ */
 final class PaymentCapturedEvent
 {
     public function __construct(
