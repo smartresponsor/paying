@@ -1,5 +1,26 @@
 parameters:
     payment.idem_ttl_default: 86400
+    paying.app_secret: '%env(APP_SECRET)%'
+    paying.storage.data_server_version: '16.0'
+    paying.storage.infra_server_version: '3.45.1'
+    paying.storage.data_url: '%env(resolve:DATABASE_URL)%'
+    paying.storage.infra_url: '%env(resolve:INFRA_URL)%'
+    paying.messenger.async_dsn: '%env(resolve:MESSENGER_TRANSPORT_DSN)%'
+    paying.messenger.dsn: '%paying.messenger.async_dsn%'
+    paying.provider.stripe.secret_key: '%env(default::STRIPE_SECRET_KEY)%'
+    paying.provider.stripe.publishable_key: '%env(default::STRIPE_PUBLISHABLE_KEY)%'
+    paying.provider.stripe.webhook_secret: '%env(default::STRIPE_WEBHOOK_SECRET)%'
+    paying.provider.stripe.success_url: '%env(default::STRIPE_SUCCESS_URL)%'
+    paying.provider.stripe.cancel_url: '%env(default::STRIPE_CANCEL_URL)%'
+    paying.idempotency.redis_url: '%env(default::REDIS_URL)%'
+    paying.idempotency.ttl_seconds: 86400
+    paying.oidc.disabled: false
+    paying.oidc.issuer: ''
+    paying.oidc.audience: ''
+    paying.oidc.jwks_url: '%env(default::OIDC_JWKS_URL)%'
+    paying.oidc.jwks_ttl_seconds: 300
+    paying.webhook.adyen_hmac_key: '%env(default::ADYEN_HMAC_KEY)%'
+    paying.webhook.allow_unknown: false
 
 services:
     _defaults:
@@ -41,14 +62,14 @@ services:
 
     App\Service\StripePaymentProvider:
         arguments:
-            $secretKey: '%env(default::STRIPE_SECRET_KEY)%'
-            $webhookSecret: '%env(default::STRIPE_WEBHOOK_SECRET)%'
+            $secretKey: '%paying.provider.stripe.secret_key%'
+            $webhookSecret: '%paying.provider.stripe.webhook_secret%'
 
     App\ServiceInterface\IdempotencyServiceInterface: '@App\Service\IdempotencyService'
 
     App\Service\IdempotencyService:
         arguments:
-            $ttlSec: '%env(int:default:payment.idem_ttl_default:IDEM_TTL)%'
+            $ttlSec: '%paying.idempotency.ttl_seconds%'
 
     App\Infrastructure\PaymentProjectionRepository:
         arguments:

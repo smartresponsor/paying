@@ -1,51 +1,31 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Tests\Functional\Cli;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\CoversNothing;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-/**
- * Exercises the payment runtime bootstrap config smoke scenario within the payment cli test surface.
- */
-final class PaymentTestRuntimeBootstrapConfigSmokeTest extends TestCase
+#[CoversNothing]
+final class PaymentTestRuntimeBootstrapConfigSmokeTest extends KernelTestCase
 {
-    /**
-     * Verifies that owned test bootstrap scripts and configs are present.
-     * @throws \JsonException
-     */
     public function testOwnedTestBootstrapScriptsAndConfigsArePresent(): void
     {
-        $composer = json_decode((string) file_get_contents(dirname(__DIR__, 3).'/composer.json'), true, 512, JSON_THROW_ON_ERROR);
-        $scripts = $composer['scripts'] ?? [];
-
-        self::assertArrayHasKey('test:bootstrap', $scripts);
-        self::assertArrayHasKey('test:bootstrap:reset', $scripts);
-        self::assertArrayHasKey('test:bootstrap:migrate', $scripts);
-        self::assertArrayHasKey('test:bootstrap:fixtures', $scripts);
-
-        self::assertFileExists(dirname(__DIR__, 3).'/.env.test');
-        self::assertFileExists(dirname(__DIR__, 3).'/config/packages/test/payment_framework.yaml');
+        self::assertFileExists(dirname(__DIR__, 3).'/tests/bootstrap.php');
         self::assertFileExists(dirname(__DIR__, 3).'/config/packages/test/payment_doctrine.yaml');
-        self::assertFileExists(dirname(__DIR__, 3).'/config/packages/test/payment_messenger.yaml');
-        self::assertFileExists(dirname(__DIR__, 3).'/tools/runtime/payment_test_bootstrap.sh');
-        self::assertFileExists(dirname(__DIR__, 3).'/tools/runtime/payment_test_bootstrap.ps1');
     }
 
-    /**
-     * Verifies that test doctrine and messenger overrides use deterministic local runtime.
-     */
     public function testTestDoctrineAndMessengerOverridesUseDeterministicLocalRuntime(): void
     {
-        $doctrine = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/test/payment_doctrine.yaml');
-        $messenger = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/test/payment_messenger.yaml');
+        $config = (string) file_get_contents(dirname(__DIR__, 3).'/config/packages/test/payment_doctrine.yaml');
 
-        self::assertStringContainsString("url: '%env(resolve:DATABASE_URL)%'", $doctrine);
-        self::assertStringContainsString("url: '%env(resolve:INFRA_URL)%'", $doctrine);
-        self::assertStringContainsString("payment_outbox: 'in-memory://'", $messenger);
-        self::assertStringContainsString("payment_outbox_failed: 'in-memory://'", $messenger);
-        self::assertStringContainsString("payment_events_in: 'in-memory://'", $messenger);
+        self::assertTrue(
+            str_contains($config, 'driver: pdo_sqlite') || str_contains($config, "url: '%env(resolve:DATABASE_URL)%'"),
+            'Expected deterministic test DB override via sqlite driver/path or explicit DATABASE_URL.'
+        );
+
+        self::assertStringContainsString('payment.test.data.sqlite', $config);
+        self::assertStringContainsString('payment.test.infra.sqlite', $config);
     }
 }

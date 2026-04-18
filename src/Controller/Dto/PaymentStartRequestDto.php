@@ -1,28 +1,26 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Controller\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Carries validated start payload data for provider-backed payment flows.
- */
 final class PaymentStartRequestDto
 {
     #[Assert\NotBlank]
-    public string $orderId = '';
+    public ?string $orderId = null;
 
     #[Assert\NotBlank]
-    #[Assert\Regex(pattern: '/^\d+(\.\d{2})$/', message: 'Use decimal amount format like 50.00.')]
-    public string $amount = '0.00';
+    public ?string $provider = null;
 
-    #[Assert\Currency]
-    public string $currency = 'USD';
+    public ?string $providerRef = null;
 
-    #[Assert\NotBlank]
-    #[Assert\Choice(choices: ['internal', 'stripe', 'paypal'])]
-    public string $provider = 'internal';
+    /**
+     * Keep scalar-loose for request/form binding; validation should convert this
+     * into 422 instead of triggering runtime type errors for malformed payloads.
+     */
+    public ?string $amount = null;
+
+    public ?string $currency = null;
 }

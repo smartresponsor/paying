@@ -40,7 +40,7 @@ final readonly class PaymentRepository implements PaymentRepositoryInterface
     public function find(string $id): ?Payment
     {
         $payment = $this->em->find(Payment::class, $id);
-        if (!$payment instanceof Payment) {
+        if (null === $payment) {
             return null;
         }
 
@@ -77,7 +77,12 @@ final readonly class PaymentRepository implements PaymentRepositoryInterface
 
         $payments = $this->em->getRepository(Payment::class)->findBy([], ['updatedAt' => 'DESC'], $limit);
 
-        return array_values(array_filter($payments, static fn (mixed $payment): bool => $payment instanceof Payment));
+        $recentPayments = [];
+        foreach ($payments as $payment) {
+            $recentPayments[] = $payment;
+        }
+
+        return $recentPayments;
     }
 
     /**
@@ -110,6 +115,6 @@ final readonly class PaymentRepository implements PaymentRepositoryInterface
             throw new PaymentRepositoryReadException('Unable to list payment ids by statuses.', 0, $e);
         }
 
-        return array_values(array_map(static fn (mixed $id): string => (string) $id, $rows));
+        return array_map(static fn (mixed $id): string => (string) $id, $rows);
     }
 }

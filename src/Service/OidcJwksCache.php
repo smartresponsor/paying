@@ -14,11 +14,13 @@ class OidcJwksCache implements OidcJwksCacheInterface
 {
     private string $cacheFile;
     private int $ttl;
+    private string $jwksUrl;
 
-    public function __construct(string $cacheDir = __DIR__.'/../../../var/cache', int $ttl = 3600)
+    public function __construct(string $cacheDir = __DIR__.'/../../../var/cache', int $ttl = 3600, string $jwksUrl = '')
     {
         $this->cacheFile = rtrim($cacheDir, '/').'/jwks.json';
-        $this->ttl = (int) ($_ENV['OIDC_JWKS_TTL'] ?? $ttl);
+        $this->ttl = $ttl;
+        $this->jwksUrl = trim($jwksUrl);
     }
 
     /**
@@ -26,8 +28,7 @@ class OidcJwksCache implements OidcJwksCacheInterface
      */
     public function get(): array
     {
-        $url = (string) ($_ENV['OIDC_JWKS_URL'] ?? '');
-        if ('' === $url) {
+        if ('' === $this->jwksUrl) {
             return ['keys' => []];
         }
 
@@ -36,7 +37,7 @@ class OidcJwksCache implements OidcJwksCacheInterface
         }
 
         $context = stream_context_create(['http' => ['timeout' => 3]]);
-        $json = @file_get_contents($url, false, $context);
+        $json = @file_get_contents($this->jwksUrl, false, $context);
         if (false !== $json) {
             @file_put_contents($this->cacheFile, $json);
 

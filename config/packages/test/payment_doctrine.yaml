@@ -3,6 +3,12 @@ doctrine:
     default_connection: data
     connections:
       data:
-        url: '%env(resolve:DATABASE_URL)%'
+        url: ~
+        driver: pdo_sqlite
+        path: '%kernel.project_dir%/var/payment.test.data.sqlite'
+        server_version: '3.45.1'
       infra:
-        url: '%env(resolve:INFRA_URL)%'
+        url: ~
+        driver: pdo_sqlite
+        path: '%kernel.project_dir%/var/payment.test.infra.sqlite'
+        server_version: '3.45.1'

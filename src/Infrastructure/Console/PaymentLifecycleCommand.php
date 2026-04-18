@@ -140,7 +140,7 @@ final class PaymentLifecycleCommand extends Command
             'providerRef' => trim((string) $input->getOption('provider-ref')),
             'gatewayTransactionId' => trim((string) $input->getOption('gateway-transaction-id')),
             'status' => trim((string) $input->getOption('status')),
-        ], static fn (mixed $value): bool => is_string($value) && '' !== $value);
+        ], static fn (string $value): bool => '' !== $value);
 
         $resolved = $this->providerGuard->finalize($provider, new Ulid($paymentId), $payload);
         $existing->syncFrom($resolved);

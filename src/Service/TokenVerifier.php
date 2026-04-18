@@ -13,8 +13,11 @@ use App\ServiceInterface\TokenVerifierInterface;
  */
 readonly class TokenVerifier implements TokenVerifierInterface
 {
-    public function __construct(private OidcJwksCacheInterface $jwks)
-    {
+    public function __construct(
+        private OidcJwksCacheInterface $jwks,
+        private string $issuer = '',
+        private string $audience = '',
+    ) {
     }
 
     /**
@@ -48,13 +51,13 @@ readonly class TokenVerifier implements TokenVerifierInterface
             throw new \RuntimeException('jwt-not-before');
         }
 
-        $issuer = (string) ($_ENV['OIDC_ISS'] ?? '');
+        $issuer = $this->issuer;
         $payloadIssuer = isset($payload['iss']) && is_string($payload['iss']) ? $payload['iss'] : '';
         if ('' !== $issuer && $payloadIssuer !== $issuer) {
             throw new \RuntimeException('iss-mismatch');
         }
 
-        $audience = (string) ($_ENV['OIDC_AUD'] ?? '');
+        $audience = $this->audience;
         if ('' !== $audience) {
             $audClaim = $payload['aud'] ?? null;
             $audiences = is_array($audClaim) ? $audClaim : [$audClaim];

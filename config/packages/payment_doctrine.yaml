@@ -3,15 +3,14 @@ doctrine:
     default_connection: data
     connections:
       data:
-        # User data storage; expected to be PostgreSQL.
+        # User data storage; PostgreSQL in normal runtime, SQLite in test override.
         url: '%env(resolve:DATABASE_URL)%'
+        server_version: '%paying.storage.data_server_version%'
       infra:
-        # Application/infrastructure data storage; expected to be SQLite.
+        # Application/infrastructure data storage; SQLite in all runtimes.
         url: '%env(resolve:INFRA_URL)%'
+        server_version: '%paying.storage.infra_server_version%'
   orm:
-    auto_generate_proxy_classes: true
-    controller_resolver:
-      auto_mapping: true
     entity_managers:
       default:
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware

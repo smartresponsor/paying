@@ -14,6 +14,14 @@ final class PaymentCreateEndpointTest extends WebTestCase
 {
     private ?string $originalOidcDisabled = null;
 
+    private static function assertJsonStatus(WebTestCase $test, int $expectedStatus, \Symfony\Component\HttpFoundation\Response $response): void
+    {
+        $content = (string) $response->getContent();
+        $message = sprintf('Expected HTTP %d, got %d. Body: %s', $expectedStatus, $response->getStatusCode(), $content);
+
+        $test::assertSame($expectedStatus, $response->getStatusCode(), $message);
+    }
+
     protected function tearDown(): void
     {
         if (null === $this->originalOidcDisabled) {
@@ -75,6 +83,6 @@ final class PaymentCreateEndpointTest extends WebTestCase
             ]),
         );
 
-        self::assertSame(201, $client->getResponse()->getStatusCode());
+        self::assertJsonStatus($this, 201, $client->getResponse());
     }
 }

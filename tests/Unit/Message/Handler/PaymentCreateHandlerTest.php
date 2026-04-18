@@ -24,7 +24,7 @@ final class PaymentCreateHandlerTest extends TestCase
      */
     public function testInvokeUsesProviderCodeAliasAndMessengerOrigin(): void
     {
-        $spy = new class() implements PaymentStartServiceInterface {
+        $spy = new class implements PaymentStartServiceInterface {
             public array $calls = [];
 
             /**
@@ -33,6 +33,7 @@ final class PaymentCreateHandlerTest extends TestCase
             public function start(string $orderId, string $provider, string $amount, string $currency, string $idempotencyKey = '', string $origin = 'api'): PaymentStartResult
             {
                 $this->calls[] = [
+                    'method' => 'start',
                     'orderId' => $orderId,
                     'provider' => $provider,
                     'amount' => $amount,
@@ -47,6 +48,26 @@ final class PaymentCreateHandlerTest extends TestCase
                     []
                 );
             }
+
+            /**
+             * Provides the restart behavior required by the extended payment start service contract.
+             */
+            public function restart(string $paymentId, string $provider, string $idempotencyKey = '', string $origin = 'api'): PaymentStartResult
+            {
+                $this->calls[] = [
+                    'method' => 'restart',
+                    'paymentId' => $paymentId,
+                    'provider' => $provider,
+                    'idempotencyKey' => $idempotencyKey,
+                    'origin' => $origin,
+                ];
+
+                return new PaymentStartResult(
+                    new Payment(new Ulid(), PaymentStatus::processing, '0.00', 'USD'),
+                    null,
+                    []
+                );
+            }
         };
 
         $handler = new PaymentCreateHandler($spy);
@@ -55,14 +76,16 @@ final class PaymentCreateHandlerTest extends TestCase
         $handler($command);
 
         self::assertCount(1, $spy->calls);
-        self::assertSame([
-            'orderId' => 'order-1001',
-            'provider' => 'paypal',
-            'amount' => '50.50',
-            'currency' => 'USD',
-            'idempotencyKey' => 'idem-1',
-            'origin' => 'messenger-create',
-        ], $spy->calls[0]);
+
+        $call = $spy->calls[0];
+
+        self::assertSame('start', $call['method']);
+        self::assertSame('order-1001', $call['orderId']);
+        self::assertSame('paypal', $call['provider']);
+        self::assertSame('50.50', $call['amount']);
+        self::assertSame('USD', $call['currency']);
+        self::assertSame('idem-1', $call['idempotencyKey']);
+        self::assertSame('messenger-create', $call['origin']);
         self::assertSame('paypal', $command->providerCode);
         self::assertSame('paypal', $command->gatewayCode);
     }

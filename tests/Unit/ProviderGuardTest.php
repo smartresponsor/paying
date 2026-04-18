@@ -30,7 +30,7 @@ final class ProviderGuardTest extends TestCase
         $breaker->method('isOpen')->willReturn(true);
         $metric = $this->createMock(MetricInterface::class);
         $metric->expects(self::once())->method('incProviderFailure')->with('stripe', 'start');
-        $metric->expects(self::once())->method('observeProviderDuration')->with('stripe', 'start', self::isType('float'));
+        $metric->expects(self::never())->method('observeProviderDuration');
 
         $guard = new ProviderGuard(new ProviderRouter([]), $this->createMock(RetryExecutorInterface::class), $breaker, $metric);
 
@@ -92,7 +92,7 @@ final class ProviderGuardTest extends TestCase
         /** @var MetricInterface&MockObject $metric */
         $metric = $this->createMock(MetricInterface::class);
         $metric->expects(self::once())->method('incProviderSuccess')->with('stripe', 'start');
-        $metric->expects(self::once())->method('observeProviderDuration')->with('stripe', 'start', self::isType('float'));
+        $metric->expects(self::once())->method('observeProviderDuration')->with('stripe', 'start', self::isFloat());
 
         $guard = new ProviderGuard($router, $retry, $breaker, $metric);
 
@@ -153,7 +153,7 @@ final class ProviderGuardTest extends TestCase
         /** @var MetricInterface&MockObject $metric */
         $metric = $this->createMock(MetricInterface::class);
         $metric->expects(self::once())->method('incProviderFailure')->with('stripe', 'start');
-        $metric->expects(self::once())->method('observeProviderDuration')->with('stripe', 'start', self::isType('float'));
+        $metric->expects(self::once())->method('observeProviderDuration')->with('stripe', 'start', self::isFloat());
 
         $guard = new ProviderGuard($router, $retry, $breaker, $metric);
 

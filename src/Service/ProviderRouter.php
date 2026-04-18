@@ -22,9 +22,7 @@ final class ProviderRouter implements ProviderRouterInterface
         $resolvedProviders = [];
 
         foreach ($providers as $name => $provider) {
-            if ($provider instanceof PaymentProviderInterface) {
-                $resolvedProviders[(string) $name] = $provider;
-            }
+            $resolvedProviders[(string) $name] = $provider;
         }
 
         $this->providers = $resolvedProviders;

@@ -2,7 +2,7 @@ framework:
   messenger:
     transports:
       payment_events_in:
-        dsn: '%env(resolve:RABBITMQ_DSN)%'
+        dsn: '%paying.messenger.dsn%'
         options:
           exchange:
             name: 'payment.events'

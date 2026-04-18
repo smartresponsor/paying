@@ -12,6 +12,13 @@ use App\ServiceInterface\WebhookVerifierInterface;
  */
 class WebhookVerifier implements WebhookVerifierInterface
 {
+    public function __construct(
+        private readonly string $stripeWebhookSecret = '',
+        private readonly bool $allowUnknown = false,
+        private readonly string $adyenHmacSecret = '',
+    ) {
+    }
+
     /**
      * Provides the verify behavior for the webhook verifier component.
      */
@@ -21,9 +28,9 @@ class WebhookVerifier implements WebhookVerifierInterface
         if ('stripe' === $prov) {
             $sig = $this->headerValue($headers, 'stripe-signature');
             $candidateSecrets = array_values(array_unique(array_filter([
-                $this->env('STRIPE_WEBHOOK_SECRET'),
+                trim($this->stripeWebhookSecret),
                 'payment_test_whsec',
-            ], static fn (mixed $value): bool => is_string($value) && '' !== trim($value))));
+            ], static fn (string $value): bool => '' !== trim($value))));
             if (null === $sig || [] === $candidateSecrets) {
                 return false;
             }
@@ -48,7 +55,7 @@ class WebhookVerifier implements WebhookVerifierInterface
         }
         if ('adyen' === $prov) {
             $hmac = $this->headerValue($headers, 'hmac-signature');
-            $secret = $this->env('ADYEN_HMAC_SECRET');
+            $secret = trim($this->adyenHmacSecret);
             if (null === $hmac || '' === $secret) {
                 return false;
             }
@@ -61,20 +68,7 @@ class WebhookVerifier implements WebhookVerifierInterface
             return hash_equals($expected, $hmac);
         }
 
-        return filter_var($this->env('PAYMENT_WEBHOOK_ALLOW_UNKNOWN', '0'), FILTER_VALIDATE_BOOL);
-    }
-
-    private function env(string $name, string $default = ''): string
-    {
-        $value = $_ENV[$name] ?? $_SERVER[$name] ?? getenv($name);
-
-        if (false === $value) {
-            return $default;
-        }
-
-        $normalized = trim((string) $value);
-
-        return '' === $normalized ? $default : $normalized;
+        return $this->allowUnknown;
     }
 
     private function headerValue(array $headers, string $name): ?string

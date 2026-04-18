@@ -2,7 +2,7 @@ framework:
   messenger:
     transports:
       payment_outbox:
-        dsn: '%env(resolve:RABBITMQ_DSN)%'
+        dsn: '%paying.messenger.dsn%'
         options:
           exchange:
             name: 'payment.events'
@@ -11,7 +11,7 @@ framework:
             payment_outbox:
               binding_keys: [ 'payment.*' ]
       payment_outbox_failed:
-        dsn: '%env(resolve:RABBITMQ_DSN)%'
+        dsn: '%paying.messenger.dsn%'
         options:
           exchange:
             name: 'payment.events.dlq'

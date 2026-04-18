@@ -11,6 +11,7 @@ use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\Service\PaymentConsoleReadModel;
 use App\ValueObject\PaymentStatus;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
@@ -24,6 +25,7 @@ final class PaymentConsoleReadModelTest extends TestCase
      */
     /**
      * Verifies that build filters payments and prefills selected card.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testBuildFiltersPaymentsAndPrefillsSelectedCard(): void
@@ -88,20 +90,14 @@ final class PaymentConsoleReadModelTest extends TestCase
             }
         };
 
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->method('getRepository')->willReturn(new class([$logA, $logB]) {
-            public function __construct(private readonly array $logs)
-            {
-            }
+        $eventRepository = $this->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['findBy'])
+            ->getMock();
+        $eventRepository->method('findBy')->willReturn(array_slice([$logA, $logB], 0, 50));
 
-            /**
-             * Provides the find by behavior required by this test scenario.
-             */
-            public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null): array
-            {
-                return array_slice($this->logs, 0, $limit ?? count($this->logs));
-            }
-        });
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->method('getRepository')->willReturn($eventRepository);
 
         $readModel = new PaymentConsoleReadModel($repo, $entityManager);
 
@@ -120,6 +116,7 @@ final class PaymentConsoleReadModelTest extends TestCase
      */
     /**
      * Verifies that build falls back to first filtered payment when selection is missing.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testBuildFallsBackToFirstFilteredPaymentWhenSelectionIsMissing(): void
@@ -181,16 +178,14 @@ final class PaymentConsoleReadModelTest extends TestCase
             }
         };
 
+        $eventRepository = $this->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['findBy'])
+            ->getMock();
+        $eventRepository->method('findBy')->willReturn([]);
+
         $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->method('getRepository')->willReturn(new class {
-            /**
-             * Provides the find by behavior required by this test scenario.
-             */
-            public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null): array
-            {
-                return [];
-            }
-        });
+        $entityManager->method('getRepository')->willReturn($eventRepository);
 
         $readModel = new PaymentConsoleReadModel($repo, $entityManager);
         $result = $readModel->build('', 'processing', '01HK153X000000000000000999');

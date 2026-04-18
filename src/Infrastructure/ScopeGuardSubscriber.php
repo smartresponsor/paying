@@ -21,6 +21,7 @@ readonly class ScopeGuardSubscriber implements EventSubscriberInterface
     public function __construct(
         private TokenVerifierInterface $verifier,
         private LoggerInterface $logger,
+        private bool $oidcDisabled = false,
     ) {
     }
 
@@ -41,7 +42,7 @@ readonly class ScopeGuardSubscriber implements EventSubscriberInterface
      */
     public function onController(ControllerEvent $event): void
     {
-        if ('1' === (string) ($_ENV['OIDC_DISABLED'] ?? '')) {
+        if ($this->oidcDisabled) {
             return;
         }
 

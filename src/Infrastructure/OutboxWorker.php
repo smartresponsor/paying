@@ -137,7 +137,7 @@ class OutboxWorker
     {
         $quoted = $this->data->quote($status);
 
-        if (is_string($quoted) && '' !== $quoted) {
+        if ('' !== $quoted) {
             return $quoted;
         }
 

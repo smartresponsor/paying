@@ -20,11 +20,19 @@ final class StripePaymentProvider implements PaymentProviderInterface
 {
     private string $secretKey;
     private string $webhookSecret;
+    private string $paymentSuccessUrl;
+    private string $paymentCancelUrl;
 
-    public function __construct(?string $secretKey = null, ?string $webhookSecret = null)
-    {
-        $this->secretKey = $secretKey ?? (getenv('STRIPE_SECRET_KEY') ?: '');
-        $this->webhookSecret = $webhookSecret ?? (getenv('STRIPE_WEBHOOK_SECRET') ?: '');
+    public function __construct(
+        ?string $secretKey = null,
+        ?string $webhookSecret = null,
+        ?string $paymentSuccessUrl = null,
+        ?string $paymentCancelUrl = null,
+    ) {
+        $this->secretKey = trim((string) ($secretKey ?? ''));
+        $this->webhookSecret = trim((string) ($webhookSecret ?? ''));
+        $this->paymentSuccessUrl = '' !== trim((string) ($paymentSuccessUrl ?? '')) ? trim((string) $paymentSuccessUrl) : 'https://example/success?session_id={CHECKOUT_SESSION_ID}';
+        $this->paymentCancelUrl = '' !== trim((string) ($paymentCancelUrl ?? '')) ? trim((string) $paymentCancelUrl) : 'https://example/cancel';
     }
 
     /**
@@ -89,8 +97,8 @@ final class StripePaymentProvider implements PaymentProviderInterface
                     ],
                     'quantity' => 1,
                 ]],
-                'success_url' => getenv('PAYMENT_SUCCESS_URL') ?: 'https://example/success?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => getenv('PAYMENT_CANCEL_URL') ?: 'https://example/cancel',
+                'success_url' => $this->paymentSuccessUrl,
+                'cancel_url' => $this->paymentCancelUrl,
             ], ['idempotency_key' => $idempotencyKey]);
 
             return [

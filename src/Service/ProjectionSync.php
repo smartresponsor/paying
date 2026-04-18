@@ -37,6 +37,7 @@ readonly class ProjectionSync implements ProjectionSyncInterface
         );
 
         $n = 0;
+        $lastUpdatedAt = null;
         foreach ($rows as $r) {
             $this->infra->upsert([
                 'id' => (string) $r['id'],
@@ -47,14 +48,12 @@ readonly class ProjectionSync implements ProjectionSyncInterface
                 'provider_ref' => isset($r['provider_ref']) ? (string) $r['provider_ref'] : null,
                 'updated_at' => (string) $r['updated_at'],
             ]);
+            $lastUpdatedAt = (string) $r['updated_at'];
             ++$n;
         }
 
-        if ($n > 0) {
-            $lastRow = end($rows);
-            if (is_array($lastRow) && isset($lastRow['updated_at'])) {
-                $this->infra->saveWatermark((string) $lastRow['updated_at']);
-            }
+        if (null !== $lastUpdatedAt) {
+            $this->infra->saveWatermark($lastUpdatedAt);
         }
 
         return $n;
@@ -69,6 +68,7 @@ readonly class ProjectionSync implements ProjectionSyncInterface
     {
         $off = 0;
         $n = 0;
+        $lastUpdatedAt = null;
         while (true) {
             $rows = $this->data->fetchAllAssociative(
                 'SELECT id, order_id, amount, currency, status, provider_ref, updated_at FROM payment ORDER BY updated_at ASC LIMIT :lim OFFSET :off',
@@ -88,13 +88,11 @@ readonly class ProjectionSync implements ProjectionSyncInterface
                     'provider_ref' => isset($r['provider_ref']) ? (string) $r['provider_ref'] : null,
                     'updated_at' => (string) $r['updated_at'],
                 ]);
+                $lastUpdatedAt = (string) $r['updated_at'];
                 ++$n;
             }
             $off += $batch;
-            $lastRow = end($rows);
-            if (is_array($lastRow) && isset($lastRow['updated_at'])) {
-                $this->infra->saveWatermark((string) $lastRow['updated_at']);
-            }
+            $this->infra->saveWatermark($lastUpdatedAt);
         }
 
         return $n;

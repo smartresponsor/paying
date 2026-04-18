@@ -11,8 +11,8 @@ use App\Infrastructure\Fixture\PaymentMethodFixture;
 use App\Infrastructure\Fixture\PaymentWebhookLogFixture;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\Mapping\ClassMetadata;
-use PHPUnit\Framework\MockObject\Exception;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\UnitOfWork;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -34,10 +34,7 @@ final class PaymentFixtureDatasetSmokeTest extends TestCase
     private function persistCount(object $fixture): int
     {
         $count = 0;
-        try {
-            $manager = $this->createMock(EntityManagerInterface::class);
-        } catch (Exception $e) {
-        }
+        $manager = $this->createMock(EntityManagerInterface::class);
         $manager->expects(self::any())
             ->method('persist')
             ->willReturnCallback(static function () use (&$count): void {
@@ -45,20 +42,13 @@ final class PaymentFixtureDatasetSmokeTest extends TestCase
             });
         $manager->expects(self::once())->method('flush');
         $manager->method('getClassMetadata')->willReturnCallback(function (string $class): ClassMetadata {
-            $metadata = static::createStub(ClassMetadata::class);
+            $metadata = $this->createMock(ClassMetadata::class);
             $metadata->method('getName')->willReturn($class);
 
             return $metadata;
         });
-        $unitOfWork = new class {
-            /**
-             * Provides the is in identity map behavior required by this test scenario.
-             */
-            public function isInIdentityMap(object $entity): bool
-            {
-                return false;
-            }
-        };
+        $unitOfWork = $this->createMock(UnitOfWork::class);
+        $unitOfWork->method('isInIdentityMap')->willReturn(false);
         $manager->method('getUnitOfWork')->willReturn($unitOfWork);
 
         if (method_exists($fixture, 'setReferenceRepository')) {

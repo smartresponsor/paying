@@ -23,13 +23,12 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
     }
 
     /**
+     * @return array{
      *     payments: list<array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string}>,
      *     selectedPayment: array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string}|null,
      *     events: list<array{id: string, provider: string, externalEventId: string, status: string, receivedAt: string}>,
      *     filters: array{q: string, status: string}
      * }
-     *
-     * @return array{
      */
     public function build(string $query, string $status, string $selectedPaymentId): array
     {
@@ -111,10 +110,6 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
 
         $events = [];
         foreach ($logs as $log) {
-            if (!$log instanceof PaymentWebhookLog) {
-                continue;
-            }
-
             $payload = $log->payload();
             $payloadPaymentId = isset($payload['paymentId']) ? (string) $payload['paymentId'] : '';
             if ('' !== $paymentId && $payloadPaymentId !== $paymentId) {

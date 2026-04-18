@@ -16,8 +16,11 @@ use Psr\Log\LoggerInterface;
  */
 readonly class IdempotencyStoreFactory
 {
-    public function __construct(private Connection $data, private LoggerInterface $logger)
-    {
+    public function __construct(
+        private Connection $data,
+        private LoggerInterface $logger,
+        private string $redisUrl = '',
+    ) {
     }
 
     /**
@@ -25,7 +28,7 @@ readonly class IdempotencyStoreFactory
      */
     public function create(): IdempotencyStoreInterface
     {
-        $url = (string) ($_ENV['REDIS_URL'] ?? '');
+        $url = trim($this->redisUrl);
         if ('' !== $url && class_exists(\Redis::class)) {
             try {
                 return new RedisIdempotencyStore($url);
