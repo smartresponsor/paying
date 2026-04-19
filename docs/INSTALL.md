@@ -46,3 +46,23 @@ symfony server:start -d
 # or
 php -S 127.0.0.1:8000 -t public
 ```
+
+
+## Composer dependency direction
+
+The component is being hardened toward a dependency-oriented install surface.
+
+Current outward bundle/config surface:
+
+- Bundle: `App\PayingBundle`
+- Bundle alias: `paying`
+- Config tree:
+  - `paying.storage.data_server_version`
+  - `paying.storage.infra_server_version`
+  - `paying.messenger.dsn`
+
+Current early compile-phase parameters:
+
+- `paying.messenger.dsn`
+- `paying.storage.data_server_version`
+- `paying.storage.infra_server_version`

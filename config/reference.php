@@ -1427,37 +1427,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     },
  * }
  * @psalm-type PayingConfig = array{
- *     app_secret?: scalar|Param|null, // Default: "%env(APP_SECRET)%"
  *     storage?: array{
- *         data_url?: scalar|Param|null, // Default: "%env(resolve:DATABASE_URL)%"
  *         data_server_version?: scalar|Param|null, // Default: "16.0"
- *         infra_url?: scalar|Param|null, // Default: "%env(resolve:INFRA_URL)%"
  *         infra_server_version?: scalar|Param|null, // Default: "3.45.1"
  *     },
  *     messenger?: array{
  *         dsn?: scalar|Param|null, // Default: "%env(resolve:RABBITMQ_DSN)%"
- *     },
- *     provider?: array{
- *         default_provider?: scalar|Param|null, // Default: "manual"
- *         stripe_secret_key?: scalar|Param|null, // Default: "%env(default::STRIPE_SECRET_KEY)%"
- *         stripe_webhook_secret?: scalar|Param|null, // Default: "%env(default::STRIPE_WEBHOOK_SECRET)%"
- *         payment_success_url?: scalar|Param|null, // Default: "%env(default::PAYMENT_SUCCESS_URL)%"
- *         payment_cancel_url?: scalar|Param|null, // Default: "%env(default::PAYMENT_CANCEL_URL)%"
- *     },
- *     idempotency?: array{
- *         ttl_sec?: int|Param, // Default: 86400
- *         redis_url?: scalar|Param|null, // Default: "%env(default::REDIS_URL)%"
- *     },
- *     oidc?: array{
- *         disabled?: bool|Param, // Default: false
- *         issuer?: scalar|Param|null, // Default: "%env(default::OIDC_ISS)%"
- *         audience?: scalar|Param|null, // Default: "%env(default::OIDC_AUD)%"
- *         jwks_url?: scalar|Param|null, // Default: "%env(default::OIDC_JWKS_URL)%"
- *         jwks_ttl?: int|Param, // Default: 3600
- *     },
- *     webhook?: array{
- *         allow_unknown?: bool|Param, // Default: false
- *         adyen_hmac_secret?: scalar|Param|null, // Default: "%env(default::ADYEN_HMAC_SECRET)%"
  *     },
  * }
  * @psalm-type ConfigType = array{

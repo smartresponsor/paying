@@ -7,7 +7,7 @@ namespace App;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Exposes the Paying component as a Symfony bundle for Composer-based installation.
+ * Canonical bundle entrypoint for the Paying component.
  */
 final class PayingBundle extends Bundle
 {

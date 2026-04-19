@@ -1,6 +1,5 @@
 framework:
-  test: true
-  secret: '%paying.app_secret%'
+  secret: '%env(APP_SECRET)%'
   http_method_override: false
   php_errors:
     log: true

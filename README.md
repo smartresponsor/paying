@@ -88,3 +88,20 @@ Antora producer entry pages mirror that split and stay intentionally thin:
 - Symfony Panther remains the canonical PHP-first browser e2e harness for the operator console.
 - Playwright (Chromium) adds complementary browser-engine coverage for flows that are not yet covered via Panther.
 - Playwright specs and config live under `tests/Playwright/`.
+
+
+## Dependency-oriented installability
+
+This component now exposes a canonical Symfony bundle/export scaffold:
+
+- `App\PayingBundle`
+- `App\DependencyInjection\Configuration`
+- `App\DependencyInjection\PayingExtension`
+
+Early compile-phase parameters intentionally remain in `config/services.yaml`
+because `framework`, `doctrine`, and `messenger` package config need them before
+late extension-populated parameters would exist:
+
+- `paying.messenger.dsn`
+- `paying.storage.data_server_version`
+- `paying.storage.infra_server_version`
