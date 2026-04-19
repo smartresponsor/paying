@@ -66,3 +66,9 @@ Current early compile-phase parameters:
 - `paying.messenger.dsn`
 - `paying.storage.data_server_version`
 - `paying.storage.infra_server_version`
+
+Framework bootstrap secret is read directly from `%env(APP_SECRET)%` and is not
+part of the Paying outward config namespace.
+
+
+Alias-only DI mappings are imported from `config/services/payment_aliases.yaml`.

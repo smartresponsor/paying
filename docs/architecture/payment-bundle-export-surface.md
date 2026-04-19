@@ -18,12 +18,15 @@ the Paying component.
 ## Early compile-phase parameters
 
 These remain in `config/services.yaml` intentionally because Symfony resolves
-package config for `framework`, `doctrine`, and `messenger` before later
+package config for `doctrine` and `messenger` before later
 extension-populated parameters would exist.
 
 - `paying.messenger.dsn`
 - `paying.storage.data_server_version`
 - `paying.storage.infra_server_version`
+
+`framework.secret` is now read directly from `%env(APP_SECRET)%` and is treated
+as framework bootstrap, not as part of the Paying outward config surface.
 
 ## Current outward config tree
 
@@ -49,3 +52,9 @@ Future cleanup waves should aim to:
 - keep only truly early compile-phase parameters in `config/services.yaml`
 - migrate the rest toward the bundle config tree and extension-owned surface
 - preserve Symfony 8 / DoctrineBundle 3 compatibility
+
+## Service layout
+
+Simple interface-to-implementation aliases are imported from
+`config/services/payment_aliases.yaml` so the root `config/services.yaml` can stay
+focused on early parameters and explicit runtime wiring.

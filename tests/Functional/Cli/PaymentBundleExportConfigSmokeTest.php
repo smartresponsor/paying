@@ -17,6 +17,7 @@ final class PaymentBundleExportConfigSmokeTest extends TestCase
         self::assertFileExists($root.'/src/DependencyInjection/PayingExtension.php');
         self::assertFileExists($root.'/config/packages/paying.yaml');
         self::assertFileExists($root.'/docs/architecture/payment-bundle-export-surface.md');
+        self::assertFileExists($root.'/config/services/payment_aliases.yaml');
     }
 
     public function testComposerAndConfigExposeDependencyOrientedSurface(): void
@@ -31,6 +32,7 @@ final class PaymentBundleExportConfigSmokeTest extends TestCase
 
         self::assertStringContainsString('"type": "library"', $composer);
         self::assertStringNotContainsString('paying.app_secret', $services);
+        self::assertStringContainsString('services/payment_aliases.yaml', $services);
         self::assertStringContainsString('paying.messenger.dsn', $services);
         self::assertStringContainsString('paying.storage.data_server_version', $services);
         self::assertStringContainsString("secret: '%env(APP_SECRET)%'", $framework);

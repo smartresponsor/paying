@@ -105,3 +105,8 @@ late extension-populated parameters would exist:
 - `paying.messenger.dsn`
 - `paying.storage.data_server_version`
 - `paying.storage.infra_server_version`
+
+
+Simple interface aliases are imported from `config/services/payment_aliases.yaml`
+to keep the root `config/services.yaml` focused on early parameters and explicit
+runtime wiring.

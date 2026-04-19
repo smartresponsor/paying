@@ -1,0 +1,9 @@
+services:
+    App\Service\StripePaymentProvider:
+        arguments:
+            $secretKey: '%env(default::STRIPE_SECRET_KEY)%'
+            $webhookSecret: '%env(default::STRIPE_WEBHOOK_SECRET)%'
+
+    App\Service\IdempotencyService:
+        arguments:
+            $ttlSec: '%env(int:default:payment.idem_ttl_default:IDEM_TTL)%'
