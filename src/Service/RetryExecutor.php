@@ -6,7 +6,6 @@ namespace App\Service;
 
 use App\ServiceInterface\MetricInterface;
 use App\ServiceInterface\RetryExecutorInterface;
-use Random\RandomException;
 
 /**
  * Provides the retry executor service used by the payment lifecycle and operator-facing flows.
@@ -51,7 +50,6 @@ readonly class RetryExecutor implements RetryExecutorInterface
 
                 $sleep = (int) ($sleep * $this->multiplier);
                 ++$attempt;
-            } catch (RandomException $e) {
             }
         }
     }
