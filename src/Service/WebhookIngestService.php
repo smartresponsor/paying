@@ -24,6 +24,7 @@ final readonly class WebhookIngestService implements WebhookIngestServiceInterfa
      * Executes the ingest operation for the current payment workflow.
      *
      * @param array<string, mixed> $normalized
+     *
      * @return array{status: 'duplicate'|'queued', outboxId: string|null}
      */
     public function ingest(string $provider, string $externalId, array $normalized, string $routingKey): array
@@ -40,7 +41,7 @@ final readonly class WebhookIngestService implements WebhookIngestServiceInterfa
         $log = new PaymentWebhookLog($provider, $externalId, $normalized);
         $this->em->persist($log);
 
-        $outbox = new PaymentOutboxMessage((new Ulid())->toRfc4122(), $routingKey, $normalized, $routingKey);
+        $outbox = new PaymentOutboxMessage(new Ulid()->toRfc4122(), $routingKey, $normalized, $routingKey);
         $this->em->persist($outbox);
 
         $log->markProcessed();

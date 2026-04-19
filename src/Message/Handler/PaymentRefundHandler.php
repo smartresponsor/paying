@@ -59,10 +59,6 @@ final readonly class PaymentRefundHandler
             return 'stripe';
         }
 
-        if (str_starts_with($normalized, 'internal')) {
-            return 'internal';
-        }
-
         return 'internal';
     }
 }

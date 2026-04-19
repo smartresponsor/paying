@@ -17,3 +17,5 @@ security:
 
     access_control:
         - { path: ^/api/docs(\.json)?$, roles: PUBLIC_ACCESS }
+        - { path: ^/payment/webhook/, roles: PUBLIC_ACCESS }
+        - { path: ^/webhook/(stripe|paypal)$, roles: PUBLIC_ACCESS }

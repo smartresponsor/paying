@@ -61,8 +61,7 @@ However, three gaps remain the main blockers before any stronger readiness claim
 
 1. fixture/bootstrap execution proof is not yet closed;
 2. webhook -> outbox -> consumer is still not proved as one integrated vertical;
-3. the QA/documentation toolchain is still incomplete because the slice has no CI, no composer lock, and no canonical Doctum surface
-   config, and no installed php-cs-fixer package.
+3. installed-runtime execution proof is still incomplete even though CI ownership, lock-backed dependency state, and Doctum producer configuration now exist in the repository.
 
 See also:
 

@@ -22,7 +22,7 @@ final class PaymentMethodFixture extends Fixture implements FixtureGroupInterfac
     public function load(ObjectManager $manager): void
     {
         foreach (['card', 'paypal', 'bank_transfer'] as $code) {
-            $method = new PaymentMethod((new Ulid())->toRfc4122(), $code);
+            $method = new PaymentMethod(new Ulid()->toRfc4122(), $code);
             $manager->persist($method);
             $this->addReference('payment-method-'.$code, $method);
         }

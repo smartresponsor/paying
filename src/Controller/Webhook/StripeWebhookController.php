@@ -9,6 +9,7 @@ use App\Service\Webhook\JsonSchemaValidator;
 use App\Service\Webhook\StripeEventNormalizer;
 use App\Service\Webhook\StripeSignatureValidator;
 use App\ServiceInterface\WebhookIngestServiceInterface;
+use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +29,15 @@ final readonly class StripeWebhookController
     ) {
     }
 
+    #[OA\Post(
+        path: '/webhook/stripe',
+        summary: 'Accept a Stripe webhook callback.',
+        tags: ['Payment Webhooks'],
+        responses: [
+            new OA\Response(response: 200, description: 'Webhook accepted or recognized as duplicate.'),
+            new OA\Response(response: 400, description: 'Invalid signature or malformed payload.'),
+        ],
+    )]
     /**
      * Verifies and processes an inbound Stripe webhook request.
      */

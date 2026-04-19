@@ -91,13 +91,12 @@ This is now the most important remaining hardening track.
 
 ### 2. Final docs consolidation
 
-The repository has many strong docs, but they still read as a layered trail of waves rather than one final consolidated
-operator/developer package.
+The repository has many strong docs, but they still read as a layered trail of waves rather than one consolidated operator/developer package.
 
 ### 3. Lock-backed reproducibility
 
-`composer.lock` is still absent from the current slice, so declared ownership is stronger than actual reproducible
-installation proof.
+`composer.lock` is present in the current slice, so the remaining gap is no longer lock-file ownership itself. The unresolved
+point is reproduced installation and runtime proof from that locked graph in a booted environment.
 
 ## Practical readiness reading
 

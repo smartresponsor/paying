@@ -40,7 +40,7 @@ class PaymentOutboxMessage
     private ?string $lastError = null;
 
     #[ORM\Column(type: 'string', length: 128, nullable: true)]
-    private ?string $routingKey = null;
+    private ?string $routingKey;
 
     public function __construct(string $id, string $type, array $payload, ?string $routingKey = null)
     {

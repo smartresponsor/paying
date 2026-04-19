@@ -43,8 +43,8 @@ STRIPE_WEBHOOK_SECRET=
 PAYMENT_WEBHOOK_ALLOW_UNKNOWN=0</code></pre>
 <p>Notes:</p>
 <ul>
-<li>`DATABASE_URL` is the Doctrine `data` connection (user/payment entities).</li>
-<li>`INFRA_URL` is the Doctrine `infra` connection (application infrastructure state).</li>
+<li><code>DATABASE_URL</code> is the Doctrine <code>data</code> connection (user/payment entities).</li>
+<li><code>INFRA_URL</code> is the Doctrine <code>infra</code> connection (application infrastructure state).</li>
 </ul>
 <h2>3) Bootstrap</h2>
 <pre><code>php bin/console doctrine:migrations:migrate --no-interaction</code></pre>

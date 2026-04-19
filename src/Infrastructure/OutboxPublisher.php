@@ -30,10 +30,10 @@ readonly class OutboxPublisher implements OutboxPublisherInterface
     {
         try {
             $this->data->insert('payment_outbox_message', [
-                'id' => (new Ulid())->toRfc4122(),
+                'id' => new Ulid()->toRfc4122(),
                 'type' => $topic,
                 'payload' => json_encode($payload, JSON_THROW_ON_ERROR),
-                'occurred_at' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+                'occurred_at' => new \DateTimeImmutable()->format('Y-m-d H:i:s'),
                 'status' => 'pending',
                 'attempts' => 0,
                 'last_error' => null,
@@ -78,7 +78,7 @@ readonly class OutboxPublisher implements OutboxPublisherInterface
                 'topic' => (string) ($row['routing_key'] ?? $row['type']),
                 'payload' => (string) $row['payload'],
                 'reason' => $reason,
-                'created_at' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+                'created_at' => new \DateTimeImmutable()->format('Y-m-d H:i:s'),
             ]);
         } catch (Exception $e) {
             $this->logger->error('Failed to insert payment DLQ message.', ['id' => $id, 'reason' => $reason, 'exception' => $e]);

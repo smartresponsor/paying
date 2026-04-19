@@ -28,8 +28,13 @@ readonly class ProviderGuard implements ProviderGuardInterface
     /**
      * Executes the start operation for the current payment workflow.
      *
+     * @param string               $provider
+     * @param Payment              $payment
      * @param array<string, mixed> $context
+     *
      * @return array{provider: string, paymentId: string, accepted?: bool, status?: string, providerRef?: string|null, checkoutUrl?: string, result?: array<string, mixed>}
+     *
+     * @throws \Throwable
      */
     public function start(string $provider, Payment $payment, array $context = []): array
     {

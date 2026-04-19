@@ -4,27 +4,27 @@
 
 ## Scope of this review
 
-This review is based strictly on the current cumulative slice after wave 31.
+This review is based strictly on the current cumulative slice.
 It is a technical triage document, not a release approval.
 
 ## What is already materially in place
 
 The current slice already has an app-owned Symfony contour:
 
-- controller-owned HTTP/API layer under `src/Controller/Payment`
+- controller-owned HTTP/API layer under `src/Controller`
 - dedicated provider webhook controllers under `src/Controller/Webhook`
-- payment aggregate and supporting entities under `src/Entity/Payment`
-- repository, service, infrastructure and message layers under `src/*/Payment`
+- payment aggregate and supporting entities under `src/Entity`
+- repository, service, infrastructure and message layers under `src/Repository`, `src/Service`, and `src/Infrastructure`
 - Nelmio/OpenAPI foundation under `config/packages/payment_nelmio_api_doc.yaml`
-- fixture classes under `src/Infrastructure/Payment/Fixture`
+- fixture classes under `src/Infrastructure/Fixture`
 - Twig/Form internal console under `templates/payment/console.html.twig`
-- owned operational CLI layer under `src/Infrastructure/Payment/Console`
+- owned operational CLI layer under `src/Infrastructure/Console`
 - PHPUnit harness through `phpunit.xml.dist` and `tests/bootstrap.php`
 
 The current slice contains:
 
 - 22 PHPUnit test files under `tests` plus one stale legacy duplicate under `tests/Payment` before cleanup
-- 8 owned operational commands under `src/Infrastructure/Payment/Console`
+- owned operational commands under `src/Infrastructure/Console`
 - controller-owned API endpoints for create, read, start, finalize and refund
 - controller-owned internal UI flows for create, start, finalize and refund
 
@@ -77,18 +77,15 @@ The repository contains:
 
 But the current slice still has major operational gaps:
 
-- no `composer.lock`
-- no GitHub CI workflow in the slice
-- no documented green baseline output
-- no baseline/strictness strategy for PHPStan
-- no installed `friendsofphp/php-cs-fixer` package in `composer.json`
-- no Doctum producer/configuration in the slice yet
+- no attached installed-runtime proof from the locked dependency graph
+- no attached green baseline output artifact inside the current slice
+- no explicit baseline/strictness strategy documented for PHPStan execution artifacts
 
 ### 4. Documentation is improved, but still not complete against the target state
 
 The current slice already has strong engineering docs, but still lacks:
 
-- Doctum project configuration
+- attached installed-runtime proof artifacts
 - explicit DocBlock coverage plan enforced in code review
 - a final post-hardening README that explains boot, migrate, load fixtures, run smoke, and inspect docs as one canonical
   journey

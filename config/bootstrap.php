@@ -39,7 +39,7 @@ if (!class_exists(Dotenv::class)) {
 }
 
 $dotenv = new Dotenv();
-$dotenv->usePutenv(true);
+$dotenv->usePutenv();
 
 $defaultEnvFile = $projectDir.'/.env';
 $fallbackEnvFile = $projectDir.'/.env.example';
@@ -52,7 +52,7 @@ if (is_file($defaultEnvFile)) {
 }
 
 $cliEnv = null;
-if (\PHP_SAPI === 'cli' && isset($_SERVER['argv']) && is_array($_SERVER['argv'])) {
+if (PHP_SAPI === 'cli' && isset($_SERVER['argv']) && is_array($_SERVER['argv'])) {
     $cliEnv = paymentResolveCliEnv($_SERVER['argv']);
 }
 

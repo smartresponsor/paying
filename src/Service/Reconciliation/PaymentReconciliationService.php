@@ -16,11 +16,11 @@ use Symfony\Component\Uid\Ulid;
 /**
  * Provides the payment reconciliation service service used by the payment lifecycle and operator-facing flows.
  */
-final class PaymentReconciliationService implements PaymentReconciliationServiceInterface
+final readonly class PaymentReconciliationService implements PaymentReconciliationServiceInterface
 {
     public function __construct(
-        private readonly PaymentRepositoryInterface $payments,
-        private readonly EntityManagerInterface $em,
+        private PaymentRepositoryInterface $payments,
+        private EntityManagerInterface $em,
     ) {
     }
 
@@ -33,7 +33,7 @@ final class PaymentReconciliationService implements PaymentReconciliationService
         $p->markCompleted($gatewayTxId);
 
         $tx = new PaymentTransaction(
-            (new Ulid())->toRfc4122(),
+            new Ulid()->toRfc4122(),
             (string) $p->id(),
             $gatewayTxId ?? 'captured',
             'capture',
@@ -55,7 +55,7 @@ final class PaymentReconciliationService implements PaymentReconciliationService
         $p->markRefunded($gatewayTxId);
 
         $refund = new PaymentRefund(
-            (new Ulid())->toRfc4122(),
+            new Ulid()->toRfc4122(),
             (string) $p->id(),
             $amountMinor,
             $currency,

@@ -28,7 +28,7 @@ class PaymentRefund
     private string $currency;
 
     #[ORM\Column(type: 'string', length: 64, nullable: true)]
-    private ?string $reason = null;
+    private ?string $reason;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $refundedAt;

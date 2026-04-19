@@ -12,7 +12,7 @@
 
 ## Phase 02 — API Platform evacuation and Nelmio OpenAPI contour
 
-- remove API Platform resources/processors under `src/Api/*`
+- verify the removed API Platform resources/processors do not re-enter the active slice
 - replace them with explicit Symfony controllers
 - introduce request/response DTOs for documented API contracts
 - wire Nelmio ApiDocBundle

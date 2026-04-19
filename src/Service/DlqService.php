@@ -7,6 +7,7 @@ namespace App\Service;
 
 use App\ServiceInterface\DlqServiceInterface;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;
 use Symfony\Component\Uid\Ulid;
 
@@ -23,7 +24,8 @@ final readonly class DlqService implements DlqServiceInterface
      * Returns the collection assembled by the list query path.
      *
      * @return list<array{id: int, outbox_id: string, topic: string, reason: string, created_at: string}>
-     * @throws \Doctrine\DBAL\Exception
+     *
+     * @throws Exception
      */
     public function list(): array
     {
@@ -46,7 +48,7 @@ final readonly class DlqService implements DlqServiceInterface
     /**
      * Executes the replay operation for the current payment workflow.
      *
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function replay(int $id): bool
     {

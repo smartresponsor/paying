@@ -7,6 +7,7 @@ namespace App\Infrastructure\Console;
 
 use App\InfrastructureInterface\OutboxPublisherInterface;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -33,7 +34,7 @@ class DlqReplayCommand extends Command
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

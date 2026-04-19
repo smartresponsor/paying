@@ -6,7 +6,6 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Payment;
-use App\Service\PaymentStartResult;
 use App\RepositoryInterface\PaymentRepositoryInterface;
 use App\ServiceInterface\PaymentStartServiceInterface;
 use App\ServiceInterface\ProviderGuardInterface;
@@ -48,7 +47,7 @@ final readonly class PaymentStartService implements PaymentStartServiceInterface
             throw PaymentNotFoundException::byId($paymentId);
         }
 
-        if ($existing->status() !== PaymentStatus::failed) {
+        if (PaymentStatus::failed !== $existing->status()) {
             throw new \InvalidArgumentException('Only failed payments can be restarted.');
         }
 

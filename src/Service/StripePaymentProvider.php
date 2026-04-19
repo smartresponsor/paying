@@ -29,10 +29,10 @@ final class StripePaymentProvider implements PaymentProviderInterface
         ?string $paymentSuccessUrl = null,
         ?string $paymentCancelUrl = null,
     ) {
-        $this->secretKey = trim((string) ($secretKey ?? ''));
-        $this->webhookSecret = trim((string) ($webhookSecret ?? ''));
-        $this->paymentSuccessUrl = '' !== trim((string) ($paymentSuccessUrl ?? '')) ? trim((string) $paymentSuccessUrl) : 'https://example/success?session_id={CHECKOUT_SESSION_ID}';
-        $this->paymentCancelUrl = '' !== trim((string) ($paymentCancelUrl ?? '')) ? trim((string) $paymentCancelUrl) : 'https://example/cancel';
+        $this->secretKey = trim($secretKey ?? '');
+        $this->webhookSecret = trim($webhookSecret ?? '');
+        $this->paymentSuccessUrl = '' !== trim($paymentSuccessUrl ?? '') ? trim((string) $paymentSuccessUrl) : 'https://example/success?session_id={CHECKOUT_SESSION_ID}';
+        $this->paymentCancelUrl = '' !== trim($paymentCancelUrl ?? '') ? trim((string) $paymentCancelUrl) : 'https://example/cancel';
     }
 
     /**

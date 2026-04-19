@@ -15,9 +15,9 @@ use Symfony\Component\Uid\Ulid;
 /**
  * Provides the payment service service used by the payment lifecycle and operator-facing flows.
  */
-final class PaymentService implements PaymentServiceInterface
+final readonly class PaymentService implements PaymentServiceInterface
 {
-    public function __construct(private readonly PaymentRepositoryInterface $paymentRepository)
+    public function __construct(private PaymentRepositoryInterface $paymentRepository)
     {
     }
 

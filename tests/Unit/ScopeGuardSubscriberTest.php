@@ -44,6 +44,7 @@ final class ScopeGuardSubscriberTest extends TestCase
 
     /**
      * Verifies that on controller logs verification failure and returns unauthorized.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      * @throws \ReflectionException
      */
@@ -70,7 +71,8 @@ final class ScopeGuardSubscriberTest extends TestCase
             );
 
         $subscriber = new ScopeGuardSubscriber($verifier, $logger);
-        $event = new ControllerEvent($kernel, [new ScopeGuardProtectedController(), 'secure'], $request, HttpKernelInterface::MAIN_REQUEST);
+        $controller = [new ScopeGuardProtectedController(), 'secure'];
+        $event = new ControllerEvent($kernel, $controller, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $subscriber->onController($event);
 
@@ -80,6 +82,66 @@ final class ScopeGuardSubscriberTest extends TestCase
         $response = $guardedController();
         self::assertInstanceOf(JsonResponse::class, $response);
         self::assertSame(401, $response->getStatusCode());
+    }
+
+    /**
+     * Verifies that the subscriber ignores sub-requests.
+     *
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \ReflectionException
+     */
+
+    /**
+     * Verifies that any-of scope requirements accept either matching scope.
+     *
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     * @throws \ReflectionException
+     */
+    public function testOnControllerAcceptsAnyOfScopeRequirement(): void
+    {
+        $verifier = $this->createMock(TokenVerifierInterface::class);
+        $logger = $this->createMock(LoggerInterface::class);
+        $kernel = $this->createMock(HttpKernelInterface::class);
+        $request = new Request();
+        $request->headers->set('Authorization', 'Bearer good-token');
+
+        $verifier->expects(self::once())
+            ->method('verify')
+            ->with('good-token')
+            ->willReturn(['scope' => 'payment:read']);
+
+        $verifier->expects(self::once())
+            ->method('hasScopes')
+            ->with(['scope' => 'payment:read'], ['payment:admin', 'payment:read'], true)
+            ->willReturn(true);
+
+        $logger->expects(self::never())->method('warning');
+
+        $subscriber = new ScopeGuardSubscriber($verifier, $logger);
+        $controller = [new ScopeGuardAnyOfProtectedController(), 'secure'];
+        $event = new ControllerEvent($kernel, $controller, $request, HttpKernelInterface::MAIN_REQUEST);
+
+        $subscriber->onController($event);
+
+        self::assertSame($controller, $event->getController());
+    }
+
+    public function testOnControllerIgnoresSubRequest(): void
+    {
+        $verifier = $this->createMock(TokenVerifierInterface::class);
+        $logger = $this->createMock(LoggerInterface::class);
+        $kernel = $this->createMock(HttpKernelInterface::class);
+        $request = new Request();
+        $controller = [new ScopeGuardProtectedController(), 'secure'];
+        $event = new ControllerEvent($kernel, $controller, $request, HttpKernelInterface::SUB_REQUEST);
+
+        $verifier->expects(self::never())->method('verify');
+        $logger->expects(self::never())->method('warning');
+
+        $subscriber = new ScopeGuardSubscriber($verifier, $logger);
+        $subscriber->onController($event);
+
+        self::assertSame($controller, $event->getController());
     }
 }
 
@@ -92,6 +154,17 @@ final class ScopeGuardProtectedController
     /**
      * Provides the secure behavior required by this test scenario.
      */
+    public function secure(): void
+    {
+    }
+}
+
+/**
+ * Exercises any-of scope requirements within the payment unit test surface.
+ */
+final class ScopeGuardAnyOfProtectedController
+{
+    #[RequireScope(['payment:admin', 'payment:read'], any: true)]
     public function secure(): void
     {
     }

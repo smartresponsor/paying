@@ -106,7 +106,7 @@ final class PaymentConsoleController extends AbstractController
         }
 
         $payment = $this->createHandler->create($dto->orderId, $dto->amountMinor, $dto->currency);
-        $this->addFlash('success', sprintf('Payment %s created with status %s.', (string) $payment->id(), $payment->status()->value));
+        $this->addFlash('success', sprintf('Payment %s created with status %s.', $payment->id(), $payment->status()->value));
 
         return $this->redirectToRoute('payment_console', ['payment' => (string) $payment->id()]);
     }
@@ -127,7 +127,7 @@ final class PaymentConsoleController extends AbstractController
 
         $payment = $this->startHandler->start($dto->orderId, $dto->provider, $dto->amount, $dto->currency);
 
-        $this->addFlash('success', sprintf('Payment %s started via %s.', (string) $payment->id(), $dto->provider));
+        $this->addFlash('success', sprintf('Payment %s started via %s.', $payment->id(), $dto->provider));
 
         return $this->redirectToRoute('payment_console', ['payment' => (string) $payment->id()]);
     }
@@ -181,7 +181,7 @@ final class PaymentConsoleController extends AbstractController
             return $this->paymentNotFoundRedirect($dto->paymentId);
         }
 
-        $this->addFlash('success', sprintf('Payment %s refunded with status %s.', (string) $payment->id(), $payment->status()->value));
+        $this->addFlash('success', sprintf('Payment %s refunded with status %s.', $payment->id(), $payment->status()->value));
 
         return $this->redirectToRoute('payment_console', ['payment' => (string) $payment->id()]);
     }
@@ -213,10 +213,6 @@ final class PaymentConsoleController extends AbstractController
 
         if (str_starts_with($normalized, 'paypal_')) {
             return 'paypal';
-        }
-
-        if (str_starts_with($normalized, 'internal')) {
-            return 'internal';
         }
 
         return 'internal';

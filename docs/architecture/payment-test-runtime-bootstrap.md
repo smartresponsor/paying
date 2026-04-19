@@ -104,7 +104,7 @@ It does **not** by itself prove a completed installed-runtime execution with res
   so `/payment/webhook/{provider}` no longer fails before controller execution.
 - Simplified `PaymentConsoleRefundType::amount` to `TextType` so the refund console flow keeps DTO decimal validation
   instead of brittle `MoneyType` transformation behavior in functional tests.
-- Hardened `WebhookVerifier` env loading to read from `$_ENV`, `$_SERVER`, and `getenv()` so Stripe signature validation
+- Hardened `WebhookVerifier` env loading to flow through explicit Symfony DI arguments where practical so Stripe signature validation
   works consistently in PHPUnit and Symfony test kernel runs.
 
 - Wave 011: repository find now refreshes managed Payment aggregates before returning them, so multi-request functional
@@ -181,7 +181,7 @@ It does **not** by itself prove a completed installed-runtime execution with res
   so `/payment/webhook/{provider}` no longer fails before controller execution.
 - Simplified `PaymentConsoleRefundType::amount` to `TextType` so the refund console flow keeps DTO decimal validation
   instead of brittle `MoneyType` transformation behavior in functional tests.
-- Hardened `WebhookVerifier` env loading to read from `$_ENV`, `$_SERVER`, and `getenv()` so Stripe signature validation
+- Hardened `WebhookVerifier` env loading to flow through explicit Symfony DI arguments where practical so Stripe signature validation
   works consistently in PHPUnit and Symfony test kernel runs.
 
 - Wave 011: repository find now refreshes managed Payment aggregates before returning them, so multi-request functional

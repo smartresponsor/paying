@@ -15,10 +15,8 @@ final class JsonSchemaValidator
      */
     public function validate(array $payload, array $requiredKeys): bool
     {
-        foreach ($requiredKeys as $requiredKey) {
-            if (!array_key_exists($requiredKey, $payload)) {
-                return false;
-            }
+        if (array_any($requiredKeys, fn ($requiredKey) => !array_key_exists($requiredKey, $payload))) {
+            return false;
         }
 
         return true;

@@ -15,7 +15,7 @@ This wave closes the repository-owned quality contour that was previously only p
 This wave does not prove a fully installed runtime by itself. The following still remain outside the scope of this
 closure step:
 
-- `composer.lock` is still absent from the current slice
+- `composer.lock` is present in the current slice, but installed execution from that locked graph is not proven inside this archive
 - CI execution is defined but not proven from inside this archive
 - Doctum output generation is configured but not executed in this repository snapshot
 

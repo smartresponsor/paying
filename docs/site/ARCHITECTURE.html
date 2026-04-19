@@ -23,14 +23,14 @@
     </nav>
     <article><h1>ARCHITECTURE</h1>
 <h2>Layer model</h2>
-<p>Canonical root: `src/` with namespace `App\`.</p>
+<p>Canonical root: <code>src/</code> with namespace <code>App\</code>.</p>
 <p>Main layers:</p>
 <ul>
-<li>`src/Controller` + `src/ControllerInterface`</li>
-<li>`src/Service` + `src/ServiceInterface`</li>
-<li>`src/Entity`</li>
-<li>`src/Infrastructure` + `src/InfrastructureInterface`</li>
-<li>`src/Repository` + `src/RepositoryInterface`</li>
+<li><code>src/Controller</code> + <code>src/ControllerInterface</code></li>
+<li><code>src/Service</code> + <code>src/ServiceInterface</code></li>
+<li><code>src/Entity</code></li>
+<li><code>src/Infrastructure</code> + <code>src/InfrastructureInterface</code></li>
+<li><code>src/Repository</code> + <code>src/RepositoryInterface</code></li>
 </ul>
 <p>Pattern in use:</p>
 <ul>
@@ -41,12 +41,12 @@
 </ul>
 <h2>Storage topology</h2>
 <ul>
-<li>Doctrine DBAL default connection: `data` (PostgreSQL expected for user data).</li>
-<li>Secondary connection: `infra` (SQLite expected for app/infrastructure data).</li>
+<li>Doctrine DBAL default connection: <code>data</code> (PostgreSQL expected for user data).</li>
+<li>Secondary connection: <code>infra</code> (SQLite expected for app/infrastructure data).</li>
 </ul>
 <h2>Eventing/runtime</h2>
 <ul>
-<li>Webhook ingest -&gt; normalize/validate -&gt; `payment_webhook_log` dedupe -&gt; outbox message.</li>
+<li>Webhook ingest -&gt; normalize/validate -&gt; <code>payment_webhook_log</code> dedupe -&gt; outbox message.</li>
 <li>Outbox worker/command publishes to Messenger transport.</li>
 <li>DLQ endpoints allow list/replay behavior.</li>
 </ul>

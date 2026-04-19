@@ -39,11 +39,11 @@ The main hand-written repository narratives remain in Markdown and are treated a
 == Generated surfaces
 
 * OpenAPI source of truth: `docs/api/openapi.yaml`
-* Runtime OpenAPI publication points: `/api/docs`, `/api/docs.json`, `/api/docs.yaml`
+* Runtime OpenAPI publication points: `/api/docs`, `/api/docs.json`
 * Doctum configuration: `doctum.php`
-* Doctum generated output target: `docs/generated/doctum/`
+* Doctum producer configuration: `doctum.php`
 
-Generated artifacts should remain publishable as separate outputs and must not be merged into the hand-written Antora narrative layer.
+Generated artifacts should remain publishable as separate outputs and must not be merged into the hand-written Antora narrative layer. Checked-in generated Doctum output is not part of the current slice.
 
 == GitHub-facing surface
 

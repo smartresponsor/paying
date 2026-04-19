@@ -15,4 +15,4 @@ Canonical narrative entry set:
 Generated surfaces stay separate:
 
 - OpenAPI: `docs/api/openapi.yaml`
-- Doctum output: `docs/generated/doctum/`
+- Doctum producer config: `doctum.php` (checked-in generated output is not included in the current slice)

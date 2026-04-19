@@ -86,6 +86,10 @@ final class PaymentConsolePantherFlowTest extends PaymentConsolePantherFlowTestB
         if (is_string($externalBaseUri) && '' !== $externalBaseUri) {
             $options['external_base_uri'] = $externalBaseUri;
         } else {
+            if (!method_exists($this, 'bootKernel')) {
+                self::markTestSkipped('Panther kernel boot helpers are unavailable in this environment.');
+            }
+
             $this->bootstrapPantherTestDatabase();
             $options['webServerDir'] = dirname(__DIR__, 3).'/public';
             $options['router'] = dirname(__DIR__, 3).'/public/index.php';
@@ -162,7 +166,7 @@ JS);
     private function buildPantherOptions(): array
     {
         return [
-            'browser' => PantherTestCase::CHROME,
+            'browser' => defined('Symfony\\Component\\Panther\\PantherTestCase::CHROME') ? constant('Symfony\\Component\\Panther\\PantherTestCase::CHROME') : 'chrome',
             'browser_arguments' => self::PANTHER_BROWSER_ARGUMENTS,
         ];
     }

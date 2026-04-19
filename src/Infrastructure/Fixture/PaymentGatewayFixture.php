@@ -22,7 +22,7 @@ final class PaymentGatewayFixture extends Fixture implements FixtureGroupInterfa
     public function load(ObjectManager $manager): void
     {
         foreach (['internal', 'stripe', 'paypal'] as $code) {
-            $gateway = new PaymentGateway((new Ulid())->toRfc4122(), $code);
+            $gateway = new PaymentGateway(new Ulid()->toRfc4122(), $code);
             $manager->persist($gateway);
             $this->addReference('payment-gateway-'.$code, $gateway);
         }

@@ -24,7 +24,7 @@ readonly class IdempotencyService implements IdempotencyServiceInterface
     public function keyFor(Request $req): string
     {
         $h = (string) $req->headers->get('Idempotency-Key', '');
-        $path = (string) $req->getPathInfo();
+        $path = $req->getPathInfo();
         $body = (string) $req->getContent();
         $hash = hash('sha256', $path.'|'.$h.'|'.$body);
 
@@ -35,8 +35,11 @@ readonly class IdempotencyService implements IdempotencyServiceInterface
      * Executes the once operation for the current payment workflow.
      *
      * @template T of array<string, mixed>
+     *
      * @param callable(): T $producer
+     *
      * @return T
+     *
      * @throws \JsonException
      */
     public function once(Request $req, callable $producer): array
@@ -48,8 +51,11 @@ readonly class IdempotencyService implements IdempotencyServiceInterface
      * Executes the execute operation for the current payment workflow.
      *
      * @template T of array<string, mixed>
+     *
      * @param callable(): T $producer
+     *
      * @return T
+     *
      * @throws \JsonException
      */
     public function execute(string $key, string $payloadHash, callable $producer): array

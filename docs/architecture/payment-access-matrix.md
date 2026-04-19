@@ -17,10 +17,13 @@ The intended minimum matrix is:
 | UI      | `POST /payment/console/start`    | `payment:write` |
 | UI      | `POST /payment/console/finalize` | `payment:write` |
 | UI      | `POST /payment/console/refund`   | `payment:write` |
-| Ops     | `GET /payment/dlq`               | `payment:read`  |
-| Ops     | `POST /payment/dlq/replay/{id}`  | `payment:write` |
+| Ops     | `GET /payment/dlq`               | `payment:admin` **or** `payment:read` |
+| Ops     | `POST /payment/dlq/replay/{id}`  | `payment:admin` |
 | Ops     | `GET /status`                    | `payment:read`  |
 | Ops     | `GET /metrics`                   | `payment:read`  |
+| Webhook | `POST /payment/webhook/{provider}` | public ingress + signature verification |
+| Webhook | `POST /webhook/stripe`           | public ingress + signature verification |
+| Webhook | `POST /webhook/paypal`           | public ingress + signature verification |
 | Docs    | `/api/docs`, `/api/docs.json`    | public          |
 
 ## CLI operational ownership
@@ -40,9 +43,11 @@ The intended minimum matrix is:
 
 - `payment:read` is for operational visibility and internal read-only navigation.
 - `payment:write` is required for lifecycle-changing flows.
-- Dedicated provider webhooks are validated through provider signatures rather than user scopes.
+- Generic and dedicated provider webhooks are public ingress routes in Symfony security config and are validated through provider signatures rather than user scopes.
+- Security config explicitly marks webhook ingress and API docs as `PUBLIC_ACCESS`; application-level signature validation still decides webhook acceptance. Webhook routes should therefore never drift into bearer-only documentation.
+- Operational endpoints `/status`, `/metrics`, `/payment/dlq`, and `/payment/dlq/replay/{id}` are part of the documented OpenAPI/Nelmio contour and require bearer access according to the matrix above.
 - The Twig console is intended as a fixture-backed smoke surface, not as a production customer UI.
-- Legacy `src/Api/*` classes are now passive/deprecated tails and should not participate in the active service graph.
+- The removed `src/Api/*` API Platform tail is not part of the active service graph.
 
 ## CLI ownership
 
@@ -53,3 +58,5 @@ See `docs/architecture/payment-cli-ownership.md` for the owned operational comma
 Registration is covered for the full owned command set. Execution smoke currently covers projection, outbox,
 reconciliation, DLQ replay, idempotency purge, and SLA reporting. `payment:gate:slo` remains registration-covered and
 should receive dedicated execution proof in a later wave.
+
+- Response header policy uses explicit Symfony DI parameters and is applied only on the main request.

@@ -22,7 +22,7 @@ tests.
 
 ## Non-owned contour
 
-Legacy `src/Api/*` classes are no longer part of the active runtime/service graph and are not part of the owned CLI/API
+The removed `src/Api/*` API Platform tail is no longer part of the active runtime/service graph and is not part of the owned CLI/API
 contour.
 
 ## Execution smoke

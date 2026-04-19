@@ -15,6 +15,9 @@ use App\Service\Outbox\PaymentOutboxProcessor;
 use App\Service\Reconciliation\PaymentReconciliationService;
 use App\ValueObject\PaymentStatus;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\Messenger\Envelope;
@@ -31,91 +34,29 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
      */
     /**
      * Verifies that webhook captured goes through outbox and consumer.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testWebhookCapturedGoesThroughOutboxAndConsumer(): void
     {
-        $repo = new class {
-            public array $storage = [];
+        $query = $this->createMock(Query::class);
+        $queryBuilder = $this->createMock(QueryBuilder::class);
+        $repository = $this->createMock(EntityRepository::class);
+        $storage = [];
 
-            /**
-             * Implements the create query builder behavior required by the local test double or scenario helper.
-             * @return __anonymous@1214
-             */
-            public function createQueryBuilder(string $alias): object
-            {
-                $self = $this;
+        $queryBuilder->method('where')->willReturnSelf();
+        $queryBuilder->method('orWhere')->willReturnSelf();
+        $queryBuilder->method('setParameter')->willReturnSelf();
+        $queryBuilder->method('setMaxResults')->willReturnSelf();
+        $queryBuilder->method('getQuery')->willReturn($query);
 
-                return new class($self) {
-                    public function __construct(private readonly object $self)
-                    {
-                    }
-
-                    /**
-                     * Implements the where behavior required by the local test double or scenario helper.
-                     * @return __anonymous@1214
-                     */
-                    public function where(string $condition): self
-                    {
-                        return $this;
-                    }
-
-                    /**
-                     * Implements the or where behavior required by the local test double or scenario helper.
-                     * @return __anonymous@1214
-                     */
-                    public function orWhere(string $condition): self
-                    {
-                        return $this;
-                    }
-
-                    /**
-                     * Implements the set parameter behavior required by the local test double or scenario helper.
-                     * @return __anonymous@1214
-                     */
-                    public function setParameter(string $key, mixed $value): self
-                    {
-                        return $this;
-                    }
-
-                    /**
-                     * Implements the set max results behavior required by the local test double or scenario helper.
-                     * @return __anonymous@1214
-                     */
-                    public function setMaxResults(int $limit): self
-                    {
-                        return $this;
-                    }
-
-                    /**
-                     * Implements the get query behavior required by the local test double or scenario helper.
-                     * @return __anonymous@2129
-                     */
-                    public function getQuery(): object
-                    {
-                        $self = $this->self;
-
-                        return new class($self) {
-                            public function __construct(private readonly object $self)
-                            {
-                            }
-
-                            /**
-                             * Implements the get result behavior required by the local test double used in this scenario.
-                             */
-                            public function getResult(): array
-                            {
-                                return $this->self->storage;
-                            }
-                        };
-                    }
-                };
-            }
-        };
+        $repository->method('createQueryBuilder')->willReturn($queryBuilder);
+        $query->method('getResult')->willReturnCallback(static function () use (&$storage): array {
+            return $storage;
+        });
 
         $em = $this->createMock(EntityManagerInterface::class);
-        $em->method('getRepository')->willReturn($repo);
-        $em->method('flush')->willReturn(null);
+        $em->method('getRepository')->willReturn($repository);
 
         $outboxMessage = new PaymentOutboxMessage('11111111-1111-1111-1111-111111111111', 'payment.captured', [
             'paymentId' => 'pay_1',
@@ -124,7 +65,7 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
             'currency' => 'USD',
             'gatewayTransactionId' => 'gw_1',
         ], 'payment.captured');
-        $repo->storage[] = $outboxMessage;
+        $storage[] = $outboxMessage;
 
         $transport = new class implements TransportInterface {
             public array $envelopes = [];

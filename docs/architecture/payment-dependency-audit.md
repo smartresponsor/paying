@@ -24,7 +24,7 @@ From `composer.json`:
 - Rector
 - PHPStan
 
-## Observed package usage not fully represented in composer.json
+## Observed package usage and historical dependency pressure points
 
 ### Messenger
 
@@ -37,7 +37,7 @@ Observed imports:
 Observed in:
 
 - `src/Message/Handler/Payment/*`
-- `src/Api/Processor/*`
+- historical `src/Api/Processor/*` tail (already removed from the current slice)
 - `src/Service/Payment/Outbox/PaymentOutboxProcessor.php`
 - `tests/E2E/PaymentWebhookToOrderFlowTest.php`
 
@@ -51,10 +51,9 @@ Observed imports:
 
 Observed in:
 
-- `src/Api/Dto/PaymentCreateInput.php`
-- `src/Api/Dto/PaymentRefundInput.php`
+- historical `src/Api/Dto/PaymentCreateInput.php` / `PaymentRefundInput.php` tail (already removed from the current slice)
 
-**Target action:** add `symfony/validator`.
+**Target action:** only add `symfony/validator` where the active controller-owned DTO path still requires it; do not reintroduce removed API Platform DTO assumptions.
 
 ### Serializer
 
@@ -64,12 +63,9 @@ Observed imports:
 
 Observed in:
 
-- `src/Api/Resource/PaymentResource.php`
-- `src/Api/Resource/RefundResource.php`
-- `src/Api/Resource/PaymentCreateRequest.php`
-- `src/Api/Resource/PaymentRefundRequest.php`
+- historical `src/Api/Resource/*` tail (already removed from the current slice)
 
-**Target action:** if resource DTO serialization remains in use after API Platform evacuation, add `symfony/serializer`.
+**Target action:** only add `symfony/serializer` where the active controller-owned surface still requires it; do not justify it from removed `src/Api/*` code.
 
 ### Framework test stack
 
@@ -108,8 +104,7 @@ Observed imports:
 
 Observed in:
 
-- `src/Api/Resource/*`
-- `src/Api/Processor/*`
+- historical `src/Api/Resource/*` / `src/Api/Processor/*` tail (already removed from the current slice)
 
 **Target action:** do **not** reinforce this dependency. Evacuate API Platform code instead and replace it with explicit
 Symfony controllers plus Nelmio documentation.
@@ -149,7 +144,7 @@ Fixtures are required by the next phase, but no fixture bundle/tooling is yet ex
 
 ## Immediate rule
 
-The next wave should first audit each observed import and decide one of two outcomes:
+For active code, each observed import should resolve to one of two outcomes:
 
 1. **keep and declare the package**, or
 2. **evacuate the code path and remove the import**.

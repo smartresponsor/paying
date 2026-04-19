@@ -8,6 +8,8 @@ namespace App\Controller;
 use App\Attribute\RequireScope;
 use App\ControllerInterface\DlqControllerInterface;
 use App\ServiceInterface\DlqServiceInterface;
+use Nelmio\ApiDocBundle\Attribute\Security;
+use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,8 +22,18 @@ final readonly class DlqController implements DlqControllerInterface
     {
     }
 
-    #[RequireScope(['payment:admin'])]
-    #[RequireScope(['payment:read'])]
+    #[RequireScope(['payment:admin', 'payment:read'], any: true)]
+    #[OA\Get(
+        path: '/payment/dlq',
+        summary: 'List dead-lettered payment messages.',
+        tags: ['Payment Operations'],
+        responses: [
+            new OA\Response(response: 200, description: 'Current dead-letter queue snapshot.'),
+            new OA\Response(response: 401, description: 'Missing or invalid bearer token.'),
+            new OA\Response(response: 403, description: 'Missing payment:admin or payment:read scope.'),
+        ],
+    )]
+    #[Security(name: 'Bearer')]
     /**
      * Returns the current dead-letter queue snapshot for payment operators.
      */
@@ -31,6 +43,19 @@ final readonly class DlqController implements DlqControllerInterface
     }
 
     #[RequireScope(['payment:admin'])]
+    #[OA\Post(
+        path: '/payment/dlq/replay/{id}',
+        summary: 'Replay a dead-lettered payment message.',
+        tags: ['Payment Operations'],
+        responses: [
+            new OA\Response(response: 200, description: 'Replay accepted.'),
+            new OA\Response(response: 401, description: 'Missing or invalid bearer token.'),
+            new OA\Response(response: 403, description: 'Missing payment:admin scope.'),
+            new OA\Response(response: 404, description: 'Dead-letter item not found.'),
+        ],
+    )]
+    #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))]
+    #[Security(name: 'Bearer')]
     /**
      * Replays a single dead-lettered message back into the payment processing flow.
      */

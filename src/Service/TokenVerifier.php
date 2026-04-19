@@ -15,8 +15,8 @@ readonly class TokenVerifier implements TokenVerifierInterface
 {
     public function __construct(
         private OidcJwksCacheInterface $jwks,
-        private string $issuer = '',
-        private string $audience = '',
+        private ?string $issuer = null,
+        private ?string $audience = null,
     ) {
     }
 
@@ -51,13 +51,13 @@ readonly class TokenVerifier implements TokenVerifierInterface
             throw new \RuntimeException('jwt-not-before');
         }
 
-        $issuer = $this->issuer;
+        $issuer = trim((string) ($this->issuer ?? ''));
         $payloadIssuer = isset($payload['iss']) && is_string($payload['iss']) ? $payload['iss'] : '';
         if ('' !== $issuer && $payloadIssuer !== $issuer) {
             throw new \RuntimeException('iss-mismatch');
         }
 
-        $audience = $this->audience;
+        $audience = trim((string) ($this->audience ?? ''));
         if ('' !== $audience) {
             $audClaim = $payload['aud'] ?? null;
             $audiences = is_array($audClaim) ? $audClaim : [$audClaim];
@@ -90,25 +90,50 @@ readonly class TokenVerifier implements TokenVerifierInterface
         return 0 === count(array_diff($required, $scopes));
     }
 
-    /** @return array{n: string, e: string, kty?: string, kid?: string} */
+    /** @return array{n: string, e: string, kty?: string, kid?: string, use?: string, alg?: string} */
     private function findKey(string $kid): array
     {
         $jwks = $this->jwks->get();
         $keys = $jwks['keys'];
         foreach ($keys as $key) {
             if (($key['kid'] ?? '') === $kid) {
-                return $key;
+                return $this->assertSupportedJwk($key);
             }
         }
 
         if ('' === $kid && isset($keys[0])) {
-            return $keys[0];
+            return $this->assertSupportedJwk($keys[0]);
         }
 
         throw new \RuntimeException('kid-not-found');
     }
 
-    /** @param array{n: string, e: string, kty?: string, kid?: string} $jwk */
+    /**
+     * @param array{n: string, e: string, kty?: string, kid?: string, use?: string, alg?: string} $jwk
+     *
+     * @return array{n: string, e: string, kty?: string, kid?: string, use?: string, alg?: string}
+     */
+    private function assertSupportedJwk(array $jwk): array
+    {
+        $keyType = trim((string) ($jwk['kty'] ?? ''));
+        if ('' !== $keyType && 'RSA' !== $keyType) {
+            throw new \RuntimeException('jwk-kty-not-supported');
+        }
+
+        $keyUse = trim((string) ($jwk['use'] ?? ''));
+        if ('' !== $keyUse && 'sig' !== $keyUse) {
+            throw new \RuntimeException('jwk-use-not-supported');
+        }
+
+        $keyAlgorithm = trim((string) ($jwk['alg'] ?? ''));
+        if ('' !== $keyAlgorithm && 'RS256' !== $keyAlgorithm) {
+            throw new \RuntimeException('jwk-alg-not-supported');
+        }
+
+        return $jwk;
+    }
+
+    /** @param array{n: string, e: string, kty?: string, kid?: string, use?: string, alg?: string} $jwk */
     private function jwkToPem(array $jwk): string
     {
         $n = $this->b64bin($jwk['n']);
@@ -203,15 +228,27 @@ readonly class TokenVerifier implements TokenVerifierInterface
 
     private function b64(string $value): string
     {
-        $value = strtr($value, '-_', '+/');
-
-        return (string) base64_decode($value.'==', true);
+        return $this->decodeBase64Url($value);
     }
 
     private function b64bin(string $value): string
     {
-        $value = strtr($value, '-_', '+/');
+        return $this->decodeBase64Url($value);
+    }
 
-        return (string) base64_decode($value.'==', true);
+    private function decodeBase64Url(string $value): string
+    {
+        $normalized = strtr($value, '-_', '+/');
+        $padding = strlen($normalized) % 4;
+        if (0 !== $padding) {
+            $normalized .= str_repeat('=', 4 - $padding);
+        }
+
+        $decoded = base64_decode($normalized, true);
+        if (false === $decoded) {
+            throw new \RuntimeException('jwt-segment-base64url');
+        }
+
+        return $decoded;
     }
 }

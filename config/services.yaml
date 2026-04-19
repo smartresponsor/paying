@@ -3,6 +3,9 @@ imports:
 
 parameters:
     payment.idem_ttl_default: 86400
+    payment.http_content_security_policy: "default-src 'self'"
+    payment.oidc_jwks_cache_dir: '%kernel.project_dir%/var/cache/payment'
+    payment.oidc_jwks_cache_ttl: 3600
     paying.messenger.dsn: '%env(resolve:RABBITMQ_DSN)%'
     paying.storage.data_server_version: '16.0'
     paying.storage.infra_server_version: '3.45.1'
@@ -91,3 +94,19 @@ services:
         autoconfigure: true
         autowire: true
 
+
+
+    App\Infrastructure\ResponseHeaderSubscriber:
+        arguments:
+            $contentSecurityPolicy: '%payment.http_content_security_policy%'
+
+    App\Service\OidcJwksCache:
+        arguments:
+            $cacheDir: '%payment.oidc_jwks_cache_dir%'
+            $ttl: '%payment.oidc_jwks_cache_ttl%'
+            $jwksUrl: '%env(default::OIDC_JWKS_URL)%'
+
+    App\Service\TokenVerifier:
+        arguments:
+            $issuer: '%env(default::OIDC_ISSUER)%'
+            $audience: '%env(default::OIDC_AUDIENCE)%'

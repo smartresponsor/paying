@@ -21,7 +21,7 @@ final class ValidationErrorMapper implements ValidationErrorMapperInterface
         $errors = [];
         foreach ($violations as $violation) {
             $errors[] = [
-                'field' => (string) $violation->getPropertyPath(),
+                'field' => $violation->getPropertyPath(),
                 'message' => (string) $violation->getMessage(),
             ];
         }

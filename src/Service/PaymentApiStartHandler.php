@@ -25,7 +25,6 @@ final readonly class PaymentApiStartHandler implements PaymentApiStartHandlerInt
      * Executes the handle operation for the current payment workflow.
      *
      * @return array{payment: string, orderId: string, provider: string, status: string, providerRef: string|null, result: array<string, mixed>}
-     * @throws \JsonException
      */
     public function handle(PaymentStartInput $input, string $idempotencyKey, string $payloadHash): array
     {

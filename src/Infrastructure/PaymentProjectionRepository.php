@@ -25,7 +25,11 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
     /**
      * Loads a payment projection by its identifier.
      *
+     * @param string $id
+     *
      * @return array<string, scalar|null>|null
+     *
+     * @throws Exception
      */
     public function findById(string $id): ?array
     {
@@ -46,7 +50,12 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
     /**
      * Lists payment projections filtered by their current status.
      *
+     * @param string $status
+     * @param int    $limit
+     *
      * @return list<array<string, scalar|null>>
+     *
+     * @throws Exception
      */
     public function listByStatus(string $status, int $limit = 100): array
     {

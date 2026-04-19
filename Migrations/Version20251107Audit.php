@@ -22,7 +22,7 @@ final class Version20251107Audit extends AbstractMigration
     }
 
     /**
-     * @param \Doctrine\DBAL\Schema\Schema $schema
+     * @param Schema $schema
      * @return void
      */
     public function up(Schema $schema): void
@@ -31,7 +31,7 @@ final class Version20251107Audit extends AbstractMigration
     }
 
     /**
-     * @param \Doctrine\DBAL\Schema\Schema $schema
+     * @param Schema $schema
      * @return void
      */
     public function down(Schema $schema): void

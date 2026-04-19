@@ -36,23 +36,23 @@
 <h2>Artifact contract</h2>
 <p>Generated under:</p>
 <ul>
-<li>`var/report/proof-pack/&lt;UTC-timestamp&gt;/`</li>
-<li>`var/report/proof-pack/latest/`</li>
+<li><code>var/report/proof-pack/&lt;UTC-timestamp&gt;/</code></li>
+<li><code>var/report/proof-pack/latest/</code></li>
 </ul>
 <p>Expected files:</p>
 <ul>
-<li>`summary.md` — compact pass/fail table</li>
-<li>`report.json` — machine-readable status and step metadata</li>
-<li>`logs/*.log` — per-step logs</li>
-<li>`logs/*.cmd.txt` — exact executed commands</li>
+<li><code>summary.md</code> — compact pass/fail table</li>
+<li><code>report.json</code> — machine-readable status and step metadata</li>
+<li><code>logs/*.log</code> — per-step logs</li>
+<li><code>logs/*.cmd.txt</code> — exact executed commands</li>
 </ul>
 <h2>Included steps</h2>
-<p>1. `composer install:preflight`</p>
-<p>2. `composer qa:style`</p>
-<p>3. `composer qa:static`</p>
-<p>4. `composer qa:test`</p>
-<p>5. `composer qa:smoke`</p>
-<p>6. `composer qa:report`</p>
+<p>1. <code>composer install:preflight</code></p>
+<p>2. <code>composer qa:style</code></p>
+<p>3. <code>composer qa:static</code></p>
+<p>4. <code>composer qa:test</code></p>
+<p>5. <code>composer qa:smoke</code></p>
+<p>6. <code>composer qa:report</code></p>
 <p>7. strict local pipeline:</p>
 <pre><code>   bash tools/ci/run-payment-local-pipeline.sh --include-smokes --include-reports --fail-on-errors</code></pre>
 <h2>Operator walkthrough (canonical)</h2>
@@ -60,14 +60,14 @@
 <pre><code>   composer install
    cp .env.example .env
    php bin/console doctrine:migrations:migrate --no-interaction</code></pre>
-<p>2. Open UI `/payment/console` and create/start payment.</p>
-<p>3. Deliver webhook to `/webhook/stripe` or `/webhook/paypal`.</p>
+<p>2. Open UI <code>/payment/console</code> and create/start payment.</p>
+<p>3. Deliver webhook to <code>/webhook/stripe</code> or <code>/webhook/paypal</code>.</p>
 <p>4. Process outbox:</p>
 <pre><code>   php bin/console payment:outbox:process --limit=50 --retry</code></pre>
-<p>5. Inspect queue lag and failures via `/payment/dlq`, then replay as needed.</p>
-<p>6. Validate health/metrics with `/status` and `/metrics`.</p>
+<p>5. Inspect queue lag and failures via <code>/payment/dlq</code>, then replay as needed.</p>
+<p>6. Validate health/metrics with <code>/status</code> and <code>/metrics</code>.</p>
 <h2>Internal RC acceptance gate</h2>
-<p>Internal RC is declared only when all proof-pack steps are green in `summary.md`.</p></article>
+<p>Internal RC is declared only when all proof-pack steps are green in <code>summary.md</code>.</p></article>
   </div>
 </body>
 </html>

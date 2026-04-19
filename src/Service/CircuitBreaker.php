@@ -7,6 +7,7 @@ namespace App\Service;
 
 use App\ServiceInterface\CircuitBreakerInterface;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 
 /**
  * Provides the circuit breaker service used by the payment lifecycle and operator-facing flows.
@@ -20,7 +21,7 @@ readonly class CircuitBreaker implements CircuitBreakerInterface
     /**
      * Determines whether the is open condition is currently satisfied.
      *
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function isOpen(string $key): bool
     {
@@ -40,7 +41,7 @@ readonly class CircuitBreaker implements CircuitBreakerInterface
     /**
      * Records the state transition performed by the record success operation.
      *
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function recordSuccess(string $key): void
     {
@@ -50,7 +51,7 @@ readonly class CircuitBreaker implements CircuitBreakerInterface
     /**
      * Records the state transition performed by the record failure operation.
      *
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function recordFailure(string $key): void
     {

@@ -54,36 +54,36 @@ composer qa:report</code></pre>
 <h2>Pipeline</h2>
 <p>Local pipeline:</p>
 <pre><code>composer pipeline:local:sh</code></pre>
-<p>Includes Playwright Chromium UI run (`composer test:ui:playwright`), so ensure Node dependencies and browser are</p>
+<p>Includes Playwright Chromium UI run (<code>composer test:ui:playwright</code>), so ensure Node dependencies and browser are</p>
 <p>installed before running the pipeline.</p>
 <p>Full/strict contour (smokes + reports + fail-on-errors):</p>
 <pre><code>bash tools/ci/run-payment-local-pipeline.sh --include-smokes --include-reports --fail-on-errors</code></pre>
 <h2>Reconciliation walkthrough</h2>
 <p>1. Start or finalize a payment.</p>
-<p>2. Deliver a webhook (`/webhook/stripe` or `/webhook/paypal`).</p>
+<p>2. Deliver a webhook (<code>/webhook/stripe</code> or <code>/webhook/paypal</code>).</p>
 <p>3. Process outbox:</p>
 <pre><code>   php bin/console payment:outbox:process --limit=50 --retry</code></pre>
 <p>4. (Optional) consume transport:</p>
 <pre><code>   php bin/console messenger:consume payment_events_in -vv</code></pre>
-<p>5. Validate payment state via `GET /api/payments/{id}` and UI payment card.</p>
+<p>5. Validate payment state via <code>GET /api/payments/{id}</code> and UI payment card.</p>
 <h2>Webhook log walkthrough</h2>
 <p>1. POST a valid webhook payload to provider endpoint.</p>
-<p>2. Verify dedupe/status behavior in `payment_webhook_log` and UI webhook visibility table.</p>
+<p>2. Verify dedupe/status behavior in <code>payment_webhook_log</code> and UI webhook visibility table.</p>
 <p>3. Re-send same event ID and confirm duplicate behavior (no double processing).</p>
 <h2>Outbox / DLQ / retry proof</h2>
 <p>1. Trigger event ingestion.</p>
 <p>2. Run outbox processor command.</p>
-<p>3. Check `/payment/dlq` list endpoint for failed items.</p>
+<p>3. Check <code>/payment/dlq</code> list endpoint for failed items.</p>
 <p>4. Replay selected item:</p>
 <pre><code>   curl -X POST http://localhost:8000/payment/dlq/replay/{id}</code></pre>
-<p>5. Re-run outbox processor with `--retry` and validate state.</p>
+<p>5. Re-run outbox processor with <code>--retry</code> and validate state.</p>
 <h2>SLA and report commands</h2>
 <pre><code>composer report:runtime-proof
 composer report:route-inventory
 composer install:proof:checklist
 composer proof:pack:sh</code></pre>
 <h2>Canonical proof pack</h2>
-<p>Use `docs/PROOF_PACK.md` for the single RC readiness flow and artifact contract.</p></article>
+<p>Use <a href="PROOF_PACK.html"><code>docs/PROOF_PACK.md</code></a> for the single RC readiness flow and artifact contract.</p></article>
   </div>
 </body>
 </html>

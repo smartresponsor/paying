@@ -17,12 +17,12 @@ final class Version20260401030000 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql("ALTER TABLE payment ADD COLUMN IF NOT EXISTS order_id VARCHAR(128) DEFAULT NULL");
+        $this->addSql('ALTER TABLE payment ADD COLUMN IF NOT EXISTS order_id VARCHAR(128) DEFAULT NULL');
         $this->addSql("UPDATE payment SET order_id = id WHERE order_id IS NULL OR order_id = ''");
-        $this->addSql("ALTER TABLE payment ALTER COLUMN order_id SET NOT NULL");
+        $this->addSql('ALTER TABLE payment ALTER COLUMN order_id SET NOT NULL');
         $this->addSql('CREATE INDEX IF NOT EXISTS idx_payment_order_id ON payment (order_id)');
 
-        $this->addSql("ALTER TABLE payment_projection ADD COLUMN IF NOT EXISTS order_id VARCHAR(128) DEFAULT NULL");
+        $this->addSql('ALTER TABLE payment_projection ADD COLUMN IF NOT EXISTS order_id VARCHAR(128) DEFAULT NULL');
         $this->addSql('CREATE INDEX IF NOT EXISTS idx_payment_projection_order_id ON payment_projection (order_id)');
         $this->addSql("UPDATE payment_projection pp SET order_id = p.order_id, provider_ref = p.provider_ref FROM payment p WHERE pp.id = p.id AND (pp.order_id IS NULL OR pp.order_id = '')");
     }

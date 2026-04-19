@@ -9,6 +9,8 @@ use App\Attribute\RequireScope;
 use App\ControllerInterface\MetricControllerInterface;
 use App\ServiceInterface\MetricInterface;
 use App\ServiceInterface\ProjectionLagServiceInterface;
+use Nelmio\ApiDocBundle\Attribute\Security;
+use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,6 +27,17 @@ final readonly class MetricController implements MetricControllerInterface
     }
 
     #[RequireScope(['payment:read'])]
+    #[OA\Get(
+        path: '/metrics',
+        summary: 'Render payment metrics and projection lag telemetry.',
+        tags: ['Payment Operations'],
+        responses: [
+            new OA\Response(response: 200, description: 'Prometheus-style metrics payload.'),
+            new OA\Response(response: 401, description: 'Missing or invalid bearer token.'),
+            new OA\Response(response: 403, description: 'Missing payment:read scope.'),
+        ],
+    )]
+    #[Security(name: 'Bearer')]
     /**
      * Renders the text-based metrics payload for observability collectors.
      */

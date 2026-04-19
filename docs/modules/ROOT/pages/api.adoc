@@ -20,6 +20,5 @@ Runtime publication points are expected at:
 
 * `/api/docs`
 * `/api/docs.json`
-* `/api/docs.yaml`
 
 If Nelmio/OpenAPI is present, the contract should continue to be generated and served there rather than duplicated manually inside Antora.

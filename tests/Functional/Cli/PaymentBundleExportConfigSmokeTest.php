@@ -38,5 +38,7 @@ final class PaymentBundleExportConfigSmokeTest extends TestCase
         self::assertStringContainsString("secret: '%env(APP_SECRET)%'", $framework);
         self::assertStringContainsString('paying.storage.data_server_version', $doctrine);
         self::assertStringContainsString('%paying.messenger.dsn%', $messenger);
+        self::assertStringContainsString('%env(default::OIDC_ISSUER)%', $services);
+        self::assertStringContainsString('%env(default::OIDC_AUDIENCE)%', $services);
     }
 }

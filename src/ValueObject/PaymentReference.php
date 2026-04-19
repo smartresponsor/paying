@@ -8,9 +8,9 @@ namespace App\ValueObject;
 /**
  * Represents the payment reference value object used by the payment lifecycle and related contracts.
  */
-final class PaymentReference
+final readonly class PaymentReference
 {
-    public function __construct(private readonly string $value)
+    public function __construct(private string $value)
     {
         if ('' === $value) {
             throw new \InvalidArgumentException('PaymentReference cannot be empty');

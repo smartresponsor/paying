@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace DoctrineMigrations;
 
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\Migrations\AbstractMigration;
 
 /**
@@ -24,7 +25,7 @@ final class Version20251108WebhookLog extends AbstractMigration
     /**
      * @param \Doctrine\DBAL\Schema\Schema $schema
      * @return void
-     * @throws \Doctrine\DBAL\Schema\SchemaException
+     * @throws SchemaException
      */
     public function up(Schema $schema): void
     {
@@ -50,7 +51,7 @@ final class Version20251108WebhookLog extends AbstractMigration
     /**
      * @param \Doctrine\DBAL\Schema\Schema $schema
      * @return void
-     * @throws \Doctrine\DBAL\Schema\SchemaException
+     * @throws SchemaException
      */
     public function down(Schema $schema): void
     {

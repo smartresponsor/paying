@@ -45,5 +45,4 @@ The highest-value next step after this proof remains the integrated vertical:
 
 - `webhook -> outbox -> consumer`
 
-The installed-runtime fixture execution proof is still a follow-up item because the current slice still lacks lock/CI
-closure.
+The installed-runtime fixture execution proof is still a follow-up item because the current slice does not yet attach executed proof artifacts from an installed runtime.

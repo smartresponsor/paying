@@ -65,7 +65,7 @@ final readonly class PayPalPaymentProvider implements PaymentProviderInterface
         $amountMinor = (int) round(((float) $amount) * 100);
         $providerRef = $this->gateway->refund((string) $id, $amountMinor, $currency);
 
-        return (new Payment($id, PaymentStatus::refunded, $amount, $currency))->withProviderRef($providerRef);
+        return new Payment($id, PaymentStatus::refunded, $amount, $currency)->withProviderRef($providerRef);
     }
 
     /**
@@ -73,7 +73,7 @@ final readonly class PayPalPaymentProvider implements PaymentProviderInterface
      */
     public function reconcile(Ulid $id): Payment
     {
-        return (new Payment($id, PaymentStatus::processing, '0.00', 'USD'))->withProviderRef('paypal_reconcile_'.(string) $id);
+        return new Payment($id, PaymentStatus::processing, '0.00', 'USD')->withProviderRef('paypal_reconcile_'.$id);
     }
 
     private function resolveStatus(string $status): PaymentStatus

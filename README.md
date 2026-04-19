@@ -17,10 +17,10 @@ Canonical documentation package:
 Documentation surfaces are intentionally split:
 
 - Antora producer pages: `docs/antora.yml` + `docs/modules/ROOT/pages/`
-- Nelmio/OpenAPI HTTP contract generation: runtime publication via `/api/docs`, `/api/docs.json`, `/api/docs.yaml`
+- Nelmio/OpenAPI HTTP contract generation: runtime publication via `/api/docs`, `/api/docs.json`
 - Swagger UI: browser-facing viewer for the Nelmio/OpenAPI contract, not a separate documentation system
 - Exported OpenAPI artifact: `docs/api/openapi.yaml`
-- Doctum generated code reference: `doctum.php` -> `docs/generated/doctum/`
+- Doctum generated code reference: producer config via `doctum.php`; checked-in generated output is not included in the current slice
 
 Canonical narrative entry set:
 
@@ -64,7 +64,7 @@ Antora producer entry pages mirror that split and stay intentionally thin:
 ### Real provider support (current truth)
 
 - Payment provider router (start/finalize/refund/reconcile): `internal`, `stripe`, `paypal`.
-- Dedicated webhook ingest endpoints: `stripe`, `paypal`.
+- Dedicated webhook ingest endpoints: `stripe`, `paypal`; firewall access stays public for provider ingress, while signature verification remains mandatory at the controller/service layer.
 - Generic webhook verifier supports signatures for `stripe`, `adyen`; unknown providers can be allowed only via env
   flag.
 

@@ -8,9 +8,9 @@ namespace App\ValueObject;
 /**
  * Represents the transaction id value object used by the payment lifecycle and related contracts.
  */
-final class TransactionId
+final readonly class TransactionId
 {
-    public function __construct(private readonly string $value)
+    public function __construct(private string $value)
     {
         if ('' === $value) {
             throw new \InvalidArgumentException('TransactionId cannot be empty');

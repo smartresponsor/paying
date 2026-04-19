@@ -12,9 +12,9 @@ The current slice already contains:
 - `.yamllint.yml`
 - smoke scripts under `tools/smoke`
 
-## Missing operational gate contour
+## Owned operational gate contour
 
-The repository still needs a canonical, executable QA matrix.
+The repository already owns a canonical QA/tooling matrix; the remaining gap is executed proof from an installed runtime.
 
 ## Target Composer scripts
 
@@ -45,10 +45,10 @@ A Payment slice should be considered green only when all of the following pass:
 
 ## Important note
 
-The current slice has quality-tool files, but not yet a full proof-oriented gate system. The next engineering phase
-should turn tool presence into an actual executable release gate.
+The current slice already owns the files and workflows for a proof-oriented gate system. The next engineering phase
+should execute that owned matrix from an installed runtime and attach the resulting proof artifacts.
 
-## Closure update after wave 35
+## Closure update
 
 The repository now contains the missing owned pieces that previously kept the quality contour open:
 

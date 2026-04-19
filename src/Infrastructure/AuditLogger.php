@@ -7,6 +7,7 @@ namespace App\Infrastructure;
 
 use App\InfrastructureInterface\AuditLoggerInterface;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 
 /**
  * Persists payment audit records for operator and system-visible lifecycle actions.
@@ -20,14 +21,14 @@ readonly class AuditLogger implements AuditLoggerInterface
     /**
      * Writes a payment audit entry to the operational database.
      *
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function log(string $action, array $context = []): void
     {
         $this->data->insert('payment_audit', [
             'action' => $action,
             'context' => json_encode($context),
-            'created_at' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+            'created_at' => new \DateTimeImmutable()->format('Y-m-d H:i:s'),
         ]);
     }
 }

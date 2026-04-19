@@ -16,11 +16,11 @@ class OidcJwksCache implements OidcJwksCacheInterface
     private int $ttl;
     private string $jwksUrl;
 
-    public function __construct(string $cacheDir = __DIR__.'/../../../var/cache', int $ttl = 3600, string $jwksUrl = '')
+    public function __construct(string $cacheDir = __DIR__.'/../../../var/cache', int $ttl = 3600, ?string $jwksUrl = null)
     {
         $this->cacheFile = rtrim($cacheDir, '/').'/jwks.json';
         $this->ttl = $ttl;
-        $this->jwksUrl = trim($jwksUrl);
+        $this->jwksUrl = trim((string) ($jwksUrl ?? ''));
     }
 
     /**
@@ -39,7 +39,11 @@ class OidcJwksCache implements OidcJwksCacheInterface
         $context = stream_context_create(['http' => ['timeout' => 3]]);
         $json = @file_get_contents($this->jwksUrl, false, $context);
         if (false !== $json) {
-            @file_put_contents($this->cacheFile, $json);
+            $cacheDir = dirname($this->cacheFile);
+            if (!is_dir($cacheDir)) {
+                @mkdir($cacheDir, 0777, true);
+            }
+            @file_put_contents($this->cacheFile, $json, LOCK_EX);
 
             return $this->decode($json);
         }
@@ -47,7 +51,7 @@ class OidcJwksCache implements OidcJwksCacheInterface
         return ['keys' => []];
     }
 
-    /** @return array{keys: list<array{n: string, e: string, kty?: string, kid?: string}>} */
+    /** @return array{keys: list<array{n: string, e: string, kty?: string, kid?: string, use?: string, alg?: string}>} */
     private function decode(string $json): array
     {
         $decoded = json_decode($json, true);
@@ -83,6 +87,16 @@ class OidcJwksCache implements OidcJwksCacheInterface
             $kty = trim((string) ($key['kty'] ?? ''));
             if ('' !== $kty) {
                 $row['kty'] = $kty;
+            }
+
+            $use = trim((string) ($key['use'] ?? ''));
+            if ('' !== $use) {
+                $row['use'] = $use;
+            }
+
+            $alg = trim((string) ($key['alg'] ?? ''));
+            if ('' !== $alg) {
+                $row['alg'] = $alg;
             }
 
             $normalized[] = $row;

@@ -10,12 +10,12 @@ use App\ServiceInterface\WebhookVerifierInterface;
 /**
  * Provides the webhook verifier service used by the payment lifecycle and operator-facing flows.
  */
-class WebhookVerifier implements WebhookVerifierInterface
+readonly class WebhookVerifier implements WebhookVerifierInterface
 {
     public function __construct(
-        private readonly string $stripeWebhookSecret = '',
-        private readonly bool $allowUnknown = false,
-        private readonly string $adyenHmacSecret = '',
+        private string $stripeWebhookSecret = '',
+        private bool $allowUnknown = false,
+        private string $adyenHmacSecret = '',
     ) {
     }
 

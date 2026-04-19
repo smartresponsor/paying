@@ -46,7 +46,7 @@ class PaymentWebhookLog
 
     public function __construct(string $provider, string $externalEventId, array $payload)
     {
-        $this->id = (new Ulid())->toRfc4122();
+        $this->id = new Ulid()->toRfc4122();
         $this->provider = strtolower($provider);
         $this->externalEventId = $externalEventId;
         $this->payload = $payload;

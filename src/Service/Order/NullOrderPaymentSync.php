@@ -11,9 +11,9 @@ use Psr\Log\LoggerInterface;
 /**
  * Provides the null order payment sync service used by the payment lifecycle and operator-facing flows.
  */
-final class NullOrderPaymentSync implements OrderPaymentSyncInterface
+final readonly class NullOrderPaymentSync implements OrderPaymentSyncInterface
 {
-    public function __construct(private readonly LoggerInterface $logger)
+    public function __construct(private LoggerInterface $logger)
     {
     }
 

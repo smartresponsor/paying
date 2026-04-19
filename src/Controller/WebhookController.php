@@ -10,6 +10,7 @@ use App\ServiceInterface\ApiJsonBodyDecoderInterface;
 use App\ServiceInterface\EventMapperInterface;
 use App\ServiceInterface\ProviderGuardInterface;
 use App\ServiceInterface\WebhookVerifierInterface;
+use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,6 +30,16 @@ final readonly class WebhookController implements WebhookControllerInterface
     ) {
     }
 
+    #[OA\Post(
+        path: '/payment/webhook/{provider}',
+        summary: 'Accept a generic provider webhook callback.',
+        tags: ['Payment Webhooks'],
+        responses: [
+            new OA\Response(response: 200, description: 'Webhook accepted or safely ignored.'),
+            new OA\Response(response: 400, description: 'Invalid signature or malformed payload.'),
+        ],
+    )]
+    #[OA\Parameter(name: 'provider', in: 'path', required: true, schema: new OA\Schema(type: 'string'))]
     /**
      * Verifies the provider callback payload and reconciles the referenced payment when possible.
      */

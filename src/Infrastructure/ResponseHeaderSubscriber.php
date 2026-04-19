@@ -14,6 +14,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class ResponseHeaderSubscriber implements EventSubscriberInterface
 {
+    public function __construct(
+        private readonly string $contentSecurityPolicy = "default-src 'self'",
+    ) {
+    }
+
     /**
      * Returns the Symfony event subscriptions exposed by this subscriber.
      *
@@ -29,11 +34,14 @@ class ResponseHeaderSubscriber implements EventSubscriberInterface
      */
     public function onResponse(ResponseEvent $event): void
     {
-        $resp = $event->getResponse();
-        $csp = (string) ($_ENV['CSP_HEADER'] ?? "default-src 'self'");
-        $resp->headers->set('Content-Security-Policy', $csp);
-        $resp->headers->set('X-Content-Type-Options', 'nosniff');
-        $resp->headers->set('X-Frame-Options', 'DENY');
-        $resp->headers->set('Referrer-Policy', 'no-referrer');
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
+        $response = $event->getResponse();
+        $response->headers->set('Content-Security-Policy', $this->contentSecurityPolicy);
+        $response->headers->set('X-Content-Type-Options', 'nosniff');
+        $response->headers->set('X-Frame-Options', 'DENY');
+        $response->headers->set('Referrer-Policy', 'no-referrer');
     }
 }

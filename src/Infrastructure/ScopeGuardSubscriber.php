@@ -42,6 +42,10 @@ readonly class ScopeGuardSubscriber implements EventSubscriberInterface
      */
     public function onController(ControllerEvent $event): void
     {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
         if ($this->oidcDisabled) {
             return;
         }

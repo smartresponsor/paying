@@ -10,7 +10,7 @@ namespace App\ValueObject;
  */
 final class GatewayCode
 {
-    private const ALLOWED = ['stripe', 'paypal', 'authorize'];
+    private const array ALLOWED = ['stripe', 'paypal', 'authorize'];
 
     public function __construct(private readonly string $value)
     {

@@ -56,4 +56,4 @@ The CLI contour is App-owned and is separate from:
 
 - the HTTP/OpenAPI contour;
 - the Twig console smoke surface;
-- the removed legacy `src/Api/*` API Platform tail.
+- the already-evacuated `src/Api/*` API Platform tail, which should stay out of the runtime tree.

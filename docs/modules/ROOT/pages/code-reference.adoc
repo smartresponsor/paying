@@ -10,7 +10,7 @@ Doctum is the generated code-reference surface for `src/`.
 * Runtime helper: `tools/runtime/payment_doctum.sh`
 * Runtime helper (PowerShell): `tools/runtime/payment_doctum.ps1`
 * Tool presence check: `tools/ci/doctum-check.php`
-* Generated output target: `docs/generated/doctum/`
+* Checked-in generated output: not included in the current slice
 
 The generated code reference is not treated as the primary narrative documentation layer. Antora should link to this surface conceptually while keeping ownership, governance, architecture, install, and operations documentation hand-written.
 

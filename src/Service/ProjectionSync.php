@@ -8,6 +8,7 @@ namespace App\Service;
 use App\InfrastructureInterface\PaymentProjectionRepositoryInterface;
 use App\ServiceInterface\ProjectionSyncInterface;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;
 
 /**
@@ -24,7 +25,7 @@ readonly class ProjectionSync implements ProjectionSyncInterface
     /**
      * Executes the sync operation for the current payment workflow.
      *
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function sync(int $limit = 500): int
     {
@@ -62,7 +63,7 @@ readonly class ProjectionSync implements ProjectionSyncInterface
     /**
      * Executes the rebuild operation for the current payment workflow.
      *
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function rebuild(int $batch = 1000): int
     {

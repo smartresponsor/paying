@@ -36,6 +36,10 @@
 - NelmioApiDocBundle is the canonical HTTP contract generator for this repository.
 - Swagger UI is the browser-facing viewer for that contract and must remain only a presentation layer, not a separate documentation system.
 - Exported OpenAPI source of truth: `docs/api/openapi.yaml`.
-- Runtime publication points: `/api/docs`, `/api/docs.json`, `/api/docs.yaml`.
+- Runtime publication points: `/api/docs`, `/api/docs.json`.
 - Antora is the owner/manual documentation entry surface for this repository.
-- Doctum is the separate generated code-reference surface for `src/`; it must not be mixed into the HTTP contract narrative.
+- Doctum is the separate generated code-reference surface for `src/`; producer configuration is owned in-repo via `doctum.php`, while checked-in generated output is not part of the current slice.
+
+## Operational visibility
+
+Operational endpoints are also published in the OpenAPI/Nelmio surface so the documented contract stays aligned with runtime security expectations for `/status`, `/metrics`, and `/payment/dlq*`.

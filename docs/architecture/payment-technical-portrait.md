@@ -2,7 +2,7 @@
 
 ## Current state
 
-The `Paying/Payment` component is now structurally canonical enough to be treated as a single Symfony-oriented
+The component is now structurally canonical enough to be treated as a single Symfony-oriented
 application under `App\ -> src/`. The repository already contains live contours for:
 
 - payment lifecycle (`Payment`, `PaymentStatus`, start/finalize/refund flows)
@@ -37,13 +37,13 @@ The component currently acts as a coordinator for:
 
 The following seams show an already recognisable payment process:
 
-- `src/Entity/Payment/Payment.php`
-- `src/ValueObject/Payment/PaymentStatus.php`
-- `src/Controller/Payment/StartController.php`
-- `src/Controller/Payment/FinalizeController.php`
-- `src/Service/Payment/RefundService.php`
-- `src/Message/Handler/Payment/PaymentCreateHandler.php`
-- `src/Message/Handler/Payment/PaymentRefundHandler.php`
+- `src/Entity/Payment.php`
+- payment lifecycle state/value handling in the current `src/Service` + entity contour
+- `src/Controller/StartController.php`
+- `src/Controller/FinalizeController.php`
+- `src/Service/RefundService.php`
+- `src/Service/PaymentService.php`
+- `src/Service/PaymentApiStartHandler.php`
 
 ### Webhook contour
 
@@ -69,32 +69,20 @@ The repository also contains explicit durability seams:
 
 ## Technical risks that remain
 
-### 1. Dependency graph does not match the code
+### 1. Installed-runtime proof remains stronger risk than package ownership
 
-There is a factual mismatch between what the code imports and what `composer.json` currently requires.
+The current slice already declares the main package contour in `composer.json` and `composer.lock`.
 
-Observed examples from the current slice:
+The higher-value remaining risk is not missing package declarations, but the absence of attached proof that the locked
+graph was actually installed and executed end-to-end for the current slice.
 
-- `ApiPlatform\Metadata\ApiResource` and `ApiPlatform\State\ProcessorInterface` are used under `src/Api/*`
-- `Symfony\Component\Messenger\*` is used by message handlers/processors/transport code
-- `Symfony\Bundle\FrameworkBundle\Test\WebTestCase` is used by functional/e2e tests
-- `Symfony\Component\Validator\Constraints` is used by DTOs
-- `Symfony\Component\Serializer\Annotation\Groups` is used by API resource classes
-- `Psr\Log\LoggerInterface` is wired from Monolog-style service definitions
+### 2. Test contour is present, but installed execution proof is still incomplete
 
-But `composer.json` does not currently declare the full matching package contour.
+The current slice contains a canonical `phpunit.xml.dist`, owned Composer test scripts, and explicit bootstrap helpers.
 
-### 2. API Platform transitional tail still exists
+The remaining gap is attached proof from an installed runtime rather than missing test ownership.
 
-The repository still contains API Platform resources and processors under `src/Api/*`. This is transitional and
-conflicts with the target direction of explicit Symfony controllers plus Nelmio-based OpenAPI documentation.
-
-### 3. Test contour is present, but not yet fully operationalised
-
-The current slice contains real tests under `tests/*`, but the repository still lacks a canonical `phpunit.xml.dist` and
-a fully explicit test bootstrap / suite layout.
-
-### 4. Quality gates exist as files, but not as a complete pipeline
+### 3. Quality gates exist as owned repository contour, but not yet as attached installed proof
 
 The repository contains:
 
@@ -104,30 +92,25 @@ The repository contains:
 - `.yamllint.yml`
 - smoke scripts under `tools/smoke`
 
-However, this is not yet a complete operational QA contour because the repository still lacks a strong script matrix and
-a documented green pipeline.
+However, the main remaining gap is executed and attached proof from that owned matrix, not file ownership.
 
-### 5. Vertical proof is incomplete
+### 4. Vertical proof is incomplete
 
-There are already tests and working seams, but the main business verticals are not yet fully proven end-to-end with a
-clearly documented matrix.
+There are already tests and working seams, but the strongest remaining closure item is executed installed-runtime proof
+that ties those seams together under the locked dependency graph.
 
 ## Immediate conclusion
 
 The next phase should not be more archive cleanup. It should be:
 
-1. dependency normalization
-2. API Platform evacuation
-3. OpenAPI + Nelmio endpoint documentation
-4. fixtures and security/access contour
-5. minimal Twig/Bootstrap operational UI
-6. CLI proof
-7. vertical business-flow proof
-8. documentation refresh
+1. installed-runtime proof
+2. fixtures and operational UI proof
+3. vertical business-flow proof
+4. documentation consolidation around executed proof artifacts
 
 ## Current runtime note
 
-The legacy `src/Api/*` tail has already been evacuated from the current slice. The active HTTP contour is now
+The removed `src/Api/*` API Platform tail is no longer part of the current slice. The active HTTP contour is now
 controller-owned and Symfony-oriented.
 
 ## Current operational proof level

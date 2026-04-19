@@ -11,10 +11,10 @@ use App\ServiceInterface\ProviderRouterInterface;
 /**
  * Provides the provider router service used by the payment lifecycle and operator-facing flows.
  */
-final class ProviderRouter implements ProviderRouterInterface
+final readonly class ProviderRouter implements ProviderRouterInterface
 {
     /** @var array<string, PaymentProviderInterface> */
-    private readonly array $providers;
+    private array $providers;
 
     /** @param iterable<string, PaymentProviderInterface> $providers */
     public function __construct(iterable $providers)
@@ -22,7 +22,7 @@ final class ProviderRouter implements ProviderRouterInterface
         $resolvedProviders = [];
 
         foreach ($providers as $name => $provider) {
-            $resolvedProviders[(string) $name] = $provider;
+            $resolvedProviders[$name] = $provider;
         }
 
         $this->providers = $resolvedProviders;
