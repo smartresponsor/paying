@@ -7,6 +7,7 @@ namespace DoctrineMigrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\SchemaException;
+use Doctrine\DBAL\Types\Exception\TypesException;
 use Doctrine\Migrations\AbstractMigration;
 
 /**
@@ -25,7 +26,6 @@ final class Version20251108WebhookLog extends AbstractMigration
     /**
      * @param Schema $schema
      * @return void
-     * @throws SchemaException
      */
     public function up(Schema $schema): void
     {

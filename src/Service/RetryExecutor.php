@@ -34,23 +34,7 @@ readonly class RetryExecutor implements RetryExecutorInterface
         while (true) {
             try {
                 return $callable();
-            } catch (\Throwable $e) {
-                if ($attempt >= $this->maxAttempts) {
-                    $this->metric->incRetryExhausted();
-                    throw $e;
-                }
-
-                $this->metric->incRetryAttempt();
-
-                $delay = min($sleep, $this->maxSleepMs);
-                if ($this->jitterMs > 0) {
-                    $delay += random_int(0, $this->jitterMs);
-                }
-
-                usleep($delay * 1000);
-
-                $sleep = (int) ($sleep * $this->multiplier);
-                ++$attempt;
+            } catch (RandomException $e) {
             } catch (RandomException $e) {
             }
         }
