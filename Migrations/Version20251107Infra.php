@@ -23,7 +23,7 @@ final class Version20251107Infra extends AbstractMigration
     }
 
     /**
-     * @param \Doctrine\DBAL\Schema\Schema $schema
+     * @param Schema $schema
      * @return void
      * @throws SchemaException
      */
@@ -51,7 +51,7 @@ final class Version20251107Infra extends AbstractMigration
     }
 
     /**
-     * @param \Doctrine\DBAL\Schema\Schema $schema
+     * @param Schema $schema
      * @return void
      * @throws SchemaException
      */

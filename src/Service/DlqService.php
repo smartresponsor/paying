@@ -63,10 +63,10 @@ final readonly class DlqService implements DlqServiceInterface
         }
 
         $this->data->insert('payment_outbox_message', [
-            'id' => (new Ulid())->toRfc4122(),
+            'id' => new Ulid()->toRfc4122(),
             'type' => (string) $row['topic'],
             'payload' => (string) $row['payload'],
-            'occurred_at' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
+            'occurred_at' => new \DateTimeImmutable()->format('Y-m-d H:i:s'),
             'status' => 'pending',
             'attempts' => 0,
             'last_error' => null,

@@ -19,11 +19,9 @@ final readonly class ProviderRouter implements ProviderRouterInterface
     /** @param iterable<string, PaymentProviderInterface> $providers */
     public function __construct(iterable $providers)
     {
-        $resolvedProviders = [];
-
-        foreach ($providers as $name => $provider) {
-            $resolvedProviders[$name] = $provider;
-        }
+        $resolvedProviders = array_map(function ($provider) {
+            return $provider;
+        }, $providers);
 
         $this->providers = $resolvedProviders;
     }

@@ -12,10 +12,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Adds payment-related response headers for observability and client diagnostics.
  */
-class ResponseHeaderSubscriber implements EventSubscriberInterface
+readonly class ResponseHeaderSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly string $contentSecurityPolicy = "default-src 'self'",
+        private string $contentSecurityPolicy = "default-src 'self'",
     ) {
     }
 

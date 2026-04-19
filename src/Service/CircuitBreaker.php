@@ -51,13 +51,16 @@ readonly class CircuitBreaker implements CircuitBreakerInterface
     /**
      * Records the state transition performed by the record failure operation.
      *
+     * @param string $key
+     *
      * @throws Exception
+     * @throws \DateMalformedStringException
      */
     public function recordFailure(string $key): void
     {
         $row = $this->data->fetchAssociative('SELECT failure_count FROM payment_circuit WHERE key = :k', ['k' => $key]);
         $count = $row ? (int) $row['failure_count'] + 1 : 1;
-        $retryAt = (new \DateTimeImmutable())->modify('+'.$this->cooldownSec.' seconds')->format('Y-m-d H:i:s');
+        $retryAt = new \DateTimeImmutable()->modify('+'.$this->cooldownSec.' seconds')->format('Y-m-d H:i:s');
         $this->data->executeStatement(
             'INSERT INTO payment_circuit(key, failure_count, retry_at) VALUES (:k,:c,:r) ON CONFLICT (key) DO UPDATE SET failure_count = EXCLUDED.failure_count, retry_at = EXCLUDED.retry_at',
             ['k' => $key, 'c' => $count, 'r' => $retryAt]

@@ -20,7 +20,7 @@ class OidcJwksCache implements OidcJwksCacheInterface
     {
         $this->cacheFile = rtrim($cacheDir, '/').'/jwks.json';
         $this->ttl = $ttl;
-        $this->jwksUrl = trim((string) ($jwksUrl ?? ''));
+        $this->jwksUrl = trim($jwksUrl ?? '');
     }
 
     /**

@@ -51,13 +51,13 @@ readonly class TokenVerifier implements TokenVerifierInterface
             throw new \RuntimeException('jwt-not-before');
         }
 
-        $issuer = trim((string) ($this->issuer ?? ''));
+        $issuer = trim($this->issuer ?? '');
         $payloadIssuer = isset($payload['iss']) && is_string($payload['iss']) ? $payload['iss'] : '';
         if ('' !== $issuer && $payloadIssuer !== $issuer) {
             throw new \RuntimeException('iss-mismatch');
         }
 
-        $audience = trim((string) ($this->audience ?? ''));
+        $audience = trim($this->audience ?? '');
         if ('' !== $audience) {
             $audClaim = $payload['aud'] ?? null;
             $audiences = is_array($audClaim) ? $audClaim : [$audClaim];
@@ -145,7 +145,7 @@ readonly class TokenVerifier implements TokenVerifierInterface
         $algorithmIdentifier = "\x30\x0D\x06\x09\x2A\x86\x48\x86\xF7\x0D\x01\x01\x01\x05\x00";
         $subjectPublicKeyInfo = "\x30".$this->derLen(strlen($algorithmIdentifier) + strlen($bitString)).$algorithmIdentifier.$bitString;
 
-        return "-----BEGIN PUBLIC KEY-----\n".chunk_split(base64_encode($subjectPublicKeyInfo), 64, "\n")."-----END PUBLIC KEY-----\n";
+        return "-----BEGIN PUBLIC KEY-----\n".chunk_split(base64_encode($subjectPublicKeyInfo), 64)."-----END PUBLIC KEY-----\n";
     }
 
     private function derInt(string $bytes): string
@@ -175,7 +175,7 @@ readonly class TokenVerifier implements TokenVerifierInterface
             throw new \RuntimeException('jwt-format');
         }
 
-        return [(string) $parts[0], (string) $parts[1], (string) $parts[2]];
+        return [$parts[0], $parts[1], $parts[2]];
     }
 
     /** @return array<string, mixed> */
@@ -200,7 +200,7 @@ readonly class TokenVerifier implements TokenVerifierInterface
 
         foreach ($claims as $key => $value) {
             if (is_bool($value) || is_int($value) || is_float($value) || is_string($value) || null === $value) {
-                $normalized[(string) $key] = $value;
+                $normalized[$key] = $value;
                 continue;
             }
 
@@ -218,7 +218,7 @@ readonly class TokenVerifier implements TokenVerifierInterface
                 }
 
                 if ($isStringList) {
-                    $normalized[(string) $key] = $stringList;
+                    $normalized[$key] = $stringList;
                 }
             }
         }
