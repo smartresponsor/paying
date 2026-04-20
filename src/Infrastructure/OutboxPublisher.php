@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure;
@@ -39,14 +38,14 @@ readonly class OutboxPublisher implements OutboxPublisherInterface
                 'last_error' => null,
                 'routing_key' => $topic,
             ]);
-        } catch (Exception|\JsonException $e) {
+        } catch (Exception|\JsonException $throwable) {
             $this->logger->error('Failed to enqueue payment outbox message.', [
                 'topic' => $topic,
                 'payload' => $payload,
-                'exception' => $e,
+                'exception' => $throwable,
             ]);
 
-            throw new OutboxOperationException('Unable to enqueue outbox message.', 0, $e);
+            throw new OutboxOperationException('Unable to enqueue outbox message.', 0, $throwable);
         }
     }
 
@@ -60,10 +59,10 @@ readonly class OutboxPublisher implements OutboxPublisherInterface
                 'SELECT * FROM payment_outbox_message WHERE id = :id',
                 ['id' => $id],
             );
-        } catch (Exception $e) {
-            $this->logger->error('Failed to load outbox message for DLQ move.', ['id' => $id, 'exception' => $e]);
+        } catch (Exception $throwable) {
+            $this->logger->error('Failed to load outbox message for DLQ move.', ['id' => $id, 'exception' => $throwable]);
 
-            throw new OutboxOperationException('Unable to read outbox message for DLQ move.', 0, $e);
+            throw new OutboxOperationException('Unable to read outbox message for DLQ move.', 0, $throwable);
         }
 
         if (false === $row) {
@@ -80,10 +79,10 @@ readonly class OutboxPublisher implements OutboxPublisherInterface
                 'reason' => $reason,
                 'created_at' => new \DateTimeImmutable()->format('Y-m-d H:i:s'),
             ]);
-        } catch (Exception $e) {
-            $this->logger->error('Failed to insert payment DLQ message.', ['id' => $id, 'reason' => $reason, 'exception' => $e]);
+        } catch (Exception $throwable) {
+            $this->logger->error('Failed to insert payment DLQ message.', ['id' => $id, 'reason' => $reason, 'exception' => $throwable]);
 
-            throw new OutboxOperationException('Unable to insert DLQ message.', 0, $e);
+            throw new OutboxOperationException('Unable to insert DLQ message.', 0, $throwable);
         }
 
         try {
@@ -91,10 +90,10 @@ readonly class OutboxPublisher implements OutboxPublisherInterface
                 'DELETE FROM payment_outbox_message WHERE id = :id',
                 ['id' => $id],
             );
-        } catch (Exception $e) {
-            $this->logger->error('Failed to delete outbox message after DLQ move.', ['id' => $id, 'exception' => $e]);
+        } catch (Exception $throwable) {
+            $this->logger->error('Failed to delete outbox message after DLQ move.', ['id' => $id, 'exception' => $throwable]);
 
-            throw new OutboxOperationException('Unable to delete outbox message after DLQ move.', 0, $e);
+            throw new OutboxOperationException('Unable to delete outbox message after DLQ move.', 0, $throwable);
         }
     }
 }

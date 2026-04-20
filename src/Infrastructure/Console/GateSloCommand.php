@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure\Console;
@@ -29,12 +28,12 @@ class GateSloCommand extends Command
         $text = $this->metric->export();
         // Fail gate if projection lag > 5000 ms (5s)
         try {
-            $d = (string) ($this->data->fetchOne('SELECT MAX(updated_at) FROM payment') ?: '');
-            $i = $d; // assume infra close to data if cannot query; gate only if clear lag can be measured
+            $dataUpdatedAt = (string) ($this->data->fetchOne('SELECT MAX(updated_at) FROM payment') ?: '');
+            $infraUpdatedAt = $dataUpdatedAt; // assume infra close to data if cannot query; gate only if clear lag can be measured
             if (function_exists('strtotime')) {
                 $lagMs = 0;
-                if ($d && $i) {
-                    $lagMs = max(0, (strtotime($d) - strtotime($i)) * 1000);
+                if ($dataUpdatedAt && $infraUpdatedAt) {
+                    $lagMs = max(0, (strtotime($dataUpdatedAt) - strtotime($infraUpdatedAt)) * 1000);
                 }
                 if ($lagMs > 5000) {
                     $output->writeln('projection_lag_ms '.$lagMs);
@@ -42,12 +41,12 @@ class GateSloCommand extends Command
                     return Command::FAILURE;
                 }
             }
-        } catch (\Throwable $e) {
-            $this->logger->warning('Unable to measure payment projection lag.', ['exception' => $e]);
+        } catch (\Throwable $throwable) {
+            $this->logger->warning('Unable to measure payment projection lag.', ['exception' => $throwable]);
         }
 
         $output->writeln($text);
-        if (preg_match('/payment_failure_total\\s+(\\d+)/', $text, $m) && (int) $m[1] > 0) {
+        if (preg_match('/payment_failure_total\\s+(\\d+)/', $text, $matches) && (int) $matches[1] > 0) {
             return Command::FAILURE;
         }
 

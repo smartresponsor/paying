@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure;
@@ -38,10 +37,10 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
                 'SELECT id, order_id, amount, currency, status, provider_ref, updated_at FROM payment_projection WHERE id = :id',
                 ['id' => $id],
             );
-        } catch (Exception $e) {
-            $this->logger->error('Failed to fetch payment projection by ID.', ['id' => $id, 'exception' => $e]);
+        } catch (Exception $exception) {
+            $this->logger->error('Failed to fetch payment projection by ID.', ['id' => $id, 'exception' => $exception]);
 
-            throw $e;
+            throw $exception;
         }
 
         return false !== $row ? $row : null;
@@ -65,10 +64,10 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
                 ['st' => $status, 'lim' => $limit],
                 ['st' => ParameterType::STRING, 'lim' => ParameterType::INTEGER],
             );
-        } catch (Exception $e) {
-            $this->logger->error('Failed to list payment projections by status.', ['status' => $status, 'limit' => $limit, 'exception' => $e]);
+        } catch (Exception $exception) {
+            $this->logger->error('Failed to list payment projections by status.', ['status' => $status, 'limit' => $limit, 'exception' => $exception]);
 
-            throw $e;
+            throw $exception;
         }
     }
 
@@ -77,29 +76,35 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
      */
     public function upsert(array $row): void
     {
-        $this->infra->transactional(function (Connection $connection) use ($row): void {
-            $id = (string) ($row['id'] ?? '');
-            if ('' === $id) {
-                throw new \InvalidArgumentException('Projection row id is required.');
-            }
+        try {
+            $this->infra->transactional(function (Connection $connection) use ($row): void {
+                $id = (string) ($row['id'] ?? '');
+                if ('' === $id) {
+                    throw new \InvalidArgumentException('Projection row id is required.');
+                }
 
-            $payload = [
-                'order_id' => (string) ($row['order_id'] ?? ($row['orderId'] ?? '')),
-                'amount' => (string) ($row['amount'] ?? '0.00'),
-                'currency' => (string) ($row['currency'] ?? ''),
-                'status' => (string) ($row['status'] ?? ''),
-                'provider_ref' => isset($row['provider_ref'])
-                    ? (string) $row['provider_ref']
-                    : (isset($row['providerRef']) ? (string) $row['providerRef'] : null),
-                'updated_at' => (string) ($row['updated_at'] ?? ''),
-            ];
+                $payload = [
+                    'order_id' => (string) ($row['order_id'] ?? ($row['orderId'] ?? '')),
+                    'amount' => (string) ($row['amount'] ?? '0.00'),
+                    'currency' => (string) ($row['currency'] ?? ''),
+                    'status' => (string) ($row['status'] ?? ''),
+                    'provider_ref' => isset($row['provider_ref'])
+                        ? (string) $row['provider_ref']
+                        : (isset($row['providerRef']) ? (string) $row['providerRef'] : null),
+                    'updated_at' => (string) ($row['updated_at'] ?? ''),
+                ];
 
-            $updated = $connection->update('payment_projection', $payload, ['id' => $id]);
+                $updated = $connection->update('payment_projection', $payload, ['id' => $id]);
 
-            if (0 === $updated) {
-                $connection->insert('payment_projection', ['id' => $id] + $payload);
-            }
-        });
+                if (0 === $updated) {
+                    $connection->insert('payment_projection', ['id' => $id] + $payload);
+                }
+            });
+        } catch (\Throwable $throwable) {
+            $this->logger->error('Failed to upsert payment projection row.', ['row' => $row, 'exception' => $throwable]);
+
+            throw $throwable;
+        }
     }
 
     /**
@@ -109,10 +114,10 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
     {
         try {
             $row = $this->infra->fetchOne('SELECT MAX(updated_at) FROM payment_projection');
-        } catch (Exception $e) {
-            $this->logger->error('Failed to read payment projection max updated_at.', ['exception' => $e]);
+        } catch (Exception $exception) {
+            $this->logger->error('Failed to read payment projection max updated_at.', ['exception' => $exception]);
 
-            throw $e;
+            throw $exception;
         }
 
         return $row ? (string) $row : null;
@@ -125,10 +130,10 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
     {
         try {
             $row = $this->infra->fetchOne("SELECT value FROM payment_projection_meta WHERE name = 'watermark'");
-        } catch (Exception $e) {
-            $this->logger->error('Failed to read payment projection watermark.', ['exception' => $e]);
+        } catch (Exception $exception) {
+            $this->logger->error('Failed to read payment projection watermark.', ['exception' => $exception]);
 
-            throw $e;
+            throw $exception;
         }
 
         return $row ? (string) $row : null;
@@ -139,10 +144,16 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
      */
     public function saveWatermark(string $ts): void
     {
-        $updated = $this->infra->update('payment_projection_meta', ['value' => $ts], ['name' => 'watermark']);
+        try {
+            $updated = $this->infra->update('payment_projection_meta', ['value' => $ts], ['name' => 'watermark']);
 
-        if (0 === $updated) {
-            $this->infra->insert('payment_projection_meta', ['name' => 'watermark', 'value' => $ts]);
+            if (0 === $updated) {
+                $this->infra->insert('payment_projection_meta', ['name' => 'watermark', 'value' => $ts]);
+            }
+        } catch (Exception $exception) {
+            $this->logger->error('Failed to save payment projection watermark.', ['watermark' => $ts, 'exception' => $exception]);
+
+            throw $exception;
         }
     }
 }

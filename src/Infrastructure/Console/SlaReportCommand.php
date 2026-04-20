@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure\Console;
@@ -25,6 +24,8 @@ class SlaReportCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
+
         $this->addArgument('window', InputArgument::OPTIONAL, 'ISO interval like P1D/PT24H', 'P1D');
     }
 
@@ -33,8 +34,8 @@ class SlaReportCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $win = (string) $input->getArgument('window');
-        $data = $this->sla->since($win);
+        $window = (string) $input->getArgument('window');
+        $data = $this->sla->since($window);
         $output->writeln((string) json_encode($data, JSON_THROW_ON_ERROR));
 
         return Command::SUCCESS;

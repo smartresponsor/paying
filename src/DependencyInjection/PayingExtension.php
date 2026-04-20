@@ -1,5 +1,5 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\DependencyInjection;
@@ -19,6 +19,8 @@ final class PayingExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container): void
     {
+        parent::load($configs, $container);
+
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 

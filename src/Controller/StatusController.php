@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Controller;
@@ -44,8 +43,8 @@ final readonly class StatusController implements StatusControllerInterface
     {
         try {
             return new JsonResponse($this->projectionLag->snapshot(), Response::HTTP_OK);
-        } catch (\Throwable $e) {
-            $this->logger->warning('Unable to calculate payment status projection lag.', ['exception' => $e]);
+        } catch (\Throwable $throwable) {
+            $this->logger->warning('Unable to calculate payment status projection lag.', ['exception' => $throwable]);
 
             return new JsonResponse([
                 'updatedAtData' => '',

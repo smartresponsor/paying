@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure;
@@ -45,7 +44,7 @@ readonly class DbalIdempotencyStore implements IdempotencyStoreInterface
      */
     public function put(string $key, string $value, int $ttlSec): void
     {
-        $exp = new \DateTimeImmutable("+{$ttlSec} seconds")->format('Y-m-d H:i:s');
+        $exp = new \DateTimeImmutable("+$ttlSec seconds")->format('Y-m-d H:i:s');
         $this->data->executeStatement(
             'INSERT INTO payment_idempotency(key, value, expires_at) VALUES(:k,:v,:e)
              ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, expires_at = EXCLUDED.expires_at',

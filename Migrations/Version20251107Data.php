@@ -1,6 +1,5 @@
 <?php
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 namespace DoctrineMigrations;
@@ -27,6 +26,10 @@ final class Version20251107Data extends AbstractMigration
      */
     public function up(Schema $schema): void
     {
+        if (method_exists(parent::class, __FUNCTION__)) {
+            parent::up($schema);
+        }
+
         $this->addSql('CREATE TABLE IF NOT EXISTS payment (id VARCHAR(26) NOT NULL, status VARCHAR(16) NOT NULL, amount NUMERIC(14,2) NOT NULL, currency VARCHAR(3) NOT NULL, provider_ref VARCHAR(128) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX IF NOT EXISTS uniq_payment_id ON payment (id)');
         $this->addSql('CREATE INDEX IF NOT EXISTS idx_payment_status_updated_at ON payment (status, updated_at)');
@@ -45,6 +48,10 @@ final class Version20251107Data extends AbstractMigration
      */
     public function down(Schema $schema): void
     {
+        if (method_exists(parent::class, __FUNCTION__)) {
+            parent::down($schema);
+        }
+
         $this->addSql('DROP TABLE IF EXISTS payment_outbox_message');
         $this->addSql('DROP TABLE IF EXISTS payment_refund');
         $this->addSql('DROP TABLE IF EXISTS payment_transaction');

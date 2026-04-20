@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 use App\Paying\Kernel;
@@ -12,4 +13,10 @@ $debug = (bool)($_SERVER['APP_DEBUG'] ?? true);
 
 $kernel = new Kernel($env, $debug);
 $application = new Application($kernel);
-$application->run();
+
+try {
+    $application->run();
+} catch (Throwable $throwable) {
+    fwrite(STDERR, $throwable->getMessage().PHP_EOL);
+    exit(1);
+}
