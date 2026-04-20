@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure;
@@ -76,14 +75,14 @@ class OutboxWorker
                             'id' => $id,
                         ],
                     );
-                } catch (Exception $e) {
+                } catch (Exception $exception) {
                     $this->logger->error('Failed to persist outbox failure status.', [
                         'id' => $id,
                         'reason' => $reason,
-                        'exception' => $e,
+                        'exception' => $exception,
                     ]);
 
-                    throw new OutboxOperationException('Unable to persist outbox failure state.', 0, $e);
+                    throw new OutboxOperationException('Unable to persist outbox failure state.', 0, $exception);
                 }
             }
         }
@@ -111,14 +110,14 @@ class OutboxWorker
 
         try {
             $rows = $this->data->fetchAllAssociative($sql);
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             $this->logger->error('Failed to load outbox messages.', [
                 'limit' => $limit,
                 'retryFailed' => $retryFailed,
-                'exception' => $e,
+                'exception' => $exception,
             ]);
 
-            throw new OutboxOperationException('Unable to load outbox messages.', 0, $e);
+            throw new OutboxOperationException('Unable to load outbox messages.', 0, $exception);
         }
 
         return array_map(

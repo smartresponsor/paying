@@ -18,6 +18,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'payment:e2e:demo', description: 'Demonstrates E2E flow: webhook -> outbox -> publish -> consume')]
 final class PaymentE2eDemoCommand extends Command
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('<info>[demo]</info> POST /webhook -> outbox (see tests for full example).');

@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure;
@@ -34,16 +33,18 @@ readonly class MetricSubscriber implements EventSubscriberInterface
     /**
      * Records a successful payment event in the metrics collector.
      */
-    public function onSuccess(PaymentEvent $e): void
+    public function onSuccess(PaymentEvent $paymentEvent): void
     {
+        unset($paymentEvent);
         $this->metrics->incSuccess();
     }
 
     /**
      * Records a failed payment event in the metrics collector.
      */
-    public function onFailure(PaymentEvent $e): void
+    public function onFailure(PaymentEvent $paymentEvent): void
     {
+        unset($paymentEvent);
         $this->metrics->incFailure();
     }
 }

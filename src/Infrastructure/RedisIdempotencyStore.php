@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure;
@@ -32,14 +31,18 @@ class RedisIdempotencyStore implements IdempotencyStoreInterface
         $db = isset($parts['path']) ? (int) trim($parts['path'], '/') : 0;
 
         $this->redis = new \Redis();
-        if (!@$this->redis->connect($host, $port, 1.5)) {
+        if (!$this->redis->connect($host, $port, 1.5)) {
             throw new \RuntimeException('Redis connect failed');
         }
         if ($pass) {
-            @$this->redis->auth($pass);
+            if (true !== $this->redis->auth($pass)) {
+                throw new \RuntimeException('Redis auth failed');
+            }
         }
         if ($db) {
-            @$this->redis->select($db);
+            if (true !== $this->redis->select($db)) {
+                throw new \RuntimeException('Redis database select failed');
+            }
         }
     }
 
