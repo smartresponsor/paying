@@ -25,11 +25,9 @@ final readonly class ProviderRouter implements ProviderRouterInterface
             return;
         }
 
-        $resolvedProviders = [];
-
-        foreach ($providers as $providerCode => $provider) {
-            $resolvedProviders[$providerCode] = $provider;
-        }
+        $resolvedProviders = array_map(function ($provider) {
+            return $provider;
+        }, (array) $providers);
 
         $this->providers = $resolvedProviders;
     }

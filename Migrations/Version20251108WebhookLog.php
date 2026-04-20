@@ -26,6 +26,7 @@ final class Version20251108WebhookLog extends AbstractMigration
     /**
      * @param Schema $schema
      * @return void
+     * @throws TypesException
      */
     public function up(Schema $schema): void
     {
