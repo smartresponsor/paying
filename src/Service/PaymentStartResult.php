@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\Entity\Payment;
+use App\Paying\Entity\Payment;
 
 /**
  * Provides the payment start result service used by the payment lifecycle and operator-facing flows.

@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\ServiceInterface\ValidationErrorMapperInterface;
+use App\Paying\ServiceInterface\ValidationErrorMapperInterface;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**

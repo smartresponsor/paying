@@ -2,7 +2,7 @@
 
 ## Layer model
 
-Canonical root: `src/` with namespace `App\`.
+Canonical root: `src/` with namespace `App\Paying\`.
 
 Main layers:
 

@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Infrastructure;
+namespace App\Paying\Infrastructure;
 
-use App\InfrastructureInterface\PublisherTransportInterface;
+use App\Paying\InfrastructureInterface\PublisherTransportInterface;
 
 /**
  * Persists transport publish attempts for payment messaging observability.

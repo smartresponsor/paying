@@ -3,10 +3,10 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Reconciliation;
+namespace App\Paying\ServiceInterface\Reconciliation;
 
-use App\Entity\Payment;
-use App\Entity\PaymentRefund;
+use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentRefund;
 
 /**
  * Defines the contract for the payment reconciliation service interface payment service boundary.

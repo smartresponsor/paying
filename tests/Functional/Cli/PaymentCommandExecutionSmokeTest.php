@@ -3,16 +3,16 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Cli;
+namespace App\Paying\Tests\Functional\Cli;
 
-use App\Entity\Payment;
-use App\Infrastructure\Console\OutboxRunCommand;
-use App\Infrastructure\Console\ProjectionRebuildCommand;
-use App\Infrastructure\Console\ProjectionSyncCommand;
-use App\Infrastructure\Console\ReconcileRunCommand;
-use App\Infrastructure\OutboxWorker;
-use App\ServiceInterface\ProjectionSyncInterface;
-use App\ServiceInterface\ReconciliationServiceInterface;
+use App\Paying\Entity\Payment;
+use App\Paying\Infrastructure\Console\OutboxRunCommand;
+use App\Paying\Infrastructure\Console\ProjectionRebuildCommand;
+use App\Paying\Infrastructure\Console\ProjectionSyncCommand;
+use App\Paying\Infrastructure\Console\ReconcileRunCommand;
+use App\Paying\Infrastructure\OutboxWorker;
+use App\Paying\ServiceInterface\ProjectionSyncInterface;
+use App\Paying\ServiceInterface\ReconciliationServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
@@ -29,6 +29,7 @@ final class PaymentCommandExecutionSmokeTest extends TestCase
      */
     /**
      * Verifies that projection sync command executes and prints synced count.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testProjectionSyncCommandExecutesAndPrintsSyncedCount(): void
@@ -51,6 +52,7 @@ final class PaymentCommandExecutionSmokeTest extends TestCase
      */
     /**
      * Verifies that projection rebuild command executes and prints rebuilt count.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testProjectionRebuildCommandExecutesAndPrintsRebuiltCount(): void
@@ -99,6 +101,7 @@ final class PaymentCommandExecutionSmokeTest extends TestCase
      */
     /**
      * Verifies that reconcile run command executes for all returned processing ids.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testReconcileRunCommandExecutesForAllReturnedProcessingIds(): void

@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\Entity\Payment;
-use App\ServiceInterface\PaymentProviderInterface;
-use App\ValueObject\PaymentStatus;
+use App\Paying\Entity\Payment;
+use App\Paying\ServiceInterface\PaymentProviderInterface;
+use App\Paying\ValueObject\PaymentStatus;
 use Stripe\StripeClient;
 use Symfony\Component\Uid\Ulid;
 

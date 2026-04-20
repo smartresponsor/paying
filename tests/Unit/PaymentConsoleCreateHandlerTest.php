@@ -3,12 +3,12 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Entity\Payment;
-use App\Service\PaymentConsoleCreateHandler;
-use App\ServiceInterface\PaymentServiceInterface;
-use App\ValueObject\PaymentStatus;
+use App\Paying\Entity\Payment;
+use App\Paying\Service\PaymentConsoleCreateHandler;
+use App\Paying\ServiceInterface\PaymentServiceInterface;
+use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
@@ -22,6 +22,7 @@ final class PaymentConsoleCreateHandlerTest extends TestCase
      */
     /**
      * Verifies that create delegates to payment service.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testCreateDelegatesToPaymentService(): void

@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Outbox;
+namespace App\Paying\ServiceInterface\Outbox;
 
 /**
  * Defines the contract for the payment outbox processor interface payment service boundary.

@@ -3,12 +3,12 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller\Webhook;
+namespace App\Paying\Controller\Webhook;
 
-use App\Service\Webhook\JsonSchemaValidator;
-use App\Service\Webhook\StripeEventNormalizer;
-use App\Service\Webhook\StripeSignatureValidator;
-use App\ServiceInterface\WebhookIngestServiceInterface;
+use App\Paying\Service\Webhook\JsonSchemaValidator;
+use App\Paying\Service\Webhook\StripeEventNormalizer;
+use App\Paying\Service\Webhook\StripeSignatureValidator;
+use App\Paying\ServiceInterface\WebhookIngestServiceInterface;
 use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

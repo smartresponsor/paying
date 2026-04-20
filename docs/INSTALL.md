@@ -54,7 +54,7 @@ The component is being hardened toward a dependency-oriented install surface.
 
 Current outward bundle/config surface:
 
-- Bundle: `App\PayingBundle`
+- Bundle: `App\Paying\PayingBundle`
 - Bundle alias: `paying`
 - Config tree:
   - `paying.storage.data_server_version`

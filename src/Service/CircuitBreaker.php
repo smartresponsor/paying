@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\ServiceInterface\CircuitBreakerInterface;
+use App\Paying\ServiceInterface\CircuitBreakerInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 

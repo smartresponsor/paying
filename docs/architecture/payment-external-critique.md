@@ -31,7 +31,7 @@
 
 ### Proposal A1: Move each controller action orchestration into dedicated application handlers
 
-- Create `App\Service\UseCase\PaymentConsole\CreatePaymentHandler`.
+- Create `App\Paying\Service\UseCase\PaymentConsole\CreatePaymentHandler`.
 - Create `StartPaymentHandler`, `FinalizePaymentHandler`, `RefundPaymentHandler`.
 - Keep controllers as: request DTO binding + validation + one handler call + response mapping.
 

@@ -3,10 +3,10 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Controller\Dto\PaymentConsoleFinalizeRequestDto;
-use App\Controller\Dto\PaymentFinalizeRequestDto;
+use App\Paying\Controller\Dto\PaymentConsoleFinalizeRequestDto;
+use App\Paying\Controller\Dto\PaymentFinalizeRequestDto;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

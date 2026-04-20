@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\ServiceInterface\MetricInterface;
+use App\Paying\ServiceInterface\MetricInterface;
 
 /**
  * Provides the metric service used by the payment lifecycle and operator-facing flows.
@@ -26,15 +26,27 @@ class Metric implements MetricInterface
     /**
      * Provides the inc success behavior for the metric component.
      */
-    public function incSuccess(): void { ++$this->success; }
+    public function incSuccess(): void
+    {
+        ++$this->success;
+    }
+
     /**
      * Provides the inc failure behavior for the metric component.
      */
-    public function incFailure(): void { ++$this->failure; }
+    public function incFailure(): void
+    {
+        ++$this->failure;
+    }
+
     /**
      * Provides the observe duration behavior for the metric component.
      */
-    public function observeDuration(float $ms): void { $this->sumMs += $ms; ++$this->countMs; }
+    public function observeDuration(float $ms): void
+    {
+        $this->sumMs += $ms;
+        ++$this->countMs;
+    }
 
     /**
      * Provides the inc provider success behavior for the metric component.
@@ -64,11 +76,18 @@ class Metric implements MetricInterface
     /**
      * Provides the inc retry attempt behavior for the metric component.
      */
-    public function incRetryAttempt(): void { ++$this->retryAttempts; }
+    public function incRetryAttempt(): void
+    {
+        ++$this->retryAttempts;
+    }
+
     /**
      * Provides the inc retry exhausted behavior for the metric component.
      */
-    public function incRetryExhausted(): void { ++$this->retryExhausted; }
+    public function incRetryExhausted(): void
+    {
+        ++$this->retryExhausted;
+    }
 
     /**
      * Provides the export behavior for the metric component.

@@ -3,13 +3,13 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Entity\Payment;
-use App\Service\PaymentConsoleRefundHandler;
-use App\Service\PaymentNotFoundException;
-use App\ServiceInterface\RefundServiceInterface;
-use App\ValueObject\PaymentStatus;
+use App\Paying\Entity\Payment;
+use App\Paying\Service\PaymentConsoleRefundHandler;
+use App\Paying\Service\PaymentNotFoundException;
+use App\Paying\ServiceInterface\RefundServiceInterface;
+use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Uid\Ulid;
@@ -24,6 +24,7 @@ final class PaymentConsoleRefundHandlerTest extends TestCase
      */
     /**
      * Verifies that refund returns payment on success.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testRefundReturnsPaymentOnSuccess(): void
@@ -50,6 +51,7 @@ final class PaymentConsoleRefundHandlerTest extends TestCase
      */
     /**
      * Verifies that refund returns null and logs on failure.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testRefundReturnsNullAndLogsOnFailure(): void

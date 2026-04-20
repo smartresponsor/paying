@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Infrastructure\ResponseHeaderSubscriber;
+use App\Paying\Infrastructure\ResponseHeaderSubscriber;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

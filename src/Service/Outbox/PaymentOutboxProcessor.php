@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service\Outbox;
+namespace App\Paying\Service\Outbox;
 
-use App\Entity\PaymentOutboxMessage;
-use App\Message\Event\PaymentTransportMessage;
-use App\ServiceInterface\Outbox\PaymentOutboxProcessorInterface;
+use App\Paying\Entity\PaymentOutboxMessage;
+use App\Paying\Message\Event\PaymentTransportMessage;
+use App\Paying\ServiceInterface\Outbox\PaymentOutboxProcessorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;

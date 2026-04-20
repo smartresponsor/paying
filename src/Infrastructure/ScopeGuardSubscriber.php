@@ -3,10 +3,10 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Infrastructure;
+namespace App\Paying\Infrastructure;
 
-use App\Attribute\RequireScope;
-use App\ServiceInterface\TokenVerifierInterface;
+use App\Paying\Attribute\RequireScope;
+use App\Paying\ServiceInterface\TokenVerifierInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

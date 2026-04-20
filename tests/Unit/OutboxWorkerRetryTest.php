@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Infrastructure\OutboxWorker;
-use App\InfrastructureInterface\OutboxPublisherInterface;
-use App\InfrastructureInterface\PublisherTransportInterface;
+use App\Paying\Infrastructure\OutboxWorker;
+use App\Paying\InfrastructureInterface\OutboxPublisherInterface;
+use App\Paying\InfrastructureInterface\PublisherTransportInterface;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
@@ -22,6 +22,7 @@ final class OutboxWorkerRetryTest extends TestCase
      */
     /**
      * Verifies that run marks failed before dlq threshold.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testRunMarksFailedBeforeDlqThreshold(): void

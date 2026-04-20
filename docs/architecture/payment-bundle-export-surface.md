@@ -7,12 +7,12 @@ the Paying component.
 
 ## Bundle
 
-- `App\PayingBundle`
+- `App\Paying\PayingBundle`
 
 ## Bundle extension and config tree
 
-- `App\DependencyInjection\PayingExtension`
-- `App\DependencyInjection\Configuration`
+- `App\Paying\DependencyInjection\PayingExtension`
+- `App\Paying\DependencyInjection\Configuration`
 - config namespace: `paying`
 
 ## Early compile-phase parameters

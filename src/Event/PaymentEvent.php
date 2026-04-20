@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Event;
+namespace App\Paying\Event;
 
 /**
  * Carries a compact payment lifecycle event payload between internal layers.

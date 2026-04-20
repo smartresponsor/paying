@@ -3,12 +3,12 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Message\Handler;
+namespace App\Paying\Message\Handler;
 
-use App\Message\Command\PaymentRefundCommand;
-use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\ServiceInterface\RefundServiceInterface;
-use App\ValueObject\Money;
+use App\Paying\Message\Command\PaymentRefundCommand;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\ServiceInterface\RefundServiceInterface;
+use App\Paying\ValueObject\Money;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Uid\Ulid;
 

@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Infrastructure;
+namespace App\Paying\Infrastructure;
 
-use App\InfrastructureInterface\PaymentProjectionRepositoryInterface;
+use App\Paying\InfrastructureInterface\PaymentProjectionRepositoryInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;

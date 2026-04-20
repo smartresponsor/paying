@@ -94,9 +94,9 @@ Antora producer entry pages mirror that split and stay intentionally thin:
 
 This component now exposes a canonical Symfony bundle/export scaffold:
 
-- `App\PayingBundle`
-- `App\DependencyInjection\Configuration`
-- `App\DependencyInjection\PayingExtension`
+- `App\Paying\PayingBundle`
+- `App\Paying\DependencyInjection\Configuration`
+- `App\Paying\DependencyInjection\PayingExtension`
 
 Early compile-phase parameters intentionally remain in `config/services.yaml`
 because `framework`, `doctrine`, and `messenger` package config need them before

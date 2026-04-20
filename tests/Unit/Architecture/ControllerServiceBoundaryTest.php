@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Architecture;
+namespace App\Paying\Tests\Unit\Architecture;
 
 use PHPUnit\Framework\TestCase;
 
@@ -19,12 +19,12 @@ final class ControllerServiceBoundaryTest extends TestCase
     {
         $controllerFiles = glob(__DIR__.'/../../../src/Controller/*.php') ?: [];
         $allowedConcreteUses = [
-            'use App\\Service\\PaymentNotFoundException;',
+            'use App\Paying\\Service\\PaymentNotFoundException;',
         ];
 
         foreach ($controllerFiles as $file) {
             $content = (string) file_get_contents($file);
-            preg_match_all('/^use App\\\\Service\\\\[^;]+;$/m', $content, $matches);
+            preg_match_all('/^use App\Paying\\\\Service\\\\[^;]+;$/m', $content, $matches);
 
             foreach ($matches[0] as $import) {
                 self::assertContains(

@@ -3,13 +3,13 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Entity\Payment;
-use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\Service\PaymentStartService;
-use App\ServiceInterface\ProviderGuardInterface;
-use App\ValueObject\PaymentStatus;
+use App\Paying\Entity\Payment;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\Service\PaymentStartService;
+use App\Paying\ServiceInterface\ProviderGuardInterface;
+use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 

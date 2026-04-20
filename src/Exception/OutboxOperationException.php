@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Exception;
+namespace App\Paying\Exception;
 
 /**
  * Signals a failure while enqueueing, publishing, or replaying payment outbox work.

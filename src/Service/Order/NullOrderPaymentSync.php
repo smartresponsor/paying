@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service\Order;
+namespace App\Paying\Service\Order;
 
-use App\ServiceInterface\Order\OrderPaymentSyncInterface;
+use App\Paying\ServiceInterface\Order\OrderPaymentSyncInterface;
 use Psr\Log\LoggerInterface;
 
 /**

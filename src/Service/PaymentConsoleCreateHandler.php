@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\Entity\Payment;
-use App\ServiceInterface\PaymentConsoleCreateHandlerInterface;
-use App\ServiceInterface\PaymentServiceInterface;
+use App\Paying\Entity\Payment;
+use App\Paying\ServiceInterface\PaymentConsoleCreateHandlerInterface;
+use App\Paying\ServiceInterface\PaymentServiceInterface;
 
 /**
  * Provides the payment console create handler service used by the payment lifecycle and operator-facing flows.

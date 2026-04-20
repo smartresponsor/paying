@@ -3,17 +3,17 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\E2E;
+namespace App\Paying\Tests\E2E;
 
-use App\Entity\Payment;
-use App\Entity\PaymentOutboxMessage;
-use App\Message\Event\PaymentTransportMessage;
-use App\Message\Handler\PaymentEventConsumer;
-use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\Service\Order\NullOrderPaymentSync;
-use App\Service\Outbox\PaymentOutboxProcessor;
-use App\Service\Reconciliation\PaymentReconciliationService;
-use App\ValueObject\PaymentStatus;
+use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentOutboxMessage;
+use App\Paying\Message\Event\PaymentTransportMessage;
+use App\Paying\Message\Handler\PaymentEventConsumer;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\Service\Order\NullOrderPaymentSync;
+use App\Paying\Service\Outbox\PaymentOutboxProcessor;
+use App\Paying\Service\Reconciliation\PaymentReconciliationService;
+use App\Paying\ValueObject\PaymentStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;

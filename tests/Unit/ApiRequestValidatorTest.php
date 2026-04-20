@@ -3,10 +3,10 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Service\ApiRequestValidator;
-use App\ServiceInterface\ValidationErrorMapperInterface;
+use App\Paying\Service\ApiRequestValidator;
+use App\Paying\ServiceInterface\ValidationErrorMapperInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -65,6 +65,7 @@ final class ApiRequestValidatorTest extends TestCase
      */
     /**
      * Verifies that validate returns unprocessable entity response when dto has violations.
+     *
      * @throws \JsonException
      */
     public function testValidateReturnsUnprocessableEntityResponseWhenDtoHasViolations(): void

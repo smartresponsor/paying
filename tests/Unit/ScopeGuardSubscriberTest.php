@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Attribute\RequireScope;
-use App\Infrastructure\ScopeGuardSubscriber;
-use App\ServiceInterface\TokenVerifierInterface;
+use App\Paying\Attribute\RequireScope;
+use App\Paying\Infrastructure\ScopeGuardSubscriber;
+use App\Paying\ServiceInterface\TokenVerifierInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

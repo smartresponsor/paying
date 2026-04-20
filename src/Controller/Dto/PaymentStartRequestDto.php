@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Dto;
+namespace App\Paying\Controller\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 

@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\Infrastructure\DbalIdempotencyStore;
-use App\Infrastructure\RedisIdempotencyStore;
-use App\ServiceInterface\IdempotencyStoreInterface;
+use App\Paying\Infrastructure\DbalIdempotencyStore;
+use App\Paying\Infrastructure\RedisIdempotencyStore;
+use App\Paying\ServiceInterface\IdempotencyStoreInterface;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
 

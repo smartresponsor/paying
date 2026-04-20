@@ -3,10 +3,10 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Service\TokenVerifier;
-use App\ServiceInterface\OidcJwksCacheInterface;
+use App\Paying\Service\TokenVerifier;
+use App\Paying\ServiceInterface\OidcJwksCacheInterface;
 use PHPUnit\Framework\TestCase;
 
 /**

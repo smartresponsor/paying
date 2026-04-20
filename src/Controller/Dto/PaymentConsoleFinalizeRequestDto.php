@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller\Dto;
+namespace App\Paying\Controller\Dto;
 
-use App\ValueObject\PaymentStatus;
+use App\Paying\ValueObject\PaymentStatus;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 

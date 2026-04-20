@@ -3,14 +3,14 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Controller\FinalizeController;
-use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\ServiceInterface\ApiErrorResponseFactoryInterface;
-use App\ServiceInterface\ApiJsonBodyDecoderInterface;
-use App\ServiceInterface\ApiRequestValidatorInterface;
-use App\ServiceInterface\ProviderGuardInterface;
+use App\Paying\Controller\FinalizeController;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\ServiceInterface\ApiErrorResponseFactoryInterface;
+use App\Paying\ServiceInterface\ApiJsonBodyDecoderInterface;
+use App\Paying\ServiceInterface\ApiRequestValidatorInterface;
+use App\Paying\ServiceInterface\ProviderGuardInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;

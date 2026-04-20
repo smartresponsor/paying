@@ -3,13 +3,13 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Entity\Payment;
-use App\Entity\PaymentWebhookLog;
-use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\Service\PaymentConsoleReadModel;
-use App\ValueObject\PaymentStatus;
+use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentWebhookLog;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\Service\PaymentConsoleReadModel;
+use App\Paying\ValueObject\PaymentStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;

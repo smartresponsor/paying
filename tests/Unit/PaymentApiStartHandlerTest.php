@@ -3,15 +3,15 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Entity\Payment;
-use App\Service\PaymentApiStartHandler;
-use App\Service\PaymentStartResult;
-use App\ServiceInterface\IdempotencyServiceInterface;
-use App\ServiceInterface\PaymentStartInput;
-use App\ServiceInterface\PaymentStartServiceInterface;
-use App\ValueObject\PaymentStatus;
+use App\Paying\Entity\Payment;
+use App\Paying\Service\PaymentApiStartHandler;
+use App\Paying\Service\PaymentStartResult;
+use App\Paying\ServiceInterface\IdempotencyServiceInterface;
+use App\Paying\ServiceInterface\PaymentStartInput;
+use App\Paying\ServiceInterface\PaymentStartServiceInterface;
+use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
@@ -25,6 +25,7 @@ final class PaymentApiStartHandlerTest extends TestCase
      */
     /**
      * Verifies that handle returns api payload via idempotency gate.
+     *
      * @throws \JsonException
      * @throws \PHPUnit\Framework\MockObject\Exception
      */

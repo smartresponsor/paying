@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Infrastructure;
+namespace App\Paying\Infrastructure;
 
-use App\Exception\OutboxOperationException;
-use App\InfrastructureInterface\OutboxPublisherInterface;
-use App\InfrastructureInterface\PublisherTransportInterface;
+use App\Paying\Exception\OutboxOperationException;
+use App\Paying\InfrastructureInterface\OutboxPublisherInterface;
+use App\Paying\InfrastructureInterface\PublisherTransportInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerInterface;

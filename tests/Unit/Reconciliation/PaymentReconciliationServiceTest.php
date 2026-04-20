@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Reconciliation;
+namespace App\Paying\Tests\Unit\Reconciliation;
 
-use App\Entity\Payment;
-use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\Service\Reconciliation\PaymentReconciliationService;
+use App\Paying\Entity\Payment;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\Service\Reconciliation\PaymentReconciliationService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;

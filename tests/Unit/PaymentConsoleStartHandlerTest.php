@@ -3,13 +3,13 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Entity\Payment;
-use App\Service\PaymentConsoleStartHandler;
-use App\Service\PaymentStartResult;
-use App\ServiceInterface\PaymentStartServiceInterface;
-use App\ValueObject\PaymentStatus;
+use App\Paying\Entity\Payment;
+use App\Paying\Service\PaymentConsoleStartHandler;
+use App\Paying\Service\PaymentStartResult;
+use App\Paying\ServiceInterface\PaymentStartServiceInterface;
+use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;

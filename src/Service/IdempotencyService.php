@@ -3,10 +3,10 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\ServiceInterface\IdempotencyServiceInterface;
-use App\ServiceInterface\IdempotencyStoreInterface;
+use App\Paying\ServiceInterface\IdempotencyServiceInterface;
+use App\Paying\ServiceInterface\IdempotencyStoreInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

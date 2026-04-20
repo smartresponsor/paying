@@ -3,12 +3,12 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\ServiceInterface\IdempotencyServiceInterface;
-use App\ServiceInterface\PaymentApiStartHandlerInterface;
-use App\ServiceInterface\PaymentStartInput;
-use App\ServiceInterface\PaymentStartServiceInterface;
+use App\Paying\ServiceInterface\IdempotencyServiceInterface;
+use App\Paying\ServiceInterface\PaymentApiStartHandlerInterface;
+use App\Paying\ServiceInterface\PaymentStartInput;
+use App\Paying\ServiceInterface\PaymentStartServiceInterface;
 
 /**
  * Provides the payment api start handler service used by the payment lifecycle and operator-facing flows.

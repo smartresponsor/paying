@@ -3,10 +3,10 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Infrastructure;
+namespace App\Paying\Infrastructure;
 
-use App\Event\PaymentEvent;
-use App\Service\Metric;
+use App\Paying\Event\PaymentEvent;
+use App\Paying\Service\Metric;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**

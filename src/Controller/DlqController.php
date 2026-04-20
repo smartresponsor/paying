@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Paying\Controller;
 
-use App\Attribute\RequireScope;
-use App\ControllerInterface\DlqControllerInterface;
-use App\ServiceInterface\DlqServiceInterface;
+use App\Paying\Attribute\RequireScope;
+use App\Paying\ControllerInterface\DlqControllerInterface;
+use App\Paying\ServiceInterface\DlqServiceInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;

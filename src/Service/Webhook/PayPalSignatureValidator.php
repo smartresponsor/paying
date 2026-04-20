@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service\Webhook;
+namespace App\Paying\Service\Webhook;
 
-use App\ServiceInterface\WebhookVerifierInterface;
+use App\Paying\ServiceInterface\WebhookVerifierInterface;
 
 /**
  * Provides the pay pal signature validator step for webhook validation and normalization flows.

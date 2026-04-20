@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Kernel;
+use App\Paying\Kernel;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\ManagerRegistry;
@@ -25,8 +25,22 @@ putenv('INFRA_URL='.$_SERVER['INFRA_URL']);
 
 require $projectDir.'/config/bootstrap.php';
 
-$cacheDir = $projectDir.'/var/cache/test';
-if (is_dir($cacheDir)) {
+$configuredTestCacheDir = $_SERVER['PAYMENT_TEST_CACHE_DIR'] ?? $_ENV['PAYMENT_TEST_CACHE_DIR'] ?? '%kernel.project_dir%/.codex-tmp/cache/test';
+if (!is_string($configuredTestCacheDir) || '' === trim($configuredTestCacheDir)) {
+    $configuredTestCacheDir = '%kernel.project_dir%/.codex-tmp/cache/test';
+}
+
+$resolvedTestCacheDir = str_replace('%kernel.project_dir%', $projectDir, $configuredTestCacheDir);
+
+foreach (array_unique([
+    $projectDir.'/var/cache/test',
+    $projectDir.'/.codex-tmp/cache/test',
+    $resolvedTestCacheDir,
+]) as $cacheDir) {
+    if (!is_dir($cacheDir)) {
+        continue;
+    }
+
     $iterator = new RecursiveIteratorIterator(
         new RecursiveDirectoryIterator($cacheDir, FilesystemIterator::SKIP_DOTS),
         RecursiveIteratorIterator::CHILD_FIRST

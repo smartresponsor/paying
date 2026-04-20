@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\ServiceInterface\Order;
+namespace App\Paying\ServiceInterface\Order;
 
 /**
  * Defines the contract for the order payment sync interface payment service boundary.

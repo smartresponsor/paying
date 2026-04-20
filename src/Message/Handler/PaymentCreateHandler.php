@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Message\Handler;
+namespace App\Paying\Message\Handler;
 
-use App\Message\Command\PaymentCreateCommand;
-use App\ServiceInterface\PaymentStartServiceInterface;
-use App\ValueObject\Money;
+use App\Paying\Message\Command\PaymentCreateCommand;
+use App\Paying\ServiceInterface\PaymentStartServiceInterface;
+use App\Paying\ValueObject\Money;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**

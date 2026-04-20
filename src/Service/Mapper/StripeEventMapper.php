@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service\Mapper;
+namespace App\Paying\Service\Mapper;
 
-use App\ServiceInterface\EventMapperInterface;
+use App\Paying\ServiceInterface\EventMapperInterface;
 
 /**
  * Maps external provider payloads into the internal stripe event mapper payment representation.

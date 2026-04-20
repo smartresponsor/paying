@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Message\Handler;
+namespace App\Paying\Message\Handler;
 
-use App\Message\Event\PaymentTransportMessage;
-use App\ServiceInterface\Order\OrderPaymentSyncInterface;
-use App\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface;
+use App\Paying\Message\Event\PaymentTransportMessage;
+use App\Paying\ServiceInterface\Order\OrderPaymentSyncInterface;
+use App\Paying\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**

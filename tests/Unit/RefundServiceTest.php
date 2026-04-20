@@ -3,14 +3,14 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Entity\Payment;
-use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\Service\PaymentNotFoundException;
-use App\Service\RefundService;
-use App\ServiceInterface\ProviderGuardInterface;
-use App\ValueObject\PaymentStatus;
+use App\Paying\Entity\Payment;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\Service\PaymentNotFoundException;
+use App\Paying\Service\RefundService;
+use App\Paying\ServiceInterface\ProviderGuardInterface;
+use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
@@ -24,6 +24,7 @@ final class RefundServiceTest extends TestCase
      */
     /**
      * Verifies that refund throws typed not found exception.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testRefundThrowsTypedNotFoundException(): void
@@ -83,6 +84,7 @@ final class RefundServiceTest extends TestCase
      */
     /**
      * Verifies that refund syncs resolved payment and persists.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testRefundSyncsResolvedPaymentAndPersists(): void

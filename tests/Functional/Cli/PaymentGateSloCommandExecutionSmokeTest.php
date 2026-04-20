@@ -3,10 +3,10 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Cli;
+namespace App\Paying\Tests\Functional\Cli;
 
-use App\Infrastructure\Console\GateSloCommand;
-use App\Service\Metric;
+use App\Paying\Infrastructure\Console\GateSloCommand;
+use App\Paying\Service\Metric;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;

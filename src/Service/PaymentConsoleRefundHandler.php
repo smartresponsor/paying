@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\Entity\Payment;
-use App\ServiceInterface\PaymentConsoleRefundHandlerInterface;
-use App\ServiceInterface\RefundServiceInterface;
+use App\Paying\Entity\Payment;
+use App\Paying\ServiceInterface\PaymentConsoleRefundHandlerInterface;
+use App\Paying\ServiceInterface\RefundServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Uid\Ulid;
 

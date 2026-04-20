@@ -3,14 +3,14 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Message\Handler;
+namespace App\Paying\Tests\Unit\Message\Handler;
 
-use App\Entity\Payment;
-use App\Message\Command\PaymentCreateCommand;
-use App\Message\Handler\PaymentCreateHandler;
-use App\Service\PaymentStartResult;
-use App\ServiceInterface\PaymentStartServiceInterface;
-use App\ValueObject\PaymentStatus;
+use App\Paying\Entity\Payment;
+use App\Paying\Message\Command\PaymentCreateCommand;
+use App\Paying\Message\Handler\PaymentCreateHandler;
+use App\Paying\Service\PaymentStartResult;
+use App\Paying\ServiceInterface\PaymentStartServiceInterface;
+use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 

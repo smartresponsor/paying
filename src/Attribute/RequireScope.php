@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Attribute;
+namespace App\Paying\Attribute;
 
 /**
  * Declares the authorization scopes that must be satisfied before a class or method is executed.

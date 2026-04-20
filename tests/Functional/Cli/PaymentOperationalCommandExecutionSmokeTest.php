@@ -3,14 +3,14 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Cli;
+namespace App\Paying\Tests\Functional\Cli;
 
-use App\Infrastructure\Console\DlqReplayCommand;
-use App\Infrastructure\Console\IdemPurgeCommand;
-use App\Infrastructure\Console\SlaReportCommand;
-use App\InfrastructureInterface\OutboxPublisherInterface;
-use App\ServiceInterface\IdempotencyStoreInterface;
-use App\ServiceInterface\SlaReporterInterface;
+use App\Paying\Infrastructure\Console\DlqReplayCommand;
+use App\Paying\Infrastructure\Console\IdemPurgeCommand;
+use App\Paying\Infrastructure\Console\SlaReportCommand;
+use App\Paying\InfrastructureInterface\OutboxPublisherInterface;
+use App\Paying\ServiceInterface\IdempotencyStoreInterface;
+use App\Paying\ServiceInterface\SlaReporterInterface;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\Entity\Payment;
-use App\ServiceInterface\CircuitBreakerInterface;
-use App\ServiceInterface\MetricInterface;
-use App\ServiceInterface\ProviderGuardInterface;
-use App\ServiceInterface\ProviderRouterInterface;
-use App\ServiceInterface\RetryExecutorInterface;
+use App\Paying\Entity\Payment;
+use App\Paying\ServiceInterface\CircuitBreakerInterface;
+use App\Paying\ServiceInterface\MetricInterface;
+use App\Paying\ServiceInterface\ProviderGuardInterface;
+use App\Paying\ServiceInterface\ProviderRouterInterface;
+use App\Paying\ServiceInterface\RetryExecutorInterface;
 use Symfony\Component\Uid\Ulid;
 
 /**

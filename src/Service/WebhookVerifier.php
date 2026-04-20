@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\ServiceInterface\WebhookVerifierInterface;
+use App\Paying\ServiceInterface\WebhookVerifierInterface;
 
 /**
  * Provides the webhook verifier service used by the payment lifecycle and operator-facing flows.

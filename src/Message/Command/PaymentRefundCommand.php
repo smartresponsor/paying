@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Message\Command;
+namespace App\Paying\Message\Command;
 
 /**
  * Carries the payment refund command payload across messenger-driven payment workflows.

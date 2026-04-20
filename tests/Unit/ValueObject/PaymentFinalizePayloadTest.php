@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\ValueObject;
+namespace App\Paying\Tests\Unit\ValueObject;
 
-use App\ValueObject\PaymentFinalizePayload;
+use App\Paying\ValueObject\PaymentFinalizePayload;
 use PHPUnit\Framework\TestCase;
 
 /**

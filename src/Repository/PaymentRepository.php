@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Paying\Repository;
 
-use App\Entity\Payment;
-use App\Exception\PaymentRepositoryReadException;
-use App\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\Entity\Payment;
+use App\Paying\Exception\PaymentRepositoryReadException;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;

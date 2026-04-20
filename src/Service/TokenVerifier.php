@@ -3,10 +3,10 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\ServiceInterface\OidcJwksCacheInterface;
-use App\ServiceInterface\TokenVerifierInterface;
+use App\Paying\ServiceInterface\OidcJwksCacheInterface;
+use App\Paying\ServiceInterface\TokenVerifierInterface;
 
 /**
  * Provides the token verifier service used by the payment lifecycle and operator-facing flows.

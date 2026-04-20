@@ -3,9 +3,9 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Infrastructure\Fixture;
+namespace App\Paying\Tests\Unit\Infrastructure\Fixture;
 
-use App\Infrastructure\Fixture\PaymentFixtureFaker;
+use App\Paying\Infrastructure\Fixture\PaymentFixtureFaker;
 use PHPUnit\Framework\TestCase;
 
 /**

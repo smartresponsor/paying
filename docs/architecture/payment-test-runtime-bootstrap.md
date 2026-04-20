@@ -74,8 +74,8 @@ It does **not** by itself prove a completed installed-runtime execution with res
 
 ## Wave 007
 
-- Removed Doctrine entity `repositoryClass` binding from `App\Entity\Payment` so Doctrine no longer
-  expects `App\Repository\PaymentRepository` to be an `ObjectRepository`.
+- Removed Doctrine entity `repositoryClass` binding from `App\Paying\Entity\Payment` so Doctrine no longer
+  expects `App\Paying\Repository\PaymentRepository` to be an `ObjectRepository`.
 - Hardened generic webhook controller to return `400` for verifier exceptions or non-object JSON payloads during smoke
   routing.
 - Updated README to mention `fixtures:payment:load`, `fixtures:payment:append`, and fixture bootstrap proof
@@ -100,7 +100,7 @@ It does **not** by itself prove a completed installed-runtime execution with res
 
 ## Wave 010
 
-- Marked `App\Controller\WebhookController` as a public controller service with `controller.service_arguments`
+- Marked `App\Paying\Controller\WebhookController` as a public controller service with `controller.service_arguments`
   so `/payment/webhook/{provider}` no longer fails before controller execution.
 - Simplified `PaymentConsoleRefundType::amount` to `TextType` so the refund console flow keeps DTO decimal validation
   instead of brittle `MoneyType` transformation behavior in functional tests.
@@ -151,8 +151,8 @@ It does **not** by itself prove a completed installed-runtime execution with res
 
 ## Wave 007
 
-- Removed Doctrine entity `repositoryClass` binding from `App\Entity\Payment` so Doctrine no longer
-  expects `App\Repository\PaymentRepository` to be an `ObjectRepository`.
+- Removed Doctrine entity `repositoryClass` binding from `App\Paying\Entity\Payment` so Doctrine no longer
+  expects `App\Paying\Repository\PaymentRepository` to be an `ObjectRepository`.
 - Hardened generic webhook controller to return `400` for verifier exceptions or non-object JSON payloads during smoke
   routing.
 - Updated README to mention `fixtures:payment:load`, `fixtures:payment:append`, and fixture bootstrap proof
@@ -177,7 +177,7 @@ It does **not** by itself prove a completed installed-runtime execution with res
 
 ## Wave 010
 
-- Marked `App\Controller\WebhookController` as a public controller service with `controller.service_arguments`
+- Marked `App\Paying\Controller\WebhookController` as a public controller service with `controller.service_arguments`
   so `/payment/webhook/{provider}` no longer fails before controller execution.
 - Simplified `PaymentConsoleRefundType::amount` to `TextType` so the refund console flow keeps DTO decimal validation
   instead of brittle `MoneyType` transformation behavior in functional tests.

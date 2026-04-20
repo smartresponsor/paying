@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Infrastructure\Console;
+namespace App\Paying\Infrastructure\Console;
 
-use App\InfrastructureInterface\OutboxPublisherInterface;
+use App\Paying\InfrastructureInterface\OutboxPublisherInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\ParameterType;

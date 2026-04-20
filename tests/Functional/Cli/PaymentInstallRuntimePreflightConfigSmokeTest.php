@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Cli;
+namespace App\Paying\Tests\Functional\Cli;
 
 use PHPUnit\Framework\TestCase;
 
@@ -14,6 +14,7 @@ final class PaymentInstallRuntimePreflightConfigSmokeTest extends TestCase
 {
     /**
      * Verifies that install preflight scripts and docs are present.
+     *
      * @throws \JsonException
      */
     public function testInstallPreflightScriptsAndDocsArePresent(): void

@@ -3,15 +3,15 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Paying\Controller;
 
-use App\Attribute\RequireScope;
-use App\Controller\Dto\PaymentCreateRequestDto;
-use App\ControllerInterface\PaymentCreateControllerInterface;
-use App\ServiceInterface\ApiErrorResponseFactoryInterface;
-use App\ServiceInterface\ApiJsonBodyDecoderInterface;
-use App\ServiceInterface\ApiRequestValidatorInterface;
-use App\ServiceInterface\PaymentServiceInterface;
+use App\Paying\Attribute\RequireScope;
+use App\Paying\Controller\Dto\PaymentCreateRequestDto;
+use App\Paying\ControllerInterface\PaymentCreateControllerInterface;
+use App\Paying\ServiceInterface\ApiErrorResponseFactoryInterface;
+use App\Paying\ServiceInterface\ApiJsonBodyDecoderInterface;
+use App\Paying\ServiceInterface\ApiRequestValidatorInterface;
+use App\Paying\ServiceInterface\PaymentServiceInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;

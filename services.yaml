@@ -13,10 +13,10 @@ services:
         autoconfigure: true
 
     _instanceof:
-        App\ServiceInterface\EventMapperInterface:
+        App\Paying\ServiceInterface\EventMapperInterface:
             tags: [ 'payment.event_mapper' ]
 
-    App\:
+    App\Paying\:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
@@ -25,40 +25,40 @@ services:
             - '../src/**/Resources/'
             - '../src/**/Tests/'
 
-    App\ServiceInterface\IdempotencyStoreInterface:
-        factory: [ '@App\Service\IdempotencyStoreFactory', 'create' ]
+    App\Paying\ServiceInterface\IdempotencyStoreInterface:
+        factory: [ '@App\Paying\Service\IdempotencyStoreFactory', 'create' ]
 
-    App\Controller\:
+    App\Paying\Controller\:
         resource: '../src/Controller/'
         public: true
         tags: [ 'controller.service_arguments' ]
 
-    App\Service\ProviderRouter:
+    App\Paying\Service\ProviderRouter:
         arguments:
             $providers:
-                internal: '@App\Service\InternalPaymentProvider'
-                stripe: '@App\Service\StripePaymentProvider'
-                paypal: '@App\Service\PayPalPaymentProvider'
+                internal: '@App\Paying\Service\InternalPaymentProvider'
+                stripe: '@App\Paying\Service\StripePaymentProvider'
+                paypal: '@App\Paying\Service\PayPalPaymentProvider'
 
-    App\Service\StripePaymentProvider:
+    App\Paying\Service\StripePaymentProvider:
         arguments:
             $secretKey: '%env(default::STRIPE_SECRET_KEY)%'
             $webhookSecret: '%env(default::STRIPE_WEBHOOK_SECRET)%'
 
 
-    App\Service\IdempotencyService:
+    App\Paying\Service\IdempotencyService:
         arguments:
             $ttlSec: '%env(int:default:payment.idem_ttl_default:IDEM_TTL)%'
 
-    App\Infrastructure\PaymentProjectionRepository:
+    App\Paying\Infrastructure\PaymentProjectionRepository:
         arguments:
             $infra: '@doctrine.dbal.infra_connection'
 
-    App\Infrastructure\RateLimitSubscriber:
+    App\Paying\Infrastructure\RateLimitSubscriber:
         arguments:
             $paymentApiLimiter: '@limiter.payment_api'
 
-    App\Controller\WebhookController:
+    App\Paying\Controller\WebhookController:
         public: true
         tags: [ 'controller.service_arguments' ]
         arguments:
@@ -67,25 +67,25 @@ services:
     payment_audit.logger:
         alias: monolog.logger.payment_audit
 
-    App\Controller\Webhook\StripeWebhookController:
+    App\Paying\Controller\Webhook\StripeWebhookController:
         public: true
         tags: [ 'controller.service_arguments' ]
         arguments:
             $paymentAuditLogger: '@payment_audit.logger'
 
-    App\Controller\Webhook\PayPalWebhookController:
+    App\Paying\Controller\Webhook\PayPalWebhookController:
         public: true
         tags: [ 'controller.service_arguments' ]
         arguments:
             $paymentAuditLogger: '@payment_audit.logger'
 
-    App\Service\Outbox\PaymentOutboxProcessor:
+    App\Paying\Service\Outbox\PaymentOutboxProcessor:
         arguments:
             $em: '@doctrine.orm.entity_manager'
             $transport: '@messenger.transport.payment_outbox'
             $logger: '@logger'
 
-    App\Service\Order\NullOrderPaymentSync:
+    App\Paying\Service\Order\NullOrderPaymentSync:
         arguments:
             $logger: '@logger'
         autoconfigure: true

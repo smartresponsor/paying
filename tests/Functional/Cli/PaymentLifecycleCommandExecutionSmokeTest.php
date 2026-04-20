@@ -3,17 +3,17 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Cli;
+namespace App\Paying\Tests\Functional\Cli;
 
-use App\Entity\Payment;
-use App\Infrastructure\Console\PaymentLifecycleCommand;
-use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\Service\PaymentStartResult;
-use App\ServiceInterface\PaymentServiceInterface;
-use App\ServiceInterface\PaymentStartServiceInterface;
-use App\ServiceInterface\ProviderGuardInterface;
-use App\ServiceInterface\RefundServiceInterface;
-use App\ValueObject\PaymentStatus;
+use App\Paying\Entity\Payment;
+use App\Paying\Infrastructure\Console\PaymentLifecycleCommand;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\Service\PaymentStartResult;
+use App\Paying\ServiceInterface\PaymentServiceInterface;
+use App\Paying\ServiceInterface\PaymentStartServiceInterface;
+use App\Paying\ServiceInterface\ProviderGuardInterface;
+use App\Paying\ServiceInterface\RefundServiceInterface;
+use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

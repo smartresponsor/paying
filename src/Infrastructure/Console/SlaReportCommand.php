@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Infrastructure\Console;
+namespace App\Paying\Infrastructure\Console;
 
-use App\ServiceInterface\SlaReporterInterface;
+use App\Paying\ServiceInterface\SlaReporterInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

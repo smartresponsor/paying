@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Support;
+namespace App\Paying\Tests\Support;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -18,6 +18,7 @@ final class DoctrineSchemaReset
      */
     /**
      * Implements the reset behavior required by the local test double or scenario helper.
+     *
      * @throws \Doctrine\DBAL\Exception
      * @throws \Doctrine\ORM\Tools\ToolsException
      */

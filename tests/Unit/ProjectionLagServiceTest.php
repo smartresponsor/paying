@@ -3,10 +3,10 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\InfrastructureInterface\PaymentProjectionRepositoryInterface;
-use App\Service\ProjectionLagService;
+use App\Paying\InfrastructureInterface\PaymentProjectionRepositoryInterface;
+use App\Paying\Service\ProjectionLagService;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 
@@ -24,6 +24,7 @@ final class ProjectionLagServiceTest extends TestCase
      */
     /**
      * Verifies that snapshot builds lag from data and infra timestamps.
+     *
      * @throws \Doctrine\DBAL\Exception
      * @throws \PHPUnit\Framework\MockObject\Exception
      */

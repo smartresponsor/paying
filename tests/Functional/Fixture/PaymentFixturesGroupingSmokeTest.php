@@ -3,12 +3,12 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Functional\Fixture;
+namespace App\Paying\Tests\Functional\Fixture;
 
-use App\Infrastructure\Fixture\PaymentFixture;
-use App\Infrastructure\Fixture\PaymentGatewayFixture;
-use App\Infrastructure\Fixture\PaymentMethodFixture;
-use App\Infrastructure\Fixture\PaymentWebhookLogFixture;
+use App\Paying\Infrastructure\Fixture\PaymentFixture;
+use App\Paying\Infrastructure\Fixture\PaymentGatewayFixture;
+use App\Paying\Infrastructure\Fixture\PaymentMethodFixture;
+use App\Paying\Infrastructure\Fixture\PaymentWebhookLogFixture;
 use PHPUnit\Framework\TestCase;
 
 /**

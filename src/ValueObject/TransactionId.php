@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\ValueObject;
+namespace App\Paying\ValueObject;
 
 /**
  * Represents the transaction id value object used by the payment lifecycle and related contracts.

@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Architecture;
+namespace App\Paying\Tests\Unit\Architecture;
 
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +20,7 @@ final class ControllerValidationBoundaryTest extends TestCase
         $controllerFiles = glob(__DIR__.'/../../../src/Controller/*.php') ?: [];
         $forbiddenImports = [
             'use Symfony\\Component\\Validator\\Validator\\ValidatorInterface;',
-            'use App\\ServiceInterface\\ValidationErrorMapperInterface;',
+            'use App\Paying\\ServiceInterface\\ValidationErrorMapperInterface;',
         ];
 
         foreach ($controllerFiles as $file) {
@@ -53,7 +53,7 @@ final class ControllerValidationBoundaryTest extends TestCase
             $content = (string) file_get_contents($path);
 
             self::assertStringContainsString(
-                'use App\\ServiceInterface\\ApiRequestValidatorInterface;',
+                'use App\Paying\\ServiceInterface\\ApiRequestValidatorInterface;',
                 $content,
                 sprintf('Controller %s must use ApiRequestValidatorInterface import.', $controller),
             );

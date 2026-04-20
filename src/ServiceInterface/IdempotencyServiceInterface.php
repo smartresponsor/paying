@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\ServiceInterface;
+namespace App\Paying\ServiceInterface;
 
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,7 +21,9 @@ interface IdempotencyServiceInterface
      * Executes the once operation for the current payment workflow.
      *
      * @template T of array<string, mixed>
+     *
      * @param callable(): T $producer
+     *
      * @return T
      */
     public function once(Request $req, callable $producer): array;
@@ -30,7 +32,9 @@ interface IdempotencyServiceInterface
      * Executes the execute operation for the current payment workflow.
      *
      * @template T of array<string, mixed>
+     *
      * @param callable(): T $producer
+     *
      * @return T
      */
     public function execute(string $key, string $payloadHash, callable $producer): array;

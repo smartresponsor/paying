@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Paying\Entity;
 
-use App\ValueObject\PaymentStatus;
+use App\Paying\ValueObject\PaymentStatus;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Ulid;
 

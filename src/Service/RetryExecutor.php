@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\ServiceInterface\MetricInterface;
-use App\ServiceInterface\RetryExecutorInterface;
+use App\Paying\ServiceInterface\MetricInterface;
+use App\Paying\ServiceInterface\RetryExecutorInterface;
 use Random\RandomException;
 
 /**
@@ -29,13 +29,40 @@ readonly class RetryExecutor implements RetryExecutorInterface
     public function execute(callable $callable): mixed
     {
         $attempt = 1;
-        $sleep = $this->baseMs;
+        $sleepMs = max(0, $this->baseMs);
 
         while (true) {
             try {
                 return $callable();
-            } catch (RandomException $e) {
-            } catch (RandomException $e) {
+            } catch (\Throwable $e) {
+                if ($attempt >= $this->maxAttempts) {
+                    $this->metric->incRetryExhausted();
+
+                    throw $e;
+                }
+
+                $this->metric->incRetryAttempt();
+
+                $delayMs = $sleepMs;
+
+                if ($this->jitterMs > 0) {
+                    try {
+                        $delayMs += random_int(0, $this->jitterMs);
+                    } catch (RandomException) {
+                        // Keep deterministic fallback delay when entropy is unavailable.
+                    }
+                }
+
+                if ($delayMs > 0) {
+                    usleep($delayMs * 1000);
+                }
+
+                ++$attempt;
+
+                $nextSleepMs = (int) ceil($sleepMs * $this->multiplier);
+                $sleepMs = $this->maxSleepMs > 0
+                    ? min($this->maxSleepMs, max(0, $nextSleepMs))
+                    : max(0, $nextSleepMs);
             }
         }
     }

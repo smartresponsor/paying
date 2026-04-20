@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service\Webhook;
+namespace App\Paying\Service\Webhook;
 
 /**
  * Provides the stripe event normalizer step for webhook validation and normalization flows.

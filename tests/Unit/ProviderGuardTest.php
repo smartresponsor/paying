@@ -3,15 +3,15 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Entity\Payment;
-use App\Service\ProviderGuard;
-use App\Service\ProviderRouter;
-use App\ServiceInterface\CircuitBreakerInterface;
-use App\ServiceInterface\MetricInterface;
-use App\ServiceInterface\PaymentProviderInterface;
-use App\ServiceInterface\RetryExecutorInterface;
+use App\Paying\Entity\Payment;
+use App\Paying\Service\ProviderGuard;
+use App\Paying\Service\ProviderRouter;
+use App\Paying\ServiceInterface\CircuitBreakerInterface;
+use App\Paying\ServiceInterface\MetricInterface;
+use App\Paying\ServiceInterface\PaymentProviderInterface;
+use App\Paying\ServiceInterface\RetryExecutorInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
@@ -165,6 +165,6 @@ final class ProviderGuardTest extends TestCase
 
     private function dummyPayment(): Payment
     {
-        return new Payment(new Ulid('01ARZ3NDEKTSV4RRFFQ69G5FZZ'), \App\ValueObject\PaymentStatus::new, '10.00', 'USD');
+        return new Payment(new Ulid('01ARZ3NDEKTSV4RRFFQ69G5FZZ'), \App\Paying\ValueObject\PaymentStatus::new, '10.00', 'USD');
     }
 }

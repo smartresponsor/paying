@@ -3,13 +3,13 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Infrastructure\Console;
+namespace App\Paying\Infrastructure\Console;
 
-use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\ServiceInterface\PaymentServiceInterface;
-use App\ServiceInterface\PaymentStartServiceInterface;
-use App\ServiceInterface\ProviderGuardInterface;
-use App\ServiceInterface\RefundServiceInterface;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\ServiceInterface\PaymentServiceInterface;
+use App\Paying\ServiceInterface\PaymentStartServiceInterface;
+use App\Paying\ServiceInterface\ProviderGuardInterface;
+use App\Paying\ServiceInterface\RefundServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Service\RetryExecutor;
-use App\ServiceInterface\MetricInterface;
+use App\Paying\Service\RetryExecutor;
+use App\Paying\ServiceInterface\MetricInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

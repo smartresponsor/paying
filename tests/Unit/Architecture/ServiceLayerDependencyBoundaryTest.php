@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Architecture;
+namespace App\Paying\Tests\Unit\Architecture;
 
 use PHPUnit\Framework\TestCase;
 
@@ -26,7 +26,7 @@ final class ServiceLayerDependencyBoundaryTest extends TestCase
             $content = (string) file_get_contents((string) $file);
 
             self::assertStringNotContainsString(
-                'App\\Controller\\',
+                'App\Paying\\Controller\\',
                 $content,
                 sprintf('Service-layer file %s must not depend on controller namespace.', basename((string) $file)),
             );

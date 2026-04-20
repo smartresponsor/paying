@@ -3,10 +3,10 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\ServiceInterface\PaymentProviderInterface;
-use App\ServiceInterface\ProviderRouterInterface;
+use App\Paying\ServiceInterface\PaymentProviderInterface;
+use App\Paying\ServiceInterface\ProviderRouterInterface;
 
 /**
  * Provides the provider router service used by the payment lifecycle and operator-facing flows.
@@ -19,9 +19,17 @@ final readonly class ProviderRouter implements ProviderRouterInterface
     /** @param iterable<string, PaymentProviderInterface> $providers */
     public function __construct(iterable $providers)
     {
-        $resolvedProviders = array_map(function ($provider) {
-            return $provider;
-        }, $providers);
+        if (is_array($providers)) {
+            $this->providers = $providers;
+
+            return;
+        }
+
+        $resolvedProviders = [];
+
+        foreach ($providers as $providerCode => $provider) {
+            $resolvedProviders[$providerCode] = $provider;
+        }
 
         $this->providers = $resolvedProviders;
     }

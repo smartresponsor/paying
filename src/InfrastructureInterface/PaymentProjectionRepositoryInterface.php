@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\InfrastructureInterface;
+namespace App\Paying\InfrastructureInterface;
 
 /**
  * Defines the read-side repository contract for payment projections.

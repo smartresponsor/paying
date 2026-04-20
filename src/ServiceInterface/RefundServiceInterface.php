@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\ServiceInterface;
+namespace App\Paying\ServiceInterface;
 
-use App\Entity\Payment;
+use App\Paying\Entity\Payment;
 use Symfony\Component\Uid\Ulid;
 
 /**

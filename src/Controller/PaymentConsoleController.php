@@ -3,22 +3,22 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Paying\Controller;
 
-use App\Attribute\RequireScope;
-use App\Controller\Dto\PaymentConsoleFinalizeRequestDto;
-use App\Controller\Dto\PaymentConsoleRefundRequestDto;
-use App\Controller\Dto\PaymentCreateRequestDto;
-use App\Controller\Dto\PaymentStartRequestDto;
-use App\Form\PaymentConsoleFinalizeType;
-use App\Form\PaymentConsoleRefundType;
-use App\Form\PaymentCreateType;
-use App\Form\PaymentStartType;
-use App\ServiceInterface\PaymentConsoleCreateHandlerInterface;
-use App\ServiceInterface\PaymentConsoleFinalizeHandlerInterface;
-use App\ServiceInterface\PaymentConsoleReadModelInterface;
-use App\ServiceInterface\PaymentConsoleRefundHandlerInterface;
-use App\ServiceInterface\PaymentConsoleStartHandlerInterface;
+use App\Paying\Attribute\RequireScope;
+use App\Paying\Controller\Dto\PaymentConsoleFinalizeRequestDto;
+use App\Paying\Controller\Dto\PaymentConsoleRefundRequestDto;
+use App\Paying\Controller\Dto\PaymentCreateRequestDto;
+use App\Paying\Controller\Dto\PaymentStartRequestDto;
+use App\Paying\Form\PaymentConsoleFinalizeType;
+use App\Paying\Form\PaymentConsoleRefundType;
+use App\Paying\Form\PaymentCreateType;
+use App\Paying\Form\PaymentStartType;
+use App\Paying\ServiceInterface\PaymentConsoleCreateHandlerInterface;
+use App\Paying\ServiceInterface\PaymentConsoleFinalizeHandlerInterface;
+use App\Paying\ServiceInterface\PaymentConsoleReadModelInterface;
+use App\Paying\ServiceInterface\PaymentConsoleRefundHandlerInterface;
+use App\Paying\ServiceInterface\PaymentConsoleStartHandlerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

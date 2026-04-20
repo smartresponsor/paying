@@ -3,14 +3,14 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\Entity\Payment;
-use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\ServiceInterface\PaymentStartServiceInterface;
-use App\ServiceInterface\ProviderGuardInterface;
-use App\ValueObject\Money;
-use App\ValueObject\PaymentStatus;
+use App\Paying\Entity\Payment;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\ServiceInterface\PaymentStartServiceInterface;
+use App\Paying\ServiceInterface\ProviderGuardInterface;
+use App\Paying\ValueObject\Money;
+use App\Paying\ValueObject\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 
 /**

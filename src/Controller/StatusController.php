@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Paying\Controller;
 
-use App\Attribute\RequireScope;
-use App\ControllerInterface\StatusControllerInterface;
-use App\ServiceInterface\ProjectionLagServiceInterface;
+use App\Paying\Attribute\RequireScope;
+use App\Paying\ControllerInterface\StatusControllerInterface;
+use App\Paying\ServiceInterface\ProjectionLagServiceInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;

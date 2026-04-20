@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\ServiceInterface;
+namespace App\Paying\ServiceInterface;
 
-use App\Service\PaymentStartResult;
+use App\Paying\Service\PaymentStartResult;
 
 /**
  * Defines the contract for the payment start service interface payment service boundary.

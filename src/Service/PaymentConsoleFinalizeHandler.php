@@ -3,13 +3,13 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\Entity\Payment;
-use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\ServiceInterface\PaymentConsoleFinalizeHandlerInterface;
-use App\ServiceInterface\ProviderGuardInterface;
-use App\ValueObject\PaymentFinalizePayload;
+use App\Paying\Entity\Payment;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\ServiceInterface\PaymentConsoleFinalizeHandlerInterface;
+use App\Paying\ServiceInterface\ProviderGuardInterface;
+use App\Paying\ValueObject\PaymentFinalizePayload;
 use Symfony\Component\Uid\Ulid;
 
 /**

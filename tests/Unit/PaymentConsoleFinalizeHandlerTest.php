@@ -3,13 +3,13 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit;
+namespace App\Paying\Tests\Unit;
 
-use App\Entity\Payment;
-use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\Service\PaymentConsoleFinalizeHandler;
-use App\ServiceInterface\ProviderGuardInterface;
-use App\ValueObject\PaymentStatus;
+use App\Paying\Entity\Payment;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\Service\PaymentConsoleFinalizeHandler;
+use App\Paying\ServiceInterface\ProviderGuardInterface;
+use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
@@ -23,6 +23,7 @@ final class PaymentConsoleFinalizeHandlerTest extends TestCase
      */
     /**
      * Verifies that finalize returns null when payment does not exist.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testFinalizeReturnsNullWhenPaymentDoesNotExist(): void
@@ -81,6 +82,7 @@ final class PaymentConsoleFinalizeHandlerTest extends TestCase
      */
     /**
      * Verifies that finalize updates and persists payment.
+     *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
     public function testFinalizeUpdatesAndPersistsPayment(): void

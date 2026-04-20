@@ -18,9 +18,9 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         connection: data
         mappings:
-          App:
+          App\Paying:
             is_bundle: false
             type: attribute
             dir: '%kernel.project_dir%/src/Entity'
-            prefix: 'App\Entity'
+            prefix: 'App\Paying\Entity'
             alias: App

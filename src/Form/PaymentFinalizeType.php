@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Form;
+namespace App\Paying\Form;
 
-use App\Controller\Dto\PaymentFinalizeRequestDto;
+use App\Paying\Controller\Dto\PaymentFinalizeRequestDto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;

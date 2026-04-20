@@ -3,7 +3,7 @@
 ## Current state
 
 The component is now structurally canonical enough to be treated as a single Symfony-oriented
-application under `App\ -> src/`. The repository already contains live contours for:
+application under `App\Paying\ -> src/`. The repository already contains live contours for:
 
 - payment lifecycle (`Payment`, `PaymentStatus`, start/finalize/refund flows)
 - webhook intake and normalization

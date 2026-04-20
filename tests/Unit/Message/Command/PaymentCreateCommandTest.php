@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Message\Handler;
+namespace App\Paying\Tests\Unit\Message\Handler;
 
-use App\Message\Command\PaymentCreateCommand;
+use App\Paying\Message\Command\PaymentCreateCommand;
 use PHPUnit\Framework\TestCase;
 
 /**

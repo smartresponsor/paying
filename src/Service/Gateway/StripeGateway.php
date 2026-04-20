@@ -3,9 +3,9 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service\Gateway;
+namespace App\Paying\Service\Gateway;
 
-use App\ServiceInterface\Gateway\PaymentGatewayInterface;
+use App\Paying\ServiceInterface\Gateway\PaymentGatewayInterface;
 
 /**
  * Implements the stripe gateway integration surface for payment gateway operations.

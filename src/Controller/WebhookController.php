@@ -3,13 +3,13 @@
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Paying\Controller;
 
-use App\ControllerInterface\WebhookControllerInterface;
-use App\ServiceInterface\ApiJsonBodyDecoderInterface;
-use App\ServiceInterface\EventMapperInterface;
-use App\ServiceInterface\ProviderGuardInterface;
-use App\ServiceInterface\WebhookVerifierInterface;
+use App\Paying\ControllerInterface\WebhookControllerInterface;
+use App\Paying\ServiceInterface\ApiJsonBodyDecoderInterface;
+use App\Paying\ServiceInterface\EventMapperInterface;
+use App\Paying\ServiceInterface\ProviderGuardInterface;
+use App\Paying\ServiceInterface\WebhookVerifierInterface;
 use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;

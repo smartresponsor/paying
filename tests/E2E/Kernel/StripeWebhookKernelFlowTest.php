@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Tests\E2E\Kernel;
+namespace App\Paying\Tests\E2E\Kernel;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -17,6 +17,7 @@ final class StripeWebhookKernelFlowTest extends WebTestCase
      */
     /**
      * Verifies that end to end stripe webhook.
+     *
      * @throws \JsonException
      */
     public function testEndToEndStripeWebhook(): void

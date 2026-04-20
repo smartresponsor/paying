@@ -3,11 +3,11 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Paying\Service;
 
-use App\Entity\PaymentOutboxMessage;
-use App\Entity\PaymentWebhookLog;
-use App\ServiceInterface\WebhookIngestServiceInterface;
+use App\Paying\Entity\PaymentOutboxMessage;
+use App\Paying\Entity\PaymentWebhookLog;
+use App\Paying\ServiceInterface\WebhookIngestServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;
 

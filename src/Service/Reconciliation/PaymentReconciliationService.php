@@ -3,13 +3,13 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Service\Reconciliation;
+namespace App\Paying\Service\Reconciliation;
 
-use App\Entity\Payment;
-use App\Entity\PaymentRefund;
-use App\Entity\PaymentTransaction;
-use App\RepositoryInterface\PaymentRepositoryInterface;
-use App\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface;
+use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentRefund;
+use App\Paying\Entity\PaymentTransaction;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;
 
