@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Command;
@@ -28,6 +27,8 @@ class PaymentOutboxProcessCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
+
         $this
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Max messages per batch', '50')
             ->addOption('retry', null, InputOption::VALUE_NONE, 'Also retry previously failed');
@@ -37,8 +38,8 @@ class PaymentOutboxProcessCommand extends Command
     {
         $limit = (int) $input->getOption('limit');
         $retry = (bool) $input->getOption('retry');
-        $n = $this->processor->process($limit, $retry);
-        $output->writeln(sprintf('<info>Published %d message(s)</info>', $n));
+        $publishedCount = $this->processor->process($limit, $retry);
+        $output->writeln(sprintf('<info>Published %d message(s)</info>', $publishedCount));
 
         return Command::SUCCESS;
     }

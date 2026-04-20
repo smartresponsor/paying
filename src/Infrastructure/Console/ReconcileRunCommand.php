@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure\Console;
@@ -26,12 +25,12 @@ class ReconcileRunCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $ids = $this->svc->listProcessingIds(200);
-        $n = 0;
+        $reconciledCount = 0;
         foreach ($ids as $id) {
             $this->svc->reconcile(new Ulid($id));
-            ++$n;
+            ++$reconciledCount;
         }
-        $output->writeln("Reconciled: {$n}");
+        $output->writeln("Reconciled: {$reconciledCount}");
 
         return Command::SUCCESS;
     }

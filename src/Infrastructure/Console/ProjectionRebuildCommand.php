@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure\Console;
@@ -25,13 +24,15 @@ class ProjectionRebuildCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
+
         $this->addArgument('batch', InputArgument::OPTIONAL, 'Batch size', '1000');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $n = $this->sync->rebuild((int) $input->getArgument('batch'));
-        $output->writeln("Rebuilt: {$n}");
+        $rebuiltCount = $this->sync->rebuild((int) $input->getArgument('batch'));
+        $output->writeln("Rebuilt: {$rebuiltCount}");
 
         return Command::SUCCESS;
     }

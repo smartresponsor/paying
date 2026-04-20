@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure\Console;
@@ -26,6 +25,8 @@ class OutboxRunCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
+
         $this->addArgument('limit', InputArgument::OPTIONAL, 'Max items', '100');
         $this->addOption('retry-failed', null, InputOption::VALUE_NONE, 'Also retry failed items before DLQ threshold');
     }

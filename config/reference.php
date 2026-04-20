@@ -1481,7 +1481,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     }>
  * }
  */
-final class App
+final class AppConfig
 {
     /**
      * @param ConfigType $config

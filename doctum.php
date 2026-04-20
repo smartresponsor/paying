@@ -1,9 +1,13 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 use Doctum\Doctum;
 use Symfony\Component\Finder\Finder;
+
+if (!class_exists(Doctum::class)) {
+    return static function (): void {};
+}
 
 $root = __DIR__;
 

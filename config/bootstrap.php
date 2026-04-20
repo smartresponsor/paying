@@ -1,5 +1,5 @@
 <?php
-
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 use Symfony\Component\Dotenv\Dotenv;
@@ -7,7 +7,7 @@ use Symfony\Component\Dotenv\Dotenv;
 /**
  * @param array<int, string> $argv
  */
-function paymentResolveCliEnv(array $argv): ?string
+function payCliEnv(array $argv): ?string
 {
     foreach ($argv as $index => $arg) {
         if (str_starts_with($arg, '--env=')) {
@@ -22,7 +22,7 @@ function paymentResolveCliEnv(array $argv): ?string
     return null;
 }
 
-function paymentResolveAppEnv(): ?string
+function payAppEnv(): ?string
 {
     return $_SERVER['APP_ENV']
         ?? $_ENV['APP_ENV']
@@ -53,10 +53,10 @@ if (is_file($defaultEnvFile)) {
 
 $cliEnv = null;
 if (PHP_SAPI === 'cli' && isset($_SERVER['argv']) && is_array($_SERVER['argv'])) {
-    $cliEnv = paymentResolveCliEnv($_SERVER['argv']);
+    $cliEnv = payCliEnv($_SERVER['argv']);
 }
 
-$resolvedEnv = $cliEnv ?? paymentResolveAppEnv();
+$resolvedEnv = $cliEnv ?? payAppEnv();
 
 if ('test' === $resolvedEnv && is_file($testEnvFile)) {
     $dotenv->overload($testEnvFile);
