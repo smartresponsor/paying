@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Controller;
 
+use App\Paying\Entity\Payment;
+
 use App\Paying\Attribute\RequireScope;
 use App\Paying\Controller\Dto\PaymentFinalizeRequestDto;
 use App\Paying\ControllerInterface\FinalizeControllerInterface;
@@ -76,11 +78,7 @@ final readonly class FinalizeController implements FinalizeControllerInterface
             return $this->errorResponseFactory->badJsonBody();
         }
 
-        $dto = new PaymentFinalizeRequestDto();
-        $dto->provider = (string) ($data['provider'] ?? $request->query->get('provider', 'internal'));
-        $dto->providerRef = (string) ($data['providerRef'] ?? '');
-        $dto->gatewayTransactionId = (string) ($data['gatewayTransactionId'] ?? '');
-        $dto->status = (string) ($data['status'] ?? '');
+        $dto = $this->hydrateFinalizeRequestDto($data, $request);
 
         $validationResponse = $this->requestValidator->validate($dto);
         if (null !== $validationResponse) {
@@ -98,10 +96,36 @@ final readonly class FinalizeController implements FinalizeControllerInterface
         $existing->syncFrom($resolved);
         $this->repo->save($existing);
 
-        return new JsonResponse([
-            'id' => (string) $existing->id(),
-            'status' => $existing->status()->value,
-            'providerRef' => $existing->providerRef(),
-        ], Response::HTTP_OK);
+        return new JsonResponse($this->buildFinalizePayload($existing), Response::HTTP_OK);
+    }
+
+    /**
+     * Maps the decoded finalize request body and query fallback into the DTO consumed by validation.
+     *
+     * @param array<string, mixed> $data
+     */
+    private function hydrateFinalizeRequestDto(array $data, Request $request): PaymentFinalizeRequestDto
+    {
+        $dto = new PaymentFinalizeRequestDto();
+        $dto->provider = (string) ($data['provider'] ?? $request->query->get('provider', 'internal'));
+        $dto->providerRef = (string) ($data['providerRef'] ?? '');
+        $dto->gatewayTransactionId = (string) ($data['gatewayTransactionId'] ?? '');
+        $dto->status = (string) ($data['status'] ?? '');
+
+        return $dto;
+    }
+
+    /**
+     * Shapes the minimal finalize response payload returned to API callers.
+     *
+     * @return array{id: string, status: string, providerRef: ?string}
+     */
+    private function buildFinalizePayload(Payment $payment): array
+    {
+        return [
+            'id' => (string) $payment->id(),
+            'status' => $payment->status()->value,
+            'providerRef' => $payment->providerRef(),
+        ];
     }
 }

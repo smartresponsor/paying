@@ -9,7 +9,6 @@ use App\Paying\Entity\Payment;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\Service\Reconciliation\PaymentReconciliationService;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -62,12 +61,10 @@ final class PaymentReconciliationServiceTest extends TestCase
                 return [];
             }
         };
-        try {
-            $em = $this->createMock(EntityManagerInterface::class);
-        } catch (Exception $e) {
-        }
+        $em = $this->createMock(EntityManagerInterface::class);
         $svc = new PaymentReconciliationService($repo, $em);
         $svc->onFailed('missing', 'declined', 'Card declined');
-        static::assertTrue(true);
+
+        self::addToAssertionCount(1);
     }
 }

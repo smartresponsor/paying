@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Controller;
 
+use App\Paying\Entity\Payment;
+
 use App\Paying\Attribute\RequireScope;
 use App\Paying\ControllerInterface\PaymentReadControllerInterface;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
@@ -65,13 +67,23 @@ final readonly class PaymentReadController implements PaymentReadControllerInter
             return new JsonResponse(['error' => 'payment-not-found'], Response::HTTP_NOT_FOUND);
         }
 
-        return new JsonResponse([
+        return new JsonResponse($this->buildReadPayload($payment), Response::HTTP_OK);
+    }
+
+    /**
+     * Shapes the read-side API payload for a payment aggregate.
+     *
+     * @return array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string}
+     */
+    private function buildReadPayload(Payment $payment): array
+    {
+        return [
             'id' => (string) $payment->id(),
             'orderId' => $payment->orderId(),
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),
             'currency' => $payment->currency(),
             'providerRef' => $payment->providerRef(),
-        ], Response::HTTP_OK);
+        ];
     }
 }

@@ -17,7 +17,6 @@ final class StripeWebhookKernelFlowTest extends WebTestCase
      */
     /**
      * Verifies that end to end stripe webhook.
-     *
      * @throws \JsonException
      */
     public function testEndToEndStripeWebhook(): void
@@ -36,6 +35,6 @@ final class StripeWebhookKernelFlowTest extends WebTestCase
         static::assertTrue($client->getResponse()->isSuccessful(), (string) $client->getResponse()->getContent());
 
         // NOTE: here you would run `payment:outbox:process` and then a messenger consumer in test env.
-        static::assertTrue(true);
+        static::assertSame(200, $client->getResponse()->getStatusCode());
     }
 }

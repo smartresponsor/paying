@@ -4,24 +4,26 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Functional\Webhook;
 
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * Marks the installed-runtime webhook -> outbox -> consumer proof contour that remains intentionally open.
+ */
 final class PaymentWebhookOutboxConsumerIntegratedProofTest extends TestCase
 {
+    /**
+     * Documents that the full installed-runtime proof still requires a wired consumer process and transport loop.
+     */
     public function testStripeWebhookQueuesPublishesAndCapturesPayment(): void
     {
-        $em = $this->createMock(EntityManagerInterface::class);
-        $em->expects(self::any())
-            ->method('flush')
-            ->willReturnCallback(static function (): void {
-            });
-
-        self::assertTrue(true);
+        self::markTestSkipped('Installed-runtime webhook -> outbox -> consumer proof is not wired in this repository snapshot.');
     }
 
+    /**
+     * Documents that secondary integrated proof coverage is still a deliberate placeholder until a runtime harness exists.
+     */
     public function testSecondProofPlaceholder(): void
     {
-        self::assertTrue(true);
+        self::markTestSkipped('Secondary integrated proof placeholder remains open until the installed-runtime harness is introduced.');
     }
 }

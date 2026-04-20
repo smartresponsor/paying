@@ -110,3 +110,11 @@ late extension-populated parameters would exist:
 Simple interface aliases are imported from `config/services/payment_aliases.yaml`
 to keep the root `config/services.yaml` focused on early parameters and explicit
 runtime wiring.
+
+
+## RC status
+
+- Internal Smart Responsor RC readiness: **ready**.
+- Symfony runtime gates observed green in the working RC snapshot: `composer dump-autoload`, `about`, `lint:container`, `phpstan`, `phpunit`.
+- Reusable bundle contour: **near-ready**, but still positioned first for the internal ecosystem rather than as a fully polished public vendor package.
+- Main remaining refinement areas are installed-runtime proof closure, continued controller decomposition, and further documentation synchronization.

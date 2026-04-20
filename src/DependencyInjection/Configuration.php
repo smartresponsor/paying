@@ -8,10 +8,13 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Defines the outward-facing configuration surface for the Paying component.
+ * Defines the outward-facing configuration contract exposed by the reusable Paying bundle surface.
  */
 final class Configuration implements ConfigurationInterface
 {
+    /**
+     * Builds the canonical configuration tree consumed by the bundle extension during container compilation.
+     */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('paying');

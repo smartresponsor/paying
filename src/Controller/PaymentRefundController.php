@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Controller;
 
+use App\Paying\Entity\Payment;
+
 use App\Paying\Attribute\RequireScope;
 use App\Paying\Controller\Dto\PaymentRefundRequestDto;
 use App\Paying\ControllerInterface\PaymentRefundControllerInterface;
@@ -75,9 +77,7 @@ final readonly class PaymentRefundController implements PaymentRefundControllerI
             return $this->errorResponseFactory->badJsonBody();
         }
 
-        $dto = new PaymentRefundRequestDto();
-        $dto->amount = (string) ($data['amount'] ?? '0.00');
-        $dto->provider = (string) ($data['provider'] ?? 'internal');
+        $dto = $this->hydrateRefundRequestDto($data);
 
         $validationResponse = $this->requestValidator->validate($dto);
         if (null !== $validationResponse) {
@@ -95,12 +95,36 @@ final readonly class PaymentRefundController implements PaymentRefundControllerI
             return $this->errorResponseFactory->paymentNotFound();
         }
 
-        return new JsonResponse([
+        return new JsonResponse($this->buildRefundPayload($payment), Response::HTTP_OK);
+    }
+
+    /**
+     * Maps the decoded refund request body into the DTO consumed by validation and orchestration.
+     *
+     * @param array<string, mixed> $data
+     */
+    private function hydrateRefundRequestDto(array $data): PaymentRefundRequestDto
+    {
+        $dto = new PaymentRefundRequestDto();
+        $dto->amount = (string) ($data['amount'] ?? '0.00');
+        $dto->provider = (string) ($data['provider'] ?? 'internal');
+
+        return $dto;
+    }
+
+    /**
+     * Shapes the serialized refund payload returned after a successful refund transition.
+     *
+     * @return array{id: string, status: string, amount: string, currency: string, providerRef: ?string}
+     */
+    private function buildRefundPayload(Payment $payment): array
+    {
+        return [
             'id' => (string) $payment->id(),
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),
             'currency' => $payment->currency(),
             'providerRef' => $payment->providerRef(),
-        ], Response::HTTP_OK);
+        ];
     }
 }

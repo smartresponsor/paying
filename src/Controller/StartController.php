@@ -68,11 +68,7 @@ final readonly class StartController implements StartControllerInterface
             return $this->errorResponseFactory->badJsonBody();
         }
 
-        $dto = new PaymentStartRequestDto();
-        $dto->orderId = (string) ($data['orderId'] ?? '');
-        $dto->amount = (string) ($data['amount'] ?? '0.00');
-        $dto->currency = strtoupper((string) ($data['currency'] ?? 'USD'));
-        $dto->provider = (string) ($data['provider'] ?? 'internal');
+        $dto = $this->hydrateStartRequestDto($data);
 
         $validationResponse = $this->requestValidator->validate($dto);
         if (null !== $validationResponse) {
@@ -81,8 +77,32 @@ final readonly class StartController implements StartControllerInterface
 
         $key = (string) $request->headers->get('Idempotency-Key', '');
         $payloadHash = hash('sha256', $request->getContent());
-        $result = $this->startHandler->handle(new PaymentStartInput($dto->orderId, $dto->provider, $dto->amount, $dto->currency), $key, $payloadHash);
+        $result = $this->startHandler->handle($this->buildStartInput($dto), $key, $payloadHash);
 
         return new JsonResponse($result, Response::HTTP_OK);
+    }
+
+    /**
+     * Maps the decoded start request body into the DTO consumed by validation and orchestration.
+     *
+     * @param array<string, mixed> $data
+     */
+    private function hydrateStartRequestDto(array $data): PaymentStartRequestDto
+    {
+        $dto = new PaymentStartRequestDto();
+        $dto->orderId = (string) ($data['orderId'] ?? '');
+        $dto->amount = (string) ($data['amount'] ?? '0.00');
+        $dto->currency = strtoupper((string) ($data['currency'] ?? 'USD'));
+        $dto->provider = (string) ($data['provider'] ?? 'internal');
+
+        return $dto;
+    }
+
+    /**
+     * Converts the validated DTO into the orchestration input contract consumed by the start handler.
+     */
+    private function buildStartInput(PaymentStartRequestDto $dto): PaymentStartInput
+    {
+        return new PaymentStartInput($dto->orderId, $dto->provider, $dto->amount, $dto->currency);
     }
 }

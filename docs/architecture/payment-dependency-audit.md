@@ -2,6 +2,12 @@
 
 // Marketing America Corp. Oleksandr Tishchenko
 
+## Current status note
+
+This audit contains historical dependency-pressure analysis from earlier Paying slices. Several items listed below are now already closed in the current RC-capable slice, including visible bundle/export wiring and the presence of packages such as Nelmio, Messenger, Form, Twig, Security, Validator, BrowserKit, and Fixtures.
+
+Read this document as an architectural dependency trail and historical rationale, not as an exact statement of the current unresolved package set.
+
 ## Purpose
 
 This document records the factual dependency mismatch of the current `Paying-20-Payment` slice and defines the target

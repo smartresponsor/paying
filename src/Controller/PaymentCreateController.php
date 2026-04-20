@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Controller;
 
+use App\Paying\Entity\Payment;
+
 use App\Paying\Attribute\RequireScope;
 use App\Paying\Controller\Dto\PaymentCreateRequestDto;
 use App\Paying\ControllerInterface\PaymentCreateControllerInterface;
@@ -79,10 +81,7 @@ final readonly class PaymentCreateController implements PaymentCreateControllerI
             return $this->errorResponseFactory->badJsonBody();
         }
 
-        $dto = new PaymentCreateRequestDto();
-        $dto->orderId = (string) ($data['orderId'] ?? '');
-        $dto->amountMinor = (int) ($data['amountMinor'] ?? 0);
-        $dto->currency = strtoupper((string) ($data['currency'] ?? 'USD'));
+        $dto = $this->hydrateCreateRequestDto($data);
 
         $validationResponse = $this->requestValidator->validate($dto);
         if (null !== $validationResponse) {
@@ -91,12 +90,37 @@ final readonly class PaymentCreateController implements PaymentCreateControllerI
 
         $payment = $this->paymentService->create($dto->orderId, $dto->amountMinor, $dto->currency);
 
-        return new JsonResponse([
+        return new JsonResponse($this->buildCreatedPaymentPayload($payment), Response::HTTP_CREATED);
+    }
+
+    /**
+     * Maps the decoded create request body into the DTO consumed by validation and orchestration.
+     *
+     * @param array<string, mixed> $data
+     */
+    private function hydrateCreateRequestDto(array $data): PaymentCreateRequestDto
+    {
+        $dto = new PaymentCreateRequestDto();
+        $dto->orderId = (string) ($data['orderId'] ?? '');
+        $dto->amountMinor = (int) ($data['amountMinor'] ?? 0);
+        $dto->currency = strtoupper((string) ($data['currency'] ?? 'USD'));
+
+        return $dto;
+    }
+
+    /**
+     * Shapes the serialized API payload returned for a newly created payment aggregate.
+     *
+     * @return array{id: string, orderId: string, status: string, amount: string, currency: string}
+     */
+    private function buildCreatedPaymentPayload(Payment $payment): array
+    {
+        return [
             'id' => (string) $payment->id(),
             'orderId' => $payment->orderId(),
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),
             'currency' => $payment->currency(),
-        ], Response::HTTP_CREATED);
+        ];
     }
 }

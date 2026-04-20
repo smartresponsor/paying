@@ -2,6 +2,18 @@
 
 // Marketing America Corp. Oleksandr Tishchenko
 
+## RC update
+
+The current slice has now cleared the owner-visible QA gate used for RC confirmation:
+
+- `composer dump-autoload` OK
+- `php bin/console about` OK
+- `php bin/console lint:container` OK
+- `php vendor/bin/phpstan analyse` OK
+- `php vendor/bin/phpunit` OK
+
+This shifts the repository from release-hardening candidate to **internal RC-ready**. The remaining work is polish around reusable-package posture, canonical proof attachment, and documentation synchronization rather than runtime viability.
+
 ## Current state
 
 The current Payment slice is no longer a cleanup candidate. It is now an App-owned Symfony component with:
