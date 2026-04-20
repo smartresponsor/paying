@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure\Console;
@@ -25,13 +24,15 @@ class ProjectionSyncCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
+
         $this->addArgument('limit', InputArgument::OPTIONAL, 'Batch size', '500');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $n = $this->sync->sync((int) $input->getArgument('limit'));
-        $output->writeln("Synced: {$n}");
+        $syncedCount = $this->sync->sync((int) $input->getArgument('limit'));
+        $output->writeln("Synced: {$syncedCount}");
 
         return Command::SUCCESS;
     }

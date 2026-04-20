@@ -1,6 +1,5 @@
 <?php
-
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure\Console;
@@ -24,8 +23,8 @@ class IdemPurgeCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $n = $this->store->purgeExpired();
-        $output->writeln("Purged: {$n}");
+        $purgedCount = $this->store->purgeExpired();
+        $output->writeln("Purged: {$purgedCount}");
 
         return Command::SUCCESS;
     }

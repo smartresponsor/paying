@@ -1,11 +1,14 @@
 <?php
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
-
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
+
+if (!class_exists(RectorConfig::class)) {
+    return static function (): void {};
+}
 
 return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->paths([__DIR__ . '/src']);
