@@ -1,8 +1,8 @@
 nelmio_api_doc:
   documentation:
     info:
-      title: Payment API
-      description: Symfony-owned OpenAPI surface for the Payment component.
+      title: PaymentEntity API
+      description: Symfony-owned OpenAPI surface for the PaymentEntity component.
       version: '1.0.0'
   areas:
     default:

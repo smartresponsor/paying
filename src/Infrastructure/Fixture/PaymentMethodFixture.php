@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Infrastructure\Fixture;
 
-use App\Paying\Entity\PaymentMethod;
+use App\Paying\Entity\PaymentMethodEntity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -22,7 +22,7 @@ final class PaymentMethodFixture extends Fixture implements FixtureGroupInterfac
     public function load(ObjectManager $manager): void
     {
         foreach (['card', 'paypal', 'bank_transfer'] as $code) {
-            $method = new PaymentMethod(new Ulid()->toRfc4122(), $code);
+            $method = new PaymentMethodEntity(new Ulid()->toRfc4122(), $code);
             $manager->persist($method);
             $this->addReference('payment-method-'.$code, $method);
         }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit\Reconciliation;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\Service\Reconciliation\PaymentReconciliationService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,14 +25,14 @@ final class PaymentReconciliationServiceTest extends TestCase
             /**
              * Implements the save behavior required by the local test double used in this scenario.
              */
-            public function save(Payment $payment): void
+            public function save(PaymentEntity $payment): void
             {
             }
 
             /**
              * Implements the find behavior required by the local test double used in this scenario.
              */
-            public function find(string $id): ?Payment
+            public function find(string $id): ?PaymentEntity
             {
                 return null;
             }
@@ -40,7 +40,7 @@ final class PaymentReconciliationServiceTest extends TestCase
             /**
              * Implements the find by order id behavior required by the local test double used in this scenario.
              */
-            public function findByOrderId(string $orderId): ?Payment
+            public function findByOrderId(string $orderId): ?PaymentEntity
             {
                 return null;
             }
@@ -59,6 +59,26 @@ final class PaymentReconciliationServiceTest extends TestCase
             public function listIdsByStatuses(array $statuses, int $limit = 100): array
             {
                 return [];
+            }
+
+            public function listUpdatedAfter(\DateTimeImmutable $updatedAfter, int $limit = 500): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: listUpdatedAfter');
+            }
+
+            public function listAllOrderedByUpdatedAt(int $limit = 1000, int $offset = 0): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: listAllOrderedByUpdatedAt');
+            }
+
+            public function maxUpdatedAt(): ?string
+            {
+                throw new \LogicException('Test repository stub method is not configured: maxUpdatedAt');
+            }
+
+            public function countByStatusSince(\DateTimeImmutable $since): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: countByStatusSince');
             }
         };
         $em = $this->createMock(EntityManagerInterface::class);

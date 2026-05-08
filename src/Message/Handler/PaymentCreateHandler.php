@@ -7,7 +7,7 @@ namespace App\Paying\Message\Handler;
 
 use App\Paying\Message\Command\PaymentCreateCommand;
 use App\Paying\ServiceInterface\PaymentStartServiceInterface;
-use App\Paying\ValueObject\Money;
+use App\Paying\ValueObject\PaymentMoney;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
@@ -28,7 +28,7 @@ final readonly class PaymentCreateHandler
      */
     public function __invoke(PaymentCreateCommand $command): void
     {
-        $money = Money::fromMinor($command->amountMinor, strtoupper($command->currency));
+        $money = PaymentMoney::fromMinor($command->amountMinor, strtoupper($command->currency));
 
         $this->paymentStartService->start(
             $command->orderId,
@@ -46,7 +46,7 @@ final readonly class PaymentCreateHandler
 
         return match ($normalized) {
             'stripe', 'paypal', 'internal' => $normalized,
-            default => throw new \RuntimeException('Payment provider not found: '.$providerCode),
+            default => throw new \RuntimeException('PaymentEntity provider not found: '.$providerCode),
         };
     }
 }

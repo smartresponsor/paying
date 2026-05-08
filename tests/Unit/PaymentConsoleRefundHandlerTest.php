@@ -5,10 +5,10 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\Service\PaymentConsoleRefundHandler;
 use App\Paying\Service\PaymentNotFoundException;
-use App\Paying\ServiceInterface\RefundServiceInterface;
+use App\Paying\ServiceInterface\PaymentRefundServiceInterface;
 use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -29,9 +29,9 @@ final class PaymentConsoleRefundHandlerTest extends TestCase
      */
     public function testRefundReturnsPaymentOnSuccess(): void
     {
-        $payment = new Payment(new Ulid(), PaymentStatus::refunded, '10.00', 'USD');
+        $payment = new PaymentEntity(new Ulid(), PaymentStatus::refunded, '10.00', 'USD');
 
-        $refundService = $this->createMock(RefundServiceInterface::class);
+        $refundService = $this->createMock(PaymentRefundServiceInterface::class);
         $refundService
             ->expects(self::once())
             ->method('refund')
@@ -56,7 +56,7 @@ final class PaymentConsoleRefundHandlerTest extends TestCase
      */
     public function testRefundReturnsNullAndLogsOnFailure(): void
     {
-        $refundService = $this->createMock(RefundServiceInterface::class);
+        $refundService = $this->createMock(PaymentRefundServiceInterface::class);
         $refundService
             ->expects(self::once())
             ->method('refund')
@@ -67,7 +67,7 @@ final class PaymentConsoleRefundHandlerTest extends TestCase
             ->expects(self::once())
             ->method('warning')
             ->with(
-                'Payment console refund failed.',
+                'PaymentEntity console refund failed.',
                 self::arrayHasKey('payment_id'),
             );
 

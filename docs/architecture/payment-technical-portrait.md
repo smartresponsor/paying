@@ -39,9 +39,9 @@ The following seams show an already recognisable payment process:
 
 - `src/Entity/Payment.php`
 - payment lifecycle state/value handling in the current `src/Service` + entity contour
-- `src/Controller/StartController.php`
-- `src/Controller/FinalizeController.php`
-- `src/Service/RefundService.php`
+- `src/Controller/PaymentStartController.php`
+- `src/Controller/PaymentFinalizeController.php`
+- `src/Service/PaymentRefundService.php`
 - `src/Service/PaymentService.php`
 - `src/Service/PaymentApiStartHandler.php`
 

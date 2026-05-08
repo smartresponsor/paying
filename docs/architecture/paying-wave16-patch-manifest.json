@@ -1,0 +1,35 @@
+{
+    "component": "Paying",
+    "wave": 16,
+    "name": "attribute-name-form-canonicalization",
+    "scope": "Rename RequireScope to PaymentRequireScopeAttribute and add a report-only guard.",
+    "public_contract_changes": false,
+    "route_changes": false,
+    "provider_key_changes": false,
+    "database_changes": false,
+    "retirements": [
+        {
+            "path": "src/Attribute/RequireScope.php",
+            "sha256": "074e64053eaab6f30c090b0d580ff90e773a9caffd3d82e69a597a54087f4ded"
+        }
+    ],
+    "added_or_updated_files": [
+        "composer.json",
+        "docs/architecture/paying-canonicalization-milestone.md",
+        "docs/architecture/paying-wave16-attribute-name-form.md",
+        "src/Attribute/PaymentRequireScopeAttribute.php",
+        "src/Controller/PaymentConsoleController.php",
+        "src/Controller/PaymentCreateController.php",
+        "src/Controller/PaymentDlqController.php",
+        "src/Controller/PaymentFinalizeController.php",
+        "src/Controller/PaymentMetricController.php",
+        "src/Controller/PaymentReadController.php",
+        "src/Controller/PaymentRefundController.php",
+        "src/Controller/PaymentStartController.php",
+        "src/Controller/PaymentStatusController.php",
+        "src/Infrastructure/ScopeGuardSubscriber.php",
+        "tests/Unit/ScopeGuardSubscriberTest.php",
+        "tools/inspection/PayingAttributeNameFormReport.php",
+        "docs/architecture/paying-wave16-patch-manifest.json"
+    ]
+}

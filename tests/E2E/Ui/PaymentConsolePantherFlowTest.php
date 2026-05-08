@@ -38,7 +38,7 @@ if (class_exists(PantherTestCase::class)) {
 final class PaymentConsolePantherFlowTest extends PaymentConsolePantherFlowTestBase
 {
     private const SQLITE_TEST_DATABASE_URL = 'sqlite:///%kernel.project_dir%/var/payment.test.data.sqlite';
-    private const SQLITE_TEST_INFRA_URL = 'sqlite:///%kernel.project_dir%/var/payment.test.infra.sqlite';
+    private const SQLITE_TEST_INFRASTRUCTURE_URL = 'sqlite:///%kernel.project_dir%/var/payment.test.infrastructure.sqlite';
     private const PANTHER_BROWSER_ARGUMENTS = [
         '--headless',
         '--disable-dev-shm-usage',
@@ -98,7 +98,7 @@ final class PaymentConsolePantherFlowTest extends PaymentConsolePantherFlowTestB
                 'APP_DEBUG' => '0',
                 'APP_SECRET' => 'payment_test_secret',
                 'DATABASE_URL' => self::SQLITE_TEST_DATABASE_URL,
-                'INFRA_URL' => self::SQLITE_TEST_INFRA_URL,
+                'INFRASTRUCTURE_URL' => self::SQLITE_TEST_INFRASTRUCTURE_URL,
                 'STRIPE_WEBHOOK_SECRET' => 'payment_test_whsec',
                 'OIDC_DISABLED' => '1',
             ];
@@ -192,15 +192,6 @@ JS);
 
             $schemaTool->createSchema($metadata);
         }
-
-        $entityManager->getConnection()->executeStatement('DROP TABLE IF EXISTS payment_idempotency');
-        $entityManager->getConnection()->executeStatement(
-            'CREATE TABLE payment_idempotency ('
-            .'key VARCHAR(80) PRIMARY KEY NOT NULL, '
-            .'value CLOB NOT NULL, '
-            .'expires_at DATETIME NOT NULL'
-            .')'
-        );
 
         self::ensureKernelShutdown();
     }

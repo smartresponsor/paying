@@ -6,9 +6,9 @@ doctrine:
         # User data storage; expected to be PostgreSQL.
         url: '%env(resolve:DATABASE_URL)%'
         server_version: '%paying.storage.data_server_version%'
-      infra:
+      infrastructure:
         # Application/infrastructure data storage; expected to be SQLite.
-        url: '%env(resolve:INFRA_URL)%'
+        url: '%env(resolve:INFRASTRUCTURE_URL)%'
         server_version: '%paying.storage.infra_server_version%'
   orm:
     controller_resolver:
@@ -24,3 +24,13 @@ doctrine:
             dir: '%kernel.project_dir%/src/Entity'
             prefix: 'App\Paying\Entity'
             alias: App
+      infrastructure:
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        connection: infrastructure
+        mappings:
+          App\Paying\Infrastructure:
+            is_bundle: false
+            type: attribute
+            dir: '%kernel.project_dir%/src/Infrastructure/Entity'
+            prefix: 'App\Paying\Infrastructure\Entity'
+            alias: Infrastructure

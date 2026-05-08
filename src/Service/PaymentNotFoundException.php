@@ -15,6 +15,6 @@ final class PaymentNotFoundException extends \RuntimeException
      */
     public static function byId(string $paymentId): self
     {
-        return new self('Payment not found: '.$paymentId);
+        return new self('PaymentEntity not found: '.$paymentId);
     }
 }

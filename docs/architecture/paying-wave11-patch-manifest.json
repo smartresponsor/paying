@@ -1,0 +1,15 @@
+{
+  "component": "Paying",
+  "wave": 11,
+  "scope": "entity-first-persistence-map-and-report",
+  "non_destructive": true,
+  "touched_files": [
+    "composer.json",
+    "docs/architecture/paying-canonicalization-milestone.md",
+    "docs/architecture/paying-entity-first-map.md",
+    "docs/architecture/paying-wave11-entity-first-persistence.md",
+    "docs/architecture/paying-wave11-patch-manifest.json",
+    "tools/inspection/PayingEntityFirstPersistenceReport.php"
+  ],
+  "retired_files": []
+}

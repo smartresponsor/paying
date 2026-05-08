@@ -5,9 +5,9 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\ServiceInterface\PaymentConsoleRefundHandlerInterface;
-use App\Paying\ServiceInterface\RefundServiceInterface;
+use App\Paying\ServiceInterface\PaymentRefundServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Uid\Ulid;
 
@@ -17,7 +17,7 @@ use Symfony\Component\Uid\Ulid;
 final readonly class PaymentConsoleRefundHandler implements PaymentConsoleRefundHandlerInterface
 {
     public function __construct(
-        private RefundServiceInterface $refundService,
+        private PaymentRefundServiceInterface $refundService,
         private LoggerInterface $logger,
     ) {
     }
@@ -25,12 +25,12 @@ final readonly class PaymentConsoleRefundHandler implements PaymentConsoleRefund
     /**
      * Executes the refund operation for the current payment workflow.
      */
-    public function refund(string $paymentId, string $amount, string $provider): ?Payment
+    public function refund(string $paymentId, string $amount, string $provider): ?PaymentEntity
     {
         try {
             return $this->refundService->refund(new Ulid($paymentId), $amount, $provider);
         } catch (PaymentNotFoundException $exception) {
-            $this->logger->warning('Payment console refund failed.', [
+            $this->logger->warning('PaymentEntity console refund failed.', [
                 'payment_id' => $paymentId,
                 'error' => $exception->getMessage(),
             ]);

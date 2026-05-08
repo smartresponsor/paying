@@ -5,10 +5,9 @@ declare(strict_types=1);
 
 namespace App\Paying\Controller;
 
-use App\Paying\Entity\Payment;
-
-use App\Paying\Attribute\RequireScope;
+use App\Paying\Attribute\PaymentRequireScopeAttribute;
 use App\Paying\ControllerInterface\PaymentReadControllerInterface;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
@@ -25,15 +24,15 @@ final readonly class PaymentReadController implements PaymentReadControllerInter
     {
     }
 
-    #[RequireScope(['payment:read'])]
+    #[PaymentRequireScopeAttribute(['payment:read'])]
     #[OA\Get(
         path: '/api/payments/{id}',
         summary: 'Read a payment aggregate by identifier.',
-        tags: ['Payment'],
+        tags: ['PaymentEntity'],
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Payment read model.',
+                description: 'PaymentEntity read model.',
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'id', type: 'string', example: '01HZY9M8Q6M7X4YH3B2A1C0D9E'),
@@ -48,7 +47,7 @@ final readonly class PaymentReadController implements PaymentReadControllerInter
             ),
             new OA\Response(response: 401, description: 'Missing or invalid bearer token.'),
             new OA\Response(response: 403, description: 'Missing payment:read scope.'),
-            new OA\Response(response: 404, description: 'Payment not found.'),
+            new OA\Response(response: 404, description: 'PaymentEntity not found.'),
         ],
     )]
     #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string'))]
@@ -75,7 +74,7 @@ final readonly class PaymentReadController implements PaymentReadControllerInter
      *
      * @return array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string}
      */
-    private function buildReadPayload(Payment $payment): array
+    private function buildReadPayload(PaymentEntity $payment): array
     {
         return [
             'id' => (string) $payment->id(),

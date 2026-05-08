@@ -25,7 +25,7 @@ final class ControllerJsonDecodeBoundaryTest extends TestCase
             self::assertStringNotContainsString(
                 'json_decode(',
                 $content,
-                sprintf('Controller %s must use ApiJsonBodyDecoder instead of raw json_decode.', basename($file)),
+                sprintf('Controller %s must use PaymentApiJsonBodyDecoder instead of raw json_decode.', basename($file)),
             );
         }
     }

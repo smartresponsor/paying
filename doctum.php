@@ -19,7 +19,7 @@ $iterator = Finder::create()
     ]);
 
 return new Doctum($iterator, [
-    'title' => 'Payment code reference',
+    'title' => 'PaymentEntity code reference',
     'build_dir' => $root . '/docs/generated/doctum',
     'cache_dir' => $root . '/var/cache/doctum',
     'default_opened_level' => 2,

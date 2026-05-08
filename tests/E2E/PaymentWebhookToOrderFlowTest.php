@@ -5,12 +5,12 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\E2E;
 
-use App\Paying\Entity\Payment;
-use App\Paying\Entity\PaymentOutboxMessage;
+use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\PaymentOutboxMessageEntity;
 use App\Paying\Message\Event\PaymentTransportMessage;
 use App\Paying\Message\Handler\PaymentEventConsumer;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
-use App\Paying\Service\Order\NullOrderPaymentSync;
+use App\Paying\Service\Order\PaymentNullOrderPaymentSync;
 use App\Paying\Service\Outbox\PaymentOutboxProcessor;
 use App\Paying\Service\Reconciliation\PaymentReconciliationService;
 use App\Paying\ValueObject\PaymentStatus;
@@ -58,7 +58,7 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
         $em = $this->createMock(EntityManagerInterface::class);
         $em->method('getRepository')->willReturn($repository);
 
-        $outboxMessage = new PaymentOutboxMessage('11111111-1111-1111-1111-111111111111', 'payment.captured', [
+        $outboxMessage = new PaymentOutboxMessageEntity('11111111-1111-1111-1111-111111111111', 'payment.captured', [
             'paymentId' => 'pay_1',
             'orderId' => 'ord_1',
             'amountMinor' => 5000,
@@ -109,14 +109,14 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
         self::assertSame('published', $outboxMessage->status());
         self::assertSame(1, $outboxMessage->attempts());
 
-        $sync = new NullOrderPaymentSync(new NullLogger());
-        $payment = new Payment(new Ulid('01HK153X000000000000000000'), PaymentStatus::processing, '50.00', 'USD');
+        $sync = new PaymentNullOrderPaymentSync(new NullLogger());
+        $payment = new PaymentEntity(new Ulid('01HK153X000000000000000000'), PaymentStatus::processing, '50.00', 'USD');
         $saved = [];
 
         $payments = new class($payment, $saved) implements PaymentRepositoryInterface {
             public array $saved = [];
 
-            public function __construct(private readonly Payment $payment, array $saved)
+            public function __construct(private readonly PaymentEntity $payment, array $saved)
             {
                 $this->saved = $saved;
             }
@@ -124,7 +124,7 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
             /**
              * Implements the save behavior required by the local test double used in this scenario.
              */
-            public function save(Payment $payment): void
+            public function save(PaymentEntity $payment): void
             {
                 $this->saved[] = $payment;
             }
@@ -132,7 +132,7 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
             /**
              * Implements the find behavior required by the local test double used in this scenario.
              */
-            public function find(string $id): ?Payment
+            public function find(string $id): ?PaymentEntity
             {
                 return 'pay_1' === $id ? $this->payment : null;
             }
@@ -140,7 +140,7 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
             /**
              * Implements the find by order id behavior required by the local test double used in this scenario.
              */
-            public function findByOrderId(string $orderId): ?Payment
+            public function findByOrderId(string $orderId): ?PaymentEntity
             {
                 return null;
             }
@@ -159,6 +159,26 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
             public function listIdsByStatuses(array $statuses, int $limit = 100): array
             {
                 return [];
+            }
+
+            public function listUpdatedAfter(\DateTimeImmutable $updatedAfter, int $limit = 500): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: listUpdatedAfter');
+            }
+
+            public function listAllOrderedByUpdatedAt(int $limit = 1000, int $offset = 0): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: listAllOrderedByUpdatedAt');
+            }
+
+            public function maxUpdatedAt(): ?string
+            {
+                throw new \LogicException('Test repository stub method is not configured: maxUpdatedAt');
+            }
+
+            public function countByStatusSince(\DateTimeImmutable $since): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: countByStatusSince');
             }
         };
 

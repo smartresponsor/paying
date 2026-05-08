@@ -18,7 +18,7 @@ final class Version20251107Circuit extends AbstractMigration
      */
     public function getDescription(): string
     {
-        return 'Payment circuit breaker storage';
+        return 'PaymentEntity circuit breaker storage';
     }
 
     /**

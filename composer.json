@@ -1,5 +1,6 @@
 {
     "name": "paying/payment",
+    "description": "Symfony payment component for payment lifecycle, providers, webhooks, reconciliation, and operational payment workflows.",
     "type": "library",
     "license": "proprietary",
     "require": {
@@ -28,7 +29,8 @@
         "symfony/workflow": "^8.0",
         "symfony/yaml": "^8.0",
         "ext-openssl": "*",
-        "ext-redis": "*"
+        "ext-redis": "*",
+        "smart-responsor/objecting": "*@dev"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.3",
@@ -54,32 +56,38 @@
         }
     },
     "scripts": {
-        "lint": "@php tools/php/php84.php tools/qa/PayingPhpLint.php",
-        "server:start": "@php tools/runtime/payment_server_start.php",
-        "server:stop": "@php tools/runtime/payment_server_stop.php",
-        "cs:fix": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php",
         "cs:check": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff",
         "cs:check-quiet": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run",
-        "stan": "@stan:runtime-target",
-        "stan:conservative": "@php tools/php/php82.php vendor/bin/phpstan analyse --memory-limit=1G --debug --no-progress",
-        "stan:runtime-target": "@php tools/php/php84.php vendor/bin/phpstan analyse --memory-limit=1G --debug --no-progress",
-        "test": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist",
-        "test:unit": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
-        "test:functional": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional",
-        "test:e2e": "bash tools/runtime/payment_panther_e2e.sh",
-        "test:ui:playwright": "npm run test:playwright",
-        "test:functional:debug": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional --stop-on-error --debug",
-        "test:debug:first-error": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --stop-on-error --debug",
-        "lint:yaml": "@php tools/ci/console-test-env.php lint:yaml config --parse-tags",
-        "lint:container": "@php tools/ci/console-test-env.php lint:container",
-        "docs:openapi:lint": "@php tools/php/php84.php tools/inspection/PaymentOpenApiLint.php",
-        "docs:docblock:report": "@php tools/php/php84.php tools/inspection/PaymentSemanticDocBlockReport.php",
+        "cs:fix": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php",
         "docs:docblock:check": "@docs:docblock:report",
-        "security:composer-audit": "composer audit --locked --no-interaction --format=plain",
-        "security:importmap-audit": "@php tools/ci/console-test-env.php importmap:audit --no-interaction",
-        "security:gitleaks": "gitleaks git --config=.gitleaks.toml --redact --exit-code 1",
-        "security:semgrep-ce": "semgrep scan --config auto --metrics=off --error",
-        "test:security": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --filter ScopeGuardSubscriberTest",
+        "docs:docblock:report": "@php tools/php/php84.php tools/inspection/PaymentSemanticDocBlockReport.php",
+        "docs:doctum": "@php tools/php/php84.php tools/runtime/doctum.phar update doctum.php --force",
+        "docs:doctum:check": "@php tools/ci/doctum-check.php",
+        "docs:openapi:lint": "@php tools/php/php84.php tools/inspection/PaymentOpenApiLint.php",
+        "fixtures:payment:append": "@php tools/php/php84.php bin/console doctrine:fixtures:load --group=payment --append --no-interaction",
+        "fixtures:payment:dry-run:docker": "bash tools/runtime/payment_fixture_dry_run.sh",
+        "fixtures:payment:load": "@php tools/php/php84.php bin/console doctrine:fixtures:load --group=payment --no-interaction",
+        "install:preflight": "@php tools/ci/install-preflight.php",
+        "install:proof:checklist": "@php tools/php/php84.php tools/inspection/PaymentRuntimeProofReport.php",
+        "lint": "@php tools/php/php84.php tools/qa/PayingPhpLint.php",
+        "lint:container": "@php tools/ci/console-test-env.php lint:container",
+        "lint:yaml": "@php tools/ci/console-test-env.php lint:yaml config --parse-tags",
+        "pipeline:local": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1",
+        "pipeline:local:full": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1 -IncludeSmokes -IncludeReports -IncludeSecurity",
+        "pipeline:local:ps1": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1",
+        "pipeline:local:sh": "bash tools/ci/run-payment-local-pipeline.sh",
+        "pipeline:local:strict": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1 -IncludeSmokes -IncludeReports -IncludeSecurity -FailOnErrors",
+        "proof:pack": "bash tools/ci/run-payment-proof-pack.sh",
+        "proof:pack:sh": "bash tools/ci/run-payment-proof-pack.sh",
+        "qa:full": [
+            "@qa:style",
+            "@qa:static",
+            "@qa:test"
+        ],
+        "qa:report": [
+            "@report:route-inventory",
+            "@report:runtime-proof"
+        ],
         "qa:security": [
             "@security:composer-audit",
             "@security:importmap-audit",
@@ -87,61 +95,103 @@
             "@security:semgrep-ce",
             "@test:security"
         ],
-        "test:bootstrap:reset": "@php tools/ci/test-bootstrap-reset.php",
-        "test:bootstrap:migrate": "@php tools/php/php84.php bin/console doctrine:migrations:migrate --env=test --no-interaction",
-        "test:bootstrap:fixtures": "@php tools/php/php84.php bin/console doctrine:fixtures:load --env=test --group=payment --no-interaction",
-        "test:bootstrap": [
-            "@test:bootstrap:reset",
-            "@test:bootstrap:migrate",
-            "@test:bootstrap:fixtures"
-        ],
-        "install:preflight": "@php tools/ci/install-preflight.php",
-        "install:proof:checklist": "@php tools/php/php84.php tools/inspection/PaymentRuntimeProofReport.php",
-        "runtime:preflight:sh": "bash tools/runtime/payment_install_preflight.sh",
-        "runtime:preflight:ps1": "pwsh -NoProfile -File tools/runtime/payment_install_preflight.ps1",
-        "fixtures:payment:load": "@php tools/php/php84.php bin/console doctrine:fixtures:load --group=payment --no-interaction",
-        "fixtures:payment:append": "@php tools/php/php84.php bin/console doctrine:fixtures:load --group=payment --append --no-interaction",
-        "fixtures:payment:dry-run:docker": "bash tools/runtime/payment_fixture_dry_run.sh",
-        "smoke:runtime": "@php tools/php/php84.php tools/smoke/payment-runtime-smoke.php",
-        "smoke:fixtures": "@php tools/php/php84.php tools/smoke/payment-fixture-sanity.php",
-        "smoke:container": "@php tools/php/php84.php tools/smoke/payment-container-boot-smoke.php",
-        "smoke:doctrine": "@php tools/php/php84.php tools/smoke/payment-doctrine-mapping-smoke.php",
-        "report:route-inventory": "@php tools/php/php84.php tools/inspection/PaymentRouteInventoryReport.php",
-        "report:runtime-proof": "@php tools/php/php84.php tools/inspection/PaymentRuntimeProofReport.php",
-        "qa:style": [
-            "@lint",
-            "@cs:check"
-        ],
-        "qa:static": [
-            "@stan"
-        ],
-        "qa:test": [
-            "@test"
-        ],
         "qa:smoke": [
             "@smoke:runtime",
             "@smoke:fixtures",
             "@smoke:container",
             "@smoke:doctrine"
         ],
-        "qa:report": [
-            "@report:route-inventory",
-            "@report:runtime-proof"
+        "qa:static": [
+            "@stan"
         ],
-        "qa:full": [
-            "@qa:style",
-            "@qa:static",
-            "@qa:test"
+        "qa:style": [
+            "@lint",
+            "@cs:check"
         ],
-        "pipeline:local": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1",
-        "pipeline:local:ps1": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1",
-        "pipeline:local:sh": "bash tools/ci/run-payment-local-pipeline.sh",
-        "pipeline:local:full": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1 -IncludeSmokes -IncludeReports -IncludeSecurity",
-        "pipeline:local:strict": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/ci/run-payment-local-pipeline.ps1 -IncludeSmokes -IncludeReports -IncludeSecurity -FailOnErrors",
+        "qa:test": [
+            "@test"
+        ],
+        "report:api-boundary-name-form": "@php tools/php/php84.php tools/inspection/PayingApiBoundaryNameFormReport.php",
+        "report:application-surface-name-form": "@php tools/php/php84.php tools/inspection/PayingApplicationSurfaceNameFormReport.php",
+        "report:attribute-name-form": "@php tools/php/php84.php tools/inspection/PayingAttributeNameFormReport.php",
+        "report:business-service-name-form": "@php tools/php/php84.php tools/inspection/PayingBusinessServiceNameFormReport.php",
+        "report:canon-structure": "@php tools/php/php84.php tools/inspection/PayingCanonicalStructureAudit.php",
+        "report:canonical-name-form": "@php tools/php/php84.php tools/inspection/PayingCanonicalNameFormSummaryReport.php",
+        "report:canonical-structure-closure": "@php tools/php/php84.php tools/inspection/PayingCanonicalStructureClosureReport.php",
+        "report:console-command-name-form": "@php tools/php/php84.php tools/inspection/PayingConsoleCommandNameFormReport.php",
+        "report:controller-name-form": "@php tools/php/php84.php tools/inspection/PayingControllerNameFormReport.php",
+        "report:entity-first-persistence": "@php tools/php/php84.php tools/inspection/PayingEntityFirstPersistenceReport.php",
+        "report:infrastructure-name-form": "@php tools/php/php84.php tools/inspection/PayingInfrastructureNameFormReport.php",
+        "report:inspection-script-registry": "@php tools/php/php84.php tools/inspection/PayingInspectionScriptRegistryReport.php",
+        "report:legacy-duplicate-retirement": "@php tools/php/php84.php tools/inspection/PayingLegacyDuplicateRetirementReport.php",
         "report:local:latest": "@php tools/ci/report-local-latest.php",
-        "proof:pack:sh": "bash tools/ci/run-payment-proof-pack.sh",
-        "proof:pack": "bash tools/ci/run-payment-proof-pack.sh",
-        "docs:doctum": "@php tools/php/php84.php tools/runtime/doctum.phar update doctum.php --force",
-        "docs:doctum:check": "@php tools/ci/doctum-check.php"
-    }
+        "report:post-subscriber-residual-retirement": "@php tools/php/php84.php tools/inspection/PayingPostSubscriberResidualRetirementReport.php",
+        "report:provider-service-name-form": "@php tools/php/php84.php tools/inspection/PayingProviderServiceNameFormReport.php",
+        "report:release-candidate-structure": "@php tools/php/php84.php tools/inspection/PayingReleaseCandidateStructureReport.php",
+        "report:residual-legacy-duplicate-retirement": "@php tools/php/php84.php tools/inspection/PayingResidualLegacyDuplicateRetirementReport.php",
+        "report:route-inventory": "@php tools/php/php84.php tools/inspection/PaymentRouteInventoryReport.php",
+        "report:runtime-proof": "@php tools/php/php84.php tools/inspection/PaymentRuntimeProofReport.php",
+        "report:service-adapter-name-form": "@php tools/php/php84.php tools/inspection/PayingServiceAdapterNameFormReport.php",
+        "report:service-core-name-form": "@php tools/php/php84.php tools/inspection/PayingServiceCoreNameFormReport.php",
+        "report:source-residual-name-form": "@php tools/php/php84.php tools/inspection/PayingSourceResidualNameFormReport.php",
+        "report:subscriber-layer-name-form": "@php tools/php/php84.php tools/inspection/PayingSubscriberLayerNameFormReport.php",
+        "report:test-canonical-closure": "@php tools/php/php84.php tools/inspection/PayingTestCanonicalClosureReport.php",
+        "report:test-legacy-duplicate-retirement": "@php tools/php/php84.php tools/inspection/PayingTestLegacyDuplicateRetirementReport.php",
+        "report:test-residual-name-form": "@php tools/php/php84.php tools/inspection/PayingTestResidualNameFormReport.php",
+        "report:test-unmapped-canonicalization": "@php tools/php/php84.php tools/inspection/PayingTestUnmappedCanonicalizationReport.php",
+        "report:test-unmapped-residual-name-form": "@php tools/php/php84.php tools/inspection/PayingTestUnmappedResidualNameFormReport.php",
+        "report:value-object-exception-name-form": "@php tools/php/php84.php tools/inspection/PayingValueObjectExceptionNameFormReport.php",
+        "report:webhook-controller-name-form": "@php tools/php/php84.php tools/inspection/PayingWebhookControllerNameFormReport.php",
+        "runtime:preflight:ps1": "pwsh -NoProfile -File tools/runtime/payment_install_preflight.ps1",
+        "runtime:preflight:sh": "bash tools/runtime/payment_install_preflight.sh",
+        "security:composer-audit": "composer audit --locked --no-interaction --format=plain",
+        "security:gitleaks": "gitleaks git --config=.gitleaks.toml --redact --exit-code 1",
+        "security:importmap-audit": "@php tools/ci/console-test-env.php importmap:audit --no-interaction",
+        "security:semgrep-ce": "semgrep scan --config auto --metrics=off --error",
+        "server:start": "@php tools/runtime/payment_server_start.php",
+        "server:stop": "@php tools/runtime/payment_server_stop.php",
+        "smoke:container": "@php tools/php/php84.php tools/smoke/payment-container-boot-smoke.php",
+        "smoke:doctrine": "@php tools/php/php84.php tools/smoke/payment-doctrine-mapping-smoke.php",
+        "smoke:fixtures": "@php tools/php/php84.php tools/smoke/payment-fixture-sanity.php",
+        "smoke:runtime": "@php tools/php/php84.php tools/smoke/payment-runtime-smoke.php",
+        "stan": "@stan:runtime-target",
+        "stan:conservative": "@php tools/php/php82.php vendor/bin/phpstan analyse --memory-limit=1G --debug --no-progress",
+        "stan:runtime-target": "@php tools/php/php84.php vendor/bin/phpstan analyse --memory-limit=1G --debug --no-progress",
+        "test": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist",
+        "test:bootstrap": [
+            "@test:bootstrap:reset",
+            "@test:bootstrap:migrate",
+            "@test:bootstrap:fixtures"
+        ],
+        "test:bootstrap:fixtures": "@php tools/php/php84.php bin/console doctrine:fixtures:load --env=test --group=payment --no-interaction",
+        "test:bootstrap:migrate": "@php tools/php/php84.php bin/console doctrine:migrations:migrate --env=test --no-interaction",
+        "test:bootstrap:reset": "@php tools/ci/test-bootstrap-reset.php",
+        "test:debug:first-error": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --stop-on-error --debug",
+        "test:e2e": "bash tools/runtime/payment_panther_e2e.sh",
+        "test:functional": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional",
+        "test:functional:debug": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite functional --stop-on-error --debug",
+        "test:security": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --filter PaymentScopeGuardSubscriberTest",
+        "test:ui:playwright": "npm run test:playwright",
+        "test:unit": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit",
+        "report:packaging-root-surface": "@php tools/php/php84.php tools/inspection/PayingPackagingRootSurfaceReport.php",
+        "report:paying-canonical-readiness": "@php tools/php/php84.php tools/inspection/PayingCanonicalReadinessReport.php",
+        "report:composer-script-hygiene": "@php tools/php/php84.php tools/inspection/PayingComposerScriptHygieneReport.php",
+        "report:entity-first-consistency": "@php tools/php/php84.php tools/inspection/PayingEntityFirstConsistencyReport.php",
+        "report:runtime-issue-inventory": "@php tools/php/php84.php tools/inspection/PayingRuntimeIssueInventoryReport.php",
+        "report:runtime-proof-core": "@php tools/php/php84.php tools/inspection/PayingRuntimeProofCoreReport.php",
+        "report:runtime-proof-closure": "@php tools/php/php84.php tools/inspection/PayingRuntimeProofClosureReport.php",
+        "report:rc3-milestone": "@php tools/php/php84.php tools/inspection/PayingRc3MilestoneReport.php",
+        "report:rc3-handoff": "@php tools/php/php84.php tools/inspection/PayingRc3HandoffReport.php",
+        "report:rc3-final-closure": "@php tools/php/php84.php tools/inspection/PayingRc3FinalClosureReport.php",
+        "report:rc3-transfer-memo": "@php tools/php/php84.php tools/inspection/PayingRc3TransferMemoReport.php"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../Objecting",
+            "options": {
+                "symlink": true
+            }
+        }
+    ]
 }

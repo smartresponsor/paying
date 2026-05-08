@@ -1,0 +1,23 @@
+{
+  "component": "Paying",
+  "base_archive": "PayingThu.zip",
+  "wave": "wave1-canonical-structure-audit-root-hygiene",
+  "mode": "touched-files-only",
+  "touched_files": [
+    "composer.json",
+    "tools/inspection/PayingCanonicalStructureAudit.php",
+    "docs/architecture/paying-canonical-structure-audit.md",
+    "docs/architecture/paying-canonicalization-milestone.md"
+  ],
+  "retired_root_files_by_apply_script": [
+    "config-services.yaml",
+    "services.yaml",
+    "task.txt",
+    "touched.txt"
+  ],
+  "notes": [
+    "No cumulative snapshot.",
+    "Apply script backs up exact root files before deletion.",
+    "No business class rename in this wave."
+  ]
+}

@@ -1,4 +1,4 @@
-name: Payment Release
+name: PaymentEntity Release
 
 on:
   push:

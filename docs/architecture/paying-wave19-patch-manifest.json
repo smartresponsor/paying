@@ -1,0 +1,17 @@
+{
+  "component": "Paying",
+  "wave": 19,
+  "name": "inspection-script-registry",
+  "scope": "report-only",
+  "runtime_contract_changes": false,
+  "route_changes": false,
+  "provider_key_changes": false,
+  "doctrine_table_changes": false,
+  "touched_files": [
+    "composer.json",
+    "tools/inspection/PayingInspectionScriptRegistryReport.php",
+    "docs/architecture/paying-wave19-inspection-script-registry.md",
+    "docs/architecture/paying-wave19-patch-manifest.json",
+    "docs/architecture/paying-canonicalization-milestone.md"
+  ]
+}

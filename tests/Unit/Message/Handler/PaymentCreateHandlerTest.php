@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit\Message\Handler;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\Message\Command\PaymentCreateCommand;
 use App\Paying\Message\Handler\PaymentCreateHandler;
 use App\Paying\Service\PaymentStartResult;
@@ -43,7 +43,7 @@ final class PaymentCreateHandlerTest extends TestCase
                 ];
 
                 return new PaymentStartResult(
-                    new Payment(new Ulid(), PaymentStatus::processing, $amount, $currency, $orderId),
+                    new PaymentEntity(new Ulid(), PaymentStatus::processing, $amount, $currency, $orderId),
                     null,
                     []
                 );
@@ -63,7 +63,7 @@ final class PaymentCreateHandlerTest extends TestCase
                 ];
 
                 return new PaymentStartResult(
-                    new Payment(new Ulid(), PaymentStatus::processing, '0.00', 'USD'),
+                    new PaymentEntity(new Ulid(), PaymentStatus::processing, '0.00', 'USD'),
                     null,
                     []
                 );

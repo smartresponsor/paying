@@ -1,14 +1,15 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure\Console;
 
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\ServiceInterface\PaymentProviderGuardInterface;
+use App\Paying\ServiceInterface\PaymentRefundServiceInterface;
 use App\Paying\ServiceInterface\PaymentServiceInterface;
 use App\Paying\ServiceInterface\PaymentStartServiceInterface;
-use App\Paying\ServiceInterface\ProviderGuardInterface;
-use App\Paying\ServiceInterface\RefundServiceInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,8 +27,8 @@ final class PaymentLifecycleCommand extends Command
         private readonly PaymentServiceInterface $paymentService,
         private readonly PaymentStartServiceInterface $paymentStartService,
         private readonly PaymentRepositoryInterface $paymentRepository,
-        private readonly ProviderGuardInterface $providerGuard,
-        private readonly RefundServiceInterface $refundService,
+        private readonly PaymentProviderGuardInterface $providerGuard,
+        private readonly PaymentRefundServiceInterface $refundService,
     ) {
         parent::__construct();
     }
@@ -126,7 +127,7 @@ final class PaymentLifecycleCommand extends Command
 
         $existing = $this->paymentRepository->find($paymentId);
         if (null === $existing) {
-            $output->writeln(sprintf('<error>Payment %s was not found.</error>', $paymentId));
+            $output->writeln(sprintf('<error>PaymentEntity %s was not found.</error>', $paymentId));
 
             return Command::FAILURE;
         }
@@ -166,7 +167,7 @@ final class PaymentLifecycleCommand extends Command
         try {
             $payment = $this->refundService->refund(new Ulid($paymentId), $amount, $provider);
         } catch (\RuntimeException $exception) {
-            $output->writeln(sprintf('<error>Payment %s was not found.</error>', $paymentId));
+            $output->writeln(sprintf('<error>PaymentEntity %s was not found.</error>', $paymentId));
 
             return Command::FAILURE;
         }
