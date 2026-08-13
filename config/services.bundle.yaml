@@ -1,0 +1,43 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Paying\Form\PaymentPlacementType: ~
+    App\Paying\Service\Http\Payment\PaymentNewService:
+        tags: ['cruding.resource_service']
+    App\Paying\Repository\PaymentRepository: ~
+    App\Paying\Service\PaymentStartService: ~
+    App\Paying\Service\PaymentProviderGuard: ~
+    App\Paying\Service\PaymentRetryExecutor: ~
+    App\Paying\Service\PaymentMetric: ~
+    App\Paying\Service\PaymentProcessLocalCircuitBreaker: ~
+    App\Paying\Service\PaymentInternalProvider: ~
+    App\Paying\Service\PaymentStripeProvider:
+        arguments:
+            $secretKey: '%env(default::STRIPE_SECRET_KEY)%'
+            $webhookSecret: '%env(default::STRIPE_WEBHOOK_SECRET)%'
+    App\Paying\Service\Gateway\PaymentPayPalGateway: ~
+    App\Paying\Service\PaymentPayPalProvider: ~
+
+    App\Paying\Service\PaymentProviderRouter:
+        arguments:
+            $providers:
+                internal: '@App\Paying\Service\PaymentInternalProvider'
+                stripe: '@App\Paying\Service\PaymentStripeProvider'
+                paypal: '@App\Paying\Service\PaymentPayPalProvider'
+
+    App\Paying\RepositoryInterface\PaymentRepositoryInterface:
+        alias: App\Paying\Repository\PaymentRepository
+    App\Paying\ServiceInterface\PaymentStartServiceInterface:
+        alias: App\Paying\Service\PaymentStartService
+    App\Paying\ServiceInterface\PaymentProviderGuardInterface:
+        alias: App\Paying\Service\PaymentProviderGuard
+    App\Paying\ServiceInterface\PaymentProviderRouterInterface:
+        alias: App\Paying\Service\PaymentProviderRouter
+    App\Paying\ServiceInterface\PaymentRetryExecutorInterface:
+        alias: App\Paying\Service\PaymentRetryExecutor
+    App\Paying\ServiceInterface\PaymentMetricInterface:
+        alias: App\Paying\Service\PaymentMetric
+    App\Paying\ServiceInterface\PaymentCircuitBreakerInterface:
+        alias: App\Paying\Service\PaymentProcessLocalCircuitBreaker
