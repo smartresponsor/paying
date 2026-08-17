@@ -1,0 +1,254 @@
+<?php
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+declare(strict_types=1);
+
+namespace App\Paying\Service;
+
+use App\Paying\ServiceInterface\PaymentOidcJwksCacheInterface;
+use App\Paying\ServiceInterface\PaymentTokenVerifierInterface;
+
+/**
+ * Provides the token verifier service used by the payment lifecycle and operator-facing flows.
+ */
+readonly class PaymentTokenVerifier implements PaymentTokenVerifierInterface
+{
+    public function __construct(
+        private PaymentOidcJwksCacheInterface $jwks,
+        private ?string $issuer = null,
+        private ?string $audience = null,
+    ) {
+    }
+
+    /**
+     * Verifies the input handled by the verify workflow.
+     */
+    public function verify(string $jwt): array
+    {
+        [$headerEncoded, $payloadEncoded, $signatureEncoded] = $this->split($jwt);
+        $header = $this->json($this->b64($headerEncoded));
+        $payload = $this->normalizeClaims($this->json($this->b64($payloadEncoded)));
+        $signature = $this->b64bin($signatureEncoded);
+
+        $algorithm = isset($header['alg']) && is_string($header['alg']) ? $header['alg'] : '';
+        if ('RS256' !== $algorithm) {
+            throw new \RuntimeException('alg-not-supported');
+        }
+
+        $keyId = isset($header['kid']) && is_string($header['kid']) ? $header['kid'] : '';
+        $jwk = $this->findKey($keyId);
+        $pem = $this->jwkToPem($jwk);
+        $verified = \openssl_verify($headerEncoded.'.'.$payloadEncoded, $signature, $pem, OPENSSL_ALGO_SHA256);
+        if (1 !== $verified) {
+            throw new \RuntimeException('jwt-signature-invalid');
+        }
+
+        $now = time();
+        if (isset($payload['exp']) && is_int($payload['exp']) && $payload['exp'] < $now) {
+            throw new \RuntimeException('jwt-expired');
+        }
+        if (isset($payload['nbf']) && is_int($payload['nbf']) && $payload['nbf'] > $now) {
+            throw new \RuntimeException('jwt-not-before');
+        }
+
+        $issuer = trim($this->issuer ?? '');
+        $payloadIssuer = isset($payload['iss']) && is_string($payload['iss']) ? $payload['iss'] : '';
+        if ('' !== $issuer && $payloadIssuer !== $issuer) {
+            throw new \RuntimeException('iss-mismatch');
+        }
+
+        $audience = trim($this->audience ?? '');
+        if ('' !== $audience) {
+            $audClaim = $payload['aud'] ?? null;
+            $audiences = is_array($audClaim) ? $audClaim : [$audClaim];
+            if (!in_array($audience, $audiences, true)) {
+                throw new \RuntimeException('aud-mismatch');
+            }
+        }
+
+        return $payload;
+    }
+
+    /**
+     * Determines whether the has scopes condition is currently satisfied.
+     */
+    public function hasScopes(array $claims, array $required, bool $any = false): bool
+    {
+        $scopes = [];
+        if (isset($claims['scope']) && is_string($claims['scope'])) {
+            $scopes = array_values(array_filter(explode(' ', $claims['scope']), static fn (string $scope): bool => '' !== $scope));
+        } elseif (isset($claims['scp']) && is_array($claims['scp'])) {
+            $scopes = array_values(array_map('strval', $claims['scp']));
+        }
+        if ([] === $required) {
+            return true;
+        }
+        if ($any) {
+            return count(array_intersect($required, $scopes)) > 0;
+        }
+
+        return 0 === count(array_diff($required, $scopes));
+    }
+
+    /** @return array{n: string, e: string, kty?: string, kid?: string, use?: string, alg?: string} */
+    private function findKey(string $kid): array
+    {
+        $jwks = $this->jwks->get();
+        $keys = $jwks['keys'];
+        foreach ($keys as $key) {
+            if (($key['kid'] ?? '') === $kid) {
+                return $this->assertSupportedJwk($key);
+            }
+        }
+
+        if ('' === $kid && isset($keys[0])) {
+            return $this->assertSupportedJwk($keys[0]);
+        }
+
+        throw new \RuntimeException('kid-not-found');
+    }
+
+    /**
+     * @param array{n: string, e: string, kty?: string, kid?: string, use?: string, alg?: string} $jwk
+     *
+     * @return array{n: string, e: string, kty?: string, kid?: string, use?: string, alg?: string}
+     */
+    private function assertSupportedJwk(array $jwk): array
+    {
+        $keyType = trim((string) ($jwk['kty'] ?? ''));
+        if ('' !== $keyType && 'RSA' !== $keyType) {
+            throw new \RuntimeException('jwk-kty-not-supported');
+        }
+
+        $keyUse = trim((string) ($jwk['use'] ?? ''));
+        if ('' !== $keyUse && 'sig' !== $keyUse) {
+            throw new \RuntimeException('jwk-use-not-supported');
+        }
+
+        $keyAlgorithm = trim((string) ($jwk['alg'] ?? ''));
+        if ('' !== $keyAlgorithm && 'RS256' !== $keyAlgorithm) {
+            throw new \RuntimeException('jwk-alg-not-supported');
+        }
+
+        return $jwk;
+    }
+
+    /** @param array{n: string, e: string, kty?: string, kid?: string, use?: string, alg?: string} $jwk */
+    private function jwkToPem(array $jwk): string
+    {
+        $n = $this->b64bin($jwk['n']);
+        $e = $this->b64bin($jwk['e']);
+        $bn = $this->derInt($n);
+        $be = $this->derInt($e);
+        $sequence = "\x30".$this->derLen(strlen($bn) + strlen($be)).$bn.$be;
+        $bitString = "\x03".$this->derLen(strlen($sequence) + 1)."\x00".$sequence;
+        $algorithmIdentifier = "\x30\x0D\x06\x09\x2A\x86\x48\x86\xF7\x0D\x01\x01\x01\x05\x00";
+        $subjectPublicKeyInfo = "\x30".$this->derLen(strlen($algorithmIdentifier) + strlen($bitString)).$algorithmIdentifier.$bitString;
+
+        return "-----BEGIN PUBLIC KEY-----\n".chunk_split(base64_encode($subjectPublicKeyInfo), 64)."-----END PUBLIC KEY-----\n";
+    }
+
+    private function derInt(string $bytes): string
+    {
+        if ('' === $bytes || $bytes[0] >= "\x80") {
+            $bytes = "\x00".$bytes;
+        }
+
+        return "\x02".$this->derLen(strlen($bytes)).$bytes;
+    }
+
+    private function derLen(int $length): string
+    {
+        if ($length < 128) {
+            return chr($length);
+        }
+        $packed = ltrim(pack('N', $length), "\x00");
+
+        return chr(0x80 | strlen($packed)).$packed;
+    }
+
+    /** @return array{0: string, 1: string, 2: string} */
+    private function split(string $jwt): array
+    {
+        $parts = explode('.', $jwt);
+        if (3 !== count($parts)) {
+            throw new \RuntimeException('jwt-format');
+        }
+
+        return [$parts[0], $parts[1], $parts[2]];
+    }
+
+    /** @return array<string, mixed> */
+    private function json(string $json): array
+    {
+        $decoded = json_decode($json, true);
+        if (!is_array($decoded)) {
+            throw new \RuntimeException('json-decode');
+        }
+
+        return $decoded;
+    }
+
+    /**
+     * @param array<string, mixed> $claims
+     *
+     * @return array<string, bool|int|float|string|list<string>|null>
+     */
+    private function normalizeClaims(array $claims): array
+    {
+        $normalized = [];
+
+        foreach ($claims as $key => $value) {
+            if (is_bool($value) || is_int($value) || is_float($value) || is_string($value) || null === $value) {
+                $normalized[$key] = $value;
+                continue;
+            }
+
+            if (is_array($value)) {
+                $stringList = [];
+                $isStringList = true;
+
+                foreach ($value as $item) {
+                    if (!is_string($item)) {
+                        $isStringList = false;
+                        break;
+                    }
+
+                    $stringList[] = $item;
+                }
+
+                if ($isStringList) {
+                    $normalized[$key] = $stringList;
+                }
+            }
+        }
+
+        return $normalized;
+    }
+
+    private function b64(string $value): string
+    {
+        return $this->decodeBase64Url($value);
+    }
+
+    private function b64bin(string $value): string
+    {
+        return $this->decodeBase64Url($value);
+    }
+
+    private function decodeBase64Url(string $value): string
+    {
+        $normalized = strtr($value, '-_', '+/');
+        $padding = strlen($normalized) % 4;
+        if (0 !== $padding) {
+            $normalized .= str_repeat('=', 4 - $padding);
+        }
+
+        $decoded = base64_decode($normalized, true);
+        if (false === $decoded) {
+            throw new \RuntimeException('jwt-segment-base64url');
+        }
+
+        return $decoded;
+    }
+}

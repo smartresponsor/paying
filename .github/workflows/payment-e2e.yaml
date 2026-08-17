@@ -1,4 +1,4 @@
-name: Payment E2E
+name: PaymentEntity E2E
 
 on:
   workflow_dispatch:

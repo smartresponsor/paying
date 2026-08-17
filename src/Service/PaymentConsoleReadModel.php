@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\Payment;
-use App\Paying\Entity\PaymentWebhookLog;
+use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\PaymentWebhookLogEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\ServiceInterface\PaymentConsoleReadModelInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,7 +36,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
         $normalizedStatus = strtolower(trim($status));
         $normalizedStatus = '' === $normalizedStatus ? 'all' : $normalizedStatus;
 
-        $paymentRows = array_map(fn (Payment $payment): array => $this->toPaymentRow($payment), $this->payments->listRecent(100));
+        $paymentRows = array_map(fn (PaymentEntity $payment): array => $this->toPaymentRow($payment), $this->payments->listRecent(100));
 
         $filteredPayments = array_values(array_filter(
             $paymentRows,
@@ -106,7 +106,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
     /** @return list<array{id: string, provider: string, externalEventId: string, status: string, receivedAt: string}> */
     private function listWebhookEvents(string $paymentId): array
     {
-        $logs = $this->em->getRepository(PaymentWebhookLog::class)->findBy([], ['receivedAt' => 'DESC'], 50);
+        $logs = $this->em->getRepository(PaymentWebhookLogEntity::class)->findBy([], ['receivedAt' => 'DESC'], 50);
 
         $events = [];
         foreach ($logs as $log) {
@@ -133,7 +133,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
     }
 
     /** @return array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string} */
-    private function toPaymentRow(Payment $payment): array
+    private function toPaymentRow(PaymentEntity $payment): array
     {
         return [
             'id' => (string) $payment->id(),

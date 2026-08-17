@@ -5,10 +5,10 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\Service\PaymentConsoleFinalizeHandler;
-use App\Paying\ServiceInterface\ProviderGuardInterface;
+use App\Paying\ServiceInterface\PaymentProviderGuardInterface;
 use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
@@ -32,14 +32,14 @@ final class PaymentConsoleFinalizeHandlerTest extends TestCase
             /**
              * Implements the save behavior required by the local test double used in this scenario.
              */
-            public function save(Payment $payment): void
+            public function save(PaymentEntity $payment): void
             {
             }
 
             /**
              * Implements the find behavior required by the local test double used in this scenario.
              */
-            public function find(string $id): ?Payment
+            public function find(string $id): ?PaymentEntity
             {
                 return null;
             }
@@ -47,7 +47,7 @@ final class PaymentConsoleFinalizeHandlerTest extends TestCase
             /**
              * Implements the find by order id behavior required by the local test double used in this scenario.
              */
-            public function findByOrderId(string $orderId): ?Payment
+            public function findByOrderId(string $orderId): ?PaymentEntity
             {
                 return null;
             }
@@ -67,9 +67,29 @@ final class PaymentConsoleFinalizeHandlerTest extends TestCase
             {
                 return [];
             }
+
+            public function listUpdatedAfter(\DateTimeImmutable $updatedAfter, int $limit = 500): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: listUpdatedAfter');
+            }
+
+            public function listAllOrderedByUpdatedAt(int $limit = 1000, int $offset = 0): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: listAllOrderedByUpdatedAt');
+            }
+
+            public function maxUpdatedAt(): ?string
+            {
+                throw new \LogicException('Test repository stub method is not configured: maxUpdatedAt');
+            }
+
+            public function countByStatusSince(\DateTimeImmutable $since): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: countByStatusSince');
+            }
         };
 
-        $guard = $this->createMock(ProviderGuardInterface::class);
+        $guard = $this->createMock(PaymentProviderGuardInterface::class);
         $guard->expects(self::never())->method('finalize');
 
         $handler = new PaymentConsoleFinalizeHandler($repo, $guard);
@@ -87,20 +107,20 @@ final class PaymentConsoleFinalizeHandlerTest extends TestCase
      */
     public function testFinalizeUpdatesAndPersistsPayment(): void
     {
-        $existing = new Payment(new Ulid(), PaymentStatus::new, '10.00', 'USD');
-        $resolved = new Payment(new Ulid(), PaymentStatus::completed, '10.00', 'USD');
+        $existing = new PaymentEntity(new Ulid(), PaymentStatus::new, '10.00', 'USD');
+        $resolved = new PaymentEntity(new Ulid(), PaymentStatus::completed, '10.00', 'USD');
 
         $repo = new class($existing) implements PaymentRepositoryInterface {
-            public ?Payment $saved = null;
+            public ?PaymentEntity $saved = null;
 
-            public function __construct(private readonly Payment $existing)
+            public function __construct(private readonly PaymentEntity $existing)
             {
             }
 
             /**
              * Implements the save behavior required by the local test double used in this scenario.
              */
-            public function save(Payment $payment): void
+            public function save(PaymentEntity $payment): void
             {
                 $this->saved = $payment;
             }
@@ -108,7 +128,7 @@ final class PaymentConsoleFinalizeHandlerTest extends TestCase
             /**
              * Implements the find behavior required by the local test double used in this scenario.
              */
-            public function find(string $id): ?Payment
+            public function find(string $id): ?PaymentEntity
             {
                 return $this->existing;
             }
@@ -116,7 +136,7 @@ final class PaymentConsoleFinalizeHandlerTest extends TestCase
             /**
              * Implements the find by order id behavior required by the local test double used in this scenario.
              */
-            public function findByOrderId(string $orderId): ?Payment
+            public function findByOrderId(string $orderId): ?PaymentEntity
             {
                 return null;
             }
@@ -136,9 +156,29 @@ final class PaymentConsoleFinalizeHandlerTest extends TestCase
             {
                 return [];
             }
+
+            public function listUpdatedAfter(\DateTimeImmutable $updatedAfter, int $limit = 500): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: listUpdatedAfter');
+            }
+
+            public function listAllOrderedByUpdatedAt(int $limit = 1000, int $offset = 0): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: listAllOrderedByUpdatedAt');
+            }
+
+            public function maxUpdatedAt(): ?string
+            {
+                throw new \LogicException('Test repository stub method is not configured: maxUpdatedAt');
+            }
+
+            public function countByStatusSince(\DateTimeImmutable $since): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: countByStatusSince');
+            }
         };
 
-        $guard = $this->createMock(ProviderGuardInterface::class);
+        $guard = $this->createMock(PaymentProviderGuardInterface::class);
         $guard
             ->expects(self::once())
             ->method('finalize')

@@ -5,10 +5,10 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\ServiceInterface\PaymentServiceInterface;
-use App\Paying\ValueObject\Money;
+use App\Paying\ValueObject\PaymentMoney;
 use App\Paying\ValueObject\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 
@@ -24,11 +24,11 @@ final readonly class PaymentService implements PaymentServiceInterface
     /**
      * Provides the create behavior for the payment service component.
      */
-    public function create(string $orderId, int $amountMinor, string $currency): Payment
+    public function create(string $orderId, int $amountMinor, string $currency): PaymentEntity
     {
-        $money = Money::fromMinor($amountMinor, strtoupper($currency));
+        $money = PaymentMoney::fromMinor($amountMinor, strtoupper($currency));
 
-        $payment = new Payment(new Ulid(), PaymentStatus::new, $money->toDecimalString(), $money->currency(), $orderId);
+        $payment = new PaymentEntity(new Ulid(), PaymentStatus::new, $money->toDecimalString(), $money->currency(), $orderId);
 
         $this->paymentRepository->save($payment);
 

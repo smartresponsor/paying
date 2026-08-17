@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Controller;
 
-use App\Paying\Attribute\RequireScope;
+use App\Paying\Attribute\PaymentRequireScopeAttribute;
 use App\Paying\Controller\Dto\PaymentConsoleFinalizeRequestDto;
 use App\Paying\Controller\Dto\PaymentConsoleRefundRequestDto;
 use App\Paying\Controller\Dto\PaymentCreateRequestDto;
@@ -39,7 +39,7 @@ final class PaymentConsoleController extends AbstractController
     ) {
     }
 
-    #[RequireScope(['payment:read'])]
+    #[PaymentRequireScopeAttribute(['payment:read'])]
     /**
      * Builds the console read model and binds all operator command forms for the currently selected payment context.
      */
@@ -66,7 +66,7 @@ final class PaymentConsoleController extends AbstractController
         ]);
     }
 
-    #[RequireScope(['payment:write'])]
+    #[PaymentRequireScopeAttribute(['payment:write'])]
     /**
      * Handles back-office payment creation requests submitted from the operator console.
      */
@@ -81,12 +81,12 @@ final class PaymentConsoleController extends AbstractController
         }
 
         $payment = $this->createHandler->create($dto->orderId, $dto->amountMinor, $dto->currency);
-        $this->addFlash('success', sprintf('Payment %s created with status %s.', $payment->id(), $payment->status()->value));
+        $this->addFlash('success', sprintf('PaymentEntity %s created with status %s.', $payment->id(), $payment->status()->value));
 
         return $this->redirectToRoute('payment_console', ['payment' => (string) $payment->id()]);
     }
 
-    #[RequireScope(['payment:write'])]
+    #[PaymentRequireScopeAttribute(['payment:write'])]
     /**
      * Starts a provider-backed payment flow from the operator console.
      */
@@ -102,12 +102,12 @@ final class PaymentConsoleController extends AbstractController
 
         $payment = $this->startHandler->start($dto->orderId, $dto->provider, $dto->amount, $dto->currency);
 
-        $this->addFlash('success', sprintf('Payment %s started via %s.', $payment->id(), $dto->provider));
+        $this->addFlash('success', sprintf('PaymentEntity %s started via %s.', $payment->id(), $dto->provider));
 
         return $this->redirectToRoute('payment_console', ['payment' => (string) $payment->id()]);
     }
 
-    #[RequireScope(['payment:write'])]
+    #[PaymentRequireScopeAttribute(['payment:write'])]
     /**
      * Finalizes the selected payment from the operator console and redirects back to the refreshed read model.
      */
@@ -132,12 +132,12 @@ final class PaymentConsoleController extends AbstractController
             return $this->paymentNotFoundRedirect($dto->paymentId);
         }
 
-        $this->addFlash('success', sprintf('Payment %s finalized with status %s.', $dto->paymentId, $payment->status()->value));
+        $this->addFlash('success', sprintf('PaymentEntity %s finalized with status %s.', $dto->paymentId, $payment->status()->value));
 
         return $this->redirectToRoute('payment_console', ['payment' => $dto->paymentId]);
     }
 
-    #[RequireScope(['payment:write'])]
+    #[PaymentRequireScopeAttribute(['payment:write'])]
     /**
      * Triggers a refund command for the selected payment from the operator console.
      */
@@ -156,7 +156,7 @@ final class PaymentConsoleController extends AbstractController
             return $this->paymentNotFoundRedirect($dto->paymentId);
         }
 
-        $this->addFlash('success', sprintf('Payment %s refunded with status %s.', $payment->id(), $payment->status()->value));
+        $this->addFlash('success', sprintf('PaymentEntity %s refunded with status %s.', $payment->id(), $payment->status()->value));
 
         return $this->redirectToRoute('payment_console', ['payment' => (string) $payment->id()]);
     }
@@ -244,7 +244,7 @@ final class PaymentConsoleController extends AbstractController
      */
     private function paymentNotFoundRedirect(string $paymentId): RedirectResponse
     {
-        $this->addFlash('danger', sprintf('Payment %s was not found.', $paymentId));
+        $this->addFlash('danger', sprintf('PaymentEntity %s was not found.', $paymentId));
 
         return $this->redirectToRoute('payment_console');
     }

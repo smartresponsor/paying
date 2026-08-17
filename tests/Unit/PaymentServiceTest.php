@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\Service\PaymentService;
 use PHPUnit\Framework\TestCase;
@@ -21,12 +21,12 @@ final class PaymentServiceTest extends TestCase
     public function testCreate(): void
     {
         $repo = new class implements PaymentRepositoryInterface {
-            public ?Payment $saved = null;
+            public ?PaymentEntity $saved = null;
 
             /**
              * Implements the save behavior required by the local test double used in this scenario.
              */
-            public function save(Payment $payment): void
+            public function save(PaymentEntity $payment): void
             {
                 $this->saved = $payment;
             }
@@ -34,7 +34,7 @@ final class PaymentServiceTest extends TestCase
             /**
              * Implements the find behavior required by the local test double used in this scenario.
              */
-            public function find(string $id): ?Payment
+            public function find(string $id): ?PaymentEntity
             {
                 return null;
             }
@@ -42,7 +42,7 @@ final class PaymentServiceTest extends TestCase
             /**
              * Implements the find by order id behavior required by the local test double used in this scenario.
              */
-            public function findByOrderId(string $orderId): ?Payment
+            public function findByOrderId(string $orderId): ?PaymentEntity
             {
                 return null;
             }
@@ -62,12 +62,32 @@ final class PaymentServiceTest extends TestCase
             {
                 return [];
             }
+
+            public function listUpdatedAfter(\DateTimeImmutable $updatedAfter, int $limit = 500): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: listUpdatedAfter');
+            }
+
+            public function listAllOrderedByUpdatedAt(int $limit = 1000, int $offset = 0): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: listAllOrderedByUpdatedAt');
+            }
+
+            public function maxUpdatedAt(): ?string
+            {
+                throw new \LogicException('Test repository stub method is not configured: maxUpdatedAt');
+            }
+
+            public function countByStatusSince(\DateTimeImmutable $since): array
+            {
+                throw new \LogicException('Test repository stub method is not configured: countByStatusSince');
+            }
         };
 
         $service = new PaymentService($repo);
         $payment = $service->create('00000000-0000-0000-0000-000000000001', 1000, 'usd');
 
-        self::assertInstanceOf(Payment::class, $payment);
+        self::assertInstanceOf(PaymentEntity::class, $payment);
         self::assertSame($payment, $repo->saved);
         self::assertSame('10.00', $payment->amount());
         self::assertSame('USD', $payment->currency());

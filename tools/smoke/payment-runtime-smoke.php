@@ -13,4 +13,4 @@ if ([] !== $missing) {
     fwrite(STDERR, 'Missing runtime proof files: '.implode(', ', $missing).PHP_EOL);
     exit(1);
 }
-echo 'Payment runtime smoke passed.'.PHP_EOL;
+echo 'PaymentEntity runtime smoke passed.'.PHP_EOL;

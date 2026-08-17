@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\ServiceInterface;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -20,20 +20,20 @@ interface PaymentProviderInterface
      *
      * @return array{provider: string, paymentId: string, accepted?: bool, status?: string, providerRef?: string|null, checkoutUrl?: string, result?: array<string, mixed>}
      */
-    public function start(Payment $payment, array $context = []): array;
+    public function start(PaymentEntity $payment, array $context = []): array;
 
     /**
      * Executes the finalize operation for the current payment workflow.
      */
-    public function finalize(Ulid $id, array $payload = []): Payment;
+    public function finalize(Ulid $id, array $payload = []): PaymentEntity;
 
     /**
      * Executes the refund operation for the current payment workflow.
      */
-    public function refund(Ulid $id, string $amount): Payment;
+    public function refund(Ulid $id, string $amount): PaymentEntity;
 
     /**
      * Executes the reconcile operation for the current payment workflow.
      */
-    public function reconcile(Ulid $id): Payment;
+    public function reconcile(Ulid $id): PaymentEntity;
 }

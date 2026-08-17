@@ -1,0 +1,148 @@
+{
+  "component": "Paying",
+  "wave": 7,
+  "title": "business-service-name-form-canonicalization",
+  "changed_files": [
+    "composer.json",
+    "config/services.yaml",
+    "config/services/payment_aliases.yaml",
+    "docs/architecture/paying-canonicalization-milestone.md",
+    "docs/architecture/paying-wave7-business-service-name-form.md",
+    "docs/architecture/paying-wave7-patch-manifest.json",
+    "docs/architecture/payment-technical-portrait.md",
+    "docs/architecture/payment-test-runtime-bootstrap.md",
+    "src/Controller/PaymentDlqController.php",
+    "src/Controller/PaymentMetricController.php",
+    "src/Controller/PaymentRefundController.php",
+    "src/Controller/PaymentStatusController.php",
+    "src/Controller/PaymentWebhookController.php",
+    "src/Controller/Webhook/PayPalWebhookController.php",
+    "src/Controller/Webhook/StripeWebhookController.php",
+    "src/Infrastructure/Console/PaymentDlqReplayCommand.php",
+    "src/Infrastructure/Console/PaymentGateSloCommand.php",
+    "src/Infrastructure/Console/PaymentLifecycleCommand.php",
+    "src/Infrastructure/Console/PaymentProjectionRebuildCommand.php",
+    "src/Infrastructure/Console/PaymentProjectionSyncCommand.php",
+    "src/Infrastructure/Console/PaymentReconcileRunCommand.php",
+    "src/Infrastructure/Console/PaymentSlaReportCommand.php",
+    "src/Message/Handler/PaymentRefundHandler.php",
+    "src/Service/PaymentApiStartHandler.php",
+    "src/Service/PaymentConsoleRefundHandler.php",
+    "src/Service/PaymentDlqService.php",
+    "src/Service/PaymentIdempotencyService.php",
+    "src/Service/PaymentIdempotencyStoreFactory.php",
+    "src/Service/PaymentProjectionLagService.php",
+    "src/Service/PaymentProjectionSyncService.php",
+    "src/Service/PaymentReconciliationService.php",
+    "src/Service/PaymentRefundService.php",
+    "src/Service/PaymentSlaReporterService.php",
+    "src/Service/PaymentWebhookIngestService.php",
+    "src/Service/PaymentWebhookVerifierService.php",
+    "src/Service/Webhook/PayPalSignatureValidator.php",
+    "src/Service/Webhook/StripeSignatureValidator.php",
+    "src/ServiceInterface/PaymentDlqServiceInterface.php",
+    "src/ServiceInterface/PaymentIdempotencyServiceInterface.php",
+    "src/ServiceInterface/PaymentProjectionLagServiceInterface.php",
+    "src/ServiceInterface/PaymentProjectionSyncServiceInterface.php",
+    "src/ServiceInterface/PaymentReconciliationServiceInterface.php",
+    "src/ServiceInterface/PaymentRefundServiceInterface.php",
+    "src/ServiceInterface/PaymentSlaReporterServiceInterface.php",
+    "src/ServiceInterface/PaymentWebhookIngestServiceInterface.php",
+    "src/ServiceInterface/PaymentWebhookVerifierServiceInterface.php",
+    "tests/Functional/Cli/PaymentCommandExecutionSmokeTest.php",
+    "tests/Functional/Cli/PaymentGateSloCommandExecutionSmokeTest.php",
+    "tests/Functional/Cli/PaymentLifecycleCommandExecutionSmokeTest.php",
+    "tests/Functional/Cli/PaymentOperationalCommandExecutionSmokeTest.php",
+    "tests/Unit/PaymentApiStartHandlerTest.php",
+    "tests/Unit/PaymentConsoleRefundHandlerTest.php",
+    "tests/Unit/PaymentProjectionLagServiceTest.php",
+    "tests/Unit/PaymentRefundServiceTest.php",
+    "tools/inspection/PayingBusinessServiceNameFormReport.php"
+  ],
+  "retired_files": [
+    {
+      "path": "src/Service/DlqService.php",
+      "sha256": "29738c36cf91d3b51a6e2c41b43aaad4e8f4e52753d50416ec57c116cda83415"
+    },
+    {
+      "path": "src/Service/IdempotencyService.php",
+      "sha256": "ed69d760171d3fb99661075e2a14258f9c1910ba8dff73a6144a03ea579110f9"
+    },
+    {
+      "path": "src/Service/IdempotencyStoreFactory.php",
+      "sha256": "75d2c7ef4d836b36a66144bd5870ed819ca95074d5c08c0ab9c4771534efa7d5"
+    },
+    {
+      "path": "src/Service/ProjectionLagService.php",
+      "sha256": "1f230f2813b88bcf00651dc9306da1e625b66dc9e3bc2416c0ca59bbc786aad9"
+    },
+    {
+      "path": "src/Service/ProjectionSync.php",
+      "sha256": "755f37a025d0077a0622fb36c48ea1f5db459fadedebabb2a841ddd7f4859593"
+    },
+    {
+      "path": "src/Service/ReconciliationService.php",
+      "sha256": "d2e5aceff8fb6c36d5c7d12af2c8c8d234569d8a0d016159d504b3022181d268"
+    },
+    {
+      "path": "src/Service/RefundService.php",
+      "sha256": "399a122421c81902bf758b613d641208f1903946f51f60c191f98f5179d23ab7"
+    },
+    {
+      "path": "src/Service/SlaReporter.php",
+      "sha256": "835c46fd474998e7466fbb8cfe23affc63021462fb7a7554cc2717a65343b822"
+    },
+    {
+      "path": "src/Service/WebhookIngestService.php",
+      "sha256": "c0929d52f69e2264cde2a2f8954d11d5071380377527c59b0052721ce41283f6"
+    },
+    {
+      "path": "src/Service/WebhookVerifier.php",
+      "sha256": "7197f3a7b8b265d956d48ab9805eea5ecf4aea5635ec20e0e14780a2c9594654"
+    },
+    {
+      "path": "src/ServiceInterface/DlqServiceInterface.php",
+      "sha256": "5606288a2028a027ffdbbd02e3816548d7e6119f4fae7a33f950086bd326996a"
+    },
+    {
+      "path": "src/ServiceInterface/IdempotencyServiceInterface.php",
+      "sha256": "4333f7e57adc3b1f85e087b98d75fadb35215188f13a00b964383cf1484473f3"
+    },
+    {
+      "path": "src/ServiceInterface/ProjectionLagServiceInterface.php",
+      "sha256": "0ec6ce21f89f755ad648034d168dce0d6b7be15b4550407bd278ad2dffbc8873"
+    },
+    {
+      "path": "src/ServiceInterface/ProjectionSyncInterface.php",
+      "sha256": "aad08b466a46b4c7b5f8bd2bb2356f5f0cbb6b6eff63a76a2d4c628a2c932c98"
+    },
+    {
+      "path": "src/ServiceInterface/ReconciliationServiceInterface.php",
+      "sha256": "8a8cb48310f75187249add8fc7da3f296768b208c3a6659183e9009e34174b0d"
+    },
+    {
+      "path": "src/ServiceInterface/RefundServiceInterface.php",
+      "sha256": "6fd0508e2de5feb60a8db7ee7d373e049a617f8aa8e5b8d5e4738f06cd12be9e"
+    },
+    {
+      "path": "src/ServiceInterface/SlaReporterInterface.php",
+      "sha256": "6584e51d29f6f5bb9980eee846839cd0b9842582468a6a9c34ef9c8eddde3ba6"
+    },
+    {
+      "path": "src/ServiceInterface/WebhookIngestServiceInterface.php",
+      "sha256": "f671080d4371bb459f98afe7163b8a07435a3823cec95726726d42502226eb0a"
+    },
+    {
+      "path": "src/ServiceInterface/WebhookVerifierInterface.php",
+      "sha256": "8007fbe9f3069611e413de32f8dcdb26b9677c630c2c911d75aea564ac794e9d"
+    },
+    {
+      "path": "tests/Unit/ProjectionLagServiceTest.php",
+      "sha256": "6c8a21e3ab15bef275851487463f1d4edf44006d81f1f620ef0fce73581cbcfd"
+    },
+    {
+      "path": "tests/Unit/RefundServiceTest.php",
+      "sha256": "aa02ce0965da18e2b5a27795ee1e1284d1a8ec2f02b9de52ad86835d83d630d6"
+    }
+  ]
+}

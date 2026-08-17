@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\ServiceInterface;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 
 /**
  * Defines the contract for the payment console refund handler interface payment service boundary.
@@ -15,5 +15,5 @@ interface PaymentConsoleRefundHandlerInterface
     /**
      * Executes the refund operation for the current payment workflow.
      */
-    public function refund(string $paymentId, string $amount, string $provider): ?Payment;
+    public function refund(string $paymentId, string $amount, string $provider): ?PaymentEntity;
 }

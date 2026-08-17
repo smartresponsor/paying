@@ -87,4 +87,4 @@ foreach ($connectionStatements as $item) {
 
 $kernel->shutdown();
 
-fwrite(STDOUT, "Payment runtime schema bootstrap complete.\n");
+fwrite(STDOUT, "PaymentEntity runtime schema bootstrap complete.\n");

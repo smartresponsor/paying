@@ -5,16 +5,15 @@ declare(strict_types=1);
 
 namespace App\Paying\Controller;
 
-use App\Paying\Entity\Payment;
-
-use App\Paying\Attribute\RequireScope;
+use App\Paying\Attribute\PaymentRequireScopeAttribute;
 use App\Paying\Controller\Dto\PaymentRefundRequestDto;
 use App\Paying\ControllerInterface\PaymentRefundControllerInterface;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\Service\PaymentNotFoundException;
-use App\Paying\ServiceInterface\ApiErrorResponseFactoryInterface;
-use App\Paying\ServiceInterface\ApiJsonBodyDecoderInterface;
-use App\Paying\ServiceInterface\ApiRequestValidatorInterface;
-use App\Paying\ServiceInterface\RefundServiceInterface;
+use App\Paying\ServiceInterface\PaymentApiErrorResponseFactoryInterface;
+use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;
+use App\Paying\ServiceInterface\PaymentApiRequestValidatorInterface;
+use App\Paying\ServiceInterface\PaymentRefundServiceInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
@@ -29,24 +28,24 @@ use Symfony\Component\Uid\Ulid;
 final readonly class PaymentRefundController implements PaymentRefundControllerInterface
 {
     public function __construct(
-        private RefundServiceInterface $refundService,
-        private ApiErrorResponseFactoryInterface $errorResponseFactory,
-        private ApiJsonBodyDecoderInterface $jsonBodyDecoder,
-        private ApiRequestValidatorInterface $requestValidator,
+        private PaymentRefundServiceInterface $refundService,
+        private PaymentApiErrorResponseFactoryInterface $errorResponseFactory,
+        private PaymentApiJsonBodyDecoderInterface $jsonBodyDecoder,
+        private PaymentApiRequestValidatorInterface $requestValidator,
         private LoggerInterface $logger,
     ) {
     }
 
-    #[RequireScope(['payment:write'])]
+    #[PaymentRequireScopeAttribute(['payment:write'])]
     #[OA\Post(
         path: '/api/payments/{id}/refund',
         summary: 'Refund an existing payment aggregate.',
-        tags: ['Payment'],
+        tags: ['PaymentEntity'],
         responses: [
-            new OA\Response(response: 200, description: 'Payment refunded.'),
+            new OA\Response(response: 200, description: 'PaymentEntity refunded.'),
             new OA\Response(response: 401, description: 'Missing or invalid bearer token.'),
             new OA\Response(response: 403, description: 'Missing payment:write scope.'),
-            new OA\Response(response: 404, description: 'Payment not found.'),
+            new OA\Response(response: 404, description: 'PaymentEntity not found.'),
             new OA\Response(response: 422, description: 'Validation failed.'),
         ],
     )]
@@ -117,7 +116,7 @@ final readonly class PaymentRefundController implements PaymentRefundControllerI
      *
      * @return array{id: string, status: string, amount: string, currency: string, providerRef: ?string}
      */
-    private function buildRefundPayload(Payment $payment): array
+    private function buildRefundPayload(PaymentEntity $payment): array
     {
         return [
             'id' => (string) $payment->id(),

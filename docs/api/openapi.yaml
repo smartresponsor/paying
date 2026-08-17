@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Payment API
+  title: PaymentEntity API
   version: 0.2.0
   description: |
     API contract for payment lifecycle operations.
@@ -15,7 +15,7 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
-    Payment:
+    PaymentEntity:
       type: object
       required: [ id, status, amount, currency ]
       properties:
@@ -117,7 +117,7 @@ paths:
               $ref: '#/components/schemas/StartPaymentRequest'
       responses:
         '200':
-          description: Payment started
+          description: PaymentEntity started
           content:
             application/json:
               schema:
@@ -165,11 +165,11 @@ paths:
               $ref: '#/components/schemas/CreatePaymentRequest'
       responses:
         '201':
-          description: Payment created
+          description: PaymentEntity created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Payment'
+                $ref: '#/components/schemas/PaymentEntity'
         '400':
           description: Invalid JSON body
           content:
@@ -205,11 +205,11 @@ paths:
               $ref: '#/components/schemas/RefundPaymentRequest'
       responses:
         '200':
-          description: Payment refunded
+          description: PaymentEntity refunded
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Payment'
+                $ref: '#/components/schemas/PaymentEntity'
         '400':
           description: Invalid JSON body
           content:
@@ -221,7 +221,7 @@ paths:
         '403':
           description: Missing payment:write scope
         '404':
-          description: Payment not found
+          description: PaymentEntity not found
           content:
             application/json:
               schema:
@@ -245,17 +245,17 @@ paths:
             type: string
       responses:
         '200':
-          description: Payment finalized
+          description: PaymentEntity finalized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Payment'
+                $ref: '#/components/schemas/PaymentEntity'
         '401':
           description: Missing or invalid bearer token
         '403':
           description: Missing payment:write scope
         '404':
-          description: Payment not found
+          description: PaymentEntity not found
           content:
             application/json:
               schema:

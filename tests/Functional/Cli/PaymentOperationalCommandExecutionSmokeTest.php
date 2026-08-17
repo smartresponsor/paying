@@ -5,14 +5,12 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Functional\Cli;
 
-use App\Paying\Infrastructure\Console\DlqReplayCommand;
-use App\Paying\Infrastructure\Console\IdemPurgeCommand;
-use App\Paying\Infrastructure\Console\SlaReportCommand;
-use App\Paying\InfrastructureInterface\OutboxPublisherInterface;
+use App\Paying\Infrastructure\Console\PaymentDlqReplayCommand;
+use App\Paying\Infrastructure\Console\PaymentIdemPurgeCommand;
+use App\Paying\Infrastructure\Console\PaymentSlaReportCommand;
 use App\Paying\ServiceInterface\IdempotencyStoreInterface;
-use App\Paying\ServiceInterface\SlaReporterInterface;
-use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\Exception;
+use App\Paying\ServiceInterface\PaymentDlqServiceInterface;
+use App\Paying\ServiceInterface\PaymentSlaReporterServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
@@ -26,67 +24,44 @@ final class PaymentOperationalCommandExecutionSmokeTest extends TestCase
     /**
      * Verifies that dlq replay command replays rows and prints count.
      */
-    public function testDlqReplayCommandReplaysRowsAndPrintsCount(): void
+    public function testPaymentDlqReplayCommandReplaysRowsAndPrintsCount(): void
     {
-        /** @var Connection&MockObject $data */
-        $data = $this->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['fetchAllAssociative', 'executeStatement'])
-            ->getMock();
-
-        $data->expects(self::once())
-            ->method('fetchAllAssociative')
-            ->with(self::stringContains('SELECT * FROM payment_dlq'))
+        /** @var PaymentDlqServiceInterface&MockObject $dlq */
+        $dlq = $this->createMock(PaymentDlqServiceInterface::class);
+        $dlq->expects(self::once())
+            ->method('list')
             ->willReturn([
                 ['id' => 11, 'topic' => 'payment.completed', 'payload' => '{"paymentId":"01TEST"}'],
                 ['id' => 12, 'topic' => 'payment.failed', 'payload' => '{"paymentId":"01FAIL"}'],
             ]);
+        $replayed = [];
+        $dlq->expects(self::exactly(2))
+            ->method('replay')
+            ->willReturnCallback(static function (int $id) use (&$replayed): bool {
+                $replayed[] = $id;
 
-        $data->expects(self::exactly(2))
-            ->method('executeStatement')
-            ->with(
-                self::stringContains('DELETE FROM payment_dlq'),
-                self::callback(static fn (array $params): bool => isset($params['id']) && in_array($params['id'], [11, 12], true)),
-                self::anything(),
-            )
-            ->willReturn(1);
-
-        try {
-            $publisher = $this->createMock(OutboxPublisherInterface::class);
-        } catch (Exception $e) {
-        }
-        $enqueued = [];
-        $publisher->expects(self::exactly(2))
-            ->method('enqueue')
-            ->willReturnCallback(static function (string $topic, array $payload) use (&$enqueued): void {
-                $enqueued[] = [$topic, $payload];
+                return true;
             });
 
-        $command = new DlqReplayCommand($data, $publisher);
+        $command = new PaymentDlqReplayCommand($dlq);
         $tester = new CommandTester($command);
 
         self::assertSame(Command::SUCCESS, $tester->execute(['limit' => '2']));
         self::assertStringContainsString('Replayed: 2', $tester->getDisplay());
-        self::assertSame([
-            ['payment.completed', ['paymentId' => '01TEST']],
-            ['payment.failed', ['paymentId' => '01FAIL']],
-        ], $enqueued);
+        self::assertSame([11, 12], $replayed);
     }
 
     /**
      * Verifies that idem purge command prints purged count.
      */
-    public function testIdemPurgeCommandPrintsPurgedCount(): void
+    public function testPaymentIdemPurgeCommandPrintsPurgedCount(): void
     {
-        try {
-            $store = $this->createMock(IdempotencyStoreInterface::class);
-        } catch (Exception $e) {
-        }
+        $store = $this->createMock(IdempotencyStoreInterface::class);
         $store->expects(self::once())
             ->method('purgeExpired')
             ->willReturn(4);
 
-        $command = new IdemPurgeCommand($store);
+        $command = new PaymentIdemPurgeCommand($store);
         $tester = new CommandTester($command);
 
         self::assertSame(Command::SUCCESS, $tester->execute([]));
@@ -96,10 +71,10 @@ final class PaymentOperationalCommandExecutionSmokeTest extends TestCase
     /**
      * Verifies that sla report command prints json report for window.
      */
-    public function testSlaReportCommandPrintsJsonReportForWindow(): void
+    public function testPaymentSlaReportCommandPrintsJsonReportForWindow(): void
     {
-        /** @var SlaReporterInterface&MockObject $reporter */
-        $reporter = $this->createMock(SlaReporterInterface::class);
+        /** @var PaymentSlaReporterServiceInterface&MockObject $reporter */
+        $reporter = $this->createMock(PaymentSlaReporterServiceInterface::class);
 
         $reporter->expects(self::once())
             ->method('since')
@@ -114,7 +89,7 @@ final class PaymentOperationalCommandExecutionSmokeTest extends TestCase
                 'successRate' => 70.0,
             ]);
 
-        $command = new SlaReportCommand($reporter);
+        $command = new PaymentSlaReportCommand($reporter);
         $tester = new CommandTester($command);
 
         self::assertSame(Command::SUCCESS, $tester->execute(['window' => 'P7D']));

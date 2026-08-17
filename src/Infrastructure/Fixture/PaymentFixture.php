@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Infrastructure\Fixture;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\ValueObject\PaymentStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
@@ -32,7 +32,7 @@ final class PaymentFixture extends Fixture implements FixtureGroupInterface
         ];
 
         foreach ($definitions as [$reference, $status, $provider]) {
-            $payment = new Payment(new Ulid(), $status, $faker->amount(), 'USD');
+            $payment = new PaymentEntity(new Ulid(), $status, $faker->amount(), 'USD');
             if (null !== $provider) {
                 $payment->withProviderRef($faker->providerReference($provider));
             }

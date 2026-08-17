@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "Payment API",
+    "name": "PaymentEntity API",
     "_postman_id": "00000000-0000-0000-0000-000000000001",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },

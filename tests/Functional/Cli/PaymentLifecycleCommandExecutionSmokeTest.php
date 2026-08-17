@@ -5,14 +5,14 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Functional\Cli;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\Infrastructure\Console\PaymentLifecycleCommand;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\Service\PaymentStartResult;
+use App\Paying\ServiceInterface\PaymentProviderGuardInterface;
+use App\Paying\ServiceInterface\PaymentRefundServiceInterface;
 use App\Paying\ServiceInterface\PaymentServiceInterface;
 use App\Paying\ServiceInterface\PaymentStartServiceInterface;
-use App\Paying\ServiceInterface\ProviderGuardInterface;
-use App\Paying\ServiceInterface\RefundServiceInterface;
 use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -31,7 +31,7 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
      */
     public function testCreateActionDelegatesToPaymentServiceAndPrintsJson(): void
     {
-        $payment = new Payment(new Ulid('01ARZ3NDEKTSV4RRFFQ69G5FAV'), PaymentStatus::new, '50.00', 'USD');
+        $payment = new PaymentEntity(new Ulid('01ARZ3NDEKTSV4RRFFQ69G5FAV'), PaymentStatus::new, '50.00', 'USD');
 
         try {
             $paymentService = $this->createMock(PaymentServiceInterface::class);
@@ -47,8 +47,8 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
                 $paymentService,
                 $this->createMock(PaymentStartServiceInterface::class),
                 $this->createMock(PaymentRepositoryInterface::class),
-                $this->createMock(ProviderGuardInterface::class),
-                $this->createMock(RefundServiceInterface::class),
+                $this->createMock(PaymentProviderGuardInterface::class),
+                $this->createMock(PaymentRefundServiceInterface::class),
             );
         } catch (Exception $e) {
         }
@@ -73,7 +73,7 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
      */
     public function testStartActionDelegatesToPaymentStartServiceAndPrintsJson(): void
     {
-        $payment = new Payment(new Ulid('01ARZ3NDEKTSV4RRFFQ69G5FB0'), PaymentStatus::processing, '50.00', 'USD');
+        $payment = new PaymentEntity(new Ulid('01ARZ3NDEKTSV4RRFFQ69G5FB0'), PaymentStatus::processing, '50.00', 'USD');
         $started = new PaymentStartResult($payment, 'stripe_pi_123', ['ok' => true]);
 
         /** @var PaymentStartServiceInterface&MockObject $paymentStartService */
@@ -87,8 +87,8 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
             $this->createMock(PaymentServiceInterface::class),
             $paymentStartService,
             $this->createMock(PaymentRepositoryInterface::class),
-            $this->createMock(ProviderGuardInterface::class),
-            $this->createMock(RefundServiceInterface::class),
+            $this->createMock(PaymentProviderGuardInterface::class),
+            $this->createMock(PaymentRefundServiceInterface::class),
         );
 
         $tester = new CommandTester($command);
@@ -116,8 +116,8 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
     public function testFinalizeActionSyncsExistingPaymentAndSavesIt(): void
     {
         $paymentId = '01ARZ3NDEKTSV4RRFFQ69G5FAV';
-        $existing = new Payment(new Ulid($paymentId), PaymentStatus::processing, '50.00', 'USD');
-        $resolved = new Payment(new Ulid($paymentId), PaymentStatus::completed, '50.00', 'USD');
+        $existing = new PaymentEntity(new Ulid($paymentId), PaymentStatus::processing, '50.00', 'USD');
+        $resolved = new PaymentEntity(new Ulid($paymentId), PaymentStatus::completed, '50.00', 'USD');
         $resolved->withProviderRef('stripe_pi_123');
 
         try {
@@ -132,9 +132,9 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
             ->method('save')
             ->with(self::identicalTo($existing));
 
-        /* @var ProviderGuardInterface&MockObject $guard */
+        /* @var PaymentProviderGuardInterface&MockObject $guard */
         try {
-            $guard = $this->createMock(ProviderGuardInterface::class);
+            $guard = $this->createMock(PaymentProviderGuardInterface::class);
         } catch (Exception $e) {
         }
         $guard->expects(self::once())
@@ -156,7 +156,7 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
                 $this->createMock(PaymentStartServiceInterface::class),
                 $repo,
                 $guard,
-                $this->createMock(RefundServiceInterface::class),
+                $this->createMock(PaymentRefundServiceInterface::class),
             );
         } catch (Exception $e) {
         }
@@ -184,11 +184,11 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
     public function testRefundActionDelegatesToRefundServiceAndPrintsJson(): void
     {
         $paymentId = new Ulid('01ARZ3NDEKTSV4RRFFQ69G5FB1');
-        $payment = new Payment($paymentId, PaymentStatus::refunded, '50.00', 'USD');
+        $payment = new PaymentEntity($paymentId, PaymentStatus::refunded, '50.00', 'USD');
         $payment->withProviderRef('stripe_refund_123');
 
-        /** @var RefundServiceInterface&MockObject $refundService */
-        $refundService = $this->createMock(RefundServiceInterface::class);
+        /** @var PaymentRefundServiceInterface&MockObject $refundService */
+        $refundService = $this->createMock(PaymentRefundServiceInterface::class);
         $refundService->expects(self::once())
             ->method('refund')
             ->with(self::equalTo($paymentId), '50.00', 'stripe')
@@ -198,7 +198,7 @@ final class PaymentLifecycleCommandExecutionSmokeTest extends TestCase
             $this->createMock(PaymentServiceInterface::class),
             $this->createMock(PaymentStartServiceInterface::class),
             $this->createMock(PaymentRepositoryInterface::class),
-            $this->createMock(ProviderGuardInterface::class),
+            $this->createMock(PaymentProviderGuardInterface::class),
             $refundService,
         );
 

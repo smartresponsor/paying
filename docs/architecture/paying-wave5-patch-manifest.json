@@ -1,0 +1,54 @@
+{
+  "component": "Paying",
+  "wave": "wave5-console-command-name-form",
+  "base": "PayingThu.zip + wave1-4 touched overlays",
+  "namespace": "App\\Paying",
+  "renamed": [
+    {
+      "from": "src/Infrastructure/Console/DlqReplayCommand.php",
+      "to": "src/Infrastructure/Console/PaymentDlqReplayCommand.php"
+    },
+    {
+      "from": "src/Infrastructure/Console/GateSloCommand.php",
+      "to": "src/Infrastructure/Console/PaymentGateSloCommand.php"
+    },
+    {
+      "from": "src/Infrastructure/Console/IdemPurgeCommand.php",
+      "to": "src/Infrastructure/Console/PaymentIdemPurgeCommand.php"
+    },
+    {
+      "from": "src/Infrastructure/Console/OutboxRunCommand.php",
+      "to": "src/Infrastructure/Console/PaymentOutboxRunCommand.php"
+    },
+    {
+      "from": "src/Infrastructure/Console/ProjectionRebuildCommand.php",
+      "to": "src/Infrastructure/Console/PaymentProjectionRebuildCommand.php"
+    },
+    {
+      "from": "src/Infrastructure/Console/ProjectionSyncCommand.php",
+      "to": "src/Infrastructure/Console/PaymentProjectionSyncCommand.php"
+    },
+    {
+      "from": "src/Infrastructure/Console/ReconcileRunCommand.php",
+      "to": "src/Infrastructure/Console/PaymentReconcileRunCommand.php"
+    },
+    {
+      "from": "src/Infrastructure/Console/SlaReportCommand.php",
+      "to": "src/Infrastructure/Console/PaymentSlaReportCommand.php"
+    }
+  ],
+  "retire_legacy_with_sha256": {
+    "src/Infrastructure/Console/DlqReplayCommand.php": "b15c8bf28e59e8ad34161854f3bbaed01bc154fefc97553850f7734d9d76abc3",
+    "src/Infrastructure/Console/GateSloCommand.php": "99fb493caecf8998dee9bed354a0ba7afb79e746ee1b3b24d5d2c46fbcd0ec0b",
+    "src/Infrastructure/Console/IdemPurgeCommand.php": "913859bff74a34362b43caa819266f68d7bd5ffffbb3ab0ffca15ebfc72e71c1",
+    "src/Infrastructure/Console/OutboxRunCommand.php": "55d81be9b26de182f40a608dda9b8b3d23787bf6835323a6314338bb92ac7d18",
+    "src/Infrastructure/Console/ProjectionRebuildCommand.php": "dc0822f2b19c81facca46972642fe0ab21f7050592cc49a38ce4f010962261e6",
+    "src/Infrastructure/Console/ProjectionSyncCommand.php": "a6c5ecd6fd0f17b3cf1c64474a5662653256fbcdc8cbd0afa649c4da0019a368",
+    "src/Infrastructure/Console/ReconcileRunCommand.php": "3535b4b50de69110bbcdf9f63d5991784511432cbdc7306dfb1eb5002952e48d",
+    "src/Infrastructure/Console/SlaReportCommand.php": "98f0696f9f3f14e7a8be71f81a18927e2d39290b40c4a5a569d93a5a1e799ae7"
+  },
+  "scripts": [
+    "composer report:console-command-name-form"
+  ],
+  "destructive": false
+}

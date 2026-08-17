@@ -40,29 +40,29 @@ payment_refund:
 
 payment_start:
   path: /payment/start
-  controller: App\Paying\Controller\StartController::start
+  controller: App\Paying\Controller\PaymentStartController::start
   methods: [ POST ]
 
 payment_finalize:
   path: /payment/finalize/{id}
-  controller: App\Paying\Controller\FinalizeController::finalize
+  controller: App\Paying\Controller\PaymentFinalizeController::finalize
   methods: [ POST ]
 payment_metrics:
   path: /metrics
-  controller: App\Paying\Controller\MetricController::metrics
+  controller: App\Paying\Controller\PaymentMetricController::metrics
   methods: [ GET ]
 
 payment_dlq_list:
   path: /payment/dlq
-  controller: App\Paying\Controller\DlqController::list
+  controller: App\Paying\Controller\PaymentDlqController::list
   methods: [ GET ]
 
 payment_dlq_replay:
   path: /payment/dlq/replay/{id}
-  controller: App\Paying\Controller\DlqController::replay
+  controller: App\Paying\Controller\PaymentDlqController::replay
   methods: [ POST ]
 
 payment_status:
   path: /status
-  controller: App\Paying\Controller\StatusController::status
+  controller: App\Paying\Controller\PaymentStatusController::status
   methods: [ GET ]

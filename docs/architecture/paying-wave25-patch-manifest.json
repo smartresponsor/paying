@@ -1,0 +1,17 @@
+{
+  "component": "Paying",
+  "wave": 25,
+  "name": "test-unmapped-residual-name-form",
+  "scope": "report-only",
+  "runtimeContractsChanged": false,
+  "routesChanged": false,
+  "providerKeysChanged": false,
+  "databaseTablesChanged": false,
+  "filesRetired": [],
+  "addedComposerScripts": [
+    "report:test-unmapped-residual-name-form"
+  ],
+  "addedInspectionReports": [
+    "tools/inspection/PayingTestUnmappedResidualNameFormReport.php"
+  ]
+}

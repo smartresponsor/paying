@@ -1,4 +1,5 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
@@ -22,7 +23,7 @@ final class PaymentConsoleRefundType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('paymentId', TextType::class, ['label' => 'Payment ID'])
+            ->add('paymentId', TextType::class, ['label' => 'PaymentEntity ID'])
             ->add('amount', TextType::class, [
                 'label' => 'Refund amount',
             ])

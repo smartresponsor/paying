@@ -43,7 +43,7 @@ final class PaymentConsoleAccessSmokeTest extends WebTestCase
         $client->request('GET', '/payment/console');
 
         if (401 === $client->getResponse()->getStatusCode()) {
-            self::markTestSkipped('Payment console smoke requires interactive/UI auth harness; current contour returns 401.');
+            self::markTestSkipped('PaymentEntity console smoke requires interactive/UI auth harness; current contour returns 401.');
         }
 
         self::assertSame(200, $client->getResponse()->getStatusCode());

@@ -20,8 +20,8 @@ putenv('APP_DEBUG=1');
 $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = 'sqlite:///'.$projectDir.'/var/payment.test.data.sqlite';
 putenv('DATABASE_URL='.$_SERVER['DATABASE_URL']);
 
-$_SERVER['INFRA_URL'] = $_ENV['INFRA_URL'] = 'sqlite:///'.$projectDir.'/var/payment.test.infra.sqlite';
-putenv('INFRA_URL='.$_SERVER['INFRA_URL']);
+$_SERVER['INFRASTRUCTURE_URL'] = $_ENV['INFRASTRUCTURE_URL'] = 'sqlite:///'.$projectDir.'/var/payment.test.infrastructure.sqlite';
+putenv('INFRASTRUCTURE_URL='.$_SERVER['INFRASTRUCTURE_URL']);
 
 require $projectDir.'/config/bootstrap.php';
 
@@ -60,7 +60,7 @@ foreach (array_unique([
 
 foreach ([
     $projectDir.'/var/payment.test.data.sqlite',
-    $projectDir.'/var/payment.test.infra.sqlite',
+    $projectDir.'/var/payment.test.infrastructure.sqlite',
 ] as $sqlitePath) {
     if (is_file($sqlitePath)) {
         @unlink($sqlitePath);

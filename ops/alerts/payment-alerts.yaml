@@ -6,10 +6,10 @@ groups:
         for: 5m
         labels: { severity: warning }
         annotations:
-          summary: "Payment errors detected"
+          summary: "PaymentEntity errors detected"
   - alert: PaymentProjectionLagHigh
     expr: payment_projection_lag_ms > 5000
     for: 5m
     labels: { severity: warning }
     annotations:
-      summary: "Payment projection lag is high"
+      summary: "PaymentEntity projection lag is high"
