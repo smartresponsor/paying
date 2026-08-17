@@ -8,6 +8,7 @@ services:
         tags: ['cruding.resource_service']
     App\Paying\Repository\PaymentRepository: ~
     App\Paying\Service\PaymentStartService: ~
+    App\Paying\Service\Placement\ListingPricingProfileNormalizer: ~
     App\Paying\Service\PaymentProviderGuard: ~
     App\Paying\Service\PaymentRetryExecutor: ~
     App\Paying\Service\PaymentMetric: ~
@@ -27,6 +28,8 @@ services:
                 stripe: '@App\Paying\Service\PaymentStripeProvider'
                 paypal: '@App\Paying\Service\PaymentPayPalProvider'
 
+    App\Paying\ServiceInterface\Placement\ListingPricingProfileNormalizerInterface:
+        alias: App\Paying\Service\Placement\ListingPricingProfileNormalizer
     App\Paying\RepositoryInterface\PaymentRepositoryInterface:
         alias: App\Paying\Repository\PaymentRepository
     App\Paying\ServiceInterface\PaymentStartServiceInterface:
