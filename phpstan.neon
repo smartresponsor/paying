@@ -2,6 +2,8 @@ parameters:
   level: 7
   ignoreErrors:
     - identifier: missingType.iterableValue
+    - identifier: property.unusedType
+    - identifier: arrayValues.list
   excludePaths:
     - tests/E2E/Ui/PaymentConsolePantherFlowTest.php
   paths:

@@ -58,8 +58,8 @@ final readonly class PaymentStartService implements PaymentStartServiceInterface
     {
         try {
             $providerResult = $this->guard->start($provider, $payment, [
-                'idempotencyKey' => '' !== $idempotencyKey ? $idempotencyKey : (string) $payment->id(),
-                'projectId' => (string) $payment->id(),
+                'idempotencyKey' => '' !== $idempotencyKey ? $idempotencyKey : $payment->slug(),
+                'projectId' => $payment->slug(),
                 'origin' => $origin,
             ]);
         } catch (\Throwable $exception) {

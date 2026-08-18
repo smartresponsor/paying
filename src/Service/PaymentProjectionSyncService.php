@@ -35,7 +35,7 @@ readonly class PaymentProjectionSyncService implements PaymentProjectionSyncServ
         $lastUpdatedAt = null;
         foreach ($rows as $r) {
             $this->paymentProjectionRepository->upsert([
-                'id' => (string) $r->id(),
+                'id' => $r->slug(),
                 'order_id' => (string) $r->orderId(),
                 'amount' => (string) $r->amount(),
                 'currency' => (string) $r->currency(),
@@ -69,7 +69,7 @@ readonly class PaymentProjectionSyncService implements PaymentProjectionSyncServ
             }
             foreach ($rows as $r) {
                 $this->paymentProjectionRepository->upsert([
-                    'id' => (string) $r->id(),
+                    'id' => $r->slug(),
                     'order_id' => (string) $r->orderId(),
                     'amount' => (string) $r->amount(),
                     'currency' => (string) $r->currency(),

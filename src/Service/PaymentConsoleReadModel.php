@@ -117,7 +117,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
             }
 
             $events[] = [
-                'id' => $log->id(),
+                'id' => (string) $log->id(),
                 'provider' => $log->provider(),
                 'externalEventId' => $log->externalEventId(),
                 'status' => $log->status(),
@@ -136,7 +136,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
     private function toPaymentRow(PaymentEntity $payment): array
     {
         return [
-            'id' => (string) $payment->id(),
+            'id' => $payment->slug(),
             'orderId' => $payment->orderId(),
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),

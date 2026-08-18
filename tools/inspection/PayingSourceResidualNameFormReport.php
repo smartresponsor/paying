@@ -119,7 +119,7 @@ foreach ($doublePrefixMatches as $path) {
 }
 
 if ($errors !== []) {
-    fwrite(STDERR, "Paying source residual name-form report: FAILED\n");
+    fwrite(STDERR, "Paying source residual nameEntity-form report: FAILED\n");
     foreach ($errors as $error) {
         fwrite(STDERR, ' - ' . $error . "\n");
     }
@@ -134,7 +134,7 @@ if ($errors !== []) {
     exit(1);
 }
 
-fwrite(STDOUT, "Paying source residual name-form report: OK\n");
+fwrite(STDOUT, "Paying source residual nameEntity-form report: OK\n");
 fwrite(STDOUT, 'Covered legacy source pairs: ' . count($coveredLegacyFiles) . "\n");
 if ($warnings !== []) {
     fwrite(STDOUT, "Warnings:\n");

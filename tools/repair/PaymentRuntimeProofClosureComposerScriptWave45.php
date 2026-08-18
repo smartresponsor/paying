@@ -35,7 +35,7 @@ if (!isset($composer['description']) || !is_string($composer['description']) || 
     foreach ($composer as $key => $value) {
         $ordered[$key] = $value;
 
-        if ($key === 'name') {
+        if ($key === 'nameEntity') {
             $ordered['description'] = $description;
         }
     }

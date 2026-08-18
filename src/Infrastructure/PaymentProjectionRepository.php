@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Persists and queries payment projection records for read-side use cases.
+ * Persists and queries payment projections through Doctrine-managed read-side entities.
  */
 readonly class PaymentProjectionRepository implements PaymentProjectionRepositoryInterface
 {
@@ -26,10 +26,10 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
     {
         try {
             $entity = $this->infrastructure->find(PaymentProjectionEntity::class, $id);
-        } catch (\Throwable $e) {
-            $this->logger->error('Failed to fetch payment projection by ID.', ['id' => $id, 'exception' => $e]);
+        } catch (\Throwable $exception) {
+            $this->logger->error('Failed to fetch payment projection by ID.', ['id' => $id, 'exception' => $exception]);
 
-            throw $e;
+            throw $exception;
         }
 
         if (!$entity instanceof PaymentProjectionEntity) {
@@ -51,14 +51,22 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
                 ->setMaxResults(max(1, $limit))
                 ->getQuery()
                 ->getResult();
-        } catch (\Throwable $e) {
-            $this->logger->error('Failed to list payment projections by status.', ['status' => $status, 'limit' => $limit, 'exception' => $e]);
+        } catch (\Throwable $exception) {
+            $this->logger->error('Failed to list payment projections by status.', ['status' => $status, 'limit' => $limit, 'exception' => $exception]);
 
-            throw $e;
+            throw $exception;
         }
 
         return array_values(array_map(
-            fn (PaymentProjectionEntity $entity): array => $this->toRow($entity),
+            static fn (PaymentProjectionEntity $entity): array => [
+                'id' => $entity->id(),
+                'order_id' => $entity->orderId(),
+                'amount' => $entity->amount(),
+                'currency' => $entity->currency(),
+                'status' => $entity->status(),
+                'provider_ref' => $entity->providerRef(),
+                'updated_at' => $entity->updatedAt()->format('Y-m-d H:i:s'),
+            ],
             array_filter($entities, static fn (mixed $entity): bool => $entity instanceof PaymentProjectionEntity),
         ));
     }
@@ -98,10 +106,10 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
                 ->from(PaymentProjectionEntity::class, 'p')
                 ->getQuery()
                 ->getSingleScalarResult();
-        } catch (\Throwable $e) {
-            $this->logger->error('Failed to read payment projection max updated_at.', ['exception' => $e]);
+        } catch (\Throwable $exception) {
+            $this->logger->error('Failed to read payment projection max updated_at.', ['exception' => $exception]);
 
-            throw $e;
+            throw $exception;
         }
 
         return is_string($value) && '' !== trim($value) ? $value : null;
@@ -111,10 +119,10 @@ readonly class PaymentProjectionRepository implements PaymentProjectionRepositor
     {
         try {
             $entity = $this->infrastructure->find(PaymentProjectionMetaEntity::class, 'watermark');
-        } catch (\Throwable $e) {
-            $this->logger->error('Failed to read payment projection watermark.', ['exception' => $e]);
+        } catch (\Throwable $exception) {
+            $this->logger->error('Failed to read payment projection watermark.', ['exception' => $exception]);
 
-            throw $e;
+            throw $exception;
         }
 
         if (!$entity instanceof PaymentProjectionMetaEntity) {

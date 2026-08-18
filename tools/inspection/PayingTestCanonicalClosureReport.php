@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Closes the Paying test name-form canonization contour introduced across Waves 23-26.
+ * Closes the Paying test nameEntity-form canonization contour introduced across Waves 23-26.
  */
 final class PayingTestCanonicalClosureReport
 {
@@ -42,9 +42,9 @@ final class PayingTestCanonicalClosureReport
 
     /** @var list<string> */
     private const REQUIRED_COMPOSER_SCRIPTS = [
-        'report:test-residual-name-form',
+        'report:test-residual-nameEntity-form',
         'report:test-legacy-duplicate-retirement',
-        'report:test-unmapped-residual-name-form',
+        'report:test-unmapped-residual-nameEntity-form',
         'report:test-unmapped-canonicalization',
     ];
 

@@ -7,7 +7,7 @@ namespace App\Paying\Entity;
 
 use App\Paying\ValueObject\PaymentStatus;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Uid\AbstractUid;
 
 /**
  * Stores the canonical payment aggregate snapshot used across the operational lifecycle.
@@ -21,8 +21,12 @@ use Symfony\Component\Uid\Ulid;
 class PaymentEntity
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'ulid', unique: true)]
-    private Ulid $id;
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
+
+    #[ORM\Column(type: 'guid', unique: true)]
+    private string $slug;
 
     #[ORM\Column(type: 'string', length: 128)]
     private string $orderId;
@@ -45,10 +49,10 @@ class PaymentEntity
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $updatedAt;
 
-    public function __construct(Ulid $id, PaymentStatus $status, string $amount, string $currency, string $orderId = '')
+    public function __construct(AbstractUid $slug, PaymentStatus $status, string $amount, string $currency, string $orderId = '')
     {
-        $this->id = $id;
-        $this->orderId = '' !== trim($orderId) ? trim($orderId) : (string) $id;
+        $this->slug = $slug->toRfc4122();
+        $this->orderId = '' !== trim($orderId) ? trim($orderId) : $this->slug;
         $this->status = $status;
         $this->amount = $amount;
         $this->currency = $currency;
@@ -68,9 +72,14 @@ class PaymentEntity
     /**
      * Returns the stable payment identifier used across repository and transport boundaries.
      */
-    public function id(): Ulid
+    public function id(): ?int
     {
         return $this->id;
+    }
+
+    public function slug(): string
+    {
+        return $this->slug;
     }
 
     /**

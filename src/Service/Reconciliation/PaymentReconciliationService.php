@@ -34,7 +34,7 @@ final readonly class PaymentReconciliationService implements PaymentReconciliati
 
         $tx = new PaymentTransactionEntity(
             new Ulid()->toRfc4122(),
-            (string) $p->id(),
+            $p->slug(),
             $gatewayTxId ?? 'captured',
             'capture',
             $amountMinor,
@@ -56,7 +56,7 @@ final readonly class PaymentReconciliationService implements PaymentReconciliati
 
         $refund = new PaymentRefundEntity(
             new Ulid()->toRfc4122(),
-            (string) $p->id(),
+            $p->slug(),
             $amountMinor,
             $currency,
             $reason,

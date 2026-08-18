@@ -21,17 +21,17 @@ function payment_render_reflection_type(?ReflectionType $type): string
     }
 
     if ($type instanceof ReflectionNamedType) {
-        $name = $type->getName();
+        $nameEntity = $type->getName();
 
-        if (!$type->isBuiltin() && !in_array($name, ['self', 'static', 'parent'], true)) {
-            $name = '\\' . $name;
+        if (!$type->isBuiltin() && !in_array($nameEntity, ['self', 'static', 'parent'], true)) {
+            $nameEntity = '\\' . $nameEntity;
         }
 
-        if ($type->allowsNull() && !in_array($name, ['mixed', 'null'], true) && !str_starts_with($name, '?')) {
-            return '?' . $name;
+        if ($type->allowsNull() && !in_array($nameEntity, ['mixed', 'null'], true) && !str_starts_with($nameEntity, '?')) {
+            return '?' . $nameEntity;
         }
 
-        return $name;
+        return $nameEntity;
     }
 
     if ($type instanceof ReflectionUnionType) {
@@ -77,19 +77,19 @@ function payment_render_parameter(ReflectionParameter $parameter): string
         $parts[] = $type;
     }
 
-    $name = '';
+    $nameEntity = '';
 
     if ($parameter->isPassedByReference()) {
-        $name .= '&';
+        $nameEntity .= '&';
     }
 
     if ($parameter->isVariadic()) {
-        $name .= '...';
+        $nameEntity .= '...';
     }
 
-    $name .= '$' . $parameter->getName();
+    $nameEntity .= '$' . $parameter->getName();
 
-    $parts[] = $name . payment_render_default_value($parameter);
+    $parts[] = $nameEntity . payment_render_default_value($parameter);
 
     return implode(' ', $parts);
 }

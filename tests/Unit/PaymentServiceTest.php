@@ -85,7 +85,7 @@ final class PaymentServiceTest extends TestCase
         };
 
         $service = new PaymentService($repo);
-        $payment = $service->create('00000000-0000-0000-0000-000000000001', 1000, 'usd');
+        $payment = $service->create('6a7b8c9d-1e2f-4a3b-8c4d-5e6f70000001', 1000, 'usd');
 
         self::assertInstanceOf(PaymentEntity::class, $payment);
         self::assertSame($payment, $repo->saved);

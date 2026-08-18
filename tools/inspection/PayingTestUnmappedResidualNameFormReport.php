@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Reports unmapped legacy test name-form leftovers after the mapped test duplicate retirement wave.
+ * Reports unmapped legacy test nameEntity-form leftovers after the mapped test duplicate retirement wave.
  *
  * This inspection is intentionally report-only. It does not delete files and it does not decide
  * whether a legacy test is obsolete. It creates a narrow backlog for the next safe mapping wave.
@@ -74,7 +74,7 @@ final class PayingTestUnmappedResidualNameFormReport
             }
         }
 
-        echo "Paying test unmapped residual name-form report\n";
+        echo "Paying test unmapped residual nameEntity-form report\n";
         echo "================================================\n";
         echo 'Project root: ' . $projectRoot . "\n";
         echo 'Warnings: ' . count($warnings) . "\n";

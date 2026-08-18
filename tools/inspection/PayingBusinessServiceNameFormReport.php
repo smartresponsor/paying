@@ -79,14 +79,14 @@ foreach ($scanRoots as $scanRoot) {
 
         $contents = (string) file_get_contents($file->getPathname());
         if (preg_match('/PaymentPayment|ServiceService/', $contents)) {
-            $violations[] = sprintf('Duplicate name-form drift found in %s', substr($file->getPathname(), strlen($root) + 1));
+            $violations[] = sprintf('Duplicate nameEntity-form drift found in %s', substr($file->getPathname(), strlen($root) + 1));
         }
     }
 }
 
 if ([] !== $violations) {
-    fwrite(STDERR, "Paying business service name-form report failed:\n- " . implode("\n- ", $violations) . "\n");
+    fwrite(STDERR, "Paying business service nameEntity-form report failed:\n- " . implode("\n- ", $violations) . "\n");
     exit(1);
 }
 
-fwrite(STDOUT, "Paying business service name-form report: OK\n");
+fwrite(STDOUT, "Paying business service nameEntity-form report: OK\n");

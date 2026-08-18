@@ -32,9 +32,9 @@ foreach (new DirectoryIterator($root) as $entry) {
         continue;
     }
 
-    $name = $entry->getFilename();
-    if (!in_array($name, $allowedRootFiles, true)) {
-        $summary['root_loose_files'][] = $name;
+    $nameEntity = $entry->getFilename();
+    if (!in_array($nameEntity, $allowedRootFiles, true)) {
+        $summary['root_loose_files'][] = $nameEntity;
     }
 }
 

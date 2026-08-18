@@ -36,8 +36,8 @@ final class PaymentConsoleReadModelTest extends TestCase
         $paymentB = new PaymentEntity(new Ulid('01HK153X000000000000000002'), PaymentStatus::completed, '25.00', 'USD');
         $paymentB->withProviderRef('internal_ref_2002');
 
-        $logA = new PaymentWebhookLogEntity('stripe', 'evt_1', ['paymentId' => (string) $paymentA->id()]);
-        $logB = new PaymentWebhookLogEntity('paypal', 'evt_2', ['paymentId' => (string) $paymentB->id()]);
+        $logA = new PaymentWebhookLogEntity('stripe', 'evt_1', ['paymentId' => $paymentA->slug()]);
+        $logB = new PaymentWebhookLogEntity('paypal', 'evt_2', ['paymentId' => $paymentB->slug()]);
 
         $repo = new class([$paymentA, $paymentB]) implements PaymentRepositoryInterface {
             public function __construct(private readonly array $payments)
@@ -57,7 +57,7 @@ final class PaymentConsoleReadModelTest extends TestCase
             public function find(string $id): ?PaymentEntity
             {
                 foreach ($this->payments as $payment) {
-                    if ((string) $payment->id() === $id) {
+                    if ($payment->slug() === $id) {
                         return $payment;
                     }
                 }
@@ -121,12 +121,12 @@ final class PaymentConsoleReadModelTest extends TestCase
 
         $readModel = new PaymentConsoleReadModel($repo, $entityManager);
 
-        $result = $readModel->build('stripe', 'processing', (string) $paymentA->id());
+        $result = $readModel->build('stripe', 'processing', $paymentA->slug());
 
         self::assertCount(1, $result['payments']);
-        self::assertSame((string) $paymentA->id(), $result['payments'][0]['id']);
+        self::assertSame($paymentA->slug(), $result['payments'][0]['id']);
         self::assertNotNull($result['selectedPayment']);
-        self::assertSame((string) $paymentA->id(), $result['selectedPayment']['id']);
+        self::assertSame($paymentA->slug(), $result['selectedPayment']['id']);
         self::assertCount(1, $result['events']);
         self::assertSame('evt_1', $result['events'][0]['externalEventId']);
     }
@@ -165,7 +165,7 @@ final class PaymentConsoleReadModelTest extends TestCase
             public function find(string $id): ?PaymentEntity
             {
                 foreach ($this->payments as $payment) {
-                    if ((string) $payment->id() === $id) {
+                    if ($payment->slug() === $id) {
                         return $payment;
                     }
                 }
@@ -231,6 +231,6 @@ final class PaymentConsoleReadModelTest extends TestCase
         $result = $readModel->build('', 'processing', '01HK153X000000000000000999');
 
         self::assertNotNull($result['selectedPayment']);
-        self::assertSame((string) $paymentA->id(), $result['selectedPayment']['id']);
+        self::assertSame($paymentA->slug(), $result['selectedPayment']['id']);
     }
 }

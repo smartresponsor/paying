@@ -30,7 +30,7 @@
     },
     {
       "path": "src/Controller/WebhookController.php",
-      "canonical": "src/Controller/PaymentWebhookController.php",
+      "canonical": "src/Service/Webhook/PaymentGenericWebhookProcessor.php",
       "sha256": "a51fee292560115f66c81f802f8e97893c8845d3c5ecf14bf0caac0ce2243b18"
     },
     {
@@ -60,7 +60,7 @@
     },
     {
       "path": "src/ControllerInterface/WebhookControllerInterface.php",
-      "canonical": "src/ControllerInterface/PaymentWebhookControllerInterface.php",
+      "canonical": "src/ControllerInterface/PaymentGenericWebhookProcessorInterface.php",
       "sha256": "2ae222ce35150774534abb7105d90397da3cf9593886d39aad914927d92bdf38"
     },
     {

@@ -20,8 +20,12 @@ use Symfony\Component\Uid\Ulid;
 class PaymentWebhookLogEntity
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'guid')]
-    private string $id;
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
+
+    #[ORM\Column(type: 'guid', unique: true)]
+    private string $slug;
 
     #[ORM\Column(type: 'string', length: 32)]
     private string $provider;
@@ -46,7 +50,7 @@ class PaymentWebhookLogEntity
 
     public function __construct(string $provider, string $externalEventId, array $payload)
     {
-        $this->id = new Ulid()->toRfc4122();
+        $this->slug = (new Ulid())->toRfc4122();
         $this->provider = strtolower($provider);
         $this->externalEventId = $externalEventId;
         $this->payload = $payload;
@@ -56,9 +60,14 @@ class PaymentWebhookLogEntity
     /**
      * Returns the stable webhook-log identifier.
      */
-    public function id(): string
+    public function id(): ?int
     {
         return $this->id;
+    }
+
+    public function slug(): string
+    {
+        return $this->slug;
     }
 
     /**

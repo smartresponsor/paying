@@ -95,7 +95,7 @@ foreach ($scanRoots as $scanRoot) {
 }
 
 if ([] !== $violations) {
-    fwrite(STDERR, "Paying API boundary name-form report: FAILED\n");
+    fwrite(STDERR, "Paying API boundary nameEntity-form report: FAILED\n");
     foreach ($violations as $violation) {
         fwrite(STDERR, ' - '.$violation."\n");
     }
@@ -103,4 +103,4 @@ if ([] !== $violations) {
     exit(1);
 }
 
-echo "Paying API boundary name-form report: OK\n";
+echo "Paying API boundary nameEntity-form report: OK\n";

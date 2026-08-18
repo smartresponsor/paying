@@ -58,7 +58,7 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
         $em = $this->createMock(EntityManagerInterface::class);
         $em->method('getRepository')->willReturn($repository);
 
-        $outboxMessage = new PaymentOutboxMessageEntity('11111111-1111-1111-1111-111111111111', 'payment.captured', [
+        $outboxMessage = new PaymentOutboxMessageEntity('7c4f1c2e-9e33-4c1b-9a6f-1a2b3c4d5011', 'payment.captured', [
             'paymentId' => 'pay_1',
             'orderId' => 'ord_1',
             'amountMinor' => 5000,

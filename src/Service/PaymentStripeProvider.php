@@ -44,12 +44,12 @@ final class PaymentStripeProvider implements PaymentProviderInterface
     {
         return [
             'provider' => 'stripe',
-            'paymentId' => (string) $payment->id(),
+            'paymentId' => $payment->slug(),
             'result' => $this->create(
-                (string) ($context['projectId'] ?? $payment->id()),
+                (string) ($context['projectId'] ?? $payment->slug()),
                 (float) $payment->amount(),
                 $payment->currency(),
-                (string) ($context['idempotencyKey'] ?? $payment->id())
+                (string) ($context['idempotencyKey'] ?? $payment->slug())
             ),
         ];
     }
@@ -92,7 +92,7 @@ final class PaymentStripeProvider implements PaymentProviderInterface
                 'line_items' => [[
                     'price_data' => [
                         'currency' => strtolower($currency),
-                        'product_data' => ['name' => 'CommerceProjectEntity '.$projectId],
+                        'product_data' => ['nameEntity' => 'CommerceProjectEntity '.$projectId],
                         'unit_amount' => $amountMinor,
                     ],
                     'quantity' => 1,

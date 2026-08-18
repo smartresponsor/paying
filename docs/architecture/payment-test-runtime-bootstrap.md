@@ -100,7 +100,7 @@ It does **not** by itself prove a completed installed-runtime execution with res
 
 ## Wave 010
 
-- Marked `App\Paying\Controller\PaymentWebhookController` as a public controller service with `controller.service_arguments`
+- Marked `App\Paying\Controller\PaymentGenericWebhookProcessor` as a public controller service with `controller.service_arguments`
   so `/payment/webhook/{provider}` no longer fails before controller execution.
 - Simplified `PaymentConsoleRefundType::amount` to `TextType` so the refund console flow keeps DTO decimal validation
   instead of brittle `MoneyType` transformation behavior in functional tests.
@@ -177,7 +177,7 @@ It does **not** by itself prove a completed installed-runtime execution with res
 
 ## Wave 010
 
-- Marked `App\Paying\Controller\PaymentWebhookController` as a public controller service with `controller.service_arguments`
+- Marked `App\Paying\Controller\PaymentGenericWebhookProcessor` as a public controller service with `controller.service_arguments`
   so `/payment/webhook/{provider}` no longer fails before controller execution.
 - Simplified `PaymentConsoleRefundType::amount` to `TextType` so the refund console flow keeps DTO decimal validation
   instead of brittle `MoneyType` transformation behavior in functional tests.

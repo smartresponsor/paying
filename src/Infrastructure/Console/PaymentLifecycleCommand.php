@@ -79,7 +79,7 @@ final class PaymentLifecycleCommand extends Command
         $payment = $this->paymentService->create($orderId, $amountMinor, $currency);
         $this->writeResult($output, [
             'action' => 'create',
-            'id' => (string) $payment->id(),
+            'id' => $payment->slug(),
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),
             'currency' => $payment->currency(),
@@ -107,7 +107,7 @@ final class PaymentLifecycleCommand extends Command
         $payment = $started->payment;
         $this->writeResult($output, [
             'action' => 'start',
-            'id' => (string) $payment->id(),
+            'id' => $payment->slug(),
             'status' => $payment->status()->value,
             'providerRef' => $started->providerRef,
         ]);
@@ -144,7 +144,7 @@ final class PaymentLifecycleCommand extends Command
 
         $this->writeResult($output, [
             'action' => 'finalize',
-            'id' => (string) $existing->id(),
+            'id' => $existing->slug(),
             'status' => $existing->status()->value,
             'providerRef' => $existing->providerRef(),
         ]);
@@ -174,7 +174,7 @@ final class PaymentLifecycleCommand extends Command
 
         $this->writeResult($output, [
             'action' => 'refund',
-            'id' => (string) $payment->id(),
+            'id' => $payment->slug(),
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),
             'currency' => $payment->currency(),

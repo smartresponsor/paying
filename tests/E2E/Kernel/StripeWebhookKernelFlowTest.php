@@ -17,6 +17,7 @@ final class StripeWebhookKernelFlowTest extends WebTestCase
      */
     /**
      * Verifies that end to end stripe webhook.
+     *
      * @throws \JsonException
      */
     public function testEndToEndStripeWebhook(): void

@@ -186,7 +186,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ValidationErrorResponse'
-  /api/payments/{id}/refund:
+  /api/payment/refund/{id}:
     post:
       summary: Refund payment
       security:

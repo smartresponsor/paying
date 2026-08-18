@@ -5,7 +5,7 @@ declare(strict_types=1);
 $required = [
     'src/Kernel.php',
     'src/Service/PaymentService.php',
-    'src/Controller/PaymentConsoleController.php',
+    'src/Service/PaymentConsoleSurfaceBuilder.php',
     'config/services.yaml',
 ];
 $missing = array_values(array_filter($required, static fn (string $file): bool => !file_exists($file)));

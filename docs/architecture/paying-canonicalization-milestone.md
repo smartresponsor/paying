@@ -104,7 +104,7 @@ Completed class-form canonicalization for ambiguous top-level controllers and th
 - `StartController` -> `PaymentStartController`
 - `FinalizeController` -> `PaymentFinalizeController`
 - `StatusController` -> `PaymentStatusController`
-- `WebhookController` -> `PaymentWebhookController`
+- `WebhookController` -> `PaymentGenericWebhookProcessor`
 - `MetricController` -> `PaymentMetricController`
 - `DlqController` -> `PaymentDlqController`
 

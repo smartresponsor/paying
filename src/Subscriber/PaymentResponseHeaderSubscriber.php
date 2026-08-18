@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 readonly class PaymentResponseHeaderSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private string $contentSecurityPolicy = "default-src 'self'",
+        private string $contentSecurityPolicy = "default-src 'self'; style-src 'self' 'unsafe-inline'",
     ) {
     }
 

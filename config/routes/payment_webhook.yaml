@@ -1,14 +1,2 @@
-payment_webhook:
-  path: /payment/webhook/{provider}
-  controller: App\Paying\Controller\PaymentWebhookController::webhook
-  methods: [ POST ]
-
-payment_webhook_stripe:
-  path: /webhook/stripe
-  controller: App\Paying\Controller\Webhook\PaymentStripeWebhookController::__invoke
-  methods: [ POST ]
-
-payment_webhook_paypal:
-  path: /webhook/paypal
-  controller: App\Paying\Controller\Webhook\PaymentPayPalWebhookController::__invoke
-  methods: [ POST ]
+# Paying webhook routes are no longer owned by producer controllers.
+# Host routing is handled by Cruding route grammar and route governance.

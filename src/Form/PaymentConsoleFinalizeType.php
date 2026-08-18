@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Form;
 
-use App\Paying\Controller\Dto\PaymentConsoleFinalizeRequestDto;
+use App\Paying\Dto\Payment\PaymentConsoleFinalizeRequestDto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -23,7 +23,10 @@ final class PaymentConsoleFinalizeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('paymentId', TextType::class, ['label' => 'PaymentEntity ID'])
+            ->add('paymentId', TextType::class, [
+                'label' => 'Payment ID',
+                'help' => 'Identifier of the payment to finalize.',
+            ])
             ->add('provider', ChoiceType::class, [
                 'label' => 'Provider',
                 'choices' => [
@@ -31,14 +34,17 @@ final class PaymentConsoleFinalizeType extends AbstractType
                     'Stripe' => 'stripe',
                     'PayPal' => 'paypal',
                 ],
+                'placeholder' => 'Choose provider',
             ])
             ->add('providerRef', TextType::class, [
                 'label' => 'Provider ref',
                 'required' => false,
+                'help' => 'Optional upstream provider reference.',
             ])
             ->add('providerTransactionId', TextType::class, [
                 'label' => 'Provider transaction ID',
                 'required' => false,
+                'help' => 'Optional transaction identifier from the provider.',
             ])
             ->add('status', ChoiceType::class, [
                 'label' => 'Finalize status',
@@ -49,6 +55,7 @@ final class PaymentConsoleFinalizeType extends AbstractType
                     'Failed' => 'failed',
                     'Refunded' => 'refunded',
                 ],
+                'help' => 'Leave empty to use the provider result.',
             ]);
     }
 

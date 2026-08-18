@@ -1,27 +1,21 @@
 <?php
 
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Controller;
 
-use App\Paying\Attribute\PaymentRequireScopeAttribute;
-use App\Paying\Controller\Dto\PaymentStartRequestDto;
 use App\Paying\ControllerInterface\PaymentStartControllerInterface;
+use App\Paying\Dto\Payment\PaymentStartRequestDto;
 use App\Paying\ServiceInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;
 use App\Paying\ServiceInterface\PaymentApiRequestValidatorInterface;
 use App\Paying\ServiceInterface\PaymentApiStartHandlerInterface;
 use App\Paying\ServiceInterface\PaymentStartInput;
-use Nelmio\ApiDocBundle\Attribute\Security;
-use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-/**
- * Starts provider-backed payment flows for newly requested payment operations.
- */
 final readonly class PaymentStartController implements PaymentStartControllerInterface
 {
     public function __construct(
@@ -32,35 +26,6 @@ final readonly class PaymentStartController implements PaymentStartControllerInt
     ) {
     }
 
-    #[PaymentRequireScopeAttribute(['payment:write'])]
-    #[OA\Post(
-        path: '/payment/start',
-        summary: 'Create and start a payment execution flow.',
-        tags: ['PaymentEntity'],
-        responses: [
-            new OA\Response(response: 200, description: 'PaymentEntity started.'),
-            new OA\Response(response: 401, description: 'Missing or invalid bearer token.'),
-            new OA\Response(response: 403, description: 'Missing payment:write scope.'),
-            new OA\Response(response: 422, description: 'Validation failed.'),
-        ],
-    )]
-    #[OA\RequestBody(
-        required: true,
-        content: new OA\JsonContent(
-            required: ['orderId', 'amount', 'currency', 'provider'],
-            properties: [
-                new OA\Property(property: 'orderId', type: 'string', example: 'order-1001'),
-                new OA\Property(property: 'amount', type: 'string', example: '50.00'),
-                new OA\Property(property: 'currency', type: 'string', example: 'USD'),
-                new OA\Property(property: 'provider', type: 'string', example: 'internal'),
-            ],
-            type: 'object',
-        ),
-    )]
-    #[Security(name: 'Bearer')]
-    /**
-     * Validates the start request body and dispatches the payment start transition.
-     */
     public function start(Request $request): JsonResponse
     {
         $data = $this->jsonBodyDecoder->decode($request);
@@ -69,7 +34,6 @@ final readonly class PaymentStartController implements PaymentStartControllerInt
         }
 
         $dto = $this->hydrateStartRequestDto($data);
-
         $validationResponse = $this->requestValidator->validate($dto);
         if (null !== $validationResponse) {
             return $validationResponse;
@@ -83,8 +47,6 @@ final readonly class PaymentStartController implements PaymentStartControllerInt
     }
 
     /**
-     * Maps the decoded start request body into the DTO consumed by validation and orchestration.
-     *
      * @param array<string, mixed> $data
      */
     private function hydrateStartRequestDto(array $data): PaymentStartRequestDto
@@ -98,9 +60,6 @@ final readonly class PaymentStartController implements PaymentStartControllerInt
         return $dto;
     }
 
-    /**
-     * Converts the validated DTO into the orchestration input contract consumed by the start handler.
-     */
     private function buildStartInput(PaymentStartRequestDto $dto): PaymentStartInput
     {
         return new PaymentStartInput($dto->orderId, $dto->provider, $dto->amount, $dto->currency);

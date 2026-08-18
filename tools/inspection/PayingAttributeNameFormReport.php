@@ -51,12 +51,12 @@ foreach ($scanRoots as $scanRoot) {
 }
 
 if ($issues !== []) {
-    echo "Paying attribute name-form report: FAILED\n";
+    echo "Paying attribute nameEntity-form report: FAILED\n";
     foreach ($issues as $issue) {
         echo '- '.$issue."\n";
     }
     exit(1);
 }
 
-echo "Paying attribute name-form report: OK\n";
+echo "Paying attribute nameEntity-form report: OK\n";
 echo "Canonical attribute: App\Paying\Attribute\PaymentRequireScopeAttribute\n";

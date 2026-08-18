@@ -69,12 +69,12 @@ foreach ($legacy as $path => $className) {
 }
 
 if ([] !== $errors) {
-    echo "Paying provider service name-form report: FAIL\n";
+    echo "Paying provider service nameEntity-form report: FAIL\n";
     foreach (array_values(array_unique($errors)) as $error) {
         echo ' - '.$error."\n";
     }
     exit(1);
 }
 
-echo "Paying provider service name-form report: OK\n";
+echo "Paying provider service nameEntity-form report: OK\n";
 echo "Canonical providers: PaymentInternalProvider, PaymentStripeProvider, PaymentPayPalProvider\n";

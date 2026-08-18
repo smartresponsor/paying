@@ -39,7 +39,7 @@ class PaymentOutboxWorker
             $payload = $row->payload();
             $attempts = $row->attempts() + 1;
             $routingKey = null !== $row->routingKey() && '' !== $row->routingKey() ? $row->routingKey() : $row->type();
-            $id = $row->id();
+            $id = (string) $row->id();
 
             try {
                 $this->transport->publish($routingKey, $payload);

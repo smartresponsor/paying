@@ -43,11 +43,11 @@ foreach ([$controllerDir, $interfaceDir] as $dir) {
 }
 
 if ($violations === []) {
-    echo "Paying controller name-form report: OK\n";
+    echo "Paying controller nameEntity-form report: OK\n";
     exit(0);
 }
 
-echo "Paying controller name-form report: violations found\n";
+echo "Paying controller nameEntity-form report: violations found\n";
 foreach ($violations as $violation) {
     echo " - {$violation}\n";
 }

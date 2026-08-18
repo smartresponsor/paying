@@ -82,7 +82,7 @@ if (!is_dir($testsDirectory)) {
     }
 }
 
-fwrite(STDOUT, "Paying test residual name-form report\n");
+fwrite(STDOUT, "Paying test residual nameEntity-form report\n");
 fwrite(STDOUT, str_repeat('=', 38) . "\n");
 fwrite(STDOUT, 'Mapped legacy tests checked: ' . count($coveredLegacyTests) . "\n");
 fwrite(STDOUT, 'Warnings: ' . count($warnings) . "\n");

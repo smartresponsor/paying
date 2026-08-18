@@ -47,6 +47,6 @@ final readonly class PaymentWebhookIngestService implements PaymentWebhookIngest
         $log->markProcessed();
         $this->em->flush();
 
-        return ['status' => 'queued', 'outboxId' => $outbox->id()];
+        return ['status' => 'queued', 'outboxId' => $outbox->slug()];
     }
 }

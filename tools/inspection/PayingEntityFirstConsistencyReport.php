@@ -65,7 +65,7 @@ function paying_namespace(string $contents): ?string
 
 function paying_table_name(string $contents): ?string
 {
-    if (preg_match('/#\[ORM\\\\Table\s*\([^)]*name\s*:\s*[\'"]([^\'"]+)[\'"]/s', $contents, $matches) === 1) {
+    if (preg_match('/#\[ORM\\\\Table\s*\([^)]*nameEntity\s*:\s*[\'"]([^\'"]+)[\'"]/s', $contents, $matches) === 1) {
         return $matches[1];
     }
 
@@ -136,7 +136,7 @@ foreach ($entityFiles as $file) {
         ++$repositoryLinkedEntities;
 
         if (!str_contains($repositoryClass, 'Payment')) {
-            $errors[] = 'Entity repositoryClass is missing Payment name-form: ' . $relative . ' uses ' . $repositoryClass;
+            $errors[] = 'Entity repositoryClass is missing Payment nameEntity-form: ' . $relative . ' uses ' . $repositoryClass;
         }
 
         $repositoryShortName = substr($repositoryClass, strrpos($repositoryClass, '\\') === false ? 0 : strrpos($repositoryClass, '\\') + 1);
@@ -160,7 +160,7 @@ foreach ($repositoryFiles as $file) {
     if (str_contains($className, 'Payment')) {
         ++$paymentNamedRepositories;
     } elseif (str_ends_with($className, 'Repository')) {
-        $errors[] = 'Repository class is missing Payment name-form: ' . $relative . ' declares ' . $className;
+        $errors[] = 'Repository class is missing Payment nameEntity-form: ' . $relative . ' declares ' . $className;
     }
 
     if (str_ends_with($className, 'Repository') && !str_contains($contents, 'ServiceEntityRepository')) {
@@ -180,7 +180,7 @@ foreach ($repositoryInterfaceFiles as $file) {
     if (str_contains($interfaceName, 'Payment')) {
         ++$paymentNamedRepositoryInterfaces;
     } elseif (str_ends_with($interfaceName, 'RepositoryInterface')) {
-        $errors[] = 'Repository interface is missing Payment name-form: ' . $relative . ' declares ' . $interfaceName;
+        $errors[] = 'Repository interface is missing Payment nameEntity-form: ' . $relative . ' declares ' . $interfaceName;
     }
 }
 
@@ -196,7 +196,7 @@ foreach ($formFiles as $file) {
     if (str_contains($className, 'Payment')) {
         ++$paymentNamedForms;
     } else {
-        $errors[] = 'Symfony form type is missing Payment name-form: ' . $relative . ' declares ' . $className;
+        $errors[] = 'Symfony form type is missing Payment nameEntity-form: ' . $relative . ' declares ' . $className;
     }
 
     if (!str_contains($contents, 'AbstractType')) {

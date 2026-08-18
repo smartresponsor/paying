@@ -36,7 +36,7 @@ final readonly class PaymentRepository implements PaymentRepositoryInterface
      */
     public function find(string $id): ?PaymentEntity
     {
-        $payment = $this->em->find(PaymentEntity::class, $id);
+        $payment = $this->em->getRepository(PaymentEntity::class)->findOneBy(['slug' => $id]);
         if (null === $payment) {
             return null;
         }
@@ -98,11 +98,12 @@ final readonly class PaymentRepository implements PaymentRepositoryInterface
 
         try {
             $rows = $this->em->createQueryBuilder()
-                ->select('p.id')
+                ->select('p.slug')
                 ->from(PaymentEntity::class, 'p')
                 ->where('LOWER(p.status) IN (:statuses)')
                 ->setParameter('statuses', $normalized)
                 ->orderBy('p.updatedAt', 'ASC')
+                ->addOrderBy('p.id', 'ASC')
                 ->setMaxResults($limit)
                 ->getQuery()
                 ->getScalarResult();
@@ -117,7 +118,7 @@ final readonly class PaymentRepository implements PaymentRepositoryInterface
         }
 
         return array_values(array_map(
-            static fn (array $row): string => (string) ($row['id'] ?? $row[0] ?? ''),
+            static fn (array $row): string => (string) ($row['slug'] ?? $row[0] ?? ''),
             $rows,
         ));
     }
@@ -132,7 +133,7 @@ final readonly class PaymentRepository implements PaymentRepositoryInterface
             ->where('p.updatedAt > :updatedAfter')
             ->setParameter('updatedAfter', $updatedAfter)
             ->orderBy('p.updatedAt', 'ASC')
-            ->addOrderBy('p.id', 'ASC')
+            ->addOrderBy('p.slug', 'ASC')
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
@@ -149,7 +150,7 @@ final readonly class PaymentRepository implements PaymentRepositoryInterface
             ->select('p')
             ->from(PaymentEntity::class, 'p')
             ->orderBy('p.updatedAt', 'ASC')
-            ->addOrderBy('p.id', 'ASC')
+            ->addOrderBy('p.slug', 'ASC')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->getQuery()

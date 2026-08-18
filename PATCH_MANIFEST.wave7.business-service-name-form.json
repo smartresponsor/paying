@@ -15,7 +15,7 @@
     "src/Controller/PaymentMetricController.php",
     "src/Controller/PaymentRefundController.php",
     "src/Controller/PaymentStatusController.php",
-    "src/Controller/PaymentWebhookController.php",
+    "src/Service/Webhook/PaymentGenericWebhookProcessor.php",
     "src/Controller/Webhook/PayPalWebhookController.php",
     "src/Controller/Webhook/StripeWebhookController.php",
     "src/Infrastructure/Console/PaymentDlqReplayCommand.php",

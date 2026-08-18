@@ -1,10 +1,11 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Form;
 
-use App\Paying\Controller\Dto\PaymentStartRequestDto;
+use App\Paying\Dto\Payment\PaymentStartRequestDto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CurrencyType;
@@ -24,14 +25,21 @@ final class PaymentStartType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('orderId', TextType::class, ['label' => 'Order ID'])
+            ->add('orderId', TextType::class, [
+                'label' => 'Order ID',
+                'help' => 'Order identifier that will be charged.',
+            ])
             ->add('amount', MoneyType::class, [
                 'label' => 'Amount',
                 'currency' => false,
                 'scale' => 2,
                 'divisor' => 1,
+                'help' => 'Requested capture amount in major units.',
             ])
-            ->add('currency', CurrencyType::class, ['label' => 'Currency'])
+            ->add('currency', CurrencyType::class, [
+                'label' => 'Currency',
+                'help' => 'ISO 4217 currency code.',
+            ])
             ->add('provider', ChoiceType::class, [
                 'label' => 'Provider',
                 'choices' => [
@@ -39,6 +47,7 @@ final class PaymentStartType extends AbstractType
                     'Stripe' => 'stripe',
                     'PayPal' => 'paypal',
                 ],
+                'placeholder' => 'Choose provider',
             ]);
     }
 

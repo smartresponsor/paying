@@ -56,12 +56,12 @@ foreach ([
 }
 
 if ([] !== $failures) {
-    echo "Paying subscriber layer/name-form report: FAIL\n";
+    echo "Paying subscriber layer/nameEntity-form report: FAIL\n";
     foreach ($failures as $failure) {
         echo '- '.$failure."\n";
     }
     exit(1);
 }
 
-echo "Paying subscriber layer/name-form report: OK\n";
+echo "Paying subscriber layer/nameEntity-form report: OK\n";
 exit(0);

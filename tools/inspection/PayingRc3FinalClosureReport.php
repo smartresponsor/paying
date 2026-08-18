@@ -78,7 +78,7 @@ $crossChecks = [
     ['tools/inspection/PayingRuntimeProofClosureReport.php', 'PayingRc3TransferMemoReport.php', 'Closure report must require transfer memo report.'],
     ['tools/inspection/PayingRuntimeProofClosureReport.php', 'report:rc3-transfer-memo', 'Closure report must require transfer memo script.'],
     ['tools/inspection/PayingRc3TransferMemoReport.php', 'report:rc3-final-closure', 'Transfer memo report must require final closure script.'],
-    ['tools/inspection/PayingRc3TransferMemoReport.php', 'RC-3 final closure surface assembled', 'Transfer memo report must name final closure milestone.'],
+    ['tools/inspection/PayingRc3TransferMemoReport.php', 'RC-3 final closure surface assembled', 'Transfer memo report must nameEntity final closure milestone.'],
     ['delivery/rc/paying-rc3-transfer-memo.md', 'composer report:rc3-final-closure', 'Transfer memo must include final closure command.'],
 ];
 

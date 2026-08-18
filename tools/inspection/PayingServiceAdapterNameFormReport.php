@@ -34,5 +34,5 @@ $expected = [
 $errors = [];
 foreach ($forbidden as $path) { if (is_file($root.'/'.$path)) { $errors[] = 'Forbidden legacy file remains: '.$path; } }
 foreach ($expected as $path) { if (!is_file($root.'/'.$path)) { $errors[] = 'Expected canonical file is missing: '.$path; } }
-if ($errors !== []) { fwrite(STDERR, "Paying service adapter name-form report: FAILED\n".implode("\n", $errors)."\n"); exit(1); }
-echo "Paying service adapter name-form report: OK\n";
+if ($errors !== []) { fwrite(STDERR, "Paying service adapter nameEntity-form report: FAILED\n".implode("\n", $errors)."\n"); exit(1); }
+echo "Paying service adapter nameEntity-form report: OK\n";

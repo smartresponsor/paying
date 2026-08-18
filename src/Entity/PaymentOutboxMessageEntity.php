@@ -18,8 +18,12 @@ use Doctrine\ORM\Mapping as ORM;
 class PaymentOutboxMessageEntity
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'guid')]
-    private string $id;
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
+
+    #[ORM\Column(type: 'guid', unique: true)]
+    private string $slug;
 
     #[ORM\Column(type: 'string', length: 128)]
     private string $type;
@@ -44,7 +48,7 @@ class PaymentOutboxMessageEntity
 
     public function __construct(string $id, string $type, array $payload, ?string $routingKey = null)
     {
-        $this->id = $id;
+        $this->slug = $id;
         $this->type = $type;
         $this->payload = $payload;
         $this->occurredAt = new \DateTimeImmutable('now');
@@ -54,9 +58,14 @@ class PaymentOutboxMessageEntity
     /**
      * Returns the stable identifier of the persisted outbox record.
      */
-    public function id(): string
+    public function id(): ?int
     {
         return $this->id;
+    }
+
+    public function slug(): string
+    {
+        return $this->slug;
     }
 
     /**

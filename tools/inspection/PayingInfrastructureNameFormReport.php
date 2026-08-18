@@ -8,7 +8,7 @@ declare(strict_types=1);
  *
  * This is intentionally report-only. It protects the Paying component from
  * reintroducing short infrastructure names such as AuditLogger or OutboxWorker
- * after the Wave 6 name-form canonicalization.
+ * after the Wave 6 nameEntity-form canonicalization.
  */
 
 $root = dirname(__DIR__, 2);
@@ -58,7 +58,7 @@ foreach ($required as $relativePath) {
 }
 
 if ($missing !== [] || $absent !== []) {
-    fwrite(STDERR, "Paying infrastructure name-form report: FAIL\n");
+    fwrite(STDERR, "Paying infrastructure nameEntity-form report: FAIL\n");
 
     foreach ($missing as $path) {
         fwrite(STDERR, " - legacy unprefixed file remains: {$path}\n");
@@ -71,4 +71,4 @@ if ($missing !== [] || $absent !== []) {
     exit(1);
 }
 
-fwrite(STDOUT, "Paying infrastructure name-form report: OK\n");
+fwrite(STDOUT, "Paying infrastructure nameEntity-form report: OK\n");

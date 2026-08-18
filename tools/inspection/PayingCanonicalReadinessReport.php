@@ -66,15 +66,15 @@ $reports = [
         'script' => 'tools/inspection/PayingCanonicalStructureClosureReport.php',
     ],
     [
-        'label' => 'Canonical name-form summary',
+        'label' => 'Canonical nameEntity-form summary',
         'script' => 'tools/inspection/PayingCanonicalNameFormSummaryReport.php',
     ],
     [
-        'label' => 'Application surface name-form',
+        'label' => 'Application surface nameEntity-form',
         'script' => 'tools/inspection/PayingApplicationSurfaceNameFormReport.php',
     ],
     [
-        'label' => 'Source residual name-form',
+        'label' => 'Source residual nameEntity-form',
         'script' => 'tools/inspection/PayingSourceResidualNameFormReport.php',
     ],
     [

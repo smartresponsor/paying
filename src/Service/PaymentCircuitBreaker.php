@@ -26,7 +26,7 @@ readonly class PaymentCircuitBreaker implements PaymentCircuitBreakerInterface
      */
     public function isOpen(string $key): bool
     {
-        $entity = $this->infrastructure->find(PaymentCircuitEntity::class, $key);
+        $entity = $this->findCircuit($key);
         if (!$entity instanceof PaymentCircuitEntity) {
             return false;
         }
@@ -40,7 +40,7 @@ readonly class PaymentCircuitBreaker implements PaymentCircuitBreakerInterface
     public function recordSuccess(string $key): void
     {
         $this->infrastructure->wrapInTransaction(function () use ($key): void {
-            $entity = $this->infrastructure->find(PaymentCircuitEntity::class, $key);
+            $entity = $this->findCircuit($key);
             if ($entity instanceof PaymentCircuitEntity) {
                 $this->infrastructure->remove($entity);
             }
@@ -59,7 +59,7 @@ readonly class PaymentCircuitBreaker implements PaymentCircuitBreakerInterface
     public function recordFailure(string $key): void
     {
         $this->infrastructure->wrapInTransaction(function () use ($key): void {
-            $entity = $this->infrastructure->find(PaymentCircuitEntity::class, $key);
+            $entity = $this->findCircuit($key);
             $count = $entity instanceof PaymentCircuitEntity ? $entity->failureCount() + 1 : 1;
             $retryAt = (new \DateTimeImmutable())->modify('+'.$this->cooldownSec.' seconds');
 
@@ -72,5 +72,14 @@ readonly class PaymentCircuitBreaker implements PaymentCircuitBreakerInterface
 
             $this->infrastructure->flush();
         });
+    }
+
+    private function findCircuit(string $key): ?PaymentCircuitEntity
+    {
+        $entity = $this->infrastructure->getRepository(PaymentCircuitEntity::class)->findOneBy([
+            'key' => $key,
+        ]);
+
+        return $entity instanceof PaymentCircuitEntity ? $entity : null;
     }
 }

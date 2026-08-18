@@ -3,7 +3,7 @@ imports:
 
 parameters:
     payment.idem_ttl_default: 86400
-    payment.http_content_security_policy: "default-src 'self'"
+    payment.http_content_security_policy: "default-src 'self'; style-src 'self' 'unsafe-inline'"
     payment.oidc_jwks_cache_dir: '%kernel.project_dir%/var/cache/payment'
     payment.oidc_jwks_cache_ttl: 3600
     paying.messenger.dsn: '%env(resolve:RABBITMQ_DSN)%'
@@ -32,10 +32,52 @@ services:
     App\Paying\ServiceInterface\IdempotencyStoreInterface:
         factory: [ '@App\Paying\Service\PaymentIdempotencyStoreFactory', 'create' ]
 
-    App\Paying\Controller\:
-        resource: '../src/Controller/'
+    App\Paying\Service\PaymentConsoleSurfaceBuilder:
+        public: true
+
+    App\Paying\Service\PaymentApiSurfaceBuilder:
+        public: true
+
+    App\Paying\Service\PaymentOpsSurfaceBuilder:
+        public: true
+
+    App\Paying\Controller\PaymentCreateController:
         public: true
         tags: [ 'controller.service_arguments' ]
+
+    App\Paying\Controller\PaymentReadController:
+        public: true
+        tags: [ 'controller.service_arguments' ]
+
+    App\Paying\Controller\PaymentFinalizeController:
+        public: true
+        tags: [ 'controller.service_arguments' ]
+
+    App\Paying\Controller\PaymentStartController:
+        public: true
+        tags: [ 'controller.service_arguments' ]
+
+    App\Paying\Controller\PaymentRefundController:
+        public: true
+        tags: [ 'controller.service_arguments' ]
+
+    App\Paying\Controller\PaymentWebhookController:
+        public: true
+        tags: [ 'controller.service_arguments' ]
+        arguments:
+            $mappers: !tagged_iterator payment.event_mapper
+
+    App\Paying\Controller\Webhook\PaymentStripeWebhookController:
+        public: true
+        tags: [ 'controller.service_arguments' ]
+        arguments:
+            $paymentAuditLogger: '@payment_audit.logger'
+
+    App\Paying\Controller\Webhook\PaymentPayPalWebhookController:
+        public: true
+        tags: [ 'controller.service_arguments' ]
+        arguments:
+            $paymentAuditLogger: '@payment_audit.logger'
 
     App\Paying\Service\PaymentProviderRouter:
         arguments:
@@ -108,7 +150,7 @@ services:
         arguments:
             $paymentApiLimiter: '@limiter.payment_api'
 
-    App\Paying\Controller\PaymentWebhookController:
+    App\Paying\Service\Webhook\PaymentGenericWebhookProcessor:
         public: true
         tags: [ 'controller.service_arguments' ]
         arguments:
@@ -117,13 +159,13 @@ services:
     payment_audit.logger:
         alias: monolog.logger.payment_audit
 
-    App\Paying\Controller\Webhook\PaymentStripeWebhookController:
+    App\Paying\Service\Webhook\PaymentStripeWebhookProcessor:
         public: true
         tags: [ 'controller.service_arguments' ]
         arguments:
             $paymentAuditLogger: '@payment_audit.logger'
 
-    App\Paying\Controller\Webhook\PaymentPayPalWebhookController:
+    App\Paying\Service\Webhook\PaymentPayPalWebhookProcessor:
         public: true
         tags: [ 'controller.service_arguments' ]
         arguments:

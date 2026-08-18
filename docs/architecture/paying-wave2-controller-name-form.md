@@ -11,7 +11,7 @@ This wave performs the first small structural cleanup after the baseline audit. 
 | `src/Controller/StartController.php` | `src/Controller/PaymentStartController.php` |
 | `src/Controller/FinalizeController.php` | `src/Controller/PaymentFinalizeController.php` |
 | `src/Controller/StatusController.php` | `src/Controller/PaymentStatusController.php` |
-| `src/Controller/WebhookController.php` | `src/Controller/PaymentWebhookController.php` |
+| `src/Controller/WebhookController.php` | `src/Service/Webhook/PaymentGenericWebhookProcessor.php` |
 | `src/Controller/MetricController.php` | `src/Controller/PaymentMetricController.php` |
 | `src/Controller/DlqController.php` | `src/Controller/PaymentDlqController.php` |
 

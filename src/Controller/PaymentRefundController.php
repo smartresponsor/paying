@@ -5,26 +5,20 @@ declare(strict_types=1);
 
 namespace App\Paying\Controller;
 
-use App\Paying\Attribute\PaymentRequireScopeAttribute;
-use App\Paying\Controller\Dto\PaymentRefundRequestDto;
 use App\Paying\ControllerInterface\PaymentRefundControllerInterface;
+use App\Paying\Dto\Payment\PaymentRefundRequestDto;
 use App\Paying\Entity\PaymentEntity;
 use App\Paying\Service\PaymentNotFoundException;
 use App\Paying\ServiceInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;
 use App\Paying\ServiceInterface\PaymentApiRequestValidatorInterface;
 use App\Paying\ServiceInterface\PaymentRefundServiceInterface;
-use Nelmio\ApiDocBundle\Attribute\Security;
-use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
 
-/**
- * Accepts refund requests for existing payment aggregates through the HTTP API.
- */
 final readonly class PaymentRefundController implements PaymentRefundControllerInterface
 {
     public function __construct(
@@ -36,35 +30,6 @@ final readonly class PaymentRefundController implements PaymentRefundControllerI
     ) {
     }
 
-    #[PaymentRequireScopeAttribute(['payment:write'])]
-    #[OA\Post(
-        path: '/api/payments/{id}/refund',
-        summary: 'Refund an existing payment aggregate.',
-        tags: ['PaymentEntity'],
-        responses: [
-            new OA\Response(response: 200, description: 'PaymentEntity refunded.'),
-            new OA\Response(response: 401, description: 'Missing or invalid bearer token.'),
-            new OA\Response(response: 403, description: 'Missing payment:write scope.'),
-            new OA\Response(response: 404, description: 'PaymentEntity not found.'),
-            new OA\Response(response: 422, description: 'Validation failed.'),
-        ],
-    )]
-    #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string'))]
-    #[OA\RequestBody(
-        required: true,
-        content: new OA\JsonContent(
-            required: ['amount', 'provider'],
-            properties: [
-                new OA\Property(property: 'amount', type: 'string', example: '50.00'),
-                new OA\Property(property: 'provider', type: 'string', example: 'internal'),
-            ],
-            type: 'object',
-        ),
-    )]
-    #[Security(name: 'Bearer')]
-    /**
-     * Validates the refund request and applies the provider-specific refund transition.
-     */
     public function refund(string $id, Request $request): JsonResponse
     {
         if (!Ulid::isValid($id)) {
@@ -77,7 +42,6 @@ final readonly class PaymentRefundController implements PaymentRefundControllerI
         }
 
         $dto = $this->hydrateRefundRequestDto($data);
-
         $validationResponse = $this->requestValidator->validate($dto);
         if (null !== $validationResponse) {
             return $validationResponse;
@@ -98,8 +62,6 @@ final readonly class PaymentRefundController implements PaymentRefundControllerI
     }
 
     /**
-     * Maps the decoded refund request body into the DTO consumed by validation and orchestration.
-     *
      * @param array<string, mixed> $data
      */
     private function hydrateRefundRequestDto(array $data): PaymentRefundRequestDto
@@ -112,14 +74,12 @@ final readonly class PaymentRefundController implements PaymentRefundControllerI
     }
 
     /**
-     * Shapes the serialized refund payload returned after a successful refund transition.
-     *
      * @return array{id: string, status: string, amount: string, currency: string, providerRef: ?string}
      */
     private function buildRefundPayload(PaymentEntity $payment): array
     {
         return [
-            'id' => (string) $payment->id(),
+            'id' => $payment->slug(),
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),
             'currency' => $payment->currency(),

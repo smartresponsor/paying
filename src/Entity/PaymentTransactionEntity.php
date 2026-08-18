@@ -15,8 +15,12 @@ use Doctrine\ORM\Mapping as ORM;
 class PaymentTransactionEntity
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'guid')]
-    private string $id;
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
+
+    #[ORM\Column(type: 'guid', unique: true)]
+    private string $slug;
 
     #[ORM\Column(type: 'guid')]
     private string $paymentId;
@@ -35,7 +39,7 @@ class PaymentTransactionEntity
 
     public function __construct(string $id, string $paymentId, string $gatewayTransactionId, string $type, int $amountMinor)
     {
-        $this->id = $id;
+        $this->slug = $id;
         $this->paymentId = $paymentId;
         $this->gatewayTransactionId = $gatewayTransactionId;
         $this->type = $type;
@@ -46,9 +50,14 @@ class PaymentTransactionEntity
     /**
      * Returns the stable transaction identifier.
      */
-    public function id(): string
+    public function id(): ?int
     {
         return $this->id;
+    }
+
+    public function slug(): string
+    {
+        return $this->slug;
     }
 
     /**

@@ -71,9 +71,9 @@ readonly class PaymentWebhookVerifierService implements PaymentWebhookVerifierSe
         return $this->allowUnknown;
     }
 
-    private function headerValue(array $headers, string $name): ?string
+    private function headerValue(array $headers, string $nameEntity): ?string
     {
-        $value = $headers[strtolower($name)] ?? $headers[$name] ?? null;
+        $value = $headers[strtolower($nameEntity)] ?? $headers[$nameEntity] ?? null;
         if (is_array($value)) {
             $value = $value[0] ?? null;
         }

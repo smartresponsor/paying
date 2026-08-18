@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Paying\Infrastructure\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * Tracks circuit breaker state for operational payment workflows.
@@ -15,7 +16,14 @@ use Doctrine\ORM\Mapping as ORM;
 class PaymentCircuitEntity
 {
     #[ORM\Id]
-    #[ORM\Column(name: 'key', type: 'string', length: 80)]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
+
+    #[ORM\Column(type: 'guid', unique: true)]
+    private string $slug;
+
+    #[ORM\Column(name: 'key', type: 'string', length: 80, unique: true)]
     private string $key = '';
 
     #[ORM\Column(name: 'failure_count', type: 'integer')]
@@ -26,9 +34,20 @@ class PaymentCircuitEntity
 
     public function __construct(string $key, int $failureCount, \DateTimeImmutable $retryAt)
     {
+        $this->slug = Uuid::v7()->toRfc4122();
         $this->key = $key;
         $this->failureCount = $failureCount;
         $this->retryAt = $retryAt;
+    }
+
+    public function id(): ?int
+    {
+        return $this->id;
+    }
+
+    public function slug(): string
+    {
+        return $this->slug;
     }
 
     public function key(): string

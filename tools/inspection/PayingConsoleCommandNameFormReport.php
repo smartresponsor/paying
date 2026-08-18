@@ -35,7 +35,7 @@ foreach ($iterator as $file) {
     }
 
     if (!str_starts_with($file->getBasename('.php'), 'Payment')) {
-        $violations[] = sprintf('%s uses non-prefixed console command file name', $relativePath);
+        $violations[] = sprintf('%s uses non-prefixed console command file nameEntity', $relativePath);
     }
 
     if (str_starts_with($className, 'PaymentPayment')) {
@@ -44,11 +44,11 @@ foreach ($iterator as $file) {
 }
 
 if ($violations !== []) {
-    fwrite(STDERR, "Paying console command name-form report: FAIL\n");
+    fwrite(STDERR, "Paying console command nameEntity-form report: FAIL\n");
     foreach ($violations as $violation) {
         fwrite(STDERR, ' - ' . $violation . "\n");
     }
     exit(1);
 }
 
-fwrite(STDOUT, "Paying console command name-form report: OK\n");
+fwrite(STDOUT, "Paying console command nameEntity-form report: OK\n");

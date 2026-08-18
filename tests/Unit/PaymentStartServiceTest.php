@@ -139,8 +139,8 @@ final class PaymentStartServiceTest extends TestCase
         self::assertSame('USD', $payment->currency());
         self::assertSame('order-1001', $payment->orderId());
         self::assertSame('payment-console', $guard->receivedContext['origin']);
-        self::assertSame((string) $payment->id(), $guard->receivedContext['idempotencyKey']);
-        self::assertSame((string) $payment->id(), $guard->receivedContext['projectId']);
+        self::assertSame($payment->slug(), $guard->receivedContext['idempotencyKey']);
+        self::assertSame($payment->slug(), $guard->receivedContext['projectId']);
     }
 
     /**

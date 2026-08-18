@@ -1,6 +1,5 @@
 <?php
 
-// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Entity;
@@ -9,37 +8,70 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Represents a configured payment method code exposed by the component.
+ *
+ * Entity-first reconciliation: restored the old monolith method nameEntity and gateway relation.
  */
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Paying\Repository\PaymentMethodRepository::class)]
 #[ORM\Table(name: 'payment_method')]
 class PaymentMethodEntity
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'guid')]
-    private string $id;
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
+
+    #[ORM\Column(type: 'guid', unique: true)]
+    private string $slug;
 
     #[ORM\Column(type: 'string', length: 32)]
     private string $code;
 
-    public function __construct(string $id, string $code)
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    private ?string $methodName = null;
+
+    #[ORM\ManyToOne(targetEntity: PaymentGatewayEntity::class, inversedBy: 'paymentMethods')]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?PaymentGatewayEntity $gateway = null;
+
+    public function __construct(string $id, string $code, ?string $methodName = null)
     {
-        $this->id = $id;
+        $this->slug = $id;
         $this->code = $code;
+        $this->methodName = $methodName;
     }
 
-    /**
-     * Returns the stable payment-method identifier used in persistence.
-     */
-    public function id(): string
+    public function id(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Returns the short method code used by UI and orchestration layers.
-     */
+    public function slug(): string
+    {
+        return $this->slug;
+    }
+
     public function code(): string
     {
         return $this->code;
+    }
+
+    public function methodName(): ?string
+    {
+        return $this->methodName;
+    }
+
+    public function setMethodName(?string $methodName): void
+    {
+        $this->methodName = $methodName;
+    }
+
+    public function gateway(): ?PaymentGatewayEntity
+    {
+        return $this->gateway;
+    }
+
+    public function setGateway(?PaymentGatewayEntity $gateway): void
+    {
+        $this->gateway = $gateway;
     }
 }

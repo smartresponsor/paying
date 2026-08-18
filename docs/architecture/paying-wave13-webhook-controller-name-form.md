@@ -8,8 +8,8 @@ Wave 13 canonicalizes provider-specific webhook controller class names so webhoo
 
 | Legacy file | Canonical file |
 | --- | --- |
-| `src/Controller/Webhook/PayPalWebhookController.php` | `src/Controller/Webhook/PaymentPayPalWebhookController.php` |
-| `src/Controller/Webhook/StripeWebhookController.php` | `src/Controller/Webhook/PaymentStripeWebhookController.php` |
+| `src/Controller/Webhook/PayPalWebhookController.php` | `src/Service/Webhook/PaymentPayPalWebhookProcessor.php` |
+| `src/Controller/Webhook/StripeWebhookController.php` | `src/Service/Webhook/PaymentStripeWebhookProcessor.php` |
 
 ## Runtime contract
 

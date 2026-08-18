@@ -26,11 +26,11 @@ final readonly class PaymentPayPalProvider implements PaymentProviderInterface
     public function start(PaymentEntity $payment, array $context = []): array
     {
         $amountMinor = (int) round(((float) $payment->amount()) * 100);
-        $providerRef = $this->gateway->authorize((string) $payment->id(), $amountMinor, $payment->currency());
+        $providerRef = $this->gateway->authorize($payment->slug(), $amountMinor, $payment->currency());
 
         return [
             'provider' => 'paypal',
-            'paymentId' => (string) $payment->id(),
+            'paymentId' => $payment->slug(),
             'providerRef' => $providerRef,
             'accepted' => true,
         ];

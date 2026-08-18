@@ -10,8 +10,8 @@
     "docs/architecture/paying-canonicalization-milestone.md",
     "docs/architecture/paying-wave13-webhook-controller-name-form.md",
     "docs/architecture/paying-wave13-patch-manifest.json",
-    "src/Controller/Webhook/PaymentPayPalWebhookController.php",
-    "src/Controller/Webhook/PaymentStripeWebhookController.php",
+    "src/Service/Webhook/PaymentPayPalWebhookProcessor.php",
+    "src/Service/Webhook/PaymentStripeWebhookProcessor.php",
     "tools/inspection/PayingWebhookControllerNameFormReport.php"
   ],
   "retired_legacy_files": [

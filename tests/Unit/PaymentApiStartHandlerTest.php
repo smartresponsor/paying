@@ -52,7 +52,7 @@ final class PaymentApiStartHandlerTest extends TestCase
         $handler = new PaymentApiStartHandler($startService, $idem);
         $result = $handler->handle($input, 'idem-1', 'hash-1');
 
-        self::assertSame((string) $payment->id(), $result['payment']);
+        self::assertSame($payment->slug(), $result['payment']);
         self::assertSame('internal', $result['provider']);
         self::assertSame('processing', $result['status']);
         self::assertSame('ref-1', $result['providerRef']);

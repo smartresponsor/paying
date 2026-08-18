@@ -82,12 +82,12 @@ foreach ([
 }
 
 if ([] !== $errors) {
-    fwrite(STDERR, "Paying webhook controller name-form report: FAILED\n");
+    fwrite(STDERR, "Paying webhook controller nameEntity-form report: FAILED\n");
     foreach ($errors as $error) {
         fwrite(STDERR, ' - ' . $error . "\n");
     }
     exit(1);
 }
 
-fwrite(STDOUT, "Paying webhook controller name-form report: OK\n");
+fwrite(STDOUT, "Paying webhook controller nameEntity-form report: OK\n");
 fwrite(STDOUT, "Canonical webhook controllers: PaymentPayPalWebhookController, PaymentStripeWebhookController\n");

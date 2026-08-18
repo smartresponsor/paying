@@ -50,19 +50,19 @@ function paying_collect_php_files(string $root, string $relativeDirectory): arra
 function paying_declared_symbol(string $contents): ?array
 {
     if (preg_match('/\b(?:final\s+|abstract\s+)?class\s+([A-Z][A-Za-z0-9_]*)\b/', $contents, $matches) === 1) {
-        return ['kind' => 'class', 'name' => $matches[1]];
+        return ['kind' => 'class', 'nameEntity' => $matches[1]];
     }
 
     if (preg_match('/\binterface\s+([A-Z][A-Za-z0-9_]*)\b/', $contents, $matches) === 1) {
-        return ['kind' => 'interface', 'name' => $matches[1]];
+        return ['kind' => 'interface', 'nameEntity' => $matches[1]];
     }
 
     if (preg_match('/\btrait\s+([A-Z][A-Za-z0-9_]*)\b/', $contents, $matches) === 1) {
-        return ['kind' => 'trait', 'name' => $matches[1]];
+        return ['kind' => 'trait', 'nameEntity' => $matches[1]];
     }
 
     if (preg_match('/\benum\s+([A-Z][A-Za-z0-9_]*)\b/', $contents, $matches) === 1) {
-        return ['kind' => 'enum', 'name' => $matches[1]];
+        return ['kind' => 'enum', 'nameEntity' => $matches[1]];
     }
 
     return null;
@@ -99,7 +99,7 @@ foreach ($surfaceDirectories as $surfaceDirectory) {
             continue;
         }
 
-        $declaredName = $symbol['name'];
+        $declaredName = $symbol['nameEntity'];
 
         if ($declaredName !== $basename) {
             $errors[] = 'Application surface file/symbol mismatch: ' . $relative . ' declares ' . $declaredName;
@@ -107,7 +107,7 @@ foreach ($surfaceDirectories as $surfaceDirectory) {
         }
 
         if (!str_contains($declaredName, 'Payment')) {
-            $errors[] = 'Application surface class-name drift: ' . $relative . ' declares ' . $declaredName;
+            $errors[] = 'Application surface class-nameEntity drift: ' . $relative . ' declares ' . $declaredName;
         }
 
         foreach ($expectedSuffixes as $directory => $suffix) {
@@ -122,7 +122,7 @@ foreach ($surfaceDirectories as $surfaceDirectory) {
     }
 }
 
-echo "Paying application surface name-form report\n";
+echo "Paying application surface nameEntity-form report\n";
 echo "=================================================\n";
 echo 'Surface directories checked: ' . count($surfaceDirectories) . "\n";
 echo 'Required files checked: ' . $checkedFiles . "\n";

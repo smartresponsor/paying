@@ -77,7 +77,7 @@ final readonly class PaymentReadController implements PaymentReadControllerInter
     private function buildReadPayload(PaymentEntity $payment): array
     {
         return [
-            'id' => (string) $payment->id(),
+            'id' => $payment->slug(),
             'orderId' => $payment->orderId(),
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),

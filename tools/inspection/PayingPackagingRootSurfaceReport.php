@@ -55,7 +55,7 @@ $requiredReportScripts = [
     'report:release-candidate-structure',
     'report:canonical-structure-closure',
     'report:test-canonical-closure',
-    'report:canonical-name-form',
+    'report:canonical-nameEntity-form',
 ];
 
 $errors = [];

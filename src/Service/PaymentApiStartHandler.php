@@ -33,7 +33,7 @@ final readonly class PaymentApiStartHandler implements PaymentApiStartHandlerInt
             $started = $this->paymentStartService->start($input->orderId, $input->provider, $input->amount, $input->currency, $idempotencyKey);
 
             return [
-                'payment' => (string) $started->payment->id(),
+                'payment' => $started->payment->slug(),
                 'orderId' => $started->payment->orderId(),
                 'provider' => $input->provider,
                 'status' => $started->payment->status()->value,

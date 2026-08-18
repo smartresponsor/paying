@@ -87,11 +87,11 @@ foreach ($scanRoots as $relativeRoot) {
 }
 
 if ([] !== $errors) {
-    echo "Paying value-object/exception name-form report: FAIL\n";
+    echo "Paying value-object/exception nameEntity-form report: FAIL\n";
     foreach ($errors as $error) {
         echo ' - '.$error."\n";
     }
     exit(1);
 }
 
-echo "Paying value-object/exception name-form report: OK\n";
+echo "Paying value-object/exception nameEntity-form report: OK\n";

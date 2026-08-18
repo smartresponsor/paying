@@ -67,8 +67,8 @@ final class PaymentConsolePantherFlowTest extends PaymentConsolePantherFlowTestB
 
     protected function tearDown(): void
     {
-        foreach (array_keys($this->originalEnv) as $name) {
-            $this->restoreEnvironmentValue($name);
+        foreach (array_keys($this->originalEnv) as $nameEntity) {
+            $this->restoreEnvironmentValue($nameEntity);
         }
 
         parent::tearDown();
@@ -146,11 +146,11 @@ if (!form) {
   throw new Error('Finalize form was not rendered.');
 }
 
-form.querySelector('input[name="payment_console_finalize[paymentId]"]').value = '01HK153X000000000000000099';
-form.querySelector('select[name="payment_console_finalize[provider]"]').value = 'internal';
-form.querySelector('input[name="payment_console_finalize[providerRef]"]').value = 'missing-target';
-form.querySelector('input[name="payment_console_finalize[gatewayTransactionId]"]').value = 'txn-missing-target';
-form.querySelector('select[name="payment_console_finalize[status]"]').value = 'completed';
+form.querySelector('input[nameEntity="payment_console_finalize[paymentId]"]').value = '01HK153X000000000000000099';
+form.querySelector('select[nameEntity="payment_console_finalize[provider]"]').value = 'internal';
+form.querySelector('input[nameEntity="payment_console_finalize[providerRef]"]').value = 'missing-target';
+form.querySelector('input[nameEntity="payment_console_finalize[gatewayTransactionId]"]').value = 'txn-missing-target';
+form.querySelector('select[nameEntity="payment_console_finalize[status]"]').value = 'completed';
 form.submit();
 JS);
 
@@ -196,28 +196,28 @@ JS);
         self::ensureKernelShutdown();
     }
 
-    private function rememberEnvironmentValue(string $name): void
+    private function rememberEnvironmentValue(string $nameEntity): void
     {
-        $this->originalEnv[$name] = $_ENV[$name] ?? (getenv($name) ?: null);
+        $this->originalEnv[$nameEntity] = $_ENV[$nameEntity] ?? (getenv($nameEntity) ?: null);
     }
 
-    private function setEnvironmentValue(string $name, string $value): void
+    private function setEnvironmentValue(string $nameEntity, string $value): void
     {
-        $_ENV[$name] = $value;
-        putenv($name.'='.$value);
+        $_ENV[$nameEntity] = $value;
+        putenv($nameEntity.'='.$value);
     }
 
-    private function restoreEnvironmentValue(string $name): void
+    private function restoreEnvironmentValue(string $nameEntity): void
     {
-        $originalValue = $this->originalEnv[$name] ?? null;
+        $originalValue = $this->originalEnv[$nameEntity] ?? null;
         if (null === $originalValue) {
-            unset($_ENV[$name]);
-            putenv($name);
+            unset($_ENV[$nameEntity]);
+            putenv($nameEntity);
 
             return;
         }
 
-        $_ENV[$name] = $originalValue;
-        putenv($name.'='.$originalValue);
+        $_ENV[$nameEntity] = $originalValue;
+        putenv($nameEntity.'='.$originalValue);
     }
 }

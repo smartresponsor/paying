@@ -16,20 +16,20 @@ class PaymentProjectionMetaEntity
 {
     #[ORM\Id]
     #[ORM\Column(type: 'string', length: 80)]
-    private string $name = '';
+    private string $nameEntity = '';
 
     #[ORM\Column(type: 'string', length: 64)]
     private string $value = '';
 
-    public function __construct(string $name, string $value)
+    public function __construct(string $nameEntity, string $value)
     {
-        $this->name = $name;
+        $this->nameEntity = $nameEntity;
         $this->value = $value;
     }
 
-    public function name(): string
+    public function nameEntity(): string
     {
-        return $this->name;
+        return $this->nameEntity;
     }
 
     public function value(): string

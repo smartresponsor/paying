@@ -24,7 +24,7 @@ final class PaymentInternalProvider implements PaymentProviderInterface
     {
         return [
             'provider' => 'internal',
-            'paymentId' => (string) $payment->id(),
+            'paymentId' => $payment->slug(),
             'status' => $payment->status()->value,
             'accepted' => true,
         ];

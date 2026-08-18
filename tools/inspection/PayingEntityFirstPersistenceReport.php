@@ -86,7 +86,7 @@ final class PayingEntityFirstPersistenceReport
         }
 
         if (!preg_match("/#\[ORM\\\\Table\(name:\s*'([^']+)'\)\]/", $contents, $match)) {
-            $this->errors[] = sprintf('Doctrine table attribute with explicit name is missing: %s', $relative);
+            $this->errors[] = sprintf('Doctrine table attribute with explicit nameEntity is missing: %s', $relative);
             return;
         }
 
@@ -94,7 +94,7 @@ final class PayingEntityFirstPersistenceReport
         $this->entityTables[$relative] = $table;
 
         if ($table !== self::TABLE_PREFIX && !str_starts_with($table, self::TABLE_PREFIX . '_')) {
-            $this->errors[] = sprintf('Table name must use payment prefix: %s -> %s', $relative, $table);
+            $this->errors[] = sprintf('Table nameEntity must use payment prefix: %s -> %s', $relative, $table);
         }
     }
 

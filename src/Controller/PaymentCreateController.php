@@ -6,8 +6,8 @@ declare(strict_types=1);
 namespace App\Paying\Controller;
 
 use App\Paying\Attribute\PaymentRequireScopeAttribute;
-use App\Paying\Controller\Dto\PaymentCreateRequestDto;
 use App\Paying\ControllerInterface\PaymentCreateControllerInterface;
+use App\Paying\Dto\Payment\PaymentCreateRequestDto;
 use App\Paying\Entity\PaymentEntity;
 use App\Paying\ServiceInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;
@@ -115,7 +115,7 @@ final readonly class PaymentCreateController implements PaymentCreateControllerI
     private function buildCreatedPaymentPayload(PaymentEntity $payment): array
     {
         return [
-            'id' => (string) $payment->id(),
+            'id' => $payment->slug(),
             'orderId' => $payment->orderId(),
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),

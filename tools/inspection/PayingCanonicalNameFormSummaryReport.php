@@ -149,7 +149,7 @@ if (is_dir($src)) {
     }
 }
 
-echo "Paying canonical name-form summary report\n";
+echo "Paying canonical nameEntity-form summary report\n";
 echo "Expected reports: " . count($expectedReports) . "\n";
 echo "Tracked residual legacy duplicates: " . count($residualLegacyPaths) . "\n";
 

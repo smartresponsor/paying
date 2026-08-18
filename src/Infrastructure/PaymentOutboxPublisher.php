@@ -67,7 +67,7 @@ readonly class PaymentOutboxPublisher implements PaymentOutboxPublisherInterface
         try {
             $this->data->wrapInTransaction(function () use ($entity, $reason): void {
                 $this->data->persist(new PaymentDlqEntity(
-                    $entity->id(),
+                    (string) $entity->id(),
                     $entity->routingKey() ?? $entity->type(),
                     $entity->payload(),
                     $reason,

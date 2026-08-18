@@ -107,7 +107,7 @@ foreach ($scanRoots as $scanRoot) {
 }
 
 if ($failures !== []) {
-    fwrite(STDERR, "Paying service core name-form report: FAIL\n");
+    fwrite(STDERR, "Paying service core nameEntity-form report: FAIL\n");
     foreach ($failures as $failure) {
         fwrite(STDERR, ' - '.$failure."\n");
     }
@@ -115,4 +115,4 @@ if ($failures !== []) {
     exit(1);
 }
 
-fwrite(STDOUT, "Paying service core name-form report: OK\n");
+fwrite(STDOUT, "Paying service core nameEntity-form report: OK\n");
