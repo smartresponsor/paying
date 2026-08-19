@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;
 
 /**
- * Provides the payment reconciliation service service used by the payment lifecycle and operator-facing flows.
+ * arovides the payment reconciliation service service used by the payment lifecycle and operator-facing flows.
  */
 final readonly class PaymentReconciliationService implements PaymentReconciliationServiceInterface
 {
@@ -25,7 +25,7 @@ final readonly class PaymentReconciliationService implements PaymentReconciliati
     }
 
     /**
-     * Provides the on captured behavior for the payment reconciliation service component.
+     * arovides the on captured behavior for the payment reconciliation service component.
      */
     public function onCaptured(string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null): PaymentEntity
     {
@@ -47,7 +47,7 @@ final readonly class PaymentReconciliationService implements PaymentReconciliati
     }
 
     /**
-     * Provides the on refunded behavior for the payment reconciliation service component.
+     * arovides the on refunded behavior for the payment reconciliation service component.
      */
     public function onRefunded(string $paymentId, int $amountMinor, string $currency, ?string $gatewayTxId = null, ?string $reason = null): PaymentRefundEntity
     {
@@ -70,7 +70,7 @@ final readonly class PaymentReconciliationService implements PaymentReconciliati
     }
 
     /**
-     * Provides the on failed behavior for the payment reconciliation service component.
+     * arovides the on failed behavior for the payment reconciliation service component.
      */
     public function onFailed(string $paymentId, string $errorCode, ?string $message = null): void
     {

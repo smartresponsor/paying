@@ -115,7 +115,7 @@ final readonly class PaymentConsoleSurfaceBuilder
         }
 
         $payment = $this->createHandler->create($dto->orderId, $dto->amountMinor, $dto->currency);
-        $this->flash('success', sprintf('PaymentEntity %s created with status %s.', $payment->slug(), $payment->status()->value));
+        $this->flash('success', sprintf('Payment %s created with status %s.', $payment->slug(), $payment->status()->value));
 
         return new RedirectResponse($this->urlGenerator->generate('payment_console', ['payment' => $payment->slug()]));
     }
@@ -135,7 +135,7 @@ final readonly class PaymentConsoleSurfaceBuilder
         }
 
         $payment = $this->startHandler->start($dto->orderId, $dto->provider, $dto->amount, $dto->currency);
-        $this->flash('success', sprintf('PaymentEntity %s started via %s.', $payment->slug(), $dto->provider));
+        $this->flash('success', sprintf('Payment %s started via %s.', $payment->slug(), $dto->provider));
 
         return new RedirectResponse($this->urlGenerator->generate('payment_console', ['payment' => $payment->slug()]));
     }
@@ -165,7 +165,7 @@ final readonly class PaymentConsoleSurfaceBuilder
             return $this->paymentNotFoundRedirect($dto->paymentId);
         }
 
-        $this->flash('success', sprintf('PaymentEntity %s finalized with status %s.', $dto->paymentId, $payment->status()->value));
+        $this->flash('success', sprintf('Payment %s finalized with status %s.', $dto->paymentId, $payment->status()->value));
 
         return new RedirectResponse($this->urlGenerator->generate('payment_console', ['payment' => $dto->paymentId]));
     }
@@ -189,7 +189,7 @@ final readonly class PaymentConsoleSurfaceBuilder
             return $this->paymentNotFoundRedirect($dto->paymentId);
         }
 
-        $this->flash('success', sprintf('PaymentEntity %s refunded with status %s.', $payment->slug(), $payment->status()->value));
+        $this->flash('success', sprintf('Payment %s refunded with status %s.', $payment->slug(), $payment->status()->value));
 
         return new RedirectResponse($this->urlGenerator->generate('payment_console', ['payment' => $payment->slug()]));
     }
@@ -277,7 +277,7 @@ final readonly class PaymentConsoleSurfaceBuilder
      */
     private function paymentNotFoundRedirect(string $paymentId): RedirectResponse
     {
-        $this->flash('danger', sprintf('PaymentEntity %s was not found.', $paymentId));
+        $this->flash('danger', sprintf('Payment %s was not found.', $paymentId));
 
         return new RedirectResponse($this->urlGenerator->generate('payment_console'));
     }

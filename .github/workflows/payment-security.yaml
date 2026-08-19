@@ -1,4 +1,4 @@
-name: PaymentEntity Security
+name: Payment Security
 
 on:
   push:

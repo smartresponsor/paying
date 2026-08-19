@@ -1,4 +1,4 @@
-name: PaymentEntity Pages
+name: Payment Pages
 
 on:
   push:

@@ -47,7 +47,7 @@ final readonly class PaymentApiSurfaceBuilder
         summary: 'Create and start a payment execution flow.',
         tags: ['PaymentEntity'],
         responses: [
-            new OA\Response(response: 200, description: 'PaymentEntity started.'),
+            new OA\Response(response: 200, description: 'Payment started.'),
             new OA\Response(response: 401, description: 'Missing or invalid bearer token.'),
             new OA\Response(response: 403, description: 'Missing payment:write scope.'),
             new OA\Response(response: 422, description: 'Validation failed.'),
@@ -93,10 +93,10 @@ final readonly class PaymentApiSurfaceBuilder
         summary: 'Finalize a payment flow for an existing payment aggregate.',
         tags: ['PaymentEntity'],
         responses: [
-            new OA\Response(response: 200, description: 'PaymentEntity finalized.'),
+            new OA\Response(response: 200, description: 'Payment finalized.'),
             new OA\Response(response: 401, description: 'Missing or invalid bearer token.'),
             new OA\Response(response: 403, description: 'Missing payment:write scope.'),
-            new OA\Response(response: 404, description: 'PaymentEntity not found.'),
+            new OA\Response(response: 404, description: 'Payment not found.'),
             new OA\Response(response: 422, description: 'Validation failed.'),
         ],
     )]
@@ -150,10 +150,10 @@ final readonly class PaymentApiSurfaceBuilder
         summary: 'Refund an existing payment aggregate.',
         tags: ['PaymentEntity'],
         responses: [
-            new OA\Response(response: 200, description: 'PaymentEntity refunded.'),
+            new OA\Response(response: 200, description: 'Payment refunded.'),
             new OA\Response(response: 401, description: 'Missing or invalid bearer token.'),
             new OA\Response(response: 403, description: 'Missing payment:write scope.'),
-            new OA\Response(response: 404, description: 'PaymentEntity not found.'),
+            new OA\Response(response: 404, description: 'Payment not found.'),
             new OA\Response(response: 422, description: 'Validation failed.'),
         ],
     )]

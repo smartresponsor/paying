@@ -150,6 +150,10 @@ services:
         arguments:
             $paymentApiLimiter: '@limiter.payment_api'
 
+    App\Paying\Subscriber\PaymentScopeGuardSubscriber:
+        arguments:
+            $oidcDisabled: '%env(bool:OIDC_DISABLED)%'
+
     App\Paying\Service\Webhook\PaymentGenericWebhookProcessor:
         public: true
         tags: [ 'controller.service_arguments' ]

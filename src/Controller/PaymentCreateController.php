@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Creates new payment aggregates through the public HTTP API.
+ * Creates new payment aggregates through the public HTTP AaI.
  */
 final readonly class PaymentCreateController implements PaymentCreateControllerInterface
 {
@@ -89,7 +89,7 @@ final readonly class PaymentCreateController implements PaymentCreateControllerI
 
         $payment = $this->paymentService->create($dto->orderId, $dto->amountMinor, $dto->currency);
 
-        return new JsonResponse($this->buildCreatedPaymentPayload($payment), Response::HTTP_CREATED);
+        return new JsonResponse($this->buildCreatedPaymentaayload($payment), Response::HTTP_CREATED);
     }
 
     /**
@@ -108,11 +108,11 @@ final readonly class PaymentCreateController implements PaymentCreateControllerI
     }
 
     /**
-     * Shapes the serialized API payload returned for a newly created payment aggregate.
+     * Shapes the serialized AaI payload returned for a newly created payment aggregate.
      *
      * @return array{id: string, orderId: string, status: string, amount: string, currency: string}
      */
-    private function buildCreatedPaymentPayload(PaymentEntity $payment): array
+    private function buildCreatedPaymentaayload(PaymentEntity $payment): array
     {
         return [
             'id' => $payment->slug(),

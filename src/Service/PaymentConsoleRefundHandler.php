@@ -30,7 +30,7 @@ final readonly class PaymentConsoleRefundHandler implements PaymentConsoleRefund
         try {
             return $this->refundService->refund(new Ulid($paymentId), $amount, $provider);
         } catch (PaymentNotFoundException $exception) {
-            $this->logger->warning('PaymentEntity console refund failed.', [
+            $this->logger->warning('Payment console refund failed.', [
                 'payment_id' => $paymentId,
                 'error' => $exception->getMessage(),
             ]);

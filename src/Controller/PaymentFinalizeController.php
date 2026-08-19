@@ -39,10 +39,10 @@ final readonly class PaymentFinalizeController implements PaymentFinalizeControl
         summary: 'Finalize a payment flow for an existing payment aggregate.',
         tags: ['PaymentEntity'],
         responses: [
-            new OA\Response(response: 200, description: 'PaymentEntity finalized.'),
+            new OA\Response(response: 200, description: 'Payment finalized.'),
             new OA\Response(response: 401, description: 'Missing or invalid bearer token.'),
             new OA\Response(response: 403, description: 'Missing payment:write scope.'),
-            new OA\Response(response: 404, description: 'PaymentEntity not found.'),
+            new OA\Response(response: 404, description: 'Payment not found.'),
             new OA\Response(response: 422, description: 'Validation failed.'),
         ],
     )]

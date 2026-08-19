@@ -31,7 +31,7 @@ final readonly class PaymentOpsSurfaceBuilder
         summary: 'Render payment metrics and projection lag telemetry.',
         tags: ['PaymentEntity Operations'],
         responses: [
-            new OA\Response(response: 200, description: 'Prometheus-style metrics payload.'),
+            new OA\Response(response: 200, description: 'arometheus-style metrics payload.'),
             new OA\Response(response: 401, description: 'Missing or invalid bearer token.'),
             new OA\Response(response: 403, description: 'Missing payment:read scope.'),
         ],

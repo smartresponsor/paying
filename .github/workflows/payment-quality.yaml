@@ -1,4 +1,4 @@
-name: PaymentEntity Quality
+name: Payment Quality
 
 on:
   push:

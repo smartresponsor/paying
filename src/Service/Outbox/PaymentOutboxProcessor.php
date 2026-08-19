@@ -56,7 +56,7 @@ final readonly class PaymentOutboxProcessor implements PaymentOutboxProcessorInt
                 $envelope = new Envelope($transportMessage, [new TransportNamesStamp(['payment_outbox'])]);
                 $this->transport->send($envelope);
                 $message->markPublished();
-                $this->logger->info('PaymentEntity outbox published', [
+                $this->logger->info('Payment outbox published', [
                     'id' => $message->id(),
                     'type' => $message->type(),
                     'attempts' => $message->attempts(),
@@ -64,7 +64,7 @@ final readonly class PaymentOutboxProcessor implements PaymentOutboxProcessorInt
                 ++$count;
             } catch (\Throwable $exception) {
                 $message->markFailed($exception->getMessage());
-                $this->logger->error('PaymentEntity outbox failed', [
+                $this->logger->error('Payment outbox failed', [
                     'id' => $message->id(),
                     'type' => $message->type(),
                     'attempts' => $message->attempts(),

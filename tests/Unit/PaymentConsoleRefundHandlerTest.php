@@ -67,7 +67,7 @@ final class PaymentConsoleRefundHandlerTest extends TestCase
             ->expects(self::once())
             ->method('warning')
             ->with(
-                'PaymentEntity console refund failed.',
+                'Payment console refund failed.',
                 self::arrayHasKey('payment_id'),
             );
 

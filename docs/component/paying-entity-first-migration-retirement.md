@@ -7,7 +7,7 @@ Old monolith donor: `Entity-src(6).zip`, restricted to `Entity/Payment` and `Ent
 
 ## Result
 
-`Paying/Migrations/**` is retired as an executable schema source. Doctrine entities are now the canonical schema source for the component.
+Doctrine entities are the canonical schema model for the component, while `Paying/Migrations/**` remains the durable production-safe schema evolution history and adoption path.
 
 ## Migration-only coverage
 
@@ -45,8 +45,9 @@ Newly restored entities use Objecting embeddable traits for generic identity/aud
 
 Existing runtime entities with already-used payment schema columns were not mechanically rewritten to Objecting embeddables in this pass to avoid breaking repository/query code without a full Doctrine metadata validation host.
 
-## Retired files
+## Migration policy
 
-- `Paying/Migrations/**`
-
-Run `remove-paying-retired-files.ps1 -Apply` after applying the entity-first patch.
+- Existing `Paying/Migrations/**` files remain part of the durable schema history.
+- New schema changes must be additive/adopt-or-create and production-safe.
+- Entity metadata defines the canonical target model; migrations define how an existing database reaches that model safely.
+- Destructive reset/update workflows are not a production migration strategy.

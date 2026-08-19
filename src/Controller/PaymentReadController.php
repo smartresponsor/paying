@@ -32,7 +32,7 @@ final readonly class PaymentReadController implements PaymentReadControllerInter
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'PaymentEntity read model.',
+                description: 'Payment read model.',
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'id', type: 'string', example: '01HZY9M8Q6M7X4YH3B2A1C0D9E'),
@@ -47,7 +47,7 @@ final readonly class PaymentReadController implements PaymentReadControllerInter
             ),
             new OA\Response(response: 401, description: 'Missing or invalid bearer token.'),
             new OA\Response(response: 403, description: 'Missing payment:read scope.'),
-            new OA\Response(response: 404, description: 'PaymentEntity not found.'),
+            new OA\Response(response: 404, description: 'Payment not found.'),
         ],
     )]
     #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string'))]
