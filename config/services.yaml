@@ -86,6 +86,14 @@ services:
                 stripe: '@App\Paying\Service\PaymentStripeProvider'
                 paypal: '@App\Paying\Service\PaymentPayPalProvider'
 
+    App\Paying\Service\PaymentProviderVocabularyService:
+        arguments:
+            $catalogVocabulary: '@?App\Cataloging\ServiceInterface\CatalogCategoryVocabularyServiceInterface'
+
+    App\Paying\Service\PaymentMethodVocabularyService:
+        arguments:
+            $catalogVocabulary: '@?App\Cataloging\ServiceInterface\CatalogCategoryTypeVocabularyServiceInterface'
+
     App\Paying\Service\PaymentStripeProvider:
         arguments:
             $secretKey: '%env(default::STRIPE_SECRET_KEY)%'

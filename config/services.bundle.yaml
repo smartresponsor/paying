@@ -27,6 +27,12 @@ services:
                 internal: '@App\Paying\Service\PaymentInternalProvider'
                 stripe: '@App\Paying\Service\PaymentStripeProvider'
                 paypal: '@App\Paying\Service\PaymentPayPalProvider'
+    App\Paying\Service\PaymentProviderVocabularyService:
+        arguments:
+            $catalogVocabulary: '@?App\Cataloging\ServiceInterface\CatalogCategoryVocabularyServiceInterface'
+    App\Paying\Service\PaymentMethodVocabularyService:
+        arguments:
+            $catalogVocabulary: '@?App\Cataloging\ServiceInterface\CatalogCategoryTypeVocabularyServiceInterface'
 
     App\Paying\ServiceInterface\Placement\ListingPricingProfileNormalizerInterface:
         alias: App\Paying\Service\Placement\ListingPricingProfileNormalizer
@@ -38,6 +44,10 @@ services:
         alias: App\Paying\Service\PaymentProviderGuard
     App\Paying\ServiceInterface\PaymentProviderRouterInterface:
         alias: App\Paying\Service\PaymentProviderRouter
+    App\Paying\ServiceInterface\PaymentProviderVocabularyServiceInterface:
+        alias: App\Paying\Service\PaymentProviderVocabularyService
+    App\Paying\ServiceInterface\PaymentMethodVocabularyServiceInterface:
+        alias: App\Paying\Service\PaymentMethodVocabularyService
     App\Paying\ServiceInterface\PaymentRetryExecutorInterface:
         alias: App\Paying\Service\PaymentRetryExecutor
     App\Paying\ServiceInterface\PaymentMetricInterface:

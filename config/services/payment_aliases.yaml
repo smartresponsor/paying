@@ -2,6 +2,8 @@ services:
     App\Paying\RepositoryInterface\PaymentRepositoryInterface: '@App\Paying\Repository\PaymentRepository'
     App\Paying\InfrastructureInterface\PaymentProjectionRepositoryInterface: '@App\Paying\Infrastructure\PaymentProjectionRepository'
     App\Paying\ServiceInterface\PaymentProviderRouterInterface: '@App\Paying\Service\PaymentProviderRouter'
+    App\Paying\ServiceInterface\PaymentProviderVocabularyServiceInterface: '@App\Paying\Service\PaymentProviderVocabularyService'
+    App\Paying\ServiceInterface\PaymentMethodVocabularyServiceInterface: '@App\Paying\Service\PaymentMethodVocabularyService'
     App\Paying\ServiceInterface\PaymentProviderGuardInterface: '@App\Paying\Service\PaymentProviderGuard'
     App\Paying\ServiceInterface\PaymentCircuitBreakerInterface: '@App\Paying\Service\PaymentCircuitBreaker'
     App\Paying\ServiceInterface\PaymentServiceInterface: '@App\Paying\Service\PaymentService'
