@@ -25,6 +25,7 @@ services:
             - '../src/Attribute/'
             - '../src/DependencyInjection/'
             - '../src/Entity/'
+            - '../src/Service/Placement/ListingPricingProfileNormalizer.php'
             - '../src/Kernel.php'
             - '../src/**/Resources/'
             - '../src/**/Tests/'

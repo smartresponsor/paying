@@ -8,7 +8,6 @@ services:
         tags: ['cruding.resource_service']
     App\Paying\Repository\PaymentRepository: ~
     App\Paying\Service\PaymentStartService: ~
-    App\Paying\Service\Placement\ListingPricingProfileNormalizer: ~
     App\Paying\Service\PaymentProviderGuard: ~
     App\Paying\Service\PaymentRetryExecutor: ~
     App\Paying\Service\PaymentMetric: ~
@@ -34,8 +33,6 @@ services:
         arguments:
             $catalogVocabulary: '@?App\Cataloging\ServiceInterface\CatalogCategoryTypeVocabularyServiceInterface'
 
-    App\Paying\ServiceInterface\Placement\ListingPricingProfileNormalizerInterface:
-        alias: App\Paying\Service\Placement\ListingPricingProfileNormalizer
     App\Paying\RepositoryInterface\PaymentRepositoryInterface:
         alias: App\Paying\Repository\PaymentRepository
     App\Paying\ServiceInterface\PaymentStartServiceInterface:
