@@ -11,7 +11,7 @@ test.describe('Payment console Chromium coverage', () => {
         await page.locator('[name="payment_console_finalize[paymentId]"]').fill('01HK153X000000000000000099');
         await page.locator('[name="payment_console_finalize[provider]"]').selectOption('internal');
         await page.locator('[name="payment_console_finalize[providerRef]"]').fill('missing-target');
-        await page.locator('[name="payment_console_finalize[gatewayTransactionId]"]').fill('txn-missing-target');
+        await page.locator('[name="payment_console_finalize[providerTransactionId]"]').fill('txn-missing-target');
         await page.locator('[name="payment_console_finalize[status]"]').selectOption('completed');
 
         await page.getByRole('button', {name: 'Finalize payment'}).click();

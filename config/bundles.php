@@ -14,4 +14,5 @@ return [
     Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
     Nelmio\ApiDocBundle\NelmioApiDocBundle::class => ['all' => true],
     App\Paying\PayingBundle::class => ['all' => true],
+    App\Viewing\ViewingBundle::class => ['all' => true],
 ];

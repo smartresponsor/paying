@@ -1,159 +1,162 @@
 <?php
-# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure;
 
+use App\Paying\Infrastructure\Entity\PaymentProjectionEntity;
+use App\Paying\Infrastructure\Entity\PaymentProjectionMetaEntity;
 use App\Paying\InfrastructureInterface\PaymentProjectionRepositoryInterface;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception;
-use Doctrine\DBAL\ParameterType;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Persists and queries payment projection records for read-side use cases.
+ * Persists and queries payment projections through Doctrine-managed read-side entities.
  */
 readonly class PaymentProjectionRepository implements PaymentProjectionRepositoryInterface
 {
     public function __construct(
-        private Connection $infra,
+        private EntityManagerInterface $infrastructure,
         private LoggerInterface $logger,
     ) {
     }
 
-    /**
-     * Loads a payment projection by its identifier.
-     *
-     * @param string $id
-     *
-     * @return array<string, scalar|null>|null
-     *
-     * @throws Exception
-     */
     public function findById(string $id): ?array
     {
         try {
-            $row = $this->infra->fetchAssociative(
-                'SELECT id, order_id, amount, currency, status, provider_ref, updated_at FROM payment_projection WHERE id = :id',
-                ['id' => $id],
-            );
-        } catch (Exception $exception) {
+            $entity = $this->infrastructure->find(PaymentProjectionEntity::class, $id);
+        } catch (\Throwable $exception) {
             $this->logger->error('Failed to fetch payment projection by ID.', ['id' => $id, 'exception' => $exception]);
 
             throw $exception;
         }
 
-        return false !== $row ? $row : null;
+        if (!$entity instanceof PaymentProjectionEntity) {
+            return null;
+        }
+
+        return $this->toRow($entity);
     }
 
-    /**
-     * Lists payment projections filtered by their current status.
-     *
-     * @param string $status
-     * @param int    $limit
-     *
-     * @return list<array<string, scalar|null>>
-     *
-     * @throws Exception
-     */
     public function listByStatus(string $status, int $limit = 100): array
     {
         try {
-            return $this->infra->fetchAllAssociative(
-                'SELECT id, order_id, amount, currency, status, provider_ref, updated_at FROM payment_projection WHERE status = :st ORDER BY updated_at DESC LIMIT :lim',
-                ['st' => $status, 'lim' => $limit],
-                ['st' => ParameterType::STRING, 'lim' => ParameterType::INTEGER],
-            );
-        } catch (Exception $exception) {
+            $entities = $this->infrastructure->createQueryBuilder()
+                ->select('p')
+                ->from(PaymentProjectionEntity::class, 'p')
+                ->where('p.status = :status')
+                ->setParameter('status', $status)
+                ->orderBy('p.updatedAt', 'DESC')
+                ->setMaxResults(max(1, $limit))
+                ->getQuery()
+                ->getResult();
+        } catch (\Throwable $exception) {
             $this->logger->error('Failed to list payment projections by status.', ['status' => $status, 'limit' => $limit, 'exception' => $exception]);
 
             throw $exception;
         }
+
+        return array_values(array_map(
+            static fn (PaymentProjectionEntity $entity): array => [
+                'id' => $entity->id(),
+                'order_id' => $entity->orderId(),
+                'amount' => $entity->amount(),
+                'currency' => $entity->currency(),
+                'status' => $entity->status(),
+                'provider_ref' => $entity->providerRef(),
+                'updated_at' => $entity->updatedAt()->format('Y-m-d H:i:s'),
+            ],
+            array_filter($entities, static fn (mixed $entity): bool => $entity instanceof PaymentProjectionEntity),
+        ));
     }
 
-    /**
-     * Creates or updates a payment projection snapshot.
-     */
     public function upsert(array $row): void
     {
-        try {
-            $this->infra->transactional(function (Connection $connection) use ($row): void {
-                $id = (string) ($row['id'] ?? '');
-                if ('' === $id) {
-                    throw new \InvalidArgumentException('Projection row id is required.');
-                }
-
-                $payload = [
-                    'order_id' => (string) ($row['order_id'] ?? ($row['orderId'] ?? '')),
-                    'amount' => (string) ($row['amount'] ?? '0.00'),
-                    'currency' => (string) ($row['currency'] ?? ''),
-                    'status' => (string) ($row['status'] ?? ''),
-                    'provider_ref' => isset($row['provider_ref'])
-                        ? (string) $row['provider_ref']
-                        : (isset($row['providerRef']) ? (string) $row['providerRef'] : null),
-                    'updated_at' => (string) ($row['updated_at'] ?? ''),
-                ];
-
-                $updated = $connection->update('payment_projection', $payload, ['id' => $id]);
-
-                if (0 === $updated) {
-                    $connection->insert('payment_projection', ['id' => $id] + $payload);
-                }
-            });
-        } catch (\Throwable $throwable) {
-            $this->logger->error('Failed to upsert payment projection row.', ['row' => $row, 'exception' => $throwable]);
-
-            throw $throwable;
+        $id = (string) ($row['id'] ?? '');
+        if ('' === $id) {
+            throw new \InvalidArgumentException('Projection row id is required.');
         }
+
+        $this->infrastructure->wrapInTransaction(function () use ($id, $row): void {
+            $entity = $this->infrastructure->find(PaymentProjectionEntity::class, $id);
+            if (!$entity instanceof PaymentProjectionEntity) {
+                $entity = new PaymentProjectionEntity($id);
+                $this->infrastructure->persist($entity);
+            }
+
+            $entity->syncFrom([
+                'order_id' => $row['order_id'] ?? $row['orderId'] ?? null,
+                'amount' => $row['amount'] ?? '0.00',
+                'currency' => $row['currency'] ?? 'USD',
+                'status' => $row['status'] ?? '',
+                'provider_ref' => $row['provider_ref'] ?? ($row['providerRef'] ?? null),
+                'updated_at' => $row['updated_at'] ?? $row['updatedAt'] ?? gmdate(DATE_ATOM),
+            ]);
+
+            $this->infrastructure->flush();
+        });
     }
 
-    /**
-     * Returns the latest projection update timestamp currently stored.
-     */
     public function maxUpdatedAt(): ?string
     {
         try {
-            $row = $this->infra->fetchOne('SELECT MAX(updated_at) FROM payment_projection');
-        } catch (Exception $exception) {
+            $value = $this->infrastructure->createQueryBuilder()
+                ->select('MAX(p.updatedAt)')
+                ->from(PaymentProjectionEntity::class, 'p')
+                ->getQuery()
+                ->getSingleScalarResult();
+        } catch (\Throwable $exception) {
             $this->logger->error('Failed to read payment projection max updated_at.', ['exception' => $exception]);
 
             throw $exception;
         }
 
-        return $row ? (string) $row : null;
+        return is_string($value) && '' !== trim($value) ? $value : null;
     }
 
-    /**
-     * Returns the stored projection watermark value.
-     */
     public function watermark(): ?string
     {
         try {
-            $row = $this->infra->fetchOne("SELECT value FROM payment_projection_meta WHERE name = 'watermark'");
-        } catch (Exception $exception) {
+            $entity = $this->infrastructure->find(PaymentProjectionMetaEntity::class, 'watermark');
+        } catch (\Throwable $exception) {
             $this->logger->error('Failed to read payment projection watermark.', ['exception' => $exception]);
 
             throw $exception;
         }
 
-        return $row ? (string) $row : null;
+        if (!$entity instanceof PaymentProjectionMetaEntity) {
+            return null;
+        }
+
+        return $entity->value();
     }
 
-    /**
-     * Stores the latest processed projection watermark value.
-     */
     public function saveWatermark(string $ts): void
     {
-        try {
-            $updated = $this->infra->update('payment_projection_meta', ['value' => $ts], ['name' => 'watermark']);
-
-            if (0 === $updated) {
-                $this->infra->insert('payment_projection_meta', ['name' => 'watermark', 'value' => $ts]);
+        $this->infrastructure->wrapInTransaction(function () use ($ts): void {
+            $entity = $this->infrastructure->find(PaymentProjectionMetaEntity::class, 'watermark');
+            if (!$entity instanceof PaymentProjectionMetaEntity) {
+                $entity = new PaymentProjectionMetaEntity('watermark', $ts);
+                $this->infrastructure->persist($entity);
+            } else {
+                $entity->setValue($ts);
             }
-        } catch (Exception $exception) {
-            $this->logger->error('Failed to save payment projection watermark.', ['watermark' => $ts, 'exception' => $exception]);
 
-            throw $exception;
-        }
+            $this->infrastructure->flush();
+        });
+    }
+
+    private function toRow(PaymentProjectionEntity $entity): array
+    {
+        return [
+            'id' => $entity->id(),
+            'order_id' => $entity->orderId(),
+            'amount' => $entity->amount(),
+            'currency' => $entity->currency(),
+            'status' => $entity->status(),
+            'provider_ref' => $entity->providerRef(),
+            'updated_at' => $entity->updatedAt()->format('Y-m-d H:i:s'),
+        ];
     }
 }

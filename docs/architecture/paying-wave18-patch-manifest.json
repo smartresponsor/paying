@@ -1,0 +1,21 @@
+{
+  "wave": 18,
+  "component": "Paying",
+  "scope": "post-subscriber residual legacy duplicate retirement",
+  "type": "cleanup-only",
+  "touched_files": [
+    "composer.json",
+    "tools/inspection/PayingPostSubscriberResidualRetirementReport.php",
+    "docs/architecture/paying-wave18-post-subscriber-residual-retirement.md",
+    "docs/architecture/paying-wave18-patch-manifest.json",
+    "docs/architecture/paying-canonicalization-milestone.md"
+  ],
+  "retirement_count": 114,
+  "invariants": [
+    "no route changes",
+    "no provider key changes",
+    "no scope string changes",
+    "no Doctrine table changes",
+    "backup and SHA256 guarded retirement"
+  ]
+}

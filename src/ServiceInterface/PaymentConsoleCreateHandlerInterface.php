@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\ServiceInterface;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 
 /**
  * Defines the contract for the payment console create handler interface payment service boundary.
@@ -15,5 +15,5 @@ interface PaymentConsoleCreateHandlerInterface
     /**
      * Executes the create operation for the current payment workflow.
      */
-    public function create(string $orderId, int $amountMinor, string $currency): Payment;
+    public function create(string $orderId, int $amountMinor, string $currency): PaymentEntity;
 }

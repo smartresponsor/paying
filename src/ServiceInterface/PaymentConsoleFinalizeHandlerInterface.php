@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\ServiceInterface;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 
 /**
  * Defines the contract for the payment console finalize handler interface payment service boundary.
@@ -21,5 +21,5 @@ interface PaymentConsoleFinalizeHandlerInterface
         ?string $providerRef,
         ?string $providerTransactionId,
         ?string $status,
-    ): ?Payment;
+    ): ?PaymentEntity;
 }

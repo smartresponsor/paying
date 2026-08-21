@@ -1,0 +1,26 @@
+{
+  "wave": "13",
+  "component": "Paying",
+  "scope": "webhook-controller-name-form",
+  "runtime_contract_changes": false,
+  "touched_files": [
+    "composer.json",
+    "config/routes/payment_webhook.yaml",
+    "config/services.yaml",
+    "docs/architecture/paying-canonicalization-milestone.md",
+    "docs/architecture/paying-wave13-webhook-controller-name-form.md",
+    "docs/architecture/paying-wave13-patch-manifest.json",
+    "src/Service/Webhook/PaymentPayPalWebhookProcessor.php",
+    "src/Service/Webhook/PaymentStripeWebhookProcessor.php",
+    "tools/inspection/PayingWebhookControllerNameFormReport.php"
+  ],
+  "retired_legacy_files": [
+    "src/Controller/Webhook/PayPalWebhookController.php",
+    "src/Controller/Webhook/StripeWebhookController.php"
+  ],
+  "post_apply_commands": [
+    "composer dump-autoload",
+    "composer report:webhook-controller-name-form",
+    "composer report:canon-structure"
+  ]
+}

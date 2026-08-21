@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\ServiceInterface\PaymentConsoleCreateHandlerInterface;
 use App\Paying\ServiceInterface\PaymentServiceInterface;
 
@@ -21,7 +21,7 @@ final readonly class PaymentConsoleCreateHandler implements PaymentConsoleCreate
     /**
      * Provides the create behavior for the payment console create handler component.
      */
-    public function create(string $orderId, int $amountMinor, string $currency): Payment
+    public function create(string $orderId, int $amountMinor, string $currency): PaymentEntity
     {
         return $this->paymentService->create($orderId, $amountMinor, $currency);
     }

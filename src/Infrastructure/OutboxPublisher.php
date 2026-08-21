@@ -1,11 +1,12 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure;
 
-use App\Paying\Exception\OutboxOperationException;
-use App\Paying\InfrastructureInterface\OutboxPublisherInterface;
+use App\Paying\Exception\PaymentOutboxOperationException as OutboxOperationException;
+use App\Paying\InfrastructureInterface\PaymentOutboxPublisherInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerInterface;
@@ -14,7 +15,7 @@ use Symfony\Component\Uid\Ulid;
 /**
  * Publishes queued payment outbox messages to the configured transport boundary.
  */
-readonly class OutboxPublisher implements OutboxPublisherInterface
+readonly class OutboxPublisher implements PaymentOutboxPublisherInterface
 {
     public function __construct(
         private Connection $data,

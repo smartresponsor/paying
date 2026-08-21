@@ -1,0 +1,14 @@
+{
+  "component": "Paying",
+  "wave": "3",
+  "title": "service core name-form canonicalization",
+  "base": "PayingThu.zip + Wave 1 + Wave 2 touched patches",
+  "non_destructive_policy": "Touched files only; legacy unprefixed files are retired by apply script only after SHA-256 verification and backup.",
+  "verification": [
+    "composer dump-autoload",
+    "composer report:service-core-name-form",
+    "composer report:controller-name-form",
+    "composer report:canon-structure",
+    "composer test:unit"
+  ]
+}

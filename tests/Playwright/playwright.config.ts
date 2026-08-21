@@ -11,7 +11,7 @@ export default defineConfig({
     retries: 0,
     reporter: [['list']],
     use: {
-        baseURL: 'http://127.0.0.1:8005',
+        baseURL: 'http://127.0.0.1:18006',
         trace: 'on-first-retry',
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
@@ -23,8 +23,8 @@ export default defineConfig({
         },
     ],
     webServer: {
-        command: 'bash tools/runtime/payment_playwright_server.sh',
-        url: 'http://127.0.0.1:8005/payment/console',
+        command: 'php -S 127.0.0.1:18006 -t ../../public ../../tools/runtime/payment_playwright_router.php',
+        url: 'http://127.0.0.1:18006/payment/console',
         reuseExistingServer: true,
         timeout: 120_000,
     },

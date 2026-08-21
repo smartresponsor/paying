@@ -47,7 +47,7 @@ final class PaymentOperationalAccessTest extends WebTestCase
     public function testApiDocsJsonRemainsPublic(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/api/docs.json');
+        $client->request('GET', '/api/doc/json');
 
         self::assertNotContains($client->getResponse()->getStatusCode(), [401, 403]);
     }
@@ -55,7 +55,7 @@ final class PaymentOperationalAccessTest extends WebTestCase
     public function testApiDocsHtmlRemainsPublic(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/api/docs');
+        $client->request('GET', '/api/doc');
 
         self::assertNotContains($client->getResponse()->getStatusCode(), [401, 403]);
     }

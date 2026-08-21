@@ -3,7 +3,7 @@ imports:
 
 parameters:
     payment.idem_ttl_default: 86400
-    payment.http_content_security_policy: "default-src 'self'"
+    payment.http_content_security_policy: "default-src 'self'; style-src 'self' 'unsafe-inline'"
     payment.oidc_jwks_cache_dir: '%kernel.project_dir%/var/cache/payment'
     payment.oidc_jwks_cache_ttl: 3600
     paying.messenger.dsn: '%env(resolve:RABBITMQ_DSN)%'
@@ -22,46 +22,148 @@ services:
     App\Paying\:
         resource: '../src/'
         exclude:
+            - '../src/Attribute/'
             - '../src/DependencyInjection/'
             - '../src/Entity/'
+            - '../src/Service/Placement/ListingPricingProfileNormalizer.php'
             - '../src/Kernel.php'
             - '../src/**/Resources/'
             - '../src/**/Tests/'
 
     App\Paying\ServiceInterface\IdempotencyStoreInterface:
-        factory: [ '@App\Paying\Service\IdempotencyStoreFactory', 'create' ]
+        factory: [ '@App\Paying\Service\PaymentIdempotencyStoreFactory', 'create' ]
 
-    App\Paying\Controller\:
-        resource: '../src/Controller/'
+    App\Paying\Service\PaymentConsoleSurfaceBuilder:
+        public: true
+
+    App\Paying\Service\PaymentApiSurfaceBuilder:
+        public: true
+
+    App\Paying\Service\PaymentOpsSurfaceBuilder:
+        public: true
+
+    App\Paying\Controller\PaymentCreateController:
         public: true
         tags: [ 'controller.service_arguments' ]
 
-    App\Paying\Service\ProviderRouter:
+    App\Paying\Controller\PaymentReadController:
+        public: true
+        tags: [ 'controller.service_arguments' ]
+
+    App\Paying\Controller\PaymentFinalizeController:
+        public: true
+        tags: [ 'controller.service_arguments' ]
+
+    App\Paying\Controller\PaymentStartController:
+        public: true
+        tags: [ 'controller.service_arguments' ]
+
+    App\Paying\Controller\PaymentRefundController:
+        public: true
+        tags: [ 'controller.service_arguments' ]
+
+    App\Paying\Controller\PaymentWebhookController:
+        public: true
+        tags: [ 'controller.service_arguments' ]
+        arguments:
+            $mappers: !tagged_iterator payment.event_mapper
+
+    App\Paying\Controller\Webhook\PaymentStripeWebhookController:
+        public: true
+        tags: [ 'controller.service_arguments' ]
+        arguments:
+            $paymentAuditLogger: '@payment_audit.logger'
+
+    App\Paying\Controller\Webhook\PaymentPayPalWebhookController:
+        public: true
+        tags: [ 'controller.service_arguments' ]
+        arguments:
+            $paymentAuditLogger: '@payment_audit.logger'
+
+    App\Paying\Service\PaymentProviderRouter:
         arguments:
             $providers:
-                internal: '@App\Paying\Service\InternalPaymentProvider'
-                stripe: '@App\Paying\Service\StripePaymentProvider'
-                paypal: '@App\Paying\Service\PayPalPaymentProvider'
+                internal: '@App\Paying\Service\PaymentInternalProvider'
+                stripe: '@App\Paying\Service\PaymentStripeProvider'
+                paypal: '@App\Paying\Service\PaymentPayPalProvider'
 
-    App\Paying\Service\StripePaymentProvider:
+    App\Paying\Service\PaymentProviderVocabularyService:
+        arguments:
+            $catalogVocabulary: '@?App\Cataloging\ServiceInterface\CatalogCategoryVocabularyServiceInterface'
+
+    App\Paying\Service\PaymentMethodVocabularyService:
+        arguments:
+            $catalogVocabulary: '@?App\Cataloging\ServiceInterface\CatalogCategoryTypeVocabularyServiceInterface'
+
+    App\Paying\Service\PaymentStripeProvider:
         arguments:
             $secretKey: '%env(default::STRIPE_SECRET_KEY)%'
             $webhookSecret: '%env(default::STRIPE_WEBHOOK_SECRET)%'
 
 
-    App\Paying\Service\IdempotencyService:
+    App\Paying\Service\PaymentIdempotencyService:
         arguments:
             $ttlSec: '%env(int:default:payment.idem_ttl_default:IDEM_TTL)%'
 
+    App\Paying\Repository\PaymentRepository:
+        arguments:
+            $em: '@doctrine.orm.entity_manager'
+
     App\Paying\Infrastructure\PaymentProjectionRepository:
         arguments:
-            $infra: '@doctrine.dbal.infra_connection'
+            $infrastructure: '@doctrine.orm.infrastructure_entity_manager'
 
-    App\Paying\Infrastructure\RateLimitSubscriber:
+    App\Paying\Service\PaymentProjectionSyncService:
+        arguments:
+            $payments: '@App\Paying\Repository\PaymentRepository'
+            $paymentProjectionRepository: '@App\Paying\Infrastructure\PaymentProjectionRepository'
+
+    App\Paying\Service\PaymentProjectionLagService:
+        arguments:
+            $payments: '@App\Paying\Repository\PaymentRepository'
+            $paymentProjectionRepository: '@App\Paying\Infrastructure\PaymentProjectionRepository'
+
+    App\Paying\Service\PaymentSlaReporterService:
+        arguments:
+            $payments: '@App\Paying\Repository\PaymentRepository'
+
+    App\Paying\Service\PaymentCircuitBreaker:
+        arguments:
+            $infrastructure: '@doctrine.orm.infrastructure_entity_manager'
+
+    App\Paying\Service\PaymentIdempotencyStoreFactory:
+        arguments:
+            $data: '@doctrine.orm.infrastructure_entity_manager'
+
+    App\Paying\Infrastructure\PaymentDbalIdempotencyStore:
+        arguments:
+            $data: '@doctrine.orm.infrastructure_entity_manager'
+
+    App\Paying\Infrastructure\PaymentAuditLogger:
+        arguments:
+            $data: '@doctrine.orm.infrastructure_entity_manager'
+
+    App\Paying\Infrastructure\PaymentOutboxPublisher:
+        arguments:
+            $data: '@doctrine.orm.entity_manager'
+
+    App\Paying\Infrastructure\PaymentOutboxWorker:
+        arguments:
+            $data: '@doctrine.orm.entity_manager'
+
+    App\Paying\Service\PaymentDlqService:
+        arguments:
+            $data: '@doctrine.orm.entity_manager'
+
+    App\Paying\Subscriber\PaymentRateLimitSubscriber:
         arguments:
             $paymentApiLimiter: '@limiter.payment_api'
 
-    App\Paying\Controller\WebhookController:
+    App\Paying\Subscriber\PaymentScopeGuardSubscriber:
+        arguments:
+            $oidcDisabled: '%env(bool:OIDC_DISABLED)%'
+
+    App\Paying\Service\Webhook\PaymentGenericWebhookProcessor:
         public: true
         tags: [ 'controller.service_arguments' ]
         arguments:
@@ -70,13 +172,13 @@ services:
     payment_audit.logger:
         alias: monolog.logger.payment_audit
 
-    App\Paying\Controller\Webhook\StripeWebhookController:
+    App\Paying\Service\Webhook\PaymentStripeWebhookProcessor:
         public: true
         tags: [ 'controller.service_arguments' ]
         arguments:
             $paymentAuditLogger: '@payment_audit.logger'
 
-    App\Paying\Controller\Webhook\PayPalWebhookController:
+    App\Paying\Service\Webhook\PaymentPayPalWebhookProcessor:
         public: true
         tags: [ 'controller.service_arguments' ]
         arguments:
@@ -88,7 +190,7 @@ services:
             $transport: '@messenger.transport.payment_outbox'
             $logger: '@logger'
 
-    App\Paying\Service\Order\NullOrderPaymentSync:
+    App\Paying\Service\Order\PaymentNullOrderPaymentSync:
         arguments:
             $logger: '@logger'
         autoconfigure: true
@@ -96,17 +198,17 @@ services:
 
 
 
-    App\Paying\Infrastructure\ResponseHeaderSubscriber:
+    App\Paying\Subscriber\PaymentResponseHeaderSubscriber:
         arguments:
             $contentSecurityPolicy: '%payment.http_content_security_policy%'
 
-    App\Paying\Service\OidcJwksCache:
+    App\Paying\Service\PaymentOidcJwksCache:
         arguments:
             $cacheDir: '%payment.oidc_jwks_cache_dir%'
             $ttl: '%payment.oidc_jwks_cache_ttl%'
             $jwksUrl: '%env(default::OIDC_JWKS_URL)%'
 
-    App\Paying\Service\TokenVerifier:
+    App\Paying\Service\PaymentTokenVerifier:
         arguments:
             $issuer: '%env(default::OIDC_ISSUER)%'
             $audience: '%env(default::OIDC_AUDIENCE)%'

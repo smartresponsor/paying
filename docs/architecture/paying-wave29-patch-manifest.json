@@ -1,0 +1,21 @@
+{
+  "component": "Paying",
+  "wave": 29,
+  "name": "packaging-root-surface",
+  "type": "report-only",
+  "runtime_changes": false,
+  "deletions": false,
+  "touched_files": [
+    "composer.json",
+    "tools/inspection/PayingPackagingRootSurfaceReport.php",
+    "docs/architecture/paying-wave29-packaging-root-surface.md",
+    "docs/architecture/paying-wave29-patch-manifest.json",
+    "docs/architecture/paying-canonicalization-milestone.md"
+  ],
+  "validation": [
+    "composer dump-autoload",
+    "composer report:packaging-root-surface",
+    "composer report:release-candidate-structure",
+    "composer report:canonical-structure-closure"
+  ]
+}

@@ -9,10 +9,10 @@ require_once __DIR__.'/../runtime/payment_runtime.php';
  */
 function paymentExportEnv(array $env): void
 {
-    foreach ($env as $name => $value) {
-        putenv($name.'='.$value);
-        $_ENV[$name] = $value;
-        $_SERVER[$name] = $value;
+    foreach ($env as $nameEntity => $value) {
+        putenv($nameEntity.'='.$value);
+        $_ENV[$nameEntity] = $value;
+        $_SERVER[$nameEntity] = $value;
     }
 }
 
@@ -55,7 +55,7 @@ if ($shouldUseDocker) {
     }
 
     $dockerEnv = array_map(
-        static fn (string $name, string $value): string => '-e '.escapeshellarg($name.'='.$value),
+        static fn (string $nameEntity, string $value): string => '-e '.escapeshellarg($nameEntity.'='.$value),
         array_keys($env),
         array_values($env),
     );

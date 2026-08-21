@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Controller\Dto\PaymentConsoleFinalizeRequestDto;
-use App\Paying\Controller\Dto\PaymentFinalizeRequestDto;
+use App\Paying\Dto\Payment\PaymentConsoleFinalizeRequestDto;
+use App\Paying\Dto\Payment\PaymentFinalizeRequestDto;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

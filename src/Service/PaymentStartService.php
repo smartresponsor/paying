@@ -5,11 +5,11 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\ServiceInterface\PaymentProviderGuardInterface;
 use App\Paying\ServiceInterface\PaymentStartServiceInterface;
-use App\Paying\ServiceInterface\ProviderGuardInterface;
-use App\Paying\ValueObject\Money;
+use App\Paying\ValueObject\PaymentMoney;
 use App\Paying\ValueObject\PaymentStatus;
 use Symfony\Component\Uid\Ulid;
 
@@ -19,7 +19,7 @@ use Symfony\Component\Uid\Ulid;
 final readonly class PaymentStartService implements PaymentStartServiceInterface
 {
     public function __construct(
-        private ProviderGuardInterface $guard,
+        private PaymentProviderGuardInterface $guard,
         private PaymentRepositoryInterface $repo,
     ) {
     }
@@ -29,9 +29,9 @@ final readonly class PaymentStartService implements PaymentStartServiceInterface
      */
     public function start(string $orderId, string $provider, string $amount, string $currency, string $idempotencyKey = '', string $origin = 'api'): PaymentStartResult
     {
-        $money = Money::fromDecimalString($amount, strtoupper($currency));
+        $money = PaymentMoney::fromDecimalString($amount, strtoupper($currency));
 
-        $payment = new Payment(new Ulid(), PaymentStatus::new, $money->toDecimalString(), $money->currency(), $orderId);
+        $payment = new PaymentEntity(new Ulid(), PaymentStatus::new, $money->toDecimalString(), $money->currency(), $orderId);
         $this->repo->save($payment);
 
         return $this->startExistingPayment($payment, $provider, $idempotencyKey, $origin);
@@ -54,12 +54,12 @@ final readonly class PaymentStartService implements PaymentStartServiceInterface
         return $this->startExistingPayment($existing, $provider, $idempotencyKey, $origin);
     }
 
-    private function startExistingPayment(Payment $payment, string $provider, string $idempotencyKey, string $origin): PaymentStartResult
+    private function startExistingPayment(PaymentEntity $payment, string $provider, string $idempotencyKey, string $origin): PaymentStartResult
     {
         try {
             $providerResult = $this->guard->start($provider, $payment, [
-                'idempotencyKey' => '' !== $idempotencyKey ? $idempotencyKey : (string) $payment->id(),
-                'projectId' => (string) $payment->id(),
+                'idempotencyKey' => '' !== $idempotencyKey ? $idempotencyKey : $payment->slug(),
+                'projectId' => $payment->slug(),
                 'origin' => $origin,
             ]);
         } catch (\Throwable $exception) {

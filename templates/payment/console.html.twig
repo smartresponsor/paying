@@ -12,11 +12,10 @@
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-2 mb-4">
         <div>
             <h1 class="h3 mb-1">Payment Console</h1>
-            <p class="text-muted mb-0">Canonical operator UI for payment lifecycle, webhook visibility, and demo flow
-                checks.</p>
+            <p class="text-muted mb-0">Canonical operator UI for payment lifecycle, webhook visibility, and runtime checks.</p>
         </div>
         <div class="d-flex gap-2">
-            <a class="btn btn-sm btn-outline-secondary" href="/api/docs" target="_blank" rel="noopener">Open API
+            <a class="btn btn-sm btn-outline-secondary" href="/api/doc" target="_blank" rel="noopener">Open API
                 docs</a>
             <a class="btn btn-sm btn-outline-secondary" href="/status" target="_blank" rel="noopener">Status</a>
             <a class="btn btn-sm btn-outline-secondary" href="/metrics" target="_blank" rel="noopener">Metrics</a>
@@ -46,8 +45,7 @@
                     <select id="status" name="status" class="form-select">
                         {% set statuses = ['all', 'new', 'processing', 'completed', 'failed', 'refunded', 'canceled'] %}
                         {% for option in statuses %}
-                            <option
-                                value="{{ option }}" {{ filters.status == option ? 'selected' : '' }}>{{ option|title }}</option>
+                            <option value="{{ option }}"{% if filters.status == option %} selected{% endif %}>{{ option|title }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -144,7 +142,7 @@
                 <div class="card-body">
                     <h2 class="h5">Webhook / event visibility</h2>
                     <p class="text-muted small mb-3">Recent
-                        events{{ selected_payment ? ' for payment ' ~ selected_payment.id : '' }}.</p>
+                        events{{ selectedPayment ? ' for payment ' ~ selectedPayment.id : '' }}.</p>
                     <div class="table-responsive">
                         <table class="table table-sm align-middle mb-0">
                             <thead>
@@ -156,7 +154,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for event in webhook_events %}
+                            {% for event in webhookEvents %}
                                 <tr>
                                     <td>{{ event.provider }}</td>
                                     <td><code>{{ event.externalEventId }}</code></td>
@@ -179,21 +177,21 @@
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
                     <h2 class="h5">Payment card</h2>
-                    {% if selected_payment %}
+                    {% if selectedPayment %}
                         <dl class="row mb-0 small">
                             <dt class="col-5 text-muted">Payment ID</dt>
-                            <dd class="col-7"><code>{{ selected_payment.id }}</code></dd>
+                            <dd class="col-7"><code>{{ selectedPayment.id }}</code></dd>
                             <dt class="col-5 text-muted">Order ID</dt>
-                            <dd class="col-7"><code>{{ selected_payment.orderId }}</code></dd>
+                            <dd class="col-7"><code>{{ selectedPayment.orderId }}</code></dd>
                             <dt class="col-5 text-muted">Status</dt>
                             <dd class="col-7"><span
-                                    class="badge text-bg-light border">{{ selected_payment.status }}</span></dd>
+                                    class="badge text-bg-light border">{{ selectedPayment.status }}</span></dd>
                             <dt class="col-5 text-muted">Amount</dt>
-                            <dd class="col-7">{{ selected_payment.amount }} {{ selected_payment.currency }}</dd>
+                            <dd class="col-7">{{ selectedPayment.amount }} {{ selectedPayment.currency }}</dd>
                             <dt class="col-5 text-muted">Provider ref</dt>
-                            <dd class="col-7">{{ selected_payment.providerRef ?: '—' }}</dd>
+                            <dd class="col-7">{{ selectedPayment.providerRef ?: '—' }}</dd>
                             <dt class="col-5 text-muted">Updated at</dt>
-                            <dd class="col-7">{{ selected_payment.updatedAt }}</dd>
+                            <dd class="col-7">{{ selectedPayment.updatedAt }}</dd>
                         </dl>
                     {% else %}
                         <p class="text-muted mb-0">Select a payment from the list to view details and prefill
@@ -220,7 +218,7 @@
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
                     <h2 class="h5">Refund payment</h2>
-                    <p class="text-muted small">Matches `POST /api/payments/{id}/refund` behavior.</p>
+                    <p class="text-muted small">Matches `POST /api/payment/refund/{id}` behavior.</p>
                     {{ form_start(refund_form) }}
                     {{ form_row(refund_form.paymentId) }}
                     {{ form_row(refund_form.amount) }}

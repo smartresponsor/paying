@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS payment_projection (
 SQL,
         <<<'SQL'
 CREATE TABLE IF NOT EXISTS payment_projection_meta (
-    name VARCHAR(64) PRIMARY KEY NOT NULL,
+    nameEntity VARCHAR(64) PRIMARY KEY NOT NULL,
     value VARCHAR(255) NOT NULL
 )
 SQL,
@@ -87,4 +87,4 @@ foreach ($connectionStatements as $item) {
 
 $kernel->shutdown();
 
-fwrite(STDOUT, "Payment runtime schema bootstrap complete.\n");
+fwrite(STDOUT, "PaymentEntity runtime schema bootstrap complete.\n");

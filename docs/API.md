@@ -6,7 +6,7 @@
 
 - `POST /api/payments` — create payment
 - `GET /api/payments/{id}` — read payment
-- `POST /api/payments/{id}/refund` — refund payment
+- `POST /api/payment/refund/{id}` — refund payment
 
 ### Lifecycle endpoints
 
@@ -28,15 +28,15 @@
 
 ### API docs
 
-- `GET /api/docs`
-- `GET /api/docs.json`
+- `GET /api/doc`
+- `GET /api/doc/json`
 
 ## Canonical API contract source
 
 - NelmioApiDocBundle is the canonical HTTP contract generator for this repository.
 - Swagger UI is the browser-facing viewer for that contract and must remain only a presentation layer, not a separate documentation system.
 - Exported OpenAPI source of truth: `docs/api/openapi.yaml`.
-- Runtime publication points: `/api/docs`, `/api/docs.json`.
+- Runtime publication points: `/api/doc`, `/api/doc/json`.
 - Antora is the owner/manual documentation entry surface for this repository.
 - Doctum is the separate generated code-reference surface for `src/`; producer configuration is owned in-repo via `doctum.php`, while checked-in generated output is not part of the current slice.
 

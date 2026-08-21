@@ -1,0 +1,29 @@
+{
+  "wave": "26",
+  "component": "Paying",
+  "scope": "test-unmapped-canonicalization",
+  "runtime_contract_changes": false,
+  "retirements": [
+    "tests/Unit/OutboxPublisherEnqueueTest.php",
+    "tests/Unit/OutboxWorkerRetryTest.php",
+    "tests/Unit/PayPalEventNormalizerTest.php",
+    "tests/Unit/StripeEventNormalizerTest.php"
+  ],
+  "touched_files": [
+    "composer.json",
+    "docs/architecture/paying-canonicalization-milestone.md",
+    "docs/architecture/paying-wave26-patch-manifest.json",
+    "docs/architecture/paying-wave26-test-unmapped-canonicalization.md",
+    "tools/inspection/PayingTestUnmappedCanonicalizationReport.php",
+    "tests/Unit/PaymentOutboxPublisherEnqueueTest.php",
+    "tests/Unit/PaymentOutboxWorkerRetryTest.php",
+    "tests/Unit/PaymentPayPalEventNormalizerTest.php",
+    "tests/Unit/PaymentStripeEventNormalizerTest.php"
+  ],
+  "verification": [
+    "composer dump-autoload",
+    "composer report:test-unmapped-canonicalization",
+    "composer report:test-unmapped-residual-name-form",
+    "composer test:unit"
+  ]
+}

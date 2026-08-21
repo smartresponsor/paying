@@ -1,0 +1,17 @@
+{
+  "wave": "21",
+  "component": "Paying",
+  "scope": "application surface name-form report-only guard",
+  "runtime_contract_changes": false,
+  "routes_changed": false,
+  "provider_keys_changed": false,
+  "doctrine_tables_changed": false,
+  "files_retired": [],
+  "touched_files": [
+    "composer.json",
+    "tools/inspection/PayingApplicationSurfaceNameFormReport.php",
+    "docs/architecture/paying-wave21-application-surface-name-form.md",
+    "docs/architecture/paying-wave21-patch-manifest.json",
+    "docs/architecture/paying-canonicalization-milestone.md"
+  ]
+}

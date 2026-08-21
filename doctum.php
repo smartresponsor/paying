@@ -13,7 +13,7 @@ $root = __DIR__;
 
 $iterator = Finder::create()
     ->files()
-    ->name('*.php')
+    ->nameEntity('*.php')
     ->in([
         $root . '/src',
     ]);

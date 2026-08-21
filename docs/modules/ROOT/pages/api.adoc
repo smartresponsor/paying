@@ -18,7 +18,7 @@ The machine-readable HTTP contract stays outside Antora narrative pages and rema
 
 Runtime publication points are expected at:
 
-* `/api/docs`
-* `/api/docs.json`
+* `/api/doc`
+* `/api/doc.json`
 
 If Nelmio/OpenAPI is present, the contract should continue to be generated and served there rather than duplicated manually inside Antora.

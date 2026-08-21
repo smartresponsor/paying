@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\ServiceInterface;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 
 /**
  * Defines the contract for the payment console start handler interface payment service boundary.
@@ -15,5 +15,5 @@ interface PaymentConsoleStartHandlerInterface
     /**
      * Executes the start operation for the current payment workflow.
      */
-    public function start(string $orderId, string $provider, string $amount, string $currency): Payment;
+    public function start(string $orderId, string $provider, string $amount, string $currency): PaymentEntity;
 }

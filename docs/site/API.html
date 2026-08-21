@@ -27,7 +27,7 @@
 <ul>
 <li>`POST /api/payments` — create payment</li>
 <li>`GET /api/payments/{id}` — read payment</li>
-<li>`POST /api/payments/{id}/refund` — refund payment</li>
+<li>`POST /api/payment/refund/{id}` — refund payment</li>
 </ul>
 <h3>Lifecycle endpoints</h3>
 <ul>
@@ -49,15 +49,15 @@
 </ul>
 <h3>API docs</h3>
 <ul>
-<li>`GET /api/docs`</li>
-<li>`GET /api/docs.json`</li>
+<li>`GET /api/doc`</li>
+<li>`GET /api/doc.json`</li>
 </ul>
 <h2>Canonical API contract source</h2>
 <ul>
 <li>NelmioApiDocBundle is the canonical HTTP contract generator for this repository.</li>
 <li>Swagger UI is the browser-facing viewer for that contract and must remain only a presentation layer, not a separate documentation system.</li>
 <li>Exported OpenAPI source of truth: `docs/api/openapi.yaml`.</li>
-<li>Runtime publication points: `/api/docs`, `/api/docs.json`.</li>
+<li>Runtime publication points: `/api/doc`, `/api/doc.json`.</li>
 <li>Antora is the owner/manual documentation entry surface for this repository.</li>
 <li>Doctum is the separate generated code-reference surface for `src/`; it must not be mixed into the HTTP contract narrative.</li>
 </ul></article>

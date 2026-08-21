@@ -1,12 +1,13 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Infrastructure;
 
-use App\Paying\Exception\OutboxOperationException;
-use App\Paying\InfrastructureInterface\OutboxPublisherInterface;
-use App\Paying\InfrastructureInterface\PublisherTransportInterface;
+use App\Paying\Exception\PaymentOutboxOperationException as OutboxOperationException;
+use App\Paying\InfrastructureInterface\PaymentOutboxPublisherInterface;
+use App\Paying\InfrastructureInterface\PaymentPublisherTransportInterface as PublisherTransportInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Psr\Log\LoggerInterface;
@@ -21,7 +22,7 @@ class OutboxWorker
     public function __construct(
         private readonly Connection $data,
         private readonly PublisherTransportInterface $transport,
-        private readonly OutboxPublisherInterface $outboxPublisher,
+        private readonly PaymentOutboxPublisherInterface $outboxPublisher,
         private readonly LoggerInterface $logger,
     ) {
     }

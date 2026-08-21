@@ -1,10 +1,11 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Form;
 
-use App\Paying\Controller\Dto\PaymentFinalizeRequestDto;
+use App\Paying\Dto\Payment\PaymentFinalizeRequestDto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -28,14 +29,17 @@ final class PaymentFinalizeType extends AbstractType
                     'Internal' => 'internal',
                     'Stripe' => 'stripe',
                 ],
+                'placeholder' => 'Choose provider',
             ])
             ->add('providerRef', TextType::class, [
                 'label' => 'Provider ref',
                 'required' => false,
+                'help' => 'Optional upstream reference shown by the provider.',
             ])
             ->add('gatewayTransactionId', TextType::class, [
                 'label' => 'Gateway transaction ID',
                 'required' => false,
+                'help' => 'Gateway transaction identifier if one exists.',
             ])
             ->add('status', ChoiceType::class, [
                 'label' => 'Finalize status',
@@ -46,6 +50,7 @@ final class PaymentFinalizeType extends AbstractType
                     'Failed' => 'failed',
                     'Refunded' => 'refunded',
                 ],
+                'help' => 'Leave empty to accept the provider result.',
             ]);
     }
 

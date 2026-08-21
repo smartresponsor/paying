@@ -1,0 +1,12 @@
+{
+  "component": "Paying",
+  "wave": 8,
+  "name": "service-adapter-name-form",
+  "namespace": "App\\Paying",
+  "touchedOnly": true,
+  "fullRepositoryOverwrite": false,
+  "retireLegacyFilesWithHashCheck": true,
+  "addedReports": [
+    "composer report:service-adapter-name-form"
+  ]
+}

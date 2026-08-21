@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Service\Outbox;
 
-use App\Paying\Entity\PaymentOutboxMessage;
+use App\Paying\Entity\PaymentOutboxMessageEntity;
 use App\Paying\Message\Event\PaymentTransportMessage;
 use App\Paying\ServiceInterface\Outbox\PaymentOutboxProcessorInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,7 +31,7 @@ final readonly class PaymentOutboxProcessor implements PaymentOutboxProcessorInt
      */
     public function process(int $limit = 50, bool $retryFailed = false): int
     {
-        $repo = $this->em->getRepository(PaymentOutboxMessage::class);
+        $repo = $this->em->getRepository(PaymentOutboxMessageEntity::class);
         $qb = $repo->createQueryBuilder('o')
             ->where('o.status = :pending')
             ->setParameter('pending', 'pending');
@@ -45,7 +45,7 @@ final readonly class PaymentOutboxProcessor implements PaymentOutboxProcessorInt
         $count = 0;
 
         foreach ($messages as $message) {
-            if (!$message instanceof PaymentOutboxMessage) {
+            if (!$message instanceof PaymentOutboxMessageEntity) {
                 continue;
             }
 
