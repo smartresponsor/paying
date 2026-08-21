@@ -153,7 +153,7 @@
         "security:composer-audit": "composer audit --locked --no-interaction --format=plain",
         "security:gitleaks": "gitleaks git --config=.gitleaks.toml --redact --exit-code 1",
         "security:importmap-audit": "@php tools/ci/console-test-env.php importmap:audit --no-interaction",
-        "security:semgrep-ce": "semgrep scan --config auto --metrics=off --error",
+        "security:semgrep-ce": "semgrep scan --config p/php --config p/security-audit --metrics=off --error",
         "server:start": "@php tools/runtime/payment_server_start.php",
         "server:stop": "@php tools/runtime/payment_server_stop.php",
         "smoke:container": "@php tools/php/php84.php tools/smoke/payment-container-boot-smoke.php",
