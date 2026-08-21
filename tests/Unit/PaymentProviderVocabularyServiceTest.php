@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
+use App\Cataloging\ServiceInterface\CatalogCategoryVocabularyServiceInterface;
 use App\Paying\Service\PaymentProviderVocabularyService;
 use App\Paying\ServiceInterface\PaymentProviderInterface;
 use App\Paying\ServiceInterface\PaymentProviderRouterInterface;
@@ -23,8 +24,8 @@ final class PaymentProviderVocabularyServiceTest extends TestCase
             throw new \InvalidArgumentException('Unknown provider');
         });
 
-        $catalog = new class {
-            public function publishedCategories(string $catalogCode): array
+        $catalog = new class implements CatalogCategoryVocabularyServiceInterface {
+            public function publishedCategories(string $catalogCode, string $tenant = 'default'): array
             {
                 return [
                     ['code' => 'stripe', 'label' => 'Stripe'],
@@ -44,8 +45,8 @@ final class PaymentProviderVocabularyServiceTest extends TestCase
         $router = $this->createMock(PaymentProviderRouterInterface::class);
         $provider = $this->createStub(PaymentProviderInterface::class);
         $router->method('for')->willReturn($provider);
-        $catalog = new class {
-            public function publishedCategories(string $catalogCode): array
+        $catalog = new class implements CatalogCategoryVocabularyServiceInterface {
+            public function publishedCategories(string $catalogCode, string $tenant = 'default'): array
             {
                 throw new \RuntimeException('Cataloging unavailable');
             }

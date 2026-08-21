@@ -5,6 +5,7 @@
     "license": "proprietary",
     "require": {
         "php": "^8.4",
+        "cataloging/catalog": "dev-master",
         "cruding/crud": "*@dev",
         "doctrine/doctrine-bundle": "^3.0",
         "doctrine/doctrine-migrations-bundle": "^4.0",
@@ -192,6 +193,13 @@
         "report:rc3-transfer-memo": "@php tools/php/php84.php tools/inspection/PayingRc3TransferMemoReport.php"
     },
     "repositories": [
+        {
+            "type": "path",
+            "url": "../Cataloging",
+            "options": {
+                "symlink": true
+            }
+        },
         {
             "type": "path",
             "url": "../Interfacing",

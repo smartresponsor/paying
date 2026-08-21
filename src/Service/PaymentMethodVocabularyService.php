@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
+use App\Cataloging\ServiceInterface\CatalogCategoryTypeVocabularyServiceInterface;
 use App\Paying\ServiceInterface\PaymentMethodVocabularyServiceInterface;
 
 final readonly class PaymentMethodVocabularyService implements PaymentMethodVocabularyServiceInterface
@@ -18,7 +19,7 @@ final readonly class PaymentMethodVocabularyService implements PaymentMethodVoca
         ],
     ];
 
-    public function __construct(private ?object $catalogVocabulary = null)
+    public function __construct(private ?CatalogCategoryTypeVocabularyServiceInterface $catalogVocabulary = null)
     {
     }
 
@@ -37,7 +38,7 @@ final readonly class PaymentMethodVocabularyService implements PaymentMethodVoca
     /** @return list<array{code: string, label: string}> */
     private function cataloguedTypes(string $providerCode): array
     {
-        if (null === $this->catalogVocabulary || !method_exists($this->catalogVocabulary, 'publishedTypes')) {
+        if (null === $this->catalogVocabulary) {
             return [];
         }
 
