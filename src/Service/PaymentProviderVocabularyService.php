@@ -54,17 +54,10 @@ final readonly class PaymentProviderVocabularyService implements PaymentProvider
             return [];
         }
 
-        if (!is_array($types)) {
-            return [];
-        }
-
         $result = [];
         foreach ($types as $type) {
-            if (!is_array($type)) {
-                continue;
-            }
-            $code = strtolower(trim((string) ($type['code'] ?? '')));
-            $label = trim((string) ($type['label'] ?? ''));
+            $code = strtolower(trim($type['code']));
+            $label = trim($type['label']);
             if ('' !== $code && '' !== $label) {
                 $result[] = ['code' => $code, 'label' => $label];
             }
