@@ -47,7 +47,7 @@ function paying_relative(string $root, string $absolute): string
 
 function paying_class_short_name(string $contents): ?string
 {
-    if (preg_match('/\bclass\s+([A-Za-z_][A-Za-z0-9_]*)\b/', $contents, $matches) !== 1) {
+    if (preg_match('/^[ \t]*(?:final\s+|readonly\s+|abstract\s+)?class\s+([A-Za-z_][A-Za-z0-9_]*)\b/m', $contents, $matches) !== 1) {
         return null;
     }
 
@@ -65,7 +65,7 @@ function paying_namespace(string $contents): ?string
 
 function paying_table_name(string $contents): ?string
 {
-    if (preg_match('/#\[ORM\\\\Table\s*\([^)]*nameEntity\s*:\s*[\'"]([^\'"]+)[\'"]/s', $contents, $matches) === 1) {
+    if (preg_match('/#\[ORM\\\\Table\s*\(\s*name\s*:\s*[\'"]([^\'"]+)[\'"]/s', $contents, $matches) === 1) {
         return $matches[1];
     }
 

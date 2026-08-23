@@ -43,10 +43,10 @@ $forbiddenRootDirectories = [
     'deployment',
     'scripts',
     'tmp',
-    'node_modules',
 ];
 
 $localGeneratedDirectories = [
+    'node_modules',
     'var',
     'vendor',
 ];
@@ -55,7 +55,7 @@ $requiredReportScripts = [
     'report:release-candidate-structure',
     'report:canonical-structure-closure',
     'report:test-canonical-closure',
-    'report:canonical-nameEntity-form',
+    'report:canonical-name-form',
 ];
 
 $errors = [];

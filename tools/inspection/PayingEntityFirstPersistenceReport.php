@@ -77,7 +77,7 @@ final class PayingEntityFirstPersistenceReport
             $this->errors[] = sprintf('Entity class file must end with *Entity: %s', $relative);
         }
 
-        if (!str_contains($contents, '#[ORM\\Entity]')) {
+        if (preg_match('/#\[ORM\\\\Entity\b/s', $contents) !== 1) {
             $this->errors[] = sprintf('Doctrine entity attribute missing: %s', $relative);
         }
 
@@ -85,8 +85,8 @@ final class PayingEntityFirstPersistenceReport
             $this->errors[] = sprintf('Entity namespace must stay under App\\Paying\\Entity or App\\Paying\\Infrastructure\\Entity: %s', $relative);
         }
 
-        if (!preg_match("/#\[ORM\\\\Table\(name:\s*'([^']+)'\)\]/", $contents, $match)) {
-            $this->errors[] = sprintf('Doctrine table attribute with explicit nameEntity is missing: %s', $relative);
+        if (!preg_match("/#\[ORM\\\\Table\(\s*name\s*:\s*'([^']+)'/s", $contents, $match)) {
+            $this->errors[] = sprintf('Doctrine table attribute with explicit name is missing: %s', $relative);
             return;
         }
 

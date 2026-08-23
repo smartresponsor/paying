@@ -89,7 +89,7 @@ $requiredScripts = [
     'report:packaging-root-surface',
     'report:canonical-structure-closure',
     'report:test-canonical-closure',
-    'report:canonical-nameEntity-form',
+    'report:canonical-name-form',
 ];
 
 foreach ($requiredScripts as $scriptName) {
