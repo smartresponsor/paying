@@ -65,3 +65,13 @@
 Что имеем? The bounded Paying implementation is committed locally and verified across deterministic runtime/canonical gates; the active console flow no longer depends on the legacy Surface contract/factory implementation, and the recurring-payment status mapping is consistent with Objecting.
 
 Что осталось? Remote publication is blocked solely by the pre-existing untracked `.gating/` clean-worktree guard. A later destructive/rename-authorized cleanup may physically remove the deprecated Surface compatibility files and address the broader pre-existing `src/Infrastructure` Canon019 migration; PHPStan diagnostics should be re-run through a non-truncated output surface before claiming a fully green static-analysis gate.
+
+### Accepted recovery — publication unblock
+
+- User explicitly accepted continuation after the push blocker.
+- Inspection showed `.gating/` is an old local Gating mirror/tooling surface containing `.commanding/log/*` artifacts and references to the separate `D:\\PhpstormProjects\\www\\Gating` repository, not canonical Paying source.
+- Added `/.gating/` to Paying `.gitignore` so the local tooling mirror remains on disk but is excluded from Paying Git status and publication. No `.gating/` file was deleted, staged, modified, or committed.
+
+Что имеем? The publication blocker is resolved by repository-local ignore policy without destructive operations or contamination of Paying history.
+
+Что осталось? Commit the ignore/journal update, execute the guarded Console MCP push, and verify upstream synchronization.

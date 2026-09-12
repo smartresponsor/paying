@@ -129,6 +129,7 @@ Thumbs.db
 !/.php-cs-fixer.cache
 !/var/metrics/
 /.codex-tmp/
+/.gating/
 /var/phpunit/
 /var/report/local/
 /var/report/inspection/
