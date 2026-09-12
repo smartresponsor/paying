@@ -53,3 +53,15 @@
 Что имеем? The bounded code change is verified and isolated; no unrelated generated drift or sibling repository change remains in the integration set.
 
 Что осталось? Create the coherent signed commit, push the current branch, inspect post-push HEAD/worktree/upstream state, and record final acceptance.
+
+### Iteration 5 — final acceptance and handoff
+
+- Signed implementation commit created: `8e23f44` (`refactor: harden paying console view contract`).
+- Push of the current branch was attempted through Console MCP and was blocked by its clean-worktree guard because the pre-existing untracked `.gating/` directory remains present. It is deliberately not staged, committed, deleted, or otherwise altered by this task.
+- After the implementation commit, the only worktree item reported outside this journal update is `?? .gating/`; task-owned implementation files are committed.
+- Acceptance evidence remains: full PHPUnit GREEN (123 tests / 574 assertions), unit GREEN (66 / 346), PHP lint GREEN (373 files), CS GREEN, Symfony container GREEN, YAML GREEN (20 files), Doctrine mapping smoke GREEN (11 entities), runtime issue inventory GREEN, Paying canonical readiness GREEN, RC-3 final closure GREEN.
+- Known non-green/caveats: strict Composer validation exits 1 only for pre-existing unbound internal `*@dev` constraints; PHPStan exits non-zero but its Console MCP output is truncated before concrete diagnostics; physical removal/rename of legacy Surface compatibility files was blocked by the task's destructive-operation prohibition / connector rename-delete restrictions.
+
+Что имеем? The bounded Paying implementation is committed locally and verified across deterministic runtime/canonical gates; the active console flow no longer depends on the legacy Surface contract/factory implementation, and the recurring-payment status mapping is consistent with Objecting.
+
+Что осталось? Remote publication is blocked solely by the pre-existing untracked `.gating/` clean-worktree guard. A later destructive/rename-authorized cleanup may physically remove the deprecated Surface compatibility files and address the broader pre-existing `src/Infrastructure` Canon019 migration; PHPStan diagnostics should be re-run through a non-truncated output surface before claiming a fully green static-analysis gate.
