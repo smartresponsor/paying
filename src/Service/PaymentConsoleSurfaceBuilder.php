@@ -14,7 +14,7 @@ use App\Paying\Form\PaymentConsoleFinalizeType;
 use App\Paying\Form\PaymentConsoleRefundType;
 use App\Paying\Form\PaymentCreateType;
 use App\Paying\Form\PaymentStartType;
-use App\Paying\Service\Payment\PaymentSurfaceContractFactory;
+use App\Paying\Service\Payment\PaymentConsoleViewFactory;
 use App\Paying\ServiceInterface\PaymentConsoleCreateHandlerInterface;
 use App\Paying\ServiceInterface\PaymentConsoleFinalizeHandlerInterface;
 use App\Paying\ServiceInterface\PaymentConsoleReadModelInterface;
@@ -33,7 +33,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 final readonly class PaymentConsoleSurfaceBuilder
 {
     public function __construct(
-        private PaymentSurfaceContractFactory $surfaceContractFactory,
+        private PaymentConsoleViewFactory $surfaceContractFactory,
         private PaymentConsoleCreateHandlerInterface $createHandler,
         private PaymentConsoleStartHandlerInterface $startHandler,
         private PaymentConsoleReadModelInterface $readModel,

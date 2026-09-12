@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit\Service;
 
-use App\Paying\Service\Payment\PaymentSurfaceContractFactory;
+use App\Paying\Service\Payment\PaymentConsoleViewFactory;
 use PHPUnit\Framework\TestCase;
 
 final class PaymentSurfaceContractFactoryTest extends TestCase
 {
     public function testCreateUsesCanonicalPaymentTemplatePath(): void
     {
-        $factory = new PaymentSurfaceContractFactory();
+        $factory = new PaymentConsoleViewFactory();
         $surface = $factory->create([
             'payments' => [
                 [

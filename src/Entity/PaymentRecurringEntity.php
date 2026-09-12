@@ -34,9 +34,6 @@ class PaymentRecurringEntity
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $scheduledAt;
 
-    #[ORM\Column(type: 'string', length: 16, options: ['default' => 'pending'])]
-    private string $status = 'pending';
-
     #[ORM\Column(type: 'string', length: 64, nullable: true)]
     private ?string $transactionId = null;
 
@@ -46,7 +43,7 @@ class PaymentRecurringEntity
         $this->scheduledAt = $scheduledAt ?? new \DateTimeImmutable();
         $this->initializeObjectIdentity();
         $this->initializeObjectAudit();
-        $this->initializeObjectState(objectStatus: $this->status);
+        $this->initializeObjectState(objectStatus: 'pending');
     }
 
     public function id(): ?int
@@ -76,12 +73,11 @@ class PaymentRecurringEntity
 
     public function status(): string
     {
-        return $this->status;
+        return $this->getObjectStatus() ?? 'pending';
     }
 
     public function setStatus(string $status): void
     {
-        $this->status = $status;
         $this->setObjectStatus($status);
     }
 
