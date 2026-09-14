@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Paying\Service\Http\Payment;
 
 use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
-use App\Cruding\Provider\Crud\CrudPageDefinitionProvider;
-use App\Cruding\Service\Crud\Resource\CrudResourceContractFactory;
+use App\Cruding\Factory\Resource\CrudResourceContractFactory;
+use App\Cruding\Provider\CrudPageDefinitionProvider;
 use App\Cruding\Value\Resource\CrudResourceContract;
 use App\Paying\Dto\Payment\PaymentPlacementFormData;
 use App\Paying\Form\PaymentPlacementType;
