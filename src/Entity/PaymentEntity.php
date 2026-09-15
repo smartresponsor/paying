@@ -17,6 +17,7 @@ use Symfony\Component\Uid\AbstractUid;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'payment')]
+#[ORM\Index(columns: ['order_id'], name: 'idx_placement_payment_order')]
 #[ORM\HasLifecycleCallbacks]
 class PaymentEntity
 {
