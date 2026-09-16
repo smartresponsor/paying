@@ -1,0 +1,61 @@
+{
+    "name": "paying/payment",
+    "description": "Symfony payment component for payment lifecycle, providers, webhooks, reconciliation, and operational payment workflows.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "cataloging/catalog": "*",
+        "collectioning/collection": "*",
+        "cruding/crud": "*",
+        "doctrine/doctrine-bundle": "^3.0",
+        "doctrine/doctrine-migrations-bundle": "^4.0",
+        "doctrine/orm": "^3.4",
+        "easycorp/easyadmin-bundle": "^5.0",
+        "ext-openssl": "*",
+        "ext-redis": "*",
+        "interfacing/interface": "*",
+        "navigating/navigation": "*",
+        "nelmio/api-doc-bundle": "^5.1",
+        "objecting/object": "*",
+        "symfony/asset": "^8.1",
+        "symfony/config": "^8.1",
+        "symfony/console": "^8.1",
+        "symfony/dependency-injection": "^8.1",
+        "symfony/form": "^8.1",
+        "symfony/framework-bundle": "^8.1",
+        "symfony/http-foundation": "^8.1",
+        "symfony/intl": "^8.1",
+        "symfony/messenger": "^8.1",
+        "symfony/monolog-bundle": "^4.0",
+        "symfony/rate-limiter": "^8.1",
+        "symfony/routing": "^8.1",
+        "symfony/runtime": "^8.1",
+        "symfony/security-bundle": "^8.1",
+        "symfony/serializer": "^8.1",
+        "symfony/twig-bundle": "^8.1",
+        "symfony/uid": "^8.1",
+        "symfony/validator": "^8.1",
+        "symfony/workflow": "^8.1",
+        "symfony/yaml": "^8.1",
+        "tabling/table": "*",
+        "viewing/view": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\Paying\\": "src/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.4.13"
+        },
+        "sort-packages": true,
+        "process-timeout": 900,
+        "allow-plugins": {
+            "symfony/runtime": true
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

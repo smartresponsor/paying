@@ -75,3 +75,31 @@
 Что имеем? The publication blocker is resolved by repository-local ignore policy without destructive operations or contamination of Paying history.
 
 Что осталось? Commit the ignore/journal update, execute the guarded Console MCP push, and verify upstream synchronization.
+
+## 2026-09-16 — Platform dependency canon closure
+
+### Reconnaissance baseline
+
+- Re-read the current Paying README, Composer manifest, standalone bundle registry, PHPUnit contract, Git state, and prior CMCP journal; the only pre-existing worktree item is the independent untracked `bin/cmcp-generate-current-baseline.ps1`.
+- Re-read the mandatory Objecting, Cruding, Viewing, and Interfacing contracts plus current Gating and Canonization textual rules. Relevant target mapping: Canon018 keeps `paying/payment` under `App\\Paying\\`; Canon019 forbids alternative root layer taxonomies; Canon021 leaves generic CRUD in Cruding; Canon022 requires the complete standalone platform baseline; Canon029/039 own standard QA/test tooling; Canon043 requires exact `dev-master` identity for locally linked first-party packages; Canon045 requires root visibility of the reachable local path-repository closure.
+- Market/enterprise baseline remains payment-orchestration focused: idempotent mutations, authenticated webhooks, durable outbox/event delivery, provider routing, reconciliation evidence, and operational diagnostics are RC-relevant; disputes, broader provider parity and checkout UX remain growth work.
+- Current factual defect: `composer validate --strict --check-lock` fails on five unbounded first-party `*@dev` constraints. The standalone manifest also omits direct Collectioning, Tabling and EasyAdmin dependencies, lacks canonical `options.versions` pins on first-party path repositories, and has no `composer.prod.json` packaged-production contract.
+- RC-critical workstream: close only that dependency/package contract without changing payment lifecycle semantics. Growth workstream remains provider/dispute/reconciliation/checkout capability expansion after RC.
+- Planned verification: package-scoped Composer resolution, strict validate/audit, canonical readiness/release reports, lint/CS/PHPStan/PHPUnit, container/YAML/Doctrine/runtime smokes, then bounded Git integration.
+
+Что имеем? Paying's current runtime behavior is not the blocker; its development/production package contract is measurably behind the current platform canon.
+Что осталось? Materialize the canonical dependency contour, update lock deterministically, then run the full bounded verification sequence.
+
+### Implementation and verification
+
+- Normalized all local first-party runtime constraints to exact `dev-master`, added `minimum-stability: dev` / `prefer-stable: true`, and pinned every local path repository with `options.versions` under Canon043.
+- Added the missing direct Canon022 standalone baseline dependencies: Collectioning, Tabling, and EasyAdmin. Added root path visibility for Collectioning/Tabling and the transitive Cataloging -> Administering closure required by Canon045 without inventing a direct Paying dependency on Administering.
+- Added `composer.prod.json` as the packaged production contract with no local path repositories or development tooling, plus a reproducible `validate:prod` Composer script.
+- Package-scoped Composer resolution completed successfully. The lock now resolves Administering, Collectioning, Tabling, current `dev-master` Navigating, and the refreshed first-party dependency graph; Composer audit reports no security advisories.
+- The refreshed Cruding package exposed two stale Paying FQCNs in `PaymentNewService`; retargeted them to `App\\Cruding\\DTO\\Entrypoint\\CrudServiceContextDTO` and `App\\Cruding\\ValueObject\\Resource\\CrudResourceContract` without changing behavior.
+- PHPStan non-debug mode exposed exactly those 13 Cruding namespace errors; after repair, the deterministic debug/single-process repository script passes with exit code 0. The non-debug retry then hit a Windows local TCP-listener limitation rather than code diagnostics, so the existing debug execution mode remains the reliable local contract.
+- Verification: `composer validate --strict --check-lock` PASS; `composer validate:prod` PASS; `composer audit` PASS; canonical readiness PASS; RC-3 final closure PASS; PHP lint 373 files PASS; CS 298 files PASS; PHPStan PASS; PHPUnit 123 tests / 574 assertions PASS (8 skips, 20 notices, 1 PHPUnit deprecation); aggregate smoke PASS for runtime, fixtures, Symfony container, and Doctrine mapping across 11 entities; YAML lint 20/20 PASS.
+- `config/reference.php` was regenerated incidentally by the dependency refresh and is explicitly excluded from the task-owned change set under Canon037. The independent untracked `bin/cmcp-generate-current-baseline.ps1` also remains untouched.
+
+Что имеем? Paying's development and production dependency contracts now match the current platform canon, the refreshed local dependency graph resolves, the sole runtime compatibility drift is repaired, and all material RC gates are green.
+Что осталось? Commit only the task-owned package/runtime files, attempt guarded publication, and report any remaining clean-worktree blocker caused exclusively by non-task artifacts.

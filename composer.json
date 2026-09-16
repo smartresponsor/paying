@@ -3,16 +3,20 @@
     "description": "Symfony payment component for payment lifecycle, providers, webhooks, reconciliation, and operational payment workflows.",
     "type": "library",
     "license": "proprietary",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "php": "^8.4",
         "cataloging/catalog": "dev-master",
-        "cruding/crud": "*@dev",
+        "collectioning/collection": "dev-master",
+        "cruding/crud": "dev-master",
         "doctrine/doctrine-bundle": "^3.0",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.4",
+        "easycorp/easyadmin-bundle": "^5.0",
         "nelmio/api-doc-bundle": "^5.1",
-        "interfacing/interface": "*@dev",
-        "navigating/navigation": "*@dev",
+        "interfacing/interface": "dev-master",
+        "navigating/navigation": "dev-master",
         "symfony/asset": "^8.1",
         "symfony/config": "^8.1",
         "symfony/console": "^8.1",
@@ -35,8 +39,9 @@
         "symfony/yaml": "^8.1",
         "ext-openssl": "*",
         "ext-redis": "*",
-        "objecting/object": "*@dev",
-        "viewing/view": "*@dev"
+        "objecting/object": "dev-master",
+        "tabling/table": "dev-master",
+        "viewing/view": "dev-master"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.3",
@@ -66,6 +71,7 @@
         "cs:check": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run --diff",
         "cs:check-quiet": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --dry-run",
         "cs:fix": "@php tools/php/php84.php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php",
+        "validate:prod": "composer validate --strict --no-check-all composer.prod.json",
         "docs:docblock:check": "@docs:docblock:report",
         "docs:docblock:report": "@php tools/php/php84.php tools/inspection/PaymentSemanticDocBlockReport.php",
         "docs:doctum": "@php tools/php/php84.php tools/runtime/doctum.phar update doctum.php --force",
@@ -197,42 +203,72 @@
             "type": "path",
             "url": "../Cataloging",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": { "cataloging/catalog": "dev-master" }
+            }
+        },
+        {
+            "type": "path",
+            "url": "../Administering",
+            "options": {
+                "symlink": true,
+                "versions": { "administering/administration": "dev-master" }
+            }
+        },
+        {
+            "type": "path",
+            "url": "../Collectioning",
+            "options": {
+                "symlink": true,
+                "versions": { "collectioning/collection": "dev-master" }
+            }
+        },
+        {
+            "type": "path",
+            "url": "../Tabling",
+            "options": {
+                "symlink": true,
+                "versions": { "tabling/table": "dev-master" }
             }
         },
         {
             "type": "path",
             "url": "../Interfacing",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": { "interfacing/interface": "dev-master" }
             }
         },
         {
             "type": "path",
             "url": "../Objecting",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": { "objecting/object": "dev-master" }
             }
         },
         {
             "type": "path",
             "url": "../Cruding",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": { "cruding/crud": "dev-master" }
             }
         },
         {
             "type": "path",
             "url": "../Viewing",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": { "viewing/view": "dev-master" }
             }
         },
         {
             "type": "path",
             "url": "../Navigating",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": { "navigating/navigation": "dev-master" }
             }
         }
     ]

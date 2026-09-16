@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Paying\Service\Http\Payment;
 
-use App\Cruding\Dto\Crud\Entrypoint\CrudServiceContext;
+use App\Cruding\DTO\Entrypoint\CrudServiceContextDTO as CrudServiceContext;
 use App\Cruding\Factory\Resource\CrudResourceContractFactory;
 use App\Cruding\Provider\CrudPageDefinitionProvider;
-use App\Cruding\Value\Resource\CrudResourceContract;
+use App\Cruding\ValueObject\Resource\CrudResourceContract;
 use App\Paying\Dto\Payment\PaymentPlacementFormData;
 use App\Paying\Form\PaymentPlacementType;
 use App\Paying\ServiceInterface\PaymentStartServiceInterface;
