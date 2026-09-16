@@ -103,3 +103,12 @@
 
 Что имеем? Paying's development and production dependency contracts now match the current platform canon, the refreshed local dependency graph resolves, the sole runtime compatibility drift is repaired, and all material RC gates are green.
 Что осталось? Commit only the task-owned package/runtime files, attempt guarded publication, and report any remaining clean-worktree blocker caused exclusively by non-task artifacts.
+
+### Canon037 publication closure
+
+- Re-read Canon037 and corrected the earlier operational assumption: `config/reference.php` is not merely generated drift to omit from a commit; it is explicitly prohibited from Git tracking.
+- Added `/config/reference.php` to `.gitignore` and removed the artifact from the Git index with working-tree content preserved. This closes the Canon037 violation instead of hiding it.
+- Added the exact orchestration-only `/bin/cmcp-generate-current-baseline.ps1` path to `.gitignore`; the helper remains on disk and is not product source.
+
+Что имеем? Paying now has no task-independent dirty artifact that should remain visible to Git; Canon037 is satisfied structurally rather than procedurally.
+Что осталось? Commit this canonical tracking cleanup, push the branch, and verify upstream synchronization.

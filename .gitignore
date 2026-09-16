@@ -137,3 +137,5 @@ Thumbs.db
 
 /tools/runtime/doctum.phar
 /docs/generated/doctum/
+/config/reference.php
+/bin/cmcp-generate-current-baseline.ps1
