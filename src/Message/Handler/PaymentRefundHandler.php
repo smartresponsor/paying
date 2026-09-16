@@ -7,8 +7,8 @@ namespace App\Paying\Message\Handler;
 
 use App\Paying\Message\Command\PaymentRefundCommand;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
-use App\Paying\ServiceInterface\RefundServiceInterface;
-use App\Paying\ValueObject\Money;
+use App\Paying\ServiceInterface\PaymentRefundServiceInterface;
+use App\Paying\ValueObject\PaymentMoney;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Uid\Ulid;
 
@@ -23,7 +23,7 @@ final readonly class PaymentRefundHandler
 {
     public function __construct(
         private PaymentRepositoryInterface $repo,
-        private RefundServiceInterface $refundService,
+        private PaymentRefundServiceInterface $refundService,
     ) {
     }
 
@@ -34,10 +34,10 @@ final readonly class PaymentRefundHandler
     {
         $payment = $this->repo->find($command->paymentId);
         if (null === $payment) {
-            throw new \RuntimeException('Payment not found');
+            throw new \RuntimeException('PaymentEntity not found');
         }
 
-        $amount = Money::fromMinor($command->amountMinor, strtoupper($command->currency))->toDecimalString();
+        $amount = PaymentMoney::fromMinor($command->amountMinor, strtoupper($command->currency))->toDecimalString();
         $provider = $this->resolveProvider($payment->providerRef());
 
         $this->refundService->refund(new Ulid($command->paymentId), $amount, $provider);

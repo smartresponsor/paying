@@ -7,8 +7,8 @@ doctrine:
         driver: pdo_sqlite
         path: '%kernel.project_dir%/var/payment.test.data.sqlite'
         server_version: '3.45.1'
-      infra:
+      infrastructure:
         url: ~
         driver: pdo_sqlite
-        path: '%kernel.project_dir%/var/payment.test.infra.sqlite'
+        path: '%kernel.project_dir%/var/payment.test.infrastructure.sqlite'
         server_version: '3.45.1'

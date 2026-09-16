@@ -1,0 +1,30 @@
+{
+  "wave": "paying-wave6-infrastructure-name-form",
+  "component": "Paying",
+  "namespace": "App\\Paying",
+  "policy": "touched-files-only",
+  "renames": {
+    "src/Infrastructure/AuditLogger.php": "src/Infrastructure/PaymentAuditLogger.php",
+    "src/Infrastructure/OutboxPublisher.php": "src/Infrastructure/PaymentOutboxPublisher.php",
+    "src/Infrastructure/OutboxWorker.php": "src/Infrastructure/PaymentOutboxWorker.php",
+    "src/Infrastructure/DbalIdempotencyStore.php": "src/Infrastructure/PaymentDbalIdempotencyStore.php",
+    "src/Infrastructure/RedisIdempotencyStore.php": "src/Infrastructure/PaymentRedisIdempotencyStore.php",
+    "src/Infrastructure/RateLimitSubscriber.php": "src/Infrastructure/PaymentRateLimitSubscriber.php",
+    "src/Infrastructure/ResponseHeaderSubscriber.php": "src/Infrastructure/PaymentResponseHeaderSubscriber.php",
+    "src/Infrastructure/MetricSubscriber.php": "src/Infrastructure/PaymentMetricSubscriber.php",
+    "src/Infrastructure/PublisherTransportLog.php": "src/Infrastructure/PaymentPublisherTransportLog.php",
+    "src/InfrastructureInterface/AuditLoggerInterface.php": "src/InfrastructureInterface/PaymentAuditLoggerInterface.php",
+    "src/InfrastructureInterface/OutboxPublisherInterface.php": "src/InfrastructureInterface/PaymentOutboxPublisherInterface.php",
+    "src/InfrastructureInterface/PublisherTransportInterface.php": "src/InfrastructureInterface/PaymentPublisherTransportInterface.php"
+  },
+  "commands": [
+    "composer dump-autoload",
+    "composer report:infrastructure-name-form",
+    "composer report:console-command-name-form",
+    "composer report:api-boundary-name-form",
+    "composer report:service-core-name-form",
+    "composer report:controller-name-form",
+    "composer report:canon-structure",
+    "composer test:unit"
+  ]
+}

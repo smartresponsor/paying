@@ -5,10 +5,9 @@ declare(strict_types=1);
 
 namespace App\Paying\Controller;
 
-use App\Paying\Entity\Payment;
-
-use App\Paying\Attribute\RequireScope;
+use App\Paying\Attribute\PaymentRequireScopeAttribute;
 use App\Paying\ControllerInterface\PaymentReadControllerInterface;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
@@ -25,11 +24,11 @@ final readonly class PaymentReadController implements PaymentReadControllerInter
     {
     }
 
-    #[RequireScope(['payment:read'])]
+    #[PaymentRequireScopeAttribute(['payment:read'])]
     #[OA\Get(
         path: '/api/payments/{id}',
         summary: 'Read a payment aggregate by identifier.',
-        tags: ['Payment'],
+        tags: ['PaymentEntity'],
         responses: [
             new OA\Response(
                 response: 200,
@@ -75,10 +74,10 @@ final readonly class PaymentReadController implements PaymentReadControllerInter
      *
      * @return array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string}
      */
-    private function buildReadPayload(Payment $payment): array
+    private function buildReadPayload(PaymentEntity $payment): array
     {
         return [
-            'id' => (string) $payment->id(),
+            'id' => $payment->slug(),
             'orderId' => $payment->orderId(),
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),

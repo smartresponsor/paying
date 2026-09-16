@@ -17,7 +17,7 @@ Canonical documentation package:
 Documentation surfaces are intentionally split:
 
 - Antora producer pages: `docs/antora.yml` + `docs/modules/ROOT/pages/`
-- Nelmio/OpenAPI HTTP contract generation: runtime publication via `/api/docs`, `/api/docs.json`
+- Nelmio/OpenAPI HTTP contract generation: runtime publication via `/api/doc`, `/api/doc/json`
 - Swagger UI: browser-facing viewer for the Nelmio/OpenAPI contract, not a separate documentation system
 - Exported OpenAPI artifact: `docs/api/openapi.yaml`
 - Doctum generated code reference: producer config via `doctum.php`; checked-in generated output is not included in the current slice
@@ -73,7 +73,7 @@ Antora producer entry pages mirror that split and stay intentionally thin:
 - **Canonical UI**: `/payment/console` (payment list + card, create/start/finalize/refund actions, webhook visibility,
   filter/search, links to OpenAPI/status/metrics).
 - **Canonical API
-  **: `/api/payments`, `/api/payments/{id}`, `/api/payments/{id}/refund`, `/payment/start`, `/payment/finalize/{id}`, `/payment/webhook/{provider}`, `/webhook/stripe`, `/webhook/paypal`, `/status`, `/metrics`, `/payment/dlq`.
+  **: `/api/payments`, `/api/payments/{id}`, `/api/payment/refund/{id}`, `/payment/start`, `/payment/finalize/{id}`, `/payment/webhook/{provider}`, `/webhook/stripe`, `/webhook/paypal`, `/status`, `/metrics`, `/payment/dlq`.
 - **Canonical CLI**: `payment:outbox:process`, `payment:e2e:demo`.
 
 ## Runtime story (short)

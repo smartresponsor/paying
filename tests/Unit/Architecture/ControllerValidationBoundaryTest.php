@@ -20,7 +20,7 @@ final class ControllerValidationBoundaryTest extends TestCase
         $controllerFiles = glob(__DIR__.'/../../../src/Controller/*.php') ?: [];
         $forbiddenImports = [
             'use Symfony\\Component\\Validator\\Validator\\ValidatorInterface;',
-            'use App\Paying\\ServiceInterface\\ValidationErrorMapperInterface;',
+            'use App\Paying\\ServiceInterface\\PaymentValidationErrorMapperInterface;',
         ];
 
         foreach ($controllerFiles as $file) {
@@ -42,10 +42,10 @@ final class ControllerValidationBoundaryTest extends TestCase
     public function testApiControllersDependOnSharedRequestValidatorContract(): void
     {
         $apiControllers = [
-            'FinalizeController.php',
+            'PaymentFinalizeController.php',
             'PaymentCreateController.php',
             'PaymentRefundController.php',
-            'StartController.php',
+            'PaymentStartController.php',
         ];
 
         foreach ($apiControllers as $controller) {
@@ -53,14 +53,14 @@ final class ControllerValidationBoundaryTest extends TestCase
             $content = (string) file_get_contents($path);
 
             self::assertStringContainsString(
-                'use App\Paying\\ServiceInterface\\ApiRequestValidatorInterface;',
+                'use App\Paying\\ServiceInterface\\PaymentApiRequestValidatorInterface;',
                 $content,
-                sprintf('Controller %s must use ApiRequestValidatorInterface import.', $controller),
+                sprintf('Controller %s must use PaymentApiRequestValidatorInterface import.', $controller),
             );
             self::assertMatchesRegularExpression(
-                '/private\s+(?:readonly\s+)?ApiRequestValidatorInterface\s+\$requestValidator,/',
+                '/private\s+(?:readonly\s+)?PaymentApiRequestValidatorInterface\s+\$requestValidator,/',
                 $content,
-                sprintf('Controller %s must inject ApiRequestValidatorInterface.', $controller),
+                sprintf('Controller %s must inject PaymentApiRequestValidatorInterface.', $controller),
             );
         }
     }

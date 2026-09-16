@@ -7,4 +7,4 @@ if ([] === $fixtureFiles) {
     fwrite(STDERR, 'No payment fixtures found.'.PHP_EOL);
     exit(1);
 }
-echo 'Payment fixture sanity smoke passed for '.count($fixtureFiles).' fixtures.'.PHP_EOL;
+echo 'PaymentEntity fixture sanity smoke passed for '.count($fixtureFiles).' fixtures.'.PHP_EOL;

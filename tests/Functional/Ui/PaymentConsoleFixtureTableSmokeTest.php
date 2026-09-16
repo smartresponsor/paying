@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Functional\Ui;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\ValueObject\PaymentStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -48,7 +48,7 @@ final class PaymentConsoleFixtureTableSmokeTest extends WebTestCase
         $em = $container->get(EntityManagerInterface::class);
         \assert($em instanceof EntityManagerInterface);
 
-        $payment = new Payment(new Ulid(), PaymentStatus::processing, '25.00', 'USD');
+        $payment = new PaymentEntity(new Ulid(), PaymentStatus::processing, '25.00', 'USD');
         $payment->withProviderRef('fixture-console-row');
         $em->persist($payment);
         $em->flush();

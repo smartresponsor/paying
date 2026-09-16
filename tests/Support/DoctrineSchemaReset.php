@@ -45,14 +45,5 @@ final class DoctrineSchemaReset
         }
 
         $tool->createSchema($metadata);
-
-        $connection->executeStatement('DROP TABLE IF EXISTS payment_idempotency');
-        $connection->executeStatement(
-            'CREATE TABLE payment_idempotency ('
-            .'key VARCHAR(80) PRIMARY KEY NOT NULL, '
-            .'value CLOB NOT NULL, '
-            .'expires_at DATETIME NOT NULL'
-            .')'
-        );
     }
 }

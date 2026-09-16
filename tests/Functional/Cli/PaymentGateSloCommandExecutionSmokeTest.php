@@ -5,10 +5,9 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Functional\Cli;
 
-use App\Paying\Infrastructure\Console\GateSloCommand;
-use App\Paying\Service\Metric;
-use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\MockObject\Exception;
+use App\Paying\Infrastructure\Console\PaymentGateSloCommand;
+use App\Paying\Service\PaymentMetric;
+use App\Paying\ServiceInterface\PaymentProjectionLagServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -23,10 +22,10 @@ final class PaymentGateSloCommandExecutionSmokeTest extends TestCase
     /**
      * Verifies that gate slo command prints metrics and succeeds when there are no failures.
      */
-    public function testGateSloCommandPrintsMetricsAndSucceedsWhenThereAreNoFailures(): void
+    public function testPaymentGateSloCommandPrintsMetricsAndSucceedsWhenThereAreNoFailures(): void
     {
-        /** @var Metric&MockObject $metric */
-        $metric = $this->getMockBuilder(Metric::class)
+        /** @var PaymentMetric&MockObject $metric */
+        $metric = $this->getMockBuilder(PaymentMetric::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['export'])
             ->getMock();
@@ -35,24 +34,20 @@ final class PaymentGateSloCommandExecutionSmokeTest extends TestCase
             ->method('export')
             ->willReturn("payment_total 10\npayment_failure_total 0\n");
 
-        /** @var Connection&MockObject $data */
-        $data = $this->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['fetchOne'])
-            ->getMock();
+        /** @var PaymentProjectionLagServiceInterface&MockObject $projectionLag */
+        $projectionLag = $this->createMock(PaymentProjectionLagServiceInterface::class);
+        $projectionLag->expects(self::once())
+            ->method('snapshot')
+            ->willReturn([
+                'updatedAtData' => '2025-11-07 10:00:00',
+                'updatedAtInfra' => '2025-11-07 10:00:00',
+                'projectionLagMs' => 0,
+            ]);
 
-        $data->expects(self::once())
-            ->method('fetchOne')
-            ->with(self::stringContains('SELECT MAX(updated_at) FROM payment'))
-            ->willReturn('2025-11-07 10:00:00');
-
-        try {
-            $logger = $this->createMock(LoggerInterface::class);
-        } catch (Exception $e) {
-        }
+        $logger = $this->createMock(LoggerInterface::class);
         $logger->expects(self::never())->method('warning');
 
-        $command = new GateSloCommand($metric, $data, $logger);
+        $command = new PaymentGateSloCommand($metric, $projectionLag, $logger);
         $tester = new CommandTester($command);
 
         self::assertSame(Command::SUCCESS, $tester->execute([]));
@@ -63,10 +58,10 @@ final class PaymentGateSloCommandExecutionSmokeTest extends TestCase
     /**
      * Verifies that gate slo command fails when metric reports failures.
      */
-    public function testGateSloCommandFailsWhenMetricReportsFailures(): void
+    public function testPaymentGateSloCommandFailsWhenMetricReportsFailures(): void
     {
-        /** @var Metric&MockObject $metric */
-        $metric = $this->getMockBuilder(Metric::class)
+        /** @var PaymentMetric&MockObject $metric */
+        $metric = $this->getMockBuilder(PaymentMetric::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['export'])
             ->getMock();
@@ -75,23 +70,20 @@ final class PaymentGateSloCommandExecutionSmokeTest extends TestCase
             ->method('export')
             ->willReturn("payment_total 10\npayment_failure_total 2\n");
 
-        /** @var Connection&MockObject $data */
-        $data = $this->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['fetchOne'])
-            ->getMock();
+        /** @var PaymentProjectionLagServiceInterface&MockObject $projectionLag */
+        $projectionLag = $this->createMock(PaymentProjectionLagServiceInterface::class);
+        $projectionLag->expects(self::once())
+            ->method('snapshot')
+            ->willReturn([
+                'updatedAtData' => '2025-11-07 10:00:00',
+                'updatedAtInfra' => '2025-11-07 10:00:00',
+                'projectionLagMs' => 0,
+            ]);
 
-        $data->expects(self::once())
-            ->method('fetchOne')
-            ->willReturn('2025-11-07 10:00:00');
-
-        try {
-            $logger = $this->createMock(LoggerInterface::class);
-        } catch (Exception $e) {
-        }
+        $logger = $this->createMock(LoggerInterface::class);
         $logger->expects(self::never())->method('warning');
 
-        $command = new GateSloCommand($metric, $data, $logger);
+        $command = new PaymentGateSloCommand($metric, $projectionLag, $logger);
         $tester = new CommandTester($command);
 
         self::assertSame(Command::FAILURE, $tester->execute([]));

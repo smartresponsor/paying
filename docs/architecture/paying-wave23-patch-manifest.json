@@ -1,0 +1,18 @@
+{
+  "wave": 23,
+  "component": "Paying",
+  "scope": "test residual name-form guard",
+  "mode": "report-only",
+  "runtime_contract_changes": false,
+  "route_changes": false,
+  "provider_key_changes": false,
+  "database_changes": false,
+  "file_retirements": [],
+  "touched_files": [
+    "composer.json",
+    "tools/inspection/PayingTestResidualNameFormReport.php",
+    "docs/architecture/paying-wave23-test-residual-name-form.md",
+    "docs/architecture/paying-wave23-patch-manifest.json",
+    "docs/architecture/paying-canonicalization-milestone.md"
+  ]
+}

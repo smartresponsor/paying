@@ -39,7 +39,7 @@ The main hand-written repository narratives remain in Markdown and are treated a
 == Generated surfaces
 
 * OpenAPI source of truth: `docs/api/openapi.yaml`
-* Runtime OpenAPI publication points: `/api/docs`, `/api/docs.json`
+* Runtime OpenAPI publication points: `/api/doc`, `/api/doc.json`
 * Doctum configuration: `doctum.php`
 * Doctum producer configuration: `doctum.php`
 

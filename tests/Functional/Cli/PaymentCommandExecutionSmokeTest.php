@@ -5,14 +5,14 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Functional\Cli;
 
-use App\Paying\Entity\Payment;
-use App\Paying\Infrastructure\Console\OutboxRunCommand;
-use App\Paying\Infrastructure\Console\ProjectionRebuildCommand;
-use App\Paying\Infrastructure\Console\ProjectionSyncCommand;
-use App\Paying\Infrastructure\Console\ReconcileRunCommand;
-use App\Paying\Infrastructure\OutboxWorker;
-use App\Paying\ServiceInterface\ProjectionSyncInterface;
-use App\Paying\ServiceInterface\ReconciliationServiceInterface;
+use App\Paying\Entity\PaymentEntity;
+use App\Paying\Infrastructure\Console\PaymentOutboxRunCommand;
+use App\Paying\Infrastructure\Console\PaymentProjectionRebuildCommand;
+use App\Paying\Infrastructure\Console\PaymentProjectionSyncCommand;
+use App\Paying\Infrastructure\Console\PaymentReconcileRunCommand;
+use App\Paying\Infrastructure\PaymentOutboxWorker;
+use App\Paying\ServiceInterface\PaymentProjectionSyncServiceInterface;
+use App\Paying\ServiceInterface\PaymentReconciliationServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
@@ -32,15 +32,15 @@ final class PaymentCommandExecutionSmokeTest extends TestCase
      *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
-    public function testProjectionSyncCommandExecutesAndPrintsSyncedCount(): void
+    public function testPaymentProjectionSyncCommandExecutesAndPrintsSyncedCount(): void
     {
-        $sync = $this->createMock(ProjectionSyncInterface::class);
+        $sync = $this->createMock(PaymentProjectionSyncServiceInterface::class);
         $sync->expects(self::once())
             ->method('sync')
             ->with(25)
             ->willReturn(7);
 
-        $command = new ProjectionSyncCommand($sync);
+        $command = new PaymentProjectionSyncCommand($sync);
         $tester = new CommandTester($command);
 
         self::assertSame(Command::SUCCESS, $tester->execute(['limit' => '25']));
@@ -55,15 +55,15 @@ final class PaymentCommandExecutionSmokeTest extends TestCase
      *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
-    public function testProjectionRebuildCommandExecutesAndPrintsRebuiltCount(): void
+    public function testPaymentProjectionRebuildCommandExecutesAndPrintsRebuiltCount(): void
     {
-        $sync = $this->createMock(ProjectionSyncInterface::class);
+        $sync = $this->createMock(PaymentProjectionSyncServiceInterface::class);
         $sync->expects(self::once())
             ->method('rebuild')
             ->with(40)
             ->willReturn(11);
 
-        $command = new ProjectionRebuildCommand($sync);
+        $command = new PaymentProjectionRebuildCommand($sync);
         $tester = new CommandTester($command);
 
         self::assertSame(Command::SUCCESS, $tester->execute(['batch' => '40']));
@@ -73,10 +73,10 @@ final class PaymentCommandExecutionSmokeTest extends TestCase
     /**
      * Verifies that outbox run command executes with retry failed flag.
      */
-    public function testOutboxRunCommandExecutesWithRetryFailedFlag(): void
+    public function testPaymentOutboxRunCommandExecutesWithRetryFailedFlag(): void
     {
-        /** @var OutboxWorker&MockObject $worker */
-        $worker = $this->getMockBuilder(OutboxWorker::class)
+        /** @var PaymentOutboxWorker&MockObject $worker */
+        $worker = $this->getMockBuilder(PaymentOutboxWorker::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['run'])
             ->getMock();
@@ -86,7 +86,7 @@ final class PaymentCommandExecutionSmokeTest extends TestCase
             ->with(3, true)
             ->willReturn(2);
 
-        $command = new OutboxRunCommand($worker);
+        $command = new PaymentOutboxRunCommand($worker);
         $tester = new CommandTester($command);
 
         self::assertSame(Command::SUCCESS, $tester->execute([
@@ -104,13 +104,13 @@ final class PaymentCommandExecutionSmokeTest extends TestCase
      *
      * @throws \PHPUnit\Framework\MockObject\Exception
      */
-    public function testReconcileRunCommandExecutesForAllReturnedProcessingIds(): void
+    public function testPaymentReconcileRunCommandExecutesForAllReturnedProcessingIds(): void
     {
-        $payment = $this->createConfiguredMock(Payment::class, []);
+        $payment = $this->createConfiguredMock(PaymentEntity::class, []);
         $first = (string) new Ulid();
         $second = (string) new Ulid();
 
-        $svc = $this->createMock(ReconciliationServiceInterface::class);
+        $svc = $this->createMock(PaymentReconciliationServiceInterface::class);
         $svc->expects(self::once())
             ->method('listProcessingIds')
             ->with(200)
@@ -118,13 +118,13 @@ final class PaymentCommandExecutionSmokeTest extends TestCase
         $reconciled = [];
         $svc->expects(self::exactly(2))
             ->method('reconcile')
-            ->willReturnCallback(static function (Ulid $id) use ($payment, &$reconciled): Payment {
+            ->willReturnCallback(static function (Ulid $id) use ($payment, &$reconciled): PaymentEntity {
                 $reconciled[] = (string) $id;
 
                 return $payment;
             });
 
-        $command = new ReconcileRunCommand($svc);
+        $command = new PaymentReconcileRunCommand($svc);
         $tester = new CommandTester($command);
 
         self::assertSame(Command::SUCCESS, $tester->execute([]));

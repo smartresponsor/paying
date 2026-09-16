@@ -1,10 +1,11 @@
 <?php
+
 # Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
 namespace App\Paying\Form;
 
-use App\Paying\Controller\Dto\PaymentCreateRequestDto;
+use App\Paying\Dto\Payment\PaymentCreateRequestDto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CurrencyType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -23,9 +24,18 @@ final class PaymentCreateType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('orderId', TextType::class, ['label' => 'Order ID'])
-            ->add('amountMinor', IntegerType::class, ['label' => 'Amount minor'])
-            ->add('currency', CurrencyType::class, ['label' => 'Currency']);
+            ->add('orderId', TextType::class, [
+                'label' => 'Order ID',
+                'help' => 'Target order identifier to attach the payment to.',
+            ])
+            ->add('amountMinor', IntegerType::class, [
+                'label' => 'Amount minor',
+                'help' => 'Minor-unit amount, e.g. 1250 for 12.50.',
+            ])
+            ->add('currency', CurrencyType::class, [
+                'label' => 'Currency',
+                'help' => 'ISO 4217 currency code.',
+            ]);
     }
 
     /**

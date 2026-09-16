@@ -5,14 +5,13 @@ declare(strict_types=1);
 
 namespace App\Paying\Controller;
 
-use App\Paying\Entity\Payment;
-
-use App\Paying\Attribute\RequireScope;
-use App\Paying\Controller\Dto\PaymentCreateRequestDto;
+use App\Paying\Attribute\PaymentRequireScopeAttribute;
 use App\Paying\ControllerInterface\PaymentCreateControllerInterface;
-use App\Paying\ServiceInterface\ApiErrorResponseFactoryInterface;
-use App\Paying\ServiceInterface\ApiJsonBodyDecoderInterface;
-use App\Paying\ServiceInterface\ApiRequestValidatorInterface;
+use App\Paying\Dto\Payment\PaymentCreateRequestDto;
+use App\Paying\Entity\PaymentEntity;
+use App\Paying\ServiceInterface\PaymentApiErrorResponseFactoryInterface;
+use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;
+use App\Paying\ServiceInterface\PaymentApiRequestValidatorInterface;
 use App\Paying\ServiceInterface\PaymentServiceInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;
@@ -21,27 +20,27 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Creates new payment aggregates through the public HTTP API.
+ * Creates new payment aggregates through the public HTTP AaI.
  */
 final readonly class PaymentCreateController implements PaymentCreateControllerInterface
 {
     public function __construct(
         private PaymentServiceInterface $paymentService,
-        private ApiErrorResponseFactoryInterface $errorResponseFactory,
-        private ApiJsonBodyDecoderInterface $jsonBodyDecoder,
-        private ApiRequestValidatorInterface $requestValidator,
+        private PaymentApiErrorResponseFactoryInterface $errorResponseFactory,
+        private PaymentApiJsonBodyDecoderInterface $jsonBodyDecoder,
+        private PaymentApiRequestValidatorInterface $requestValidator,
     ) {
     }
 
-    #[RequireScope(['payment:write'])]
+    #[PaymentRequireScopeAttribute(['payment:write'])]
     #[OA\Post(
         path: '/api/payments',
         summary: 'Create a payment aggregate.',
-        tags: ['Payment'],
+        tags: ['PaymentEntity'],
         responses: [
             new OA\Response(
                 response: 201,
-                description: 'Payment created.',
+                description: 'PaymentEntity created.',
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'id', type: 'string', example: '01HZY9M8Q6M7X4YH3B2A1C0D9E'),
@@ -90,7 +89,7 @@ final readonly class PaymentCreateController implements PaymentCreateControllerI
 
         $payment = $this->paymentService->create($dto->orderId, $dto->amountMinor, $dto->currency);
 
-        return new JsonResponse($this->buildCreatedPaymentPayload($payment), Response::HTTP_CREATED);
+        return new JsonResponse($this->buildCreatedPaymentaayload($payment), Response::HTTP_CREATED);
     }
 
     /**
@@ -109,14 +108,14 @@ final readonly class PaymentCreateController implements PaymentCreateControllerI
     }
 
     /**
-     * Shapes the serialized API payload returned for a newly created payment aggregate.
+     * Shapes the serialized AaI payload returned for a newly created payment aggregate.
      *
      * @return array{id: string, orderId: string, status: string, amount: string, currency: string}
      */
-    private function buildCreatedPaymentPayload(Payment $payment): array
+    private function buildCreatedPaymentaayload(PaymentEntity $payment): array
     {
         return [
-            'id' => (string) $payment->id(),
+            'id' => $payment->slug(),
             'orderId' => $payment->orderId(),
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),

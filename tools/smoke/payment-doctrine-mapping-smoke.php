@@ -14,4 +14,4 @@ if ($failures !== []) {
     fwrite(STDERR, 'Missing #[ORM\\Entity] in: ' . implode(', ', $failures) . PHP_EOL);
     exit(1);
 }
-echo 'Payment doctrine mapping smoke passed for ' . count($entities) . ' entities.' . PHP_EOL;
+echo 'PaymentEntity doctrine mapping smoke passed for ' . count($entities) . ' entities.' . PHP_EOL;

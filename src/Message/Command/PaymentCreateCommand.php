@@ -11,7 +11,7 @@ namespace App\Paying\Message\Command;
 final class PaymentCreateCommand
 {
     /**
-     * Canonical provider-oriented name for the create command.
+     * Canonical provider-oriented nameEntity for the create command.
      *
      * `gatewayCode` is intentionally preserved below as a backward-compatible alias
      * for older producers and named-argument call sites.

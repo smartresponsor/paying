@@ -54,11 +54,11 @@ function paymentRunProcess(array $command, ?string $workingDirectory = null, ?ar
     return is_int($status) ? $status : 1;
 }
 
-function paymentEnv(string $name): ?string
+function paymentEnv(string $nameEntity): ?string
 {
-    return $_ENV[$name]
-        ?? $_SERVER[$name]
-        ?? (false !== getenv($name) ? (string) getenv($name) : null);
+    return $_ENV[$nameEntity]
+        ?? $_SERVER[$nameEntity]
+        ?? (false !== getenv($nameEntity) ? (string) getenv($nameEntity) : null);
 }
 
 /**

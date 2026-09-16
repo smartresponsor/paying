@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\ServiceInterface\PaymentConsoleStartHandlerInterface;
 use App\Paying\ServiceInterface\PaymentStartServiceInterface;
 
@@ -21,7 +21,7 @@ final readonly class PaymentConsoleStartHandler implements PaymentConsoleStartHa
     /**
      * Executes the start operation for the current payment workflow.
      */
-    public function start(string $orderId, string $provider, string $amount, string $currency): Payment
+    public function start(string $orderId, string $provider, string $amount, string $currency): PaymentEntity
     {
         return $this->paymentStartService->start($orderId, $provider, $amount, $currency, '', 'payment-console')->payment;
     }

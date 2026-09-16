@@ -24,5 +24,5 @@ Payment should not depend on API Platform as its application skeleton. The targe
 
 - No runtime dependency on API Platform.
 - No service registration for API Platform processors.
-- OpenAPI available under `/api/docs` and `/api/docs.json`.
+- OpenAPI available under `/api/doc` and `/api/doc/json`.
 - Payment create/refund documentation generated from Symfony-owned endpoints and DTOs.

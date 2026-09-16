@@ -1,0 +1,14 @@
+{
+  "component": "Paying",
+  "wave": 27,
+  "name": "test canonical closure guard",
+  "type": "report-only",
+  "runtime_contracts_changed": false,
+  "files": [
+    "composer.json",
+    "docs/architecture/paying-canonicalization-milestone.md",
+    "docs/architecture/paying-wave27-patch-manifest.json",
+    "docs/architecture/paying-wave27-test-canonical-closure.md",
+    "tools/inspection/PayingTestCanonicalClosureReport.php"
+  ]
+}

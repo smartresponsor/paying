@@ -108,14 +108,14 @@ foreach ($phpFiles as $path) {
         }
 
         if (in_array($id, [T_CLASS, T_INTERFACE, T_TRAIT, T_ENUM], true)) {
-            $name = nextIdentifier($tokens, $i + 1);
-            if (null === $name) {
+            $nameEntity = nextIdentifier($tokens, $i + 1);
+            if (null === $nameEntity) {
                 $lastDocBlock = null;
                 continue;
             }
 
             ++$summary['class_like']['total'];
-            $fqcn = '' !== $namespace ? $namespace.'\\'.$name : $name;
+            $fqcn = '' !== $namespace ? $namespace.'\\'.$nameEntity : $nameEntity;
             if (hasSemanticDocBlock($lastDocBlock)) {
                 ++$summary['class_like']['documented'];
             } else {
@@ -123,7 +123,7 @@ foreach ($phpFiles as $path) {
                     'type' => 'class_like',
                     'path' => relativePath($root, $path),
                     'line' => $line,
-                    'name' => $fqcn,
+                    'nameEntity' => $fqcn,
                     'message' => 'Missing semantic DocBlock on class-like declaration.',
                 ];
             }
@@ -134,8 +134,8 @@ foreach ($phpFiles as $path) {
         }
 
         if (T_FUNCTION === $id && [] !== $classDepthStack) {
-            $name = nextIdentifier($tokens, $i + 1);
-            if (null === $name || '__construct' === $name || '__destruct' === $name) {
+            $nameEntity = nextIdentifier($tokens, $i + 1);
+            if (null === $nameEntity || '__construct' === $nameEntity || '__destruct' === $nameEntity) {
                 $lastDocBlock = null;
                 continue;
             }
@@ -153,7 +153,7 @@ foreach ($phpFiles as $path) {
                     'type' => 'public_method',
                     'path' => relativePath($root, $path),
                     'line' => $line,
-                    'name' => $name,
+                    'nameEntity' => $nameEntity,
                     'message' => 'Missing semantic DocBlock on public method.',
                 ];
             }
@@ -188,7 +188,7 @@ if ([] === $issues) {
 
 echo PHP_EOL.'First issues:'.PHP_EOL;
 foreach (array_slice($issues, 0, 50) as $issue) {
-    echo sprintf('- %s:%d %s [%s]%s', $issue['path'], $issue['line'], $issue['message'], $issue['name'], PHP_EOL);
+    echo sprintf('- %s:%d %s [%s]%s', $issue['path'], $issue['line'], $issue['message'], $issue['nameEntity'], PHP_EOL);
 }
 
 exit(1);

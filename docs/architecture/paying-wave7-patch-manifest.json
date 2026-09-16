@@ -1,0 +1,13 @@
+{
+  "component": "Paying",
+  "wave": 7,
+  "title": "business-service-name-form-canonicalization",
+  "scope": "Touched-files only. Canonicalizes remaining root business services and mirrored service interfaces.",
+  "runtime_contracts_preserved": [
+    "Symfony command names",
+    "HTTP routes",
+    "Doctrine table names",
+    "provider/gateway classes"
+  ],
+  "report": "composer report:business-service-name-form"
+}

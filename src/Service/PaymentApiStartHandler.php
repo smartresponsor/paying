@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\ServiceInterface\IdempotencyServiceInterface;
 use App\Paying\ServiceInterface\PaymentApiStartHandlerInterface;
+use App\Paying\ServiceInterface\PaymentIdempotencyServiceInterface;
 use App\Paying\ServiceInterface\PaymentStartInput;
 use App\Paying\ServiceInterface\PaymentStartServiceInterface;
 
@@ -17,7 +17,7 @@ final readonly class PaymentApiStartHandler implements PaymentApiStartHandlerInt
 {
     public function __construct(
         private PaymentStartServiceInterface $paymentStartService,
-        private IdempotencyServiceInterface $idem,
+        private PaymentIdempotencyServiceInterface $idem,
     ) {
     }
 
@@ -33,7 +33,7 @@ final readonly class PaymentApiStartHandler implements PaymentApiStartHandlerInt
             $started = $this->paymentStartService->start($input->orderId, $input->provider, $input->amount, $input->currency, $idempotencyKey);
 
             return [
-                'payment' => (string) $started->payment->id(),
+                'payment' => $started->payment->slug(),
                 'orderId' => $started->payment->orderId(),
                 'provider' => $input->provider,
                 'status' => $started->payment->status()->value,

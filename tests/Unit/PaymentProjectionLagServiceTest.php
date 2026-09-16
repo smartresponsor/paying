@@ -1,0 +1,51 @@
+<?php
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+declare(strict_types=1);
+
+namespace App\Paying\Tests\Unit;
+
+use App\Paying\InfrastructureInterface\PaymentProjectionRepositoryInterface;
+use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\Service\PaymentProjectionLagService;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * Exercises the projection lag service scenario within the payment unit test surface.
+ */
+final class PaymentProjectionLagServiceTest extends TestCase
+{
+    /**
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    /**
+     * Verifies that snapshot builds lag from data and infra timestamps.
+     *
+     * @throws \Doctrine\DBAL\Exception
+     * @throws \PHPUnit\Framework\MockObject\Exception
+     */
+    public function testSnapshotBuildsLagFromDataAndInfraTimestamps(): void
+    {
+        $connection = $this->createMock(PaymentRepositoryInterface::class);
+        $projection = $this->createMock(PaymentProjectionRepositoryInterface::class);
+
+        $connection->expects(self::once())
+            ->method('maxUpdatedAt')
+            ->willReturn('2025-11-08 10:00:05');
+
+        $projection->expects(self::once())
+            ->method('maxUpdatedAt')
+            ->willReturn('2025-11-08 10:00:00');
+
+        $service = new PaymentProjectionLagService($connection, $projection);
+        $snapshot = $service->snapshot();
+
+        self::assertSame('2025-11-08 10:00:05', $snapshot['updatedAtData']);
+        self::assertSame('2025-11-08 10:00:00', $snapshot['updatedAtInfra']);
+        self::assertSame(5000, $snapshot['projectionLagMs']);
+    }
+}

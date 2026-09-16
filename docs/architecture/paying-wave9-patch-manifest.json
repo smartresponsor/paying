@@ -1,0 +1,12 @@
+{
+  "component": "Paying",
+  "wave": 9,
+  "name": "legacy-duplicate-retirement",
+  "scope": "Retire residual unprefixed duplicate files superseded by Payment-prefixed canonical classes from Waves 2-8.",
+  "destructive_repository_operation": false,
+  "full_repository_overwrite": false,
+  "delete_policy": "Only listed legacy duplicate files may be retired, with backup and SHA-256 guard in PowerShell.",
+  "adds_reports": [
+    "composer report:legacy-duplicate-retirement"
+  ]
+}

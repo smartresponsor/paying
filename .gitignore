@@ -72,6 +72,7 @@ Thumbs.db
 # ──────────────────────────────────────────────
 #  🧰 Temporary & Backup files
 # ──────────────────────────────────────────────
+/.patch-backup/
 *.tmp
 *.bak
 *.old
@@ -128,6 +129,7 @@ Thumbs.db
 !/.php-cs-fixer.cache
 !/var/metrics/
 /.codex-tmp/
+/.gating/
 /var/phpunit/
 /var/report/local/
 /var/report/inspection/
@@ -135,3 +137,5 @@ Thumbs.db
 
 /tools/runtime/doctum.phar
 /docs/generated/doctum/
+/config/reference.php
+/bin/cmcp-generate-current-baseline.ps1

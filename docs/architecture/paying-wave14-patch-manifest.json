@@ -1,0 +1,40 @@
+{
+  "wave": "14",
+  "name": "provider-service-name-form",
+  "touched_files": [
+    "composer.json",
+    "config/services.yaml",
+    "docs/architecture/paying-canonicalization-milestone.md",
+    "docs/architecture/paying-wave14-provider-service-name-form.md",
+    "src/Service/PaymentInternalProvider.php",
+    "src/Service/PaymentPayPalProvider.php",
+    "src/Service/PaymentStripeProvider.php",
+    "tools/inspection/PayingProviderServiceNameFormReport.php"
+  ],
+  "retired_files": [
+    {
+      "path": "src/Service/InternalPaymentProvider.php",
+      "sha256": "68f3007eec488143189e1e1f447068a3400cdc771751bbb4329277044e26a6e0",
+      "replacement": "src/Service/PaymentInternalProvider.php"
+    },
+    {
+      "path": "src/Service/StripePaymentProvider.php",
+      "sha256": "82557d0b5ff271b66afbfec41fa626b125ff698714376e4ae4a6c3dc2b8fc3d5",
+      "replacement": "src/Service/PaymentStripeProvider.php"
+    },
+    {
+      "path": "src/Service/PayPalPaymentProvider.php",
+      "sha256": "c9158ff4f2b1420ffd79d8cf20329bf13b4c23e4d2bcf9765b422c685cb39086",
+      "replacement": "src/Service/PaymentPayPalProvider.php"
+    }
+  ],
+  "runtime_contracts_preserved": [
+    "provider keys internal/stripe/paypal",
+    "public routes",
+    "Symfony command names",
+    "Doctrine entity/table mapping"
+  ],
+  "reports": [
+    "composer report:provider-service-name-form"
+  ]
+}

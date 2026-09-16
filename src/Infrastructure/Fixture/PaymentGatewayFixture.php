@@ -5,11 +5,11 @@ declare(strict_types=1);
 
 namespace App\Paying\Infrastructure\Fixture;
 
-use App\Paying\Entity\PaymentGateway;
+use App\Paying\Entity\PaymentGatewayEntity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * Seeds payment gateway reference data for local development and tests.
@@ -22,7 +22,7 @@ final class PaymentGatewayFixture extends Fixture implements FixtureGroupInterfa
     public function load(ObjectManager $manager): void
     {
         foreach (['internal', 'stripe', 'paypal'] as $code) {
-            $gateway = new PaymentGateway(new Ulid()->toRfc4122(), $code);
+            $gateway = new PaymentGatewayEntity(Uuid::v4()->toRfc4122(), $code);
             $manager->persist($gateway);
             $this->addReference('payment-gateway-'.$code, $gateway);
         }

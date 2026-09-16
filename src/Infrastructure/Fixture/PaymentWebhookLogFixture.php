@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Infrastructure\Fixture;
 
-use App\Paying\Entity\PaymentWebhookLog;
+use App\Paying\Entity\PaymentWebhookLogEntity;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -26,7 +26,7 @@ final class PaymentWebhookLogFixture extends Fixture implements FixtureGroupInte
         ];
 
         foreach ($definitions as [$provider, $externalEventId, $state]) {
-            $log = new PaymentWebhookLog($provider, $externalEventId, [
+            $log = new PaymentWebhookLogEntity($provider, $externalEventId, [
                 'paymentId' => 'fixture-'.$provider,
                 'externalEventId' => $externalEventId,
                 'provider' => $provider,

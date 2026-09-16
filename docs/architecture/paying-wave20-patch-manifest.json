@@ -1,0 +1,20 @@
+{
+  "component": "Paying",
+  "wave": 20,
+  "name": "canonical-structure-closure",
+  "scope": "report-only closure guard",
+  "runtime_contracts_changed": false,
+  "routes_changed": false,
+  "provider_keys_changed": false,
+  "doctrine_tables_changed": false,
+  "files_retired_by_script": false,
+  "added": [
+    "tools/inspection/PayingCanonicalStructureClosureReport.php",
+    "docs/architecture/paying-wave20-canonical-structure-closure.md",
+    "docs/architecture/paying-wave20-patch-manifest.json"
+  ],
+  "updated": [
+    "composer.json",
+    "docs/architecture/paying-canonicalization-milestone.md"
+  ]
+}

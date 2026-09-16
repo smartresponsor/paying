@@ -1,0 +1,102 @@
+<?php
+
+// Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+declare(strict_types=1);
+
+namespace App\Paying\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Stores a refund record linked to a payment and its refunded amount.
+ */
+#[ORM\Entity]
+#[ORM\Table(name: 'payment_refund')]
+class PaymentRefundEntity
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
+
+    #[ORM\Column(type: 'guid', unique: true)]
+    private string $slug;
+
+    #[ORM\Column(type: 'guid')]
+    private string $paymentId;
+
+    #[ORM\Column(type: 'integer')]
+    private int $amountMinor;
+
+    #[ORM\Column(type: 'string', length: 3)]
+    private string $currency;
+
+    #[ORM\Column(type: 'string', length: 64, nullable: true)]
+    private ?string $reason;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeImmutable $refundedAt;
+
+    public function __construct(string $id, string $paymentId, int $amountMinor, string $currency, ?string $reason = null)
+    {
+        $this->slug = $id;
+        $this->paymentId = $paymentId;
+        $this->amountMinor = $amountMinor;
+        $this->currency = $currency;
+        $this->reason = $reason;
+        $this->refundedAt = new \DateTimeImmutable('now');
+    }
+
+    /**
+     * Returns the stable refund identifier.
+     */
+    public function id(): ?int
+    {
+        return $this->id;
+    }
+
+    public function slug(): string
+    {
+        return $this->slug;
+    }
+
+    /**
+     * Returns the identifier of the payment that this refund belongs to.
+     */
+    public function paymentId(): string
+    {
+        return $this->paymentId;
+    }
+
+    /**
+     * Returns the refunded amount in minor units for precise arithmetic.
+     */
+    public function amountMinor(): int
+    {
+        return $this->amountMinor;
+    }
+
+    /**
+     * Returns the ISO currency code for the refund amount.
+     */
+    public function currency(): string
+    {
+        return $this->currency;
+    }
+
+    /**
+     * Returns the business reason captured for the refund, when provided.
+     */
+    public function reason(): ?string
+    {
+        return $this->reason;
+    }
+
+    /**
+     * Returns when the refund record was created.
+     */
+    public function refundedAt(): \DateTimeImmutable
+    {
+        return $this->refundedAt;
+    }
+}

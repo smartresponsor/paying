@@ -5,10 +5,10 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\Service\PaymentApiStartHandler;
 use App\Paying\Service\PaymentStartResult;
-use App\Paying\ServiceInterface\IdempotencyServiceInterface;
+use App\Paying\ServiceInterface\PaymentIdempotencyServiceInterface;
 use App\Paying\ServiceInterface\PaymentStartInput;
 use App\Paying\ServiceInterface\PaymentStartServiceInterface;
 use App\Paying\ValueObject\PaymentStatus;
@@ -33,7 +33,7 @@ final class PaymentApiStartHandlerTest extends TestCase
     {
         $input = new PaymentStartInput('order-2001', 'internal', '12.50', 'USD');
 
-        $payment = new Payment(new Ulid(), PaymentStatus::processing, '12.50', 'USD');
+        $payment = new PaymentEntity(new Ulid(), PaymentStatus::processing, '12.50', 'USD');
 
         $startService = $this->createMock(PaymentStartServiceInterface::class);
         $startService
@@ -42,7 +42,7 @@ final class PaymentApiStartHandlerTest extends TestCase
             ->with('order-2001', 'internal', '12.50', 'USD', 'idem-1', 'api')
             ->willReturn(new PaymentStartResult($payment, 'ref-1', ['ok' => true]));
 
-        $idem = $this->createMock(IdempotencyServiceInterface::class);
+        $idem = $this->createMock(PaymentIdempotencyServiceInterface::class);
         $idem
             ->expects(self::once())
             ->method('execute')
@@ -52,7 +52,7 @@ final class PaymentApiStartHandlerTest extends TestCase
         $handler = new PaymentApiStartHandler($startService, $idem);
         $result = $handler->handle($input, 'idem-1', 'hash-1');
 
-        self::assertSame((string) $payment->id(), $result['payment']);
+        self::assertSame($payment->slug(), $result['payment']);
         self::assertSame('internal', $result['provider']);
         self::assertSame('processing', $result['status']);
         self::assertSame('ref-1', $result['providerRef']);

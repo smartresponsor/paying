@@ -5,10 +5,10 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\Payment;
+use App\Paying\Entity\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\ServiceInterface\PaymentConsoleFinalizeHandlerInterface;
-use App\Paying\ServiceInterface\ProviderGuardInterface;
+use App\Paying\ServiceInterface\PaymentProviderGuardInterface;
 use App\Paying\ValueObject\PaymentFinalizePayload;
 use Symfony\Component\Uid\Ulid;
 
@@ -19,7 +19,7 @@ final readonly class PaymentConsoleFinalizeHandler implements PaymentConsoleFina
 {
     public function __construct(
         private PaymentRepositoryInterface $repo,
-        private ProviderGuardInterface $guard,
+        private PaymentProviderGuardInterface $guard,
     ) {
     }
 
@@ -32,7 +32,7 @@ final readonly class PaymentConsoleFinalizeHandler implements PaymentConsoleFina
         ?string $providerRef,
         ?string $providerTransactionId,
         ?string $status,
-    ): ?Payment {
+    ): ?PaymentEntity {
         $payment = $this->repo->find($paymentId);
         if (null === $payment) {
             return null;
