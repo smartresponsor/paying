@@ -165,3 +165,15 @@
 
 Что имеем? The Canon019 migration is implemented and verified across runtime, Doctrine, static analysis, tests, Composer integrity/security and the repository's canonical RC reports.
 Что осталось? Integrate only task-owned files into coherent signed commits, attempt guarded publication, then inspect final HEAD/upstream/worktree. Concurrent Composer/audit drift and untracked temporary placeholders remain outside the task-owned integration set.
+
+### Integration and publication status
+
+- Signed task-owned commit created: `015e208c062a34a65016cf2e215de01cc40befa7` (`refactor: align paying with role-first topology`), containing the Canon019 migration, callers/config/tests, guard repairs, documentation synchronization, and this execution journal.
+- A separate concurrent local commit appeared during the run: `29ada50` (`Retain Gating artifact surface`). It is not part of this task's implementation and is not attributed to this run.
+- Post-commit branch state: `checkpoint/paying-release-audit-20260818`, upstream `origin/checkpoint/paying-release-audit-20260818`, ahead 2 / behind 0.
+- Guarded push was attempted and refused with `GIT_PUSH_GUARD_BLOCKED` because the working tree is dirty.
+- The remaining dirty state is isolated from the committed Canon019 work: modified `composer.json`, `composer.lock`, `composer.prod.json`; untracked `PRODUCT_CAPABILITY_AUDIT.adoc`; and the two temporary untracked Entity subtree `.gitkeep` files. The Composer/audit changes appeared after the clean baseline and are not safe to discard or commit as part of this task. Console MCP policy forbids deleting the temporary source-tree placeholders.
+- Implementation-run capture confirms the only commits since baseline `d435aef` are the concurrent `29ada50` and task-owned `015e208`; the task implementation itself is fully committed.
+
+Что имеем? Paying's Canon019 role-first topology work is locally complete, committed and green across all relevant deterministic gates. The implementation is not mixed with the concurrent Composer/Gating worktree drift.
+Что осталось? Remote publication is blocked solely by the dirty-worktree guard around independent/concurrent files that this task must not destroy or absorb. Once that separate worktree is resolved, push the current branch and verify upstream synchronization.
