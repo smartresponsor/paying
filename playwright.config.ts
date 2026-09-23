@@ -2,7 +2,7 @@
 import {defineConfig, devices} from '@playwright/test';
 
 export default defineConfig({
-    testDir: './specs',
+    testDir: './tests/Playwright/specs',
     timeout: 30_000,
     expect: {
         timeout: 5_000,
@@ -23,7 +23,7 @@ export default defineConfig({
         },
     ],
     webServer: {
-        command: 'php -S 127.0.0.1:18006 -t ../../public ../../tools/runtime/payment_playwright_router.php',
+        command: 'php -S 127.0.0.1:18006 -t public tools/runtime/payment_playwright_router.php',
         url: 'http://127.0.0.1:18006/payment/console',
         reuseExistingServer: true,
         timeout: 120_000,

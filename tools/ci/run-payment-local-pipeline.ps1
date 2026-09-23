@@ -18,7 +18,8 @@ $logRoot = Join-Path $reportRoot 'logs'
 New-Item -ItemType Directory -Force -Path $logRoot | Out-Null
 if (Test-Path $latestRoot)
 {
-    Remove-Item -Recurse -Force $latestRoot
+    $previousRoot = Join-Path $reportBase ('previous-' + $timestamp)
+    Move-Item -LiteralPath $latestRoot -Destination $previousRoot
 }
 New-Item -ItemType Directory -Force -Path $latestRoot | Out-Null
 

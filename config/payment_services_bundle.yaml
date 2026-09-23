@@ -12,20 +12,20 @@ services:
     App\Paying\Service\PaymentRetryExecutor: ~
     App\Paying\Service\PaymentMetric: ~
     App\Paying\Service\PaymentProcessLocalCircuitBreaker: ~
-    App\Paying\Service\PaymentInternalProvider: ~
-    App\Paying\Service\PaymentStripeProvider:
+    App\Paying\Provider\PaymentInternalProvider: ~
+    App\Paying\Provider\PaymentStripeProvider:
         arguments:
             $secretKey: '%env(default::STRIPE_SECRET_KEY)%'
             $webhookSecret: '%env(default::STRIPE_WEBHOOK_SECRET)%'
     App\Paying\Service\Gateway\PaymentPayPalGateway: ~
-    App\Paying\Service\PaymentPayPalProvider: ~
+    App\Paying\Provider\PaymentPayPalProvider: ~
 
     App\Paying\Service\PaymentProviderRouter:
         arguments:
             $providers:
-                internal: '@App\Paying\Service\PaymentInternalProvider'
-                stripe: '@App\Paying\Service\PaymentStripeProvider'
-                paypal: '@App\Paying\Service\PaymentPayPalProvider'
+                internal: '@App\Paying\Provider\PaymentInternalProvider'
+                stripe: '@App\Paying\Provider\PaymentStripeProvider'
+                paypal: '@App\Paying\Provider\PaymentPayPalProvider'
     App\Paying\Service\PaymentProviderVocabularyService:
         arguments:
             $catalogVocabulary: '@?App\Cataloging\ServiceInterface\CatalogCategoryVocabularyServiceInterface'

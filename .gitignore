@@ -131,6 +131,7 @@ Thumbs.db
 /.codex-tmp/
 /.gating/
 /var/phpunit/
+/var/coverage/
 /var/report/local/
 /var/report/inspection/
 /var/payment-create-endpoint-error.txt

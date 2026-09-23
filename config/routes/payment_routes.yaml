@@ -5,7 +5,7 @@ payment_api_create:
 
 payment_api_start:
   path: /api/payments/start
-  controller: App\Paying\Service\PaymentApiSurfaceBuilder::start
+  controller: App\Paying\Builder\PaymentApiSurfaceBuilder::start
   methods: [ POST ]
 
 payment_api_read:
@@ -14,18 +14,18 @@ payment_api_read:
   methods: [ GET ]
 
 payment_api_refund:
-  path: /api/payments/{id}/refund
+  path: /api/payments/refund/{id}
   controller: App\Paying\Controller\PaymentRefundController::refund
   methods: [ POST ]
 
 payment_status_short:
   path: /status
-  controller: App\Paying\Service\PaymentOpsSurfaceBuilder::status
+  controller: App\Paying\Builder\PaymentOpsSurfaceBuilder::status
   methods: [ GET ]
 
 payment_metrics_short:
   path: /metrics
-  controller: App\Paying\Service\PaymentOpsSurfaceBuilder::metrics
+  controller: App\Paying\Builder\PaymentOpsSurfaceBuilder::metrics
   methods: [ GET ]
 
 payment_webhook_stripe:
@@ -45,74 +45,74 @@ payment_webhook_generic:
 
 payment_console:
   path: /payment/console
-  controller: App\Paying\Service\PaymentConsoleSurfaceBuilder::console
+  controller: App\Paying\Builder\PaymentConsoleSurfaceBuilder::console
   methods: [ GET ]
 
 payment_console_slash:
   path: /payment/console/
-  controller: App\Paying\Service\PaymentConsoleSurfaceBuilder::legacyConsole
+  controller: App\Paying\Builder\PaymentConsoleSurfaceBuilder::legacyConsole
   methods: [ GET ]
 
 refund_index:
   path: /refund/
-  controller: App\Paying\Service\PaymentConsoleSurfaceBuilder::refundLanding
+  controller: App\Paying\Builder\PaymentConsoleSurfaceBuilder::refundLanding
   methods: [ GET ]
 
 refund_index_no_slash:
   path: /refund
-  controller: App\Paying\Service\PaymentConsoleSurfaceBuilder::refundLanding
+  controller: App\Paying\Builder\PaymentConsoleSurfaceBuilder::refundLanding
   methods: [ GET ]
 
 payment_console_create:
   path: /payment/console/create
-  controller: App\Paying\Service\PaymentConsoleSurfaceBuilder::create
+  controller: App\Paying\Builder\PaymentConsoleSurfaceBuilder::create
   methods: [ POST ]
 
 payment_console_start:
   path: /payment/console/start
-  controller: App\Paying\Service\PaymentConsoleSurfaceBuilder::start
+  controller: App\Paying\Builder\PaymentConsoleSurfaceBuilder::start
   methods: [ POST ]
 
 payment_console_finalize:
   path: /payment/console/finalize
-  controller: App\Paying\Service\PaymentConsoleSurfaceBuilder::finalize
+  controller: App\Paying\Builder\PaymentConsoleSurfaceBuilder::finalize
   methods: [ POST ]
 
 payment_console_refund:
   path: /payment/console/refund
-  controller: App\Paying\Service\PaymentConsoleSurfaceBuilder::refund
+  controller: App\Paying\Builder\PaymentConsoleSurfaceBuilder::refund
   methods: [ POST ]
 
 payment_refund:
   path: /api/payment/refund/{id}
-  controller: App\Paying\Service\PaymentApiSurfaceBuilder::refund
+  controller: App\Paying\Builder\PaymentApiSurfaceBuilder::refund
   methods: [ POST ]
 
 payment_start:
   path: /payment/start
-  controller: App\Paying\Service\PaymentApiSurfaceBuilder::start
+  controller: App\Paying\Builder\PaymentApiSurfaceBuilder::start
   methods: [ POST ]
 
 payment_finalize:
   path: /payment/finalize/{id}
-  controller: App\Paying\Service\PaymentApiSurfaceBuilder::finalize
+  controller: App\Paying\Builder\PaymentApiSurfaceBuilder::finalize
   methods: [ POST ]
 payment_metrics:
   path: /api/payment/metric
-  controller: App\Paying\Service\PaymentOpsSurfaceBuilder::metrics
+  controller: App\Paying\Builder\PaymentOpsSurfaceBuilder::metrics
   methods: [ GET ]
 
 payment_dlq_list:
   path: /payment/dlq
-  controller: App\Paying\Service\PaymentOpsSurfaceBuilder::dlqList
+  controller: App\Paying\Builder\PaymentOpsSurfaceBuilder::dlqList
   methods: [ GET ]
 
 payment_dlq_replay:
   path: /payment/dlq/replay/{id}
-  controller: App\Paying\Service\PaymentOpsSurfaceBuilder::dlqReplay
+  controller: App\Paying\Builder\PaymentOpsSurfaceBuilder::dlqReplay
   methods: [ POST ]
 
 payment_status:
   path: /payment/status
-  controller: App\Paying\Service\PaymentOpsSurfaceBuilder::status
+  controller: App\Paying\Builder\PaymentOpsSurfaceBuilder::status
   methods: [ GET ]

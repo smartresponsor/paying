@@ -1,7 +1,5 @@
-# Gating artifacts
+# Paying Gating artifacts
 
-This directory is a repository-local output surface for Gating artifacts only.
+This directory is an artifact-only surface for reports, evidence, caches, checksums, and generated Gating output.
 
-Generated reports, evidence, cache data, checksums, and verification artifacts may live here.
-Executable rules and policy come from the `gating/gate` Composer package.
-Repository-specific Gating configuration belongs under Symfony `config/`.
+Normative Gating policy and executable rules are provided by the `gating/gate` development dependency and the canonical sibling Gating repository. Do not copy the Gating engine, executable policy, or configuration into this directory.

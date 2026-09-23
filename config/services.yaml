@@ -16,7 +16,7 @@ services:
         autoconfigure: true
 
     _instanceof:
-        App\Paying\ServiceInterface\EventMapperInterface:
+        App\Paying\ServiceInterface\PaymentEventMapperInterface:
             tags: [ 'payment.event_mapper' ]
 
     App\Paying\:
@@ -25,21 +25,21 @@ services:
             - '../src/Attribute/'
             - '../src/DependencyInjection/'
             - '../src/Entity/'
-            - '../src/Service/Placement/ListingPricingProfileNormalizer.php'
+            - '../src/Normalizer/PaymentListingPricingProfileNormalizer.php'
             - '../src/Kernel.php'
             - '../src/**/Resources/'
             - '../src/**/Tests/'
 
-    App\Paying\ServiceInterface\IdempotencyStoreInterface:
-        factory: [ '@App\Paying\Service\PaymentIdempotencyStoreFactory', 'create' ]
+    App\Paying\ServiceInterface\PaymentIdempotencyStoreInterface:
+        factory: [ '@App\Paying\Factory\PaymentIdempotencyStoreFactory', 'create' ]
 
-    App\Paying\Service\PaymentConsoleSurfaceBuilder:
+    App\Paying\Builder\PaymentConsoleSurfaceBuilder:
         public: true
 
-    App\Paying\Service\PaymentApiSurfaceBuilder:
+    App\Paying\Builder\PaymentApiSurfaceBuilder:
         public: true
 
-    App\Paying\Service\PaymentOpsSurfaceBuilder:
+    App\Paying\Builder\PaymentOpsSurfaceBuilder:
         public: true
 
     App\Paying\Controller\PaymentCreateController:
@@ -83,9 +83,9 @@ services:
     App\Paying\Service\PaymentProviderRouter:
         arguments:
             $providers:
-                internal: '@App\Paying\Service\PaymentInternalProvider'
-                stripe: '@App\Paying\Service\PaymentStripeProvider'
-                paypal: '@App\Paying\Service\PaymentPayPalProvider'
+                internal: '@App\Paying\Provider\PaymentInternalProvider'
+                stripe: '@App\Paying\Provider\PaymentStripeProvider'
+                paypal: '@App\Paying\Provider\PaymentPayPalProvider'
 
     App\Paying\Service\PaymentProviderVocabularyService:
         arguments:
@@ -95,7 +95,7 @@ services:
         arguments:
             $catalogVocabulary: '@?App\Cataloging\ServiceInterface\CatalogCategoryTypeVocabularyServiceInterface'
 
-    App\Paying\Service\PaymentStripeProvider:
+    App\Paying\Provider\PaymentStripeProvider:
         arguments:
             $secretKey: '%env(default::STRIPE_SECRET_KEY)%'
             $webhookSecret: '%env(default::STRIPE_WEBHOOK_SECRET)%'
@@ -127,39 +127,27 @@ services:
         arguments:
             $payments: '@App\Paying\Repository\PaymentRepository'
 
-    App\Paying\Service\PaymentCircuitBreaker:
+    App\Paying\Repository\PaymentOperationalRepository:
         arguments:
             $infrastructure: '@doctrine.orm.infrastructure_entity_manager'
 
-    App\Paying\Service\PaymentIdempotencyStoreFactory:
+    App\Paying\Repository\PaymentOutboxRepository:
         arguments:
-            $data: '@doctrine.orm.infrastructure_entity_manager'
+            $em: '@doctrine.orm.entity_manager'
 
-    App\Paying\Service\PaymentDbalIdempotencyStore:
+    App\Paying\Repository\PaymentWebhookRepository:
         arguments:
-            $data: '@doctrine.orm.infrastructure_entity_manager'
+            $em: '@doctrine.orm.entity_manager'
 
-    App\Paying\Service\PaymentAuditLogger:
+    App\Paying\Repository\PaymentReconciliationRepository:
         arguments:
-            $data: '@doctrine.orm.infrastructure_entity_manager'
+            $em: '@doctrine.orm.entity_manager'
 
-    App\Paying\Service\PaymentOutboxPublisher:
-        arguments:
-            $data: '@doctrine.orm.entity_manager'
-
-    App\Paying\Service\PaymentOutboxWorker:
-        arguments:
-            $data: '@doctrine.orm.entity_manager'
-
-    App\Paying\Service\PaymentDlqService:
-        arguments:
-            $data: '@doctrine.orm.entity_manager'
-
-    App\Paying\Subscriber\PaymentRateLimitSubscriber:
+    App\Paying\EventSubscriber\PaymentRateLimitSubscriber:
         arguments:
             $paymentApiLimiter: '@limiter.payment_api'
 
-    App\Paying\Subscriber\PaymentScopeGuardSubscriber:
+    App\Paying\EventSubscriber\PaymentScopeGuardSubscriber:
         arguments:
             $oidcDisabled: '%env(bool:OIDC_DISABLED)%'
 
@@ -186,7 +174,6 @@ services:
 
     App\Paying\Service\Outbox\PaymentOutboxProcessor:
         arguments:
-            $em: '@doctrine.orm.entity_manager'
             $transport: '@messenger.transport.payment_outbox'
             $logger: '@logger'
 
@@ -198,7 +185,7 @@ services:
 
 
 
-    App\Paying\Subscriber\PaymentResponseHeaderSubscriber:
+    App\Paying\EventSubscriber\PaymentResponseHeaderSubscriber:
         arguments:
             $contentSecurityPolicy: '%payment.http_content_security_policy%'
 
@@ -208,7 +195,7 @@ services:
             $ttl: '%payment.oidc_jwks_cache_ttl%'
             $jwksUrl: '%env(default::OIDC_JWKS_URL)%'
 
-    App\Paying\Service\PaymentTokenVerifier:
+    App\Paying\Verifier\PaymentTokenVerifier:
         arguments:
             $issuer: '%env(default::OIDC_ISSUER)%'
             $audience: '%env(default::OIDC_AUDIENCE)%'
