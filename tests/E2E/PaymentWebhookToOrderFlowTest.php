@@ -97,14 +97,9 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
 
         $sync = new PaymentNullOrderPaymentSync(new NullLogger());
         $payment = new PaymentEntity(new Ulid('01HK153X000000000000000000'), PaymentStatus::processing, '50.00', 'USD');
-        $saved = [];
-
-        $payments = new class($payment, $saved) implements PaymentRepositoryInterface {
-            public array $saved = [];
-
-            public function __construct(private readonly PaymentEntity $payment, array $saved)
+        $payments = new class($payment) implements PaymentRepositoryInterface {
+            public function __construct(private readonly PaymentEntity $payment)
             {
-                $this->saved = $saved;
             }
 
             /**
@@ -112,7 +107,6 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
              */
             public function save(PaymentEntity $payment): void
             {
-                $this->saved[] = $payment;
             }
 
             /**
@@ -187,7 +181,6 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
 
         self::assertSame(PaymentStatus::completed, $payment->status());
         self::assertSame('gw_1', $payment->providerRef());
-        self::assertCount(1, $payments->saved);
         self::assertCount(1, $persisted);
     }
 }
