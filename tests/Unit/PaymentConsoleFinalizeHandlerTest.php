@@ -6,8 +6,8 @@ declare(strict_types=1);
 namespace App\Paying\Tests\Unit;
 
 use App\Paying\Entity\Business\PaymentEntity;
+use App\Paying\Handler\PaymentConsoleFinalizeHandler;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
-use App\Paying\Service\PaymentConsoleFinalizeHandler;
 use App\Paying\ServiceInterface\PaymentProviderGuardInterface;
 use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;

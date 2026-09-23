@@ -8,8 +8,8 @@ namespace App\Paying\Tests\Functional\Cli;
 use App\Paying\Command\PaymentDlqReplayCommand;
 use App\Paying\Command\PaymentIdemPurgeCommand;
 use App\Paying\Command\PaymentSlaReportCommand;
-use App\Paying\ServiceInterface\IdempotencyStoreInterface;
 use App\Paying\ServiceInterface\PaymentDlqServiceInterface;
+use App\Paying\ServiceInterface\PaymentIdempotencyStoreInterface;
 use App\Paying\ServiceInterface\PaymentSlaReporterServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -56,7 +56,7 @@ final class PaymentOperationalCommandExecutionSmokeTest extends TestCase
      */
     public function testPaymentIdemPurgeCommandPrintsPurgedCount(): void
     {
-        $store = $this->createMock(IdempotencyStoreInterface::class);
+        $store = $this->createMock(PaymentIdempotencyStoreInterface::class);
         $store->expects(self::once())
             ->method('purgeExpired')
             ->willReturn(4);

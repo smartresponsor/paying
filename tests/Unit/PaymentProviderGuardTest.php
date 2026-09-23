@@ -6,11 +6,11 @@ declare(strict_types=1);
 namespace App\Paying\Tests\Unit;
 
 use App\Paying\Entity\Business\PaymentEntity;
+use App\Paying\ProviderInterface\PaymentProviderInterface;
 use App\Paying\Service\PaymentProviderGuard;
 use App\Paying\Service\PaymentProviderRouter;
 use App\Paying\ServiceInterface\PaymentCircuitBreakerInterface;
 use App\Paying\ServiceInterface\PaymentMetricInterface;
-use App\Paying\ServiceInterface\PaymentProviderInterface;
 use App\Paying\ServiceInterface\PaymentRetryExecutorInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

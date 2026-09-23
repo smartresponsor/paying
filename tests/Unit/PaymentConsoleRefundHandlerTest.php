@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace App\Paying\Tests\Unit;
 
 use App\Paying\Entity\Business\PaymentEntity;
-use App\Paying\Service\PaymentConsoleRefundHandler;
+use App\Paying\Handler\PaymentConsoleRefundHandler;
 use App\Paying\Service\PaymentNotFoundException;
 use App\Paying\ServiceInterface\PaymentRefundServiceInterface;
 use App\Paying\ValueObject\PaymentStatus;

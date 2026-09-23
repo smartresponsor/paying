@@ -6,9 +6,9 @@ declare(strict_types=1);
 namespace App\Paying\Tests\Unit\Reconciliation;
 
 use App\Paying\Entity\Business\PaymentEntity;
+use App\Paying\RepositoryInterface\PaymentReconciliationRepositoryInterface;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\Service\Reconciliation\PaymentReconciliationService;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -81,8 +81,8 @@ final class PaymentReconciliationServiceTest extends TestCase
                 throw new \LogicException('Test repository stub method is not configured: countByStatusSince');
             }
         };
-        $em = $this->createMock(EntityManagerInterface::class);
-        $svc = new PaymentReconciliationService($repo, $em);
+        $reconciliation = $this->createMock(PaymentReconciliationRepositoryInterface::class);
+        $svc = new PaymentReconciliationService($repo, $reconciliation);
         $svc->onFailed('missing', 'declined', 'Card declined');
 
         self::addToAssertionCount(1);

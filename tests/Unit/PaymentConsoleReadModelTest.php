@@ -8,10 +8,9 @@ namespace App\Paying\Tests\Unit;
 use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\Entity\Business\PaymentWebhookLogEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\RepositoryInterface\PaymentWebhookRepositoryInterface;
 use App\Paying\Service\PaymentConsoleReadModel;
 use App\Paying\ValueObject\PaymentStatus;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Ulid;
 
@@ -110,16 +109,10 @@ final class PaymentConsoleReadModelTest extends TestCase
             }
         };
 
-        $eventRepository = $this->getMockBuilder(EntityRepository::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['findBy'])
-            ->getMock();
-        $eventRepository->method('findBy')->willReturn(array_slice([$logA, $logB], 0, 50));
+        $webhooks = $this->createMock(PaymentWebhookRepositoryInterface::class);
+        $webhooks->method('listRecent')->willReturn([$logA, $logB]);
 
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->method('getRepository')->willReturn($eventRepository);
-
-        $readModel = new PaymentConsoleReadModel($repo, $entityManager);
+        $readModel = new PaymentConsoleReadModel($repo, $webhooks);
 
         $result = $readModel->build('stripe', 'processing', $paymentA->slug());
 
@@ -218,16 +211,10 @@ final class PaymentConsoleReadModelTest extends TestCase
             }
         };
 
-        $eventRepository = $this->getMockBuilder(EntityRepository::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['findBy'])
-            ->getMock();
-        $eventRepository->method('findBy')->willReturn([]);
+        $webhooks = $this->createMock(PaymentWebhookRepositoryInterface::class);
+        $webhooks->method('listRecent')->willReturn([]);
 
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager->method('getRepository')->willReturn($eventRepository);
-
-        $readModel = new PaymentConsoleReadModel($repo, $entityManager);
+        $readModel = new PaymentConsoleReadModel($repo, $webhooks);
         $result = $readModel->build('', 'processing', '01HK153X000000000000000999');
 
         self::assertNotNull($result['selectedPayment']);

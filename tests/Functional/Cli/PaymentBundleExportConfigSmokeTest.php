@@ -15,7 +15,7 @@ final class PaymentBundleExportConfigSmokeTest extends TestCase
         self::assertFileExists($root.'/src/PayingBundle.php');
         self::assertFileExists($root.'/src/DependencyInjection/Configuration.php');
         self::assertFileExists($root.'/src/DependencyInjection/PayingExtension.php');
-        self::assertFileExists($root.'/config/packages/paying.yaml');
+        self::assertFileExists($root.'/config/packages/payment_runtime.yaml');
         self::assertFileExists($root.'/docs/architecture/payment-bundle-export-surface.md');
         self::assertFileExists($root.'/config/services/payment_aliases.yaml');
     }

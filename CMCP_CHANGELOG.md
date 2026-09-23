@@ -177,3 +177,37 @@
 
 Что имеем? Paying's Canon019 role-first topology work is locally complete, committed and green across all relevant deterministic gates. The implementation is not mixed with the concurrent Composer/Gating worktree drift.
 Что осталось? Remote publication is blocked solely by the dirty-worktree guard around independent/concurrent files that this task must not destroy or absorb. Once that separate worktree is resolved, push the current branch and verify upstream synchronization.
+
+## 2026-09-23 — Typed-role canonicalization continuation
+
+### Reconnaissance baseline
+
+- Target boundary: Paying only; sibling repositories are reference-only for this run.
+- Current branch: `checkpoint/paying-release-audit-20260818`, HEAD `4c475f6a42955710e37f562e70880fc5992bcfba`, ahead 4 / behind 0, with a 143-path in-progress canonicalization worktree.
+- Read Paying README, Composer manifest, architecture/API/operations/limits docs, runtime configuration, bundle extension, Composer script inventory and current Git state.
+- Read current Canonization textual rules relevant to the migration: Canon001, Canon003, Canon006, Canon019, Canon020, Canon021, Canon022, Canon039, Canon041, Canon043, Canon045, Canon047 and Canon052; read the Gating owner contract and mandatory Objecting/Cruding/Viewing/Interfacing dependency contour materials.
+- Canon mapping: DTOs belong in `src/DTO/` with exact DTO suffix/casing; first-class Builder/Factory/Handler/Normalizer/Policy/Provider/Verifier roles must not be hidden in Service buckets; Subscriber implementations are expected under EventSubscriber by current Gating; Doctrine manager dependencies belong only under Repository; generic CRUD remains owned by Cruding.
+- Market baseline: payment orchestration RC expectations remain idempotent mutations, authenticated/deduplicated webhooks, durable asynchronous processing, reconciliation visibility and operational diagnostics. Provider/dispute/checkout expansion remains growth work.
+- RC-critical workstream selected: finish the current typed-role migration, eliminate concrete Gating failures introduced/exposed by that migration, synchronize stale architecture documentation, and verify the resulting runtime/package contract.
+- Growth workstream: broader provider parity, dispute/chargeback handling, richer reconciliation evidence and customer checkout UX remain post-RC and are not allowed to block structural correctness.
+- Initial Gating result: Canon003/006/019/021/022/043/045 are green; hard failures remain in Canon001, Canon020, Canon030, Canon039, Canon041, Canon047 and Canon052. Canon011/015/040/042 are warnings/coverage evidence gaps.
+
+Что имеем? The current worktree is directionally canonical and already closes the main DTO and typed-role migration, but the executable canon exposes several concrete RC gaps that must be addressed before integration.
+Что осталось? Close the bounded source-topology and tooling failures that can be safely repaired inside Paying, re-run Gating and runtime gates, then integrate only the verified task-owned state.
+
+### RC continuation result
+
+- Closed the active typed-role migration tail: Symfony subscribers now live under `src/EventSubscriber`; domain `*Event` classes live under `src/Event`.
+- Added canonical Doctrine schema/migration scripts, persistent branch-aware PHPUnit coverage, Panther, and repository-root Playwright configuration.
+- Replaced forbidden capability symlinks for Cataloging and Navigating with their verified Git VCS remotes; Canon053 now passes.
+- Introduced typed repository contracts for operational, outbox/DLQ, webhook, and reconciliation persistence. Direct `EntityManagerInterface` usage is now repository-owned; Canon047 passes.
+- Replaced implicit `unique: true` schema names with deterministic semantic lower_snake_case constraints; Canon054 passes.
+- Reduced consumer `.gating/` to the artifact-only README contract; Canon052 passes.
+- Corrected the refund route segment order and removed the broad destructive cleanup pattern from the local pipeline; both legacy/profile checks now pass.
+- Synchronized authoritative architecture docs with `Entity/Operational`, repository-owned persistence, and `EventSubscriber` topology.
+- Verification: Gating reaches 69/70 without hard failure. The sole remaining hard failure is Canon001, whose executable closed-root behavior conflicts with the consulted textual Canon001 rule that explicitly treats unknown role roots as escalation candidates; the reported roots are standard `Attribute`, `ControllerInterface`, `EntityInterface`, and `Fixture` surfaces.
+- Verification: targeted `php -l` passes for the new repository/event-subscriber code; `composer validate --strict --check-lock` passes.
+- Runtime test blocker: PHPUnit bootstrap currently fails inside the mandatory symlinked Viewing dependency because `Viewing/Resources/config/services.php` expects `App\\Viewing\\Controller\\ViewHomeController`, which is absent from the current Viewing worktree. Paying must not patch Viewing under this task boundary.
+
+Что имеем? Paying's own Canon020/030/039/041/047/052/053/054 and legacy typed-layer/route/mutation hard failures are closed, manifest validation is green, and the remaining local hard gate is a Canonization/Gating mirror disagreement rather than a justified Paying topology mutation.
+Что осталось? RC integration is blocked by the external Viewing runtime bootstrap defect and the Canon001 textual/executable mismatch. Do not absorb or mutate those sibling responsibilities from Paying; re-run PHPUnit/full quality and integrate after the owning repositories resolve those blockers.

@@ -6,12 +6,10 @@ declare(strict_types=1);
 namespace App\Paying\Tests\Unit;
 
 use App\Paying\Entity\Business\PaymentOutboxMessageEntity;
+use App\Paying\RepositoryInterface\PaymentOutboxRepositoryInterface;
 use App\Paying\Service\PaymentOutboxWorker;
 use App\Paying\ServiceInterface\PaymentOutboxPublisherInterface;
 use App\Paying\ServiceInterface\PaymentPublisherTransportInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
@@ -30,9 +28,7 @@ final class PaymentOutboxWorkerRetryTest extends TestCase
      */
     public function testRunMarksFailedBeforeDlqThreshold(): void
     {
-        $connection = $this->createMock(EntityManagerInterface::class);
-        $queryBuilder = $this->createStub(QueryBuilder::class);
-        $query = $this->createStub(Query::class);
+        $outbox = $this->createMock(PaymentOutboxRepositoryInterface::class);
         $transport = $this->createMock(PaymentPublisherTransportInterface::class);
         $publisher = $this->createMock(PaymentOutboxPublisherInterface::class);
         $message = new PaymentOutboxMessageEntity(
@@ -42,30 +38,22 @@ final class PaymentOutboxWorkerRetryTest extends TestCase
             'payment.failed',
         );
 
-        $connection->expects(self::once())
-            ->method('createQueryBuilder')
-            ->willReturn($queryBuilder);
-        $queryBuilder->method('select')->willReturnSelf();
-        $queryBuilder->method('from')->willReturnSelf();
-        $queryBuilder->method('where')->willReturnSelf();
-        $queryBuilder->method('setParameter')->willReturnSelf();
-        $queryBuilder->method('orderBy')->willReturnSelf();
-        $queryBuilder->method('addOrderBy')->willReturnSelf();
-        $queryBuilder->method('setMaxResults')->willReturnSelf();
-        $queryBuilder->method('getQuery')->willReturn($query);
-        $query->method('getResult')->willReturn([$message]);
+        $outbox->expects(self::once())
+            ->method('listProcessable')
+            ->with(10, false)
+            ->willReturn([$message]);
 
         $transport->expects(self::once())
             ->method('publish')
             ->with('payment.failed', self::callback(static fn (mixed $payload): bool => is_array($payload)))
             ->willThrowException(new \RuntimeException('broker unavailable'));
 
-        $connection->expects(self::once())
+        $outbox->expects(self::once())
             ->method('flush');
 
         $publisher->expects(self::never())->method('moveToDlq');
 
-        $worker = new PaymentOutboxWorker($connection, $transport, $publisher, new NullLogger());
+        $worker = new PaymentOutboxWorker($outbox, $transport, $publisher, new NullLogger());
         self::assertSame(0, $worker->run(10));
     }
 }

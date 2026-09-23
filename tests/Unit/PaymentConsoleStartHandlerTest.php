@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace App\Paying\Tests\Unit;
 
 use App\Paying\Entity\Business\PaymentEntity;
-use App\Paying\Service\PaymentConsoleStartHandler;
+use App\Paying\Handler\PaymentConsoleStartHandler;
 use App\Paying\Service\PaymentStartResult;
 use App\Paying\ServiceInterface\PaymentStartServiceInterface;
 use App\Paying\ValueObject\PaymentStatus;

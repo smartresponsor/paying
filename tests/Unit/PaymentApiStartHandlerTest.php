@@ -5,11 +5,11 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
+use App\Paying\DTO\PaymentStartInputDTO;
 use App\Paying\Entity\Business\PaymentEntity;
-use App\Paying\Service\PaymentApiStartHandler;
+use App\Paying\Handler\PaymentApiStartHandler;
 use App\Paying\Service\PaymentStartResult;
 use App\Paying\ServiceInterface\PaymentIdempotencyServiceInterface;
-use App\Paying\ServiceInterface\PaymentStartInput;
 use App\Paying\ServiceInterface\PaymentStartServiceInterface;
 use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +31,7 @@ final class PaymentApiStartHandlerTest extends TestCase
      */
     public function testHandleReturnsApiPayloadViaIdempotencyGate(): void
     {
-        $input = new PaymentStartInput('order-2001', 'internal', '12.50', 'USD');
+        $input = new PaymentStartInputDTO('order-2001', 'internal', '12.50', 'USD');
 
         $payment = new PaymentEntity(new Ulid(), PaymentStatus::processing, '12.50', 'USD');
 

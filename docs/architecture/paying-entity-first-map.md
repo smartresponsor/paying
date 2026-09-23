@@ -4,11 +4,11 @@
 
 Paying should be reviewed from persistence outward, not from controllers or provider adapters inward.
 
-1. `src/Entity` is the component business persistence surface.
-2. `src/Infrastructure/Entity` is the operational/internal persistence surface used for audit, idempotency, projections, and circuit state.
-3. `src/Repository` and `src/Infrastructure` provide Doctrine-facing access and operational execution.
-4. `src/Service` coordinates payment lifecycle behavior.
-5. Controllers, console commands, webhook handlers, and message handlers are entrypoints only.
+1. `src/Entity/Business` is the component business persistence surface.
+2. `src/Entity/Operational` is the operational/internal persistence surface used for audit, idempotency, projections, and circuit state.
+3. `src/Repository` owns direct Doctrine manager access for both persistence contours.
+4. `src/Service` coordinates payment lifecycle behavior through repository contracts.
+5. Controllers, commands, handlers, event subscribers, and message handlers are entrypoints/integration roles only.
 
 ## Business entity surface
 
@@ -23,7 +23,7 @@ Paying should be reviewed from persistence outward, not from controllers or prov
 | `PaymentMethodEntity` | `payment_method` | Configured payment method catalog. |
 | `PaymentWebhookLogEntity` | `payment_webhook_log` | Provider webhook receipt and deduplication state. |
 
-## Infrastructure entity surface
+## Operational entity surface
 
 | Entity | Table | Responsibility |
 | --- | --- | --- |
@@ -41,7 +41,7 @@ This follows the ecosystem-wide table naming canon and avoids unowned generic na
 
 ## Current boundary decision
 
-The existing `src/Infrastructure/Entity` layer is allowed because it is entity-scoped and expresses internal operational persistence. It must not become a generic infrastructure dumping ground. Non-entity infrastructure classes remain under their type-identifiable layers.
+There is no generic `src/Infrastructure` application layer. Operational entities live under `src/Entity/Operational`; direct Doctrine manager access is repository-owned under `src/Repository`; event integration lives under `src/EventSubscriber`; other application classes remain under explicit Symfony technical-role roots.
 
 ## Validation
 

@@ -6,8 +6,8 @@ declare(strict_types=1);
 namespace App\Paying\Tests\Unit;
 
 use App\Paying\Attribute\PaymentRequireScopeAttribute;
-use App\Paying\ServiceInterface\PaymentTokenVerifierInterface;
-use App\Paying\Subscriber\PaymentScopeGuardSubscriber;
+use App\Paying\EventSubscriber\PaymentScopeGuardSubscriber;
+use App\Paying\VerifierInterface\PaymentTokenVerifierInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Service\Webhook\PaymentPayPalEventNormalizer;
+use App\Paying\Normalizer\PaymentPayPalEventNormalizer;
 use PHPUnit\Framework\TestCase;
 
 /**

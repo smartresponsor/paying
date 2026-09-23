@@ -9,15 +9,13 @@ use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\Entity\Business\PaymentOutboxMessageEntity;
 use App\Paying\Message\Event\PaymentTransportMessage;
 use App\Paying\Message\Handler\PaymentEventConsumer;
+use App\Paying\RepositoryInterface\PaymentOutboxRepositoryInterface;
+use App\Paying\RepositoryInterface\PaymentReconciliationRepositoryInterface;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\Service\Order\PaymentNullOrderPaymentSync;
 use App\Paying\Service\Outbox\PaymentOutboxProcessor;
 use App\Paying\Service\Reconciliation\PaymentReconciliationService;
 use App\Paying\ValueObject\PaymentStatus;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\Messenger\Envelope;
@@ -39,25 +37,7 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
      */
     public function testWebhookCapturedGoesThroughOutboxAndConsumer(): void
     {
-        $query = $this->createMock(Query::class);
-        $queryBuilder = $this->createMock(QueryBuilder::class);
-        $repository = $this->createMock(EntityRepository::class);
         $storage = [];
-
-        $queryBuilder->method('where')->willReturnSelf();
-        $queryBuilder->method('orWhere')->willReturnSelf();
-        $queryBuilder->method('setParameter')->willReturnSelf();
-        $queryBuilder->method('setMaxResults')->willReturnSelf();
-        $queryBuilder->method('getQuery')->willReturn($query);
-
-        $repository->method('createQueryBuilder')->willReturn($queryBuilder);
-        $query->method('getResult')->willReturnCallback(static function () use (&$storage): array {
-            return $storage;
-        });
-
-        $em = $this->createMock(EntityManagerInterface::class);
-        $em->method('getRepository')->willReturn($repository);
-
         $outboxMessage = new PaymentOutboxMessageEntity('7c4f1c2e-9e33-4c1b-9a6f-1a2b3c4d5011', 'payment.captured', [
             'paymentId' => 'pay_1',
             'orderId' => 'ord_1',
@@ -103,7 +83,13 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
             }
         };
 
-        $processor = new PaymentOutboxProcessor($em, $transport, new NullLogger());
+        $outbox = $this->createMock(PaymentOutboxRepositoryInterface::class);
+        $outbox->method('listProcessable')->willReturnCallback(static function () use (&$storage): array {
+            return $storage;
+        });
+        $outbox->expects(self::once())->method('flush');
+
+        $processor = new PaymentOutboxProcessor($outbox, $transport, new NullLogger());
         $published = $processor->process(10);
         self::assertSame(1, $published);
         self::assertSame('published', $outboxMessage->status());
@@ -183,14 +169,14 @@ final class PaymentWebhookToOrderFlowTest extends TestCase
         };
 
         $persisted = [];
-        $reconciliationEm = $this->createMock(EntityManagerInterface::class);
-        $reconciliationEm->expects(self::once())
-            ->method('persist')
-            ->willReturnCallback(static function (object $entity) use (&$persisted): void {
-                $persisted[] = $entity;
+        $reconciliationRepository = $this->createMock(PaymentReconciliationRepositoryInterface::class);
+        $reconciliationRepository->expects(self::once())
+            ->method('saveCaptured')
+            ->willReturnCallback(static function (PaymentEntity $payment, object $transaction) use (&$persisted): void {
+                $persisted[] = $transaction;
             });
 
-        $reconciliation = new PaymentReconciliationService($payments, $reconciliationEm);
+        $reconciliation = new PaymentReconciliationService($payments, $reconciliationRepository);
         $consumer = new PaymentEventConsumer($reconciliation, $sync);
 
         foreach ($transport->envelopes as $envelope) {

@@ -6,8 +6,8 @@ declare(strict_types=1);
 namespace App\Paying\Tests\Unit;
 
 use App\Paying\Controller\PaymentFinalizeController;
+use App\Paying\FactoryInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
-use App\Paying\ServiceInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;
 use App\Paying\ServiceInterface\PaymentApiRequestValidatorInterface;
 use App\Paying\ServiceInterface\PaymentProviderGuardInterface;

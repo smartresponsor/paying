@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Dto\Payment\PaymentConsoleFinalizeRequestDto;
-use App\Paying\Dto\Payment\PaymentFinalizeRequestDto;
+use App\Paying\DTO\PaymentConsoleFinalizeRequestDTO;
+use App\Paying\DTO\PaymentFinalizeRequestDTO;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -30,7 +30,7 @@ final class PaymentFinalizeDtoValidationTest extends TestCase
      */
     public function testApiFinalizeDtoAllowsKnownStatusAndEmptyStatus(): void
     {
-        $dto = new PaymentFinalizeRequestDto();
+        $dto = new PaymentFinalizeRequestDTO();
         $dto->provider = 'internal';
         $dto->status = 'completed';
 
@@ -45,7 +45,7 @@ final class PaymentFinalizeDtoValidationTest extends TestCase
      */
     public function testApiFinalizeDtoRejectsUnknownStatus(): void
     {
-        $dto = new PaymentFinalizeRequestDto();
+        $dto = new PaymentFinalizeRequestDTO();
         $dto->provider = 'internal';
         $dto->status = 'done';
 
@@ -60,7 +60,7 @@ final class PaymentFinalizeDtoValidationTest extends TestCase
      */
     public function testConsoleFinalizeDtoRejectsUnknownStatus(): void
     {
-        $dto = new PaymentConsoleFinalizeRequestDto();
+        $dto = new PaymentConsoleFinalizeRequestDTO();
         $dto->paymentId = '01HZY9M8Q6M7X4YH3B2A1C0D9E';
         $dto->provider = 'internal';
         $dto->status = 'done';

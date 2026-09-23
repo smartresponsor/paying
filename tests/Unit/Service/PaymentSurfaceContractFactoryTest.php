@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit\Service;
 
-use App\Paying\Service\Payment\PaymentConsoleViewFactory;
+use App\Paying\Factory\PaymentConsoleViewFactory;
 use PHPUnit\Framework\TestCase;
 
 final class PaymentSurfaceContractFactoryTest extends TestCase

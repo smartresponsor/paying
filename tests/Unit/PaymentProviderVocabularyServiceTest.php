@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Paying\Tests\Unit;
 
 use App\Cataloging\ServiceInterface\CatalogCategoryVocabularyServiceInterface;
+use App\Paying\ProviderInterface\PaymentProviderInterface;
 use App\Paying\Service\PaymentProviderVocabularyService;
-use App\Paying\ServiceInterface\PaymentProviderInterface;
 use App\Paying\ServiceInterface\PaymentProviderRouterInterface;
 use PHPUnit\Framework\TestCase;
 

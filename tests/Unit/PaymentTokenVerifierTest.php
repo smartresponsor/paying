@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Service\PaymentTokenVerifier;
 use App\Paying\ServiceInterface\PaymentOidcJwksCacheInterface;
+use App\Paying\Verifier\PaymentTokenVerifier;
 use PHPUnit\Framework\TestCase;
 
 /**

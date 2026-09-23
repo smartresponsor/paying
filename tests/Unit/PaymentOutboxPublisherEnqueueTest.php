@@ -5,9 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Entity\Business\PaymentOutboxMessageEntity;
+use App\Paying\RepositoryInterface\PaymentOutboxRepositoryInterface;
 use App\Paying\Service\PaymentOutboxPublisher;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
@@ -27,19 +26,12 @@ final class PaymentOutboxPublisherEnqueueTest extends TestCase
      */
     public function testEnqueueWritesUnifiedPaymentOutboxMessageTable(): void
     {
-        $connection = $this->createMock(EntityManagerInterface::class);
-        $connection->expects(self::once())
-            ->method('wrapInTransaction')
-            ->willReturnCallback(static function (callable $callback): void {
-                $callback();
-            });
-        $connection->expects(self::once())
-            ->method('persist')
-            ->with(self::callback(static fn (mixed $entity): bool => $entity instanceof PaymentOutboxMessageEntity));
-        $connection->expects(self::once())
-            ->method('flush');
+        $outbox = $this->createMock(PaymentOutboxRepositoryInterface::class);
+        $outbox->expects(self::once())
+            ->method('enqueue')
+            ->with('payment.captured', ['paymentId' => '01TESTPAYMENT']);
 
-        $publisher = new PaymentOutboxPublisher($connection, new NullLogger());
+        $publisher = new PaymentOutboxPublisher($outbox, new NullLogger());
         $publisher->enqueue('payment.captured', ['paymentId' => '01TESTPAYMENT']);
     }
 }
