@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Controller\Webhook;
 
+use App\Paying\Normalizer\PaymentPayPalEventNormalizer;
 use App\Paying\Service\Webhook\PaymentJsonSchemaValidator;
-use App\Paying\Service\Webhook\PaymentPayPalEventNormalizer;
 use App\Paying\Service\Webhook\PaymentPayPalSignatureValidator;
 use App\Paying\ServiceInterface\PaymentWebhookIngestServiceInterface;
 use OpenApi\Attributes as OA;

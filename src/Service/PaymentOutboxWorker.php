@@ -7,9 +7,9 @@ namespace App\Paying\Service;
 
 use App\Paying\Entity\Business\PaymentOutboxMessageEntity;
 use App\Paying\Exception\PaymentOutboxOperationException;
+use App\Paying\RepositoryInterface\PaymentOutboxRepositoryInterface;
 use App\Paying\ServiceInterface\PaymentOutboxPublisherInterface;
 use App\Paying\ServiceInterface\PaymentPublisherTransportInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -20,7 +20,7 @@ class PaymentOutboxWorker
     private const int MAX_ATTEMPTS = 3;
 
     public function __construct(
-        private readonly EntityManagerInterface $data,
+        private readonly PaymentOutboxRepositoryInterface $outbox,
         private readonly PaymentPublisherTransportInterface $transport,
         private readonly PaymentOutboxPublisherInterface $outboxPublisher,
         private readonly LoggerInterface $logger,
@@ -45,7 +45,7 @@ class PaymentOutboxWorker
                 $this->transport->publish($routingKey, $payload);
                 $row->incrementAttempts();
                 $row->markPublished();
-                $this->data->flush();
+                $this->outbox->flush();
                 ++$count;
             } catch (\Throwable $exception) {
                 $reason = 'publish-failed: '.$exception->getMessage();
@@ -64,7 +64,7 @@ class PaymentOutboxWorker
                 try {
                     $row->incrementAttempts();
                     $row->markFailed($reason);
-                    $this->data->flush();
+                    $this->outbox->flush();
                 } catch (\Throwable $e) {
                     $this->logger->error('Failed to persist outbox failure status.', [
                         'id' => $id,
@@ -85,19 +85,8 @@ class PaymentOutboxWorker
      */
     private function loadRows(int $limit, bool $retryFailed): array
     {
-        $statuses = $retryFailed ? ['pending', 'failed'] : ['pending'];
-
         try {
-            $rows = $this->data->createQueryBuilder()
-                ->select('m')
-                ->from(PaymentOutboxMessageEntity::class, 'm')
-                ->where('m.status IN (:statuses)')
-                ->setParameter('statuses', $statuses)
-                ->orderBy('m.occurredAt', 'ASC')
-                ->addOrderBy('m.id', 'ASC')
-                ->setMaxResults(max(1, $limit))
-                ->getQuery()
-                ->getResult();
+            $rows = $this->outbox->listProcessable($limit, $retryFailed);
         } catch (\Throwable $e) {
             $this->logger->error('Failed to load outbox messages.', [
                 'limit' => $limit,

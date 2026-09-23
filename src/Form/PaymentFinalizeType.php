@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Form;
 
-use App\Paying\Dto\Payment\PaymentFinalizeRequestDto;
+use App\Paying\DTO\PaymentFinalizeRequestDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -62,7 +62,7 @@ final class PaymentFinalizeType extends AbstractType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'data_class' => PaymentFinalizeRequestDto::class,
+            'data_class' => PaymentFinalizeRequestDTO::class,
             'csrf_protection' => true,
         ]);
     }

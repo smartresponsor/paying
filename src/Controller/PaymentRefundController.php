@@ -6,10 +6,10 @@ declare(strict_types=1);
 namespace App\Paying\Controller;
 
 use App\Paying\ControllerInterface\PaymentRefundControllerInterface;
-use App\Paying\Dto\Payment\PaymentRefundRequestDto;
+use App\Paying\DTO\PaymentRefundRequestDTO;
 use App\Paying\Entity\Business\PaymentEntity;
+use App\Paying\FactoryInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\Service\PaymentNotFoundException;
-use App\Paying\ServiceInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;
 use App\Paying\ServiceInterface\PaymentApiRequestValidatorInterface;
 use App\Paying\ServiceInterface\PaymentRefundServiceInterface;
@@ -64,9 +64,9 @@ final readonly class PaymentRefundController implements PaymentRefundControllerI
     /**
      * @param array<string, mixed> $data
      */
-    private function hydrateRefundRequestDto(array $data): PaymentRefundRequestDto
+    private function hydrateRefundRequestDto(array $data): PaymentRefundRequestDTO
     {
-        $dto = new PaymentRefundRequestDto();
+        $dto = new PaymentRefundRequestDTO();
         $dto->amount = (string) ($data['amount'] ?? '0.00');
         $dto->provider = (string) ($data['provider'] ?? 'internal');
 

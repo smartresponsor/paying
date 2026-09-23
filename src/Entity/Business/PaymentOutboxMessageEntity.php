@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'payment_outbox_message')]
+#[ORM\UniqueConstraint(name: 'uniq_payment_outbox_message_slug', columns: ['slug'])]
 class PaymentOutboxMessageEntity
 {
     #[ORM\Id]
@@ -22,7 +23,7 @@ class PaymentOutboxMessageEntity
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'guid', unique: true)]
+    #[ORM\Column(type: 'guid')]
     private string $slug;
 
     #[ORM\Column(type: 'string', length: 128)]

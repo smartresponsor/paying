@@ -5,18 +5,15 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\Business\PaymentOutboxMessageEntity;
-use App\Paying\Entity\Business\PaymentWebhookLogEntity;
+use App\Paying\RepositoryInterface\PaymentWebhookRepositoryInterface;
 use App\Paying\ServiceInterface\PaymentWebhookIngestServiceInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Uid\Ulid;
 
 /**
  * Provides the webhook ingest service service used by the payment lifecycle and operator-facing flows.
  */
 final readonly class PaymentWebhookIngestService implements PaymentWebhookIngestServiceInterface
 {
-    public function __construct(private EntityManagerInterface $em)
+    public function __construct(private PaymentWebhookRepositoryInterface $webhooks)
     {
     }
 
@@ -29,24 +26,6 @@ final readonly class PaymentWebhookIngestService implements PaymentWebhookIngest
      */
     public function ingest(string $provider, string $externalId, array $normalized, string $routingKey): array
     {
-        $repo = $this->em->getRepository(PaymentWebhookLogEntity::class);
-        $existing = $repo->findOneBy(['provider' => $provider, 'externalEventId' => $externalId]);
-        if ($existing) {
-            $existing->markDuplicate();
-            $this->em->flush();
-
-            return ['status' => 'duplicate', 'outboxId' => null];
-        }
-
-        $log = new PaymentWebhookLogEntity($provider, $externalId, $normalized);
-        $this->em->persist($log);
-
-        $outbox = new PaymentOutboxMessageEntity(new Ulid()->toRfc4122(), $routingKey, $normalized, $routingKey);
-        $this->em->persist($outbox);
-
-        $log->markProcessed();
-        $this->em->flush();
-
-        return ['status' => 'queued', 'outboxId' => $outbox->slug()];
+        return $this->webhooks->ingest($provider, $externalId, $normalized, $routingKey);
     }
 }

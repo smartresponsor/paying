@@ -5,14 +5,14 @@ declare(strict_types=1);
 
 namespace App\Paying\Service\Webhook;
 
-use App\Paying\ServiceInterface\PaymentWebhookVerifierServiceInterface;
+use App\Paying\VerifierInterface\PaymentWebhookVerifierInterface;
 
 /**
  * Provides the stripe signature validator step for webhook validation and normalization flows.
  */
 final readonly class PaymentStripeSignatureValidator
 {
-    public function __construct(private PaymentWebhookVerifierServiceInterface $verifier)
+    public function __construct(private PaymentWebhookVerifierInterface $verifier)
     {
     }
 

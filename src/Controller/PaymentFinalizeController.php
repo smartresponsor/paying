@@ -7,10 +7,10 @@ namespace App\Paying\Controller;
 
 use App\Paying\Attribute\PaymentRequireScopeAttribute;
 use App\Paying\ControllerInterface\PaymentFinalizeControllerInterface;
-use App\Paying\Dto\Payment\PaymentFinalizeRequestDto;
+use App\Paying\DTO\PaymentFinalizeRequestDTO;
 use App\Paying\Entity\Business\PaymentEntity;
+use App\Paying\FactoryInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
-use App\Paying\ServiceInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;
 use App\Paying\ServiceInterface\PaymentApiRequestValidatorInterface;
 use App\Paying\ServiceInterface\PaymentProviderGuardInterface;
@@ -81,9 +81,9 @@ final readonly class PaymentFinalizeController implements PaymentFinalizeControl
     /**
      * @param array<string, mixed> $data
      */
-    private function hydrateFinalizeRequestDto(array $data, Request $request): PaymentFinalizeRequestDto
+    private function hydrateFinalizeRequestDto(array $data, Request $request): PaymentFinalizeRequestDTO
     {
-        $dto = new PaymentFinalizeRequestDto();
+        $dto = new PaymentFinalizeRequestDTO();
         $dto->provider = (string) ($data['provider'] ?? $request->query->get('provider', 'internal'));
         $dto->providerRef = (string) ($data['providerRef'] ?? '');
         $dto->gatewayTransactionId = (string) ($data['gatewayTransactionId'] ?? '');

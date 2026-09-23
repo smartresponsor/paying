@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Command;
 
-use App\Paying\ServiceInterface\IdempotencyStoreInterface;
+use App\Paying\ServiceInterface\PaymentIdempotencyStoreInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'payment:idem:purge', description: 'Purge expired idempotency entries')]
 final class PaymentIdemPurgeCommand extends Command
 {
-    public function __construct(private readonly IdempotencyStoreInterface $store)
+    public function __construct(private readonly PaymentIdempotencyStoreInterface $store)
     {
         parent::__construct();
     }

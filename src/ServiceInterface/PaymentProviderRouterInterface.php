@@ -5,6 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\ServiceInterface;
 
+use App\Paying\ProviderInterface\PaymentProviderInterface;
+
 /**
  * Defines the contract for the provider router interface payment service boundary.
  */

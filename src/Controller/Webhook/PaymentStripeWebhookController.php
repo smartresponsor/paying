@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Controller\Webhook;
 
+use App\Paying\Normalizer\PaymentStripeEventNormalizer;
 use App\Paying\Service\Webhook\PaymentJsonSchemaValidator;
-use App\Paying\Service\Webhook\PaymentStripeEventNormalizer;
 use App\Paying\Service\Webhook\PaymentStripeSignatureValidator;
 use App\Paying\ServiceInterface\PaymentWebhookIngestServiceInterface;
 use OpenApi\Attributes as OA;

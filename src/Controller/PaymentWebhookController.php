@@ -6,10 +6,10 @@ declare(strict_types=1);
 namespace App\Paying\Controller;
 
 use App\Paying\ControllerInterface\PaymentWebhookControllerInterface;
-use App\Paying\ServiceInterface\EventMapperInterface;
 use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;
+use App\Paying\ServiceInterface\PaymentEventMapperInterface;
 use App\Paying\ServiceInterface\PaymentProviderGuardInterface;
-use App\Paying\ServiceInterface\PaymentWebhookVerifierServiceInterface;
+use App\Paying\VerifierInterface\PaymentWebhookVerifierInterface;
 use OpenApi\Attributes as OA;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,10 +22,10 @@ use Symfony\Component\Uid\Ulid;
 final readonly class PaymentWebhookController implements PaymentWebhookControllerInterface
 {
     public function __construct(
-        private PaymentWebhookVerifierServiceInterface $verifier,
+        private PaymentWebhookVerifierInterface $verifier,
         private PaymentProviderGuardInterface $guard,
         private PaymentApiJsonBodyDecoderInterface $jsonBodyDecoder,
-        /** @var iterable<EventMapperInterface> */ private iterable $mappers,
+        /** @var iterable<PaymentEventMapperInterface> */ private iterable $mappers,
         private LoggerInterface $logger,
     ) {
     }

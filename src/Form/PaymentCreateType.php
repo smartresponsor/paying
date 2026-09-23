@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Form;
 
-use App\Paying\Dto\Payment\PaymentCreateRequestDto;
+use App\Paying\DTO\PaymentCreateRequestDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CurrencyType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -46,7 +46,7 @@ final class PaymentCreateType extends AbstractType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'data_class' => PaymentCreateRequestDto::class,
+            'data_class' => PaymentCreateRequestDTO::class,
             'csrf_protection' => true,
         ]);
     }

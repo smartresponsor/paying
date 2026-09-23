@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Service\Webhook;
 
+use App\Paying\Normalizer\PaymentPayPalEventNormalizer;
 use App\Paying\ServiceInterface\PaymentWebhookIngestServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;

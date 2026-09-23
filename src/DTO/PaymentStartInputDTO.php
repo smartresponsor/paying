@@ -1,0 +1,20 @@
+<?php
+
+# Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
+declare(strict_types=1);
+
+namespace App\Paying\DTO;
+
+/**
+ * Defines the contract for the payment start input payment service boundary.
+ */
+final readonly class PaymentStartInputDTO
+{
+    public function __construct(
+        public string $orderId,
+        public string $provider,
+        public string $amount,
+        public string $currency,
+    ) {
+    }
+}

@@ -5,12 +5,12 @@ declare(strict_types=1);
 
 namespace App\Paying\Service\Mapper;
 
-use App\Paying\ServiceInterface\EventMapperInterface;
+use App\Paying\ServiceInterface\PaymentEventMapperInterface;
 
 /**
  * Maps external provider payloads into the internal stripe event mapper payment representation.
  */
-class PaymentStripeEventMapper implements EventMapperInterface
+class PaymentStripeEventMapper implements PaymentEventMapperInterface
 {
     /**
      * Provides the provider behavior for the stripe event mapper component.

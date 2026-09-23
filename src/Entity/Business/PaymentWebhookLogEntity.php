@@ -16,6 +16,7 @@ use Symfony\Component\Uid\Ulid;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'payment_webhook_log')]
+#[ORM\UniqueConstraint(name: 'uniq_payment_webhook_log_slug', columns: ['slug'])]
 #[ORM\UniqueConstraint(name: 'uniq_payment_webhook_provider_event', columns: ['provider', 'external_event_id'])]
 class PaymentWebhookLogEntity
 {
@@ -24,7 +25,7 @@ class PaymentWebhookLogEntity
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'guid', unique: true)]
+    #[ORM\Column(type: 'guid')]
     private string $slug;
 
     #[ORM\Column(type: 'string', length: 32)]

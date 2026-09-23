@@ -6,8 +6,8 @@ declare(strict_types=1);
 namespace App\Paying\Service;
 
 use App\Paying\Entity\Operational\PaymentCircuitEntity;
+use App\Paying\RepositoryInterface\PaymentOperationalRepositoryInterface;
 use App\Paying\ServiceInterface\PaymentCircuitBreakerInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Provides the circuit breaker service used by the payment lifecycle and operator-facing flows.
@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 readonly class PaymentCircuitBreaker implements PaymentCircuitBreakerInterface
 {
     public function __construct(
-        private EntityManagerInterface $infrastructure,
+        private PaymentOperationalRepositoryInterface $operations,
         private int $threshold = 5,
         private int $cooldownSec = 60,
     ) {
@@ -26,7 +26,7 @@ readonly class PaymentCircuitBreaker implements PaymentCircuitBreakerInterface
      */
     public function isOpen(string $key): bool
     {
-        $entity = $this->findCircuit($key);
+        $entity = $this->operations->findCircuit($key);
         if (!$entity instanceof PaymentCircuitEntity) {
             return false;
         }
@@ -39,14 +39,10 @@ readonly class PaymentCircuitBreaker implements PaymentCircuitBreakerInterface
      */
     public function recordSuccess(string $key): void
     {
-        $this->infrastructure->wrapInTransaction(function () use ($key): void {
-            $entity = $this->findCircuit($key);
-            if ($entity instanceof PaymentCircuitEntity) {
-                $this->infrastructure->remove($entity);
-            }
-
-            $this->infrastructure->flush();
-        });
+        $entity = $this->operations->findCircuit($key);
+        if ($entity instanceof PaymentCircuitEntity) {
+            $this->operations->removeCircuit($entity);
+        }
     }
 
     /**
@@ -58,28 +54,16 @@ readonly class PaymentCircuitBreaker implements PaymentCircuitBreakerInterface
      */
     public function recordFailure(string $key): void
     {
-        $this->infrastructure->wrapInTransaction(function () use ($key): void {
-            $entity = $this->findCircuit($key);
-            $count = $entity instanceof PaymentCircuitEntity ? $entity->failureCount() + 1 : 1;
-            $retryAt = (new \DateTimeImmutable())->modify('+'.$this->cooldownSec.' seconds');
+        $entity = $this->operations->findCircuit($key);
+        $count = $entity instanceof PaymentCircuitEntity ? $entity->failureCount() + 1 : 1;
+        $retryAt = (new \DateTimeImmutable())->modify('+'.$this->cooldownSec.' seconds');
 
-            if (!$entity instanceof PaymentCircuitEntity) {
-                $entity = new PaymentCircuitEntity($key, $count, $retryAt);
-                $this->infrastructure->persist($entity);
-            } else {
-                $entity->recordFailure($count, $retryAt);
-            }
+        if (!$entity instanceof PaymentCircuitEntity) {
+            $entity = new PaymentCircuitEntity($key, $count, $retryAt);
+        } else {
+            $entity->recordFailure($count, $retryAt);
+        }
 
-            $this->infrastructure->flush();
-        });
-    }
-
-    private function findCircuit(string $key): ?PaymentCircuitEntity
-    {
-        $entity = $this->infrastructure->getRepository(PaymentCircuitEntity::class)->findOneBy([
-            'key' => $key,
-        ]);
-
-        return $entity instanceof PaymentCircuitEntity ? $entity : null;
+        $this->operations->saveCircuit($entity);
     }
 }

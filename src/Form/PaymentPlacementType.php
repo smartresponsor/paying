@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Form;
 
-use App\Paying\Dto\Payment\PaymentPlacementFormData;
+use App\Paying\DTO\PaymentPlacementFormDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CurrencyType;
@@ -39,7 +39,7 @@ final class PaymentPlacementType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => PaymentPlacementFormData::class,
+            'data_class' => PaymentPlacementFormDTO::class,
             'csrf_protection' => true,
         ]);
     }

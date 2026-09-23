@@ -5,13 +5,13 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\ServiceInterface\IdempotencyStoreInterface;
+use App\Paying\ServiceInterface\PaymentIdempotencyStoreInterface;
 use Redis;
 
 /**
  * Stores payment idempotency keys in Redis-backed operational state.
  */
-class PaymentRedisIdempotencyStore implements IdempotencyStoreInterface
+class PaymentRedisIdempotencyStore implements PaymentIdempotencyStoreInterface
 {
     private \Redis $redis;
 

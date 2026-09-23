@@ -6,17 +6,15 @@ declare(strict_types=1);
 namespace App\Paying\Service;
 
 use App\Paying\Entity\Business\PaymentDlqEntity;
-use App\Paying\Entity\Business\PaymentOutboxMessageEntity;
+use App\Paying\RepositoryInterface\PaymentOutboxRepositoryInterface;
 use App\Paying\ServiceInterface\PaymentDlqServiceInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Uid\Ulid;
 
 /**
  * Provides the dlq service service used by the payment lifecycle and operator-facing flows.
  */
 final readonly class PaymentDlqService implements PaymentDlqServiceInterface
 {
-    public function __construct(private EntityManagerInterface $data)
+    public function __construct(private PaymentOutboxRepositoryInterface $outbox)
     {
     }
 
@@ -27,13 +25,7 @@ final readonly class PaymentDlqService implements PaymentDlqServiceInterface
      */
     public function list(): array
     {
-        $rows = $this->data->createQueryBuilder()
-            ->select('d')
-            ->from(PaymentDlqEntity::class, 'd')
-            ->orderBy('d.id', 'DESC')
-            ->setMaxResults(200)
-            ->getQuery()
-            ->getResult();
+        $rows = $this->outbox->listDlq(200);
 
         return array_map(
             static fn (PaymentDlqEntity $row): array => [
@@ -52,22 +44,6 @@ final readonly class PaymentDlqService implements PaymentDlqServiceInterface
      */
     public function replay(int $id): bool
     {
-        $entity = $this->data->find(PaymentDlqEntity::class, $id);
-        if (!$entity instanceof PaymentDlqEntity) {
-            return false;
-        }
-
-        $this->data->wrapInTransaction(function () use ($entity): void {
-            $this->data->persist(new PaymentOutboxMessageEntity(
-                (new Ulid())->toRfc4122(),
-                $entity->topic(),
-                $entity->payload(),
-                $entity->topic(),
-            ));
-            $this->data->remove($entity);
-            $this->data->flush();
-        });
-
-        return true;
+        return $this->outbox->replayDlq($id);
     }
 }

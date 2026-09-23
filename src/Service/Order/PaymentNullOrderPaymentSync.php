@@ -5,13 +5,13 @@ declare(strict_types=1);
 
 namespace App\Paying\Service\Order;
 
-use App\Paying\ServiceInterface\Order\OrderPaymentSyncInterface;
+use App\Paying\ServiceInterface\Order\PaymentOrderPaymentSyncInterface;
 use Psr\Log\LoggerInterface;
 
 /**
  * Provides the null order payment sync service used by the payment lifecycle and operator-facing flows.
  */
-final readonly class PaymentNullOrderPaymentSync implements OrderPaymentSyncInterface
+final readonly class PaymentNullOrderPaymentSync implements PaymentOrderPaymentSyncInterface
 {
     public function __construct(private LoggerInterface $logger)
     {

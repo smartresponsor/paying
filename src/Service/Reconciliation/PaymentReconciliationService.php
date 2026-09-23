@@ -8,9 +8,9 @@ namespace App\Paying\Service\Reconciliation;
 use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\Entity\Business\PaymentRefundEntity;
 use App\Paying\Entity\Business\PaymentTransactionEntity;
+use App\Paying\RepositoryInterface\PaymentReconciliationRepositoryInterface;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;
 
 /**
@@ -20,7 +20,7 @@ final readonly class PaymentReconciliationService implements PaymentReconciliati
 {
     public function __construct(
         private PaymentRepositoryInterface $payments,
-        private EntityManagerInterface $em,
+        private PaymentReconciliationRepositoryInterface $reconciliation,
     ) {
     }
 
@@ -40,8 +40,7 @@ final readonly class PaymentReconciliationService implements PaymentReconciliati
             $amountMinor,
         );
 
-        $this->em->persist($tx);
-        $this->payments->save($p);
+        $this->reconciliation->saveCaptured($p, $tx);
 
         return $p;
     }
@@ -62,9 +61,7 @@ final readonly class PaymentReconciliationService implements PaymentReconciliati
             $reason,
         );
 
-        $this->em->persist($refund);
-        $this->payments->save($p);
-        $this->em->flush();
+        $this->reconciliation->saveRefunded($p, $refund);
 
         return $refund;
     }

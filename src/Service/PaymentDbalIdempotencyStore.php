@@ -5,16 +5,15 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\Operational\PaymentIdempotencyEntity;
-use App\Paying\ServiceInterface\IdempotencyStoreInterface;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Paying\RepositoryInterface\PaymentOperationalRepositoryInterface;
+use App\Paying\ServiceInterface\PaymentIdempotencyStoreInterface;
 
 /**
  * Stores payment idempotency keys in the relational operational database.
  */
-readonly class PaymentDbalIdempotencyStore implements IdempotencyStoreInterface
+readonly class PaymentDbalIdempotencyStore implements PaymentIdempotencyStoreInterface
 {
-    public function __construct(private EntityManagerInterface $data)
+    public function __construct(private PaymentOperationalRepositoryInterface $operations)
     {
     }
 
@@ -23,21 +22,7 @@ readonly class PaymentDbalIdempotencyStore implements IdempotencyStoreInterface
      */
     public function get(string $key): ?string
     {
-        $entity = $this->data->find(PaymentIdempotencyEntity::class, $key);
-        if (!$entity instanceof PaymentIdempotencyEntity) {
-            return null;
-        }
-
-        if ($entity->expiresAt()->getTimestamp() < time()) {
-            $this->data->wrapInTransaction(function () use ($entity): void {
-                $this->data->remove($entity);
-                $this->data->flush();
-            });
-
-            return null;
-        }
-
-        return $entity->value();
+        return $this->operations->idempotencyGet($key);
     }
 
     /**
@@ -45,19 +30,7 @@ readonly class PaymentDbalIdempotencyStore implements IdempotencyStoreInterface
      */
     public function put(string $key, string $value, int $ttlSec): void
     {
-        $expiresAt = new \DateTimeImmutable("+{$ttlSec} seconds");
-
-        $this->data->wrapInTransaction(function () use ($key, $value, $expiresAt): void {
-            $entity = $this->data->find(PaymentIdempotencyEntity::class, $key);
-            if (!$entity instanceof PaymentIdempotencyEntity) {
-                $entity = new PaymentIdempotencyEntity($key, $value, $expiresAt);
-                $this->data->persist($entity);
-            } else {
-                $entity->refresh($value, $expiresAt);
-            }
-
-            $this->data->flush();
-        });
+        $this->operations->idempotencyPut($key, $value, $ttlSec);
     }
 
     /**
@@ -65,11 +38,6 @@ readonly class PaymentDbalIdempotencyStore implements IdempotencyStoreInterface
      */
     public function purgeExpired(): int
     {
-        return (int) $this->data->createQueryBuilder()
-            ->delete(PaymentIdempotencyEntity::class, 'i')
-            ->where('i.expiresAt < :now')
-            ->setParameter('now', new \DateTimeImmutable('now'))
-            ->getQuery()
-            ->execute();
+        return $this->operations->purgeExpiredIdempotency();
     }
 }

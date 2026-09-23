@@ -26,7 +26,7 @@ final class PayingExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__, 2).'/config'));
-        $loader->load('services.bundle.yaml');
+        $loader->load('payment_services_bundle.yaml');
 
         $container->setParameter('paying.storage.data_server_version', $config['storage']['data_server_version']);
         $container->setParameter('paying.storage.infra_server_version', $config['storage']['infra_server_version']);

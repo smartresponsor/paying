@@ -13,6 +13,8 @@ use Symfony\Component\Uid\Uuid;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'payment_circuit')]
+#[ORM\UniqueConstraint(name: 'uniq_payment_circuit_slug', columns: ['slug'])]
+#[ORM\UniqueConstraint(name: 'uniq_payment_circuit_key', columns: ['key'])]
 class PaymentCircuitEntity
 {
     #[ORM\Id]
@@ -20,10 +22,10 @@ class PaymentCircuitEntity
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'guid', unique: true)]
+    #[ORM\Column(type: 'guid')]
     private string $slug;
 
-    #[ORM\Column(name: 'key', type: 'string', length: 80, unique: true)]
+    #[ORM\Column(name: 'key', type: 'string', length: 80)]
     private string $key = '';
 
     #[ORM\Column(name: 'failure_count', type: 'integer')]

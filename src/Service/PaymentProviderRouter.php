@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\ServiceInterface\PaymentProviderInterface;
+use App\Paying\ProviderInterface\PaymentProviderInterface;
 use App\Paying\ServiceInterface\PaymentProviderRouterInterface;
 
 /**

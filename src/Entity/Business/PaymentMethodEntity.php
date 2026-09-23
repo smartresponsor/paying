@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Entity(repositoryClass: \App\Paying\Repository\PaymentMethodRepository::class)]
 #[ORM\Table(name: 'payment_method')]
+#[ORM\UniqueConstraint(name: 'uniq_payment_method_slug', columns: ['slug'])]
 class PaymentMethodEntity
 {
     #[ORM\Id]
@@ -20,7 +21,7 @@ class PaymentMethodEntity
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'guid', unique: true)]
+    #[ORM\Column(type: 'guid')]
     private string $slug;
 
     #[ORM\Column(type: 'string', length: 32)]

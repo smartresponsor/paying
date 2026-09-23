@@ -17,6 +17,7 @@ use Symfony\Component\Uid\AbstractUid;
  */
 #[ORM\Entity]
 #[ORM\Table(name: 'payment')]
+#[ORM\UniqueConstraint(name: 'uniq_payment_slug', columns: ['slug'])]
 #[ORM\Index(columns: ['order_id'], name: 'idx_placement_payment_order')]
 #[ORM\HasLifecycleCallbacks]
 class PaymentEntity
@@ -26,7 +27,7 @@ class PaymentEntity
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'guid', unique: true)]
+    #[ORM\Column(type: 'guid')]
     private string $slug;
 
     #[ORM\Column(type: 'string', length: 128)]

@@ -8,7 +8,7 @@ use App\Cruding\DTO\Entrypoint\CrudServiceContextDTO as CrudServiceContext;
 use App\Cruding\Factory\Resource\CrudResourceContractFactory;
 use App\Cruding\Provider\CrudPageDefinitionProvider;
 use App\Cruding\ValueObject\Resource\CrudResourceContract;
-use App\Paying\Dto\Payment\PaymentPlacementFormData;
+use App\Paying\DTO\PaymentPlacementFormDTO;
 use App\Paying\Form\PaymentPlacementType;
 use App\Paying\ServiceInterface\PaymentStartServiceInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -45,7 +45,7 @@ final readonly class PaymentNewService
             return $this->redirect('retail/new');
         }
 
-        $data = new PaymentPlacementFormData();
+        $data = new PaymentPlacementFormDTO();
         $data->amount = $this->majorAmount($placement['amountMinor']);
         $data->currency = $placement['currency'];
 

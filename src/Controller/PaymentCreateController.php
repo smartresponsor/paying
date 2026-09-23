@@ -7,9 +7,9 @@ namespace App\Paying\Controller;
 
 use App\Paying\Attribute\PaymentRequireScopeAttribute;
 use App\Paying\ControllerInterface\PaymentCreateControllerInterface;
-use App\Paying\Dto\Payment\PaymentCreateRequestDto;
+use App\Paying\DTO\PaymentCreateRequestDTO;
 use App\Paying\Entity\Business\PaymentEntity;
-use App\Paying\ServiceInterface\PaymentApiErrorResponseFactoryInterface;
+use App\Paying\FactoryInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;
 use App\Paying\ServiceInterface\PaymentApiRequestValidatorInterface;
 use App\Paying\ServiceInterface\PaymentServiceInterface;
@@ -97,9 +97,9 @@ final readonly class PaymentCreateController implements PaymentCreateControllerI
      *
      * @param array<string, mixed> $data
      */
-    private function hydrateCreateRequestDto(array $data): PaymentCreateRequestDto
+    private function hydrateCreateRequestDto(array $data): PaymentCreateRequestDTO
     {
-        $dto = new PaymentCreateRequestDto();
+        $dto = new PaymentCreateRequestDTO();
         $dto->orderId = (string) ($data['orderId'] ?? '');
         $dto->amountMinor = (int) ($data['amountMinor'] ?? 0);
         $dto->currency = strtoupper((string) ($data['currency'] ?? 'USD'));

@@ -5,12 +5,12 @@ declare(strict_types=1);
 
 namespace App\Paying\Service\Mapper;
 
-use App\Paying\ServiceInterface\EventMapperInterface;
+use App\Paying\ServiceInterface\PaymentEventMapperInterface;
 
 /**
  * Maps external provider payloads into the internal adyen event mapper payment representation.
  */
-class PaymentAdyenEventMapper implements EventMapperInterface
+class PaymentAdyenEventMapper implements PaymentEventMapperInterface
 {
     /**
      * Provides the provider behavior for the adyen event mapper component.

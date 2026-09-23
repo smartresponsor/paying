@@ -6,10 +6,9 @@ declare(strict_types=1);
 namespace App\Paying\Service;
 
 use App\Paying\Entity\Business\PaymentEntity;
-use App\Paying\Entity\Business\PaymentWebhookLogEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\RepositoryInterface\PaymentWebhookRepositoryInterface;
 use App\Paying\ServiceInterface\PaymentConsoleReadModelInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Provides the payment console read model service used by the payment lifecycle and operator-facing flows.
@@ -18,7 +17,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
 {
     public function __construct(
         private PaymentRepositoryInterface $payments,
-        private EntityManagerInterface $em,
+        private PaymentWebhookRepositoryInterface $webhooks,
     ) {
     }
 
@@ -106,7 +105,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
     /** @return list<array{id: string, provider: string, externalEventId: string, status: string, receivedAt: string}> */
     private function listWebhookEvents(string $paymentId): array
     {
-        $logs = $this->em->getRepository(PaymentWebhookLogEntity::class)->findBy([], ['receivedAt' => 'DESC'], 50);
+        $logs = $this->webhooks->listRecent(50);
 
         $events = [];
         foreach ($logs as $log) {

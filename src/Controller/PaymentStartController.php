@@ -6,12 +6,12 @@ declare(strict_types=1);
 namespace App\Paying\Controller;
 
 use App\Paying\ControllerInterface\PaymentStartControllerInterface;
-use App\Paying\Dto\Payment\PaymentStartRequestDto;
-use App\Paying\ServiceInterface\PaymentApiErrorResponseFactoryInterface;
+use App\Paying\DTO\PaymentStartInputDTO;
+use App\Paying\DTO\PaymentStartRequestDTO;
+use App\Paying\FactoryInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;
 use App\Paying\ServiceInterface\PaymentApiRequestValidatorInterface;
 use App\Paying\ServiceInterface\PaymentApiStartHandlerInterface;
-use App\Paying\ServiceInterface\PaymentStartInput;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,9 +49,9 @@ final readonly class PaymentStartController implements PaymentStartControllerInt
     /**
      * @param array<string, mixed> $data
      */
-    private function hydrateStartRequestDto(array $data): PaymentStartRequestDto
+    private function hydrateStartRequestDto(array $data): PaymentStartRequestDTO
     {
-        $dto = new PaymentStartRequestDto();
+        $dto = new PaymentStartRequestDTO();
         $dto->orderId = (string) ($data['orderId'] ?? '');
         $dto->amount = (string) ($data['amount'] ?? '0.00');
         $dto->currency = strtoupper((string) ($data['currency'] ?? 'USD'));
@@ -60,8 +60,8 @@ final readonly class PaymentStartController implements PaymentStartControllerInt
         return $dto;
     }
 
-    private function buildStartInput(PaymentStartRequestDto $dto): PaymentStartInput
+    private function buildStartInput(PaymentStartRequestDTO $dto): PaymentStartInputDTO
     {
-        return new PaymentStartInput($dto->orderId, $dto->provider, $dto->amount, $dto->currency);
+        return new PaymentStartInputDTO($dto->orderId, $dto->provider, $dto->amount, $dto->currency);
     }
 }
