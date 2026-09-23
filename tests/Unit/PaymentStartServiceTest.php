@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\Service\PaymentStartService;
 use App\Paying\ServiceInterface\PaymentProviderGuardInterface;

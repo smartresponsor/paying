@@ -8,7 +8,7 @@ declare(strict_types=1);
  */
 final class PayingEntityFirstPersistenceReport
 {
-    private const ENTITY_DIRS = ['src/Entity', 'src/Infrastructure/Entity'];
+    private const ENTITY_DIRS = ['src/Entity/Business', 'src/Entity/Operational'];
     private const TABLE_PREFIX = 'payment';
 
     /** @var list<string> */
@@ -60,7 +60,7 @@ final class PayingEntityFirstPersistenceReport
         sort($this->entityFiles);
 
         if ([] === $this->entityFiles) {
-            $this->errors[] = 'No Doctrine entity files found in src/Entity or src/Infrastructure/Entity.';
+            $this->errors[] = 'No Doctrine entity files found in src/Entity/Business or src/Entity/Operational.';
         }
     }
 
@@ -81,8 +81,8 @@ final class PayingEntityFirstPersistenceReport
             $this->errors[] = sprintf('Doctrine entity attribute missing: %s', $relative);
         }
 
-        if (!preg_match('/namespace\s+App\\\\Paying\\\\(?:Infrastructure\\\\)?Entity;/', $contents)) {
-            $this->errors[] = sprintf('Entity namespace must stay under App\\Paying\\Entity or App\\Paying\\Infrastructure\\Entity: %s', $relative);
+        if (!preg_match('/namespace\s+App\\\\Paying\\\\Entity\\\\(?:Business|Operational);/', $contents)) {
+            $this->errors[] = sprintf('Entity namespace must stay under App\\Paying\\Entity\\Business or App\\Paying\\Entity\\Operational: %s', $relative);
         }
 
         if (!preg_match("/#\[ORM\\\\Table\(\s*name\s*:\s*'([^']+)'/s", $contents, $match)) {

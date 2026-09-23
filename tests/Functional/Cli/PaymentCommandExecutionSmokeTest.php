@@ -5,12 +5,12 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Functional\Cli;
 
-use App\Paying\Entity\PaymentEntity;
-use App\Paying\Infrastructure\Console\PaymentOutboxRunCommand;
-use App\Paying\Infrastructure\Console\PaymentProjectionRebuildCommand;
-use App\Paying\Infrastructure\Console\PaymentProjectionSyncCommand;
-use App\Paying\Infrastructure\Console\PaymentReconcileRunCommand;
-use App\Paying\Infrastructure\PaymentOutboxWorker;
+use App\Paying\Command\PaymentOutboxRunCommand;
+use App\Paying\Command\PaymentProjectionRebuildCommand;
+use App\Paying\Command\PaymentProjectionSyncCommand;
+use App\Paying\Command\PaymentReconcileRunCommand;
+use App\Paying\Entity\Business\PaymentEntity;
+use App\Paying\Service\PaymentOutboxWorker;
 use App\Paying\ServiceInterface\PaymentProjectionSyncServiceInterface;
 use App\Paying\ServiceInterface\PaymentReconciliationServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;

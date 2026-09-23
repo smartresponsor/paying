@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Functional\Cli;
 
-use App\Paying\Infrastructure\Console\PaymentGateSloCommand;
+use App\Paying\Command\PaymentGateSloCommand;
 use App\Paying\Service\PaymentMetric;
 use App\Paying\ServiceInterface\PaymentProjectionLagServiceInterface;
 use PHPUnit\Framework\MockObject\MockObject;

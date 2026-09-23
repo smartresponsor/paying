@@ -5,11 +5,11 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Functional\Fixture;
 
-use App\Paying\Entity\PaymentEntity;
-use App\Paying\Infrastructure\Fixture\PaymentFixture;
-use App\Paying\Infrastructure\Fixture\PaymentGatewayFixture;
-use App\Paying\Infrastructure\Fixture\PaymentMethodFixture;
-use App\Paying\Infrastructure\Fixture\PaymentWebhookLogFixture;
+use App\Paying\Entity\Business\PaymentEntity;
+use App\Paying\Fixture\PaymentFixture;
+use App\Paying\Fixture\PaymentGatewayFixture;
+use App\Paying\Fixture\PaymentMethodFixture;
+use App\Paying\Fixture\PaymentWebhookLogFixture;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;

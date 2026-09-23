@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace App\Paying\Service\Api;
 
 use App\Paying\Dto\Payment\PaymentCreateRequestDto;
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\ServiceInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;
 use App\Paying\ServiceInterface\PaymentApiRequestValidatorInterface;

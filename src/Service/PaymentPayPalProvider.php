@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\Service\Gateway\PaymentPayPalGateway;
 use App\Paying\ServiceInterface\PaymentProviderInterface;
 use App\Paying\ValueObject\PaymentStatus;

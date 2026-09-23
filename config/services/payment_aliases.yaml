@@ -1,6 +1,6 @@
 services:
     App\Paying\RepositoryInterface\PaymentRepositoryInterface: '@App\Paying\Repository\PaymentRepository'
-    App\Paying\InfrastructureInterface\PaymentProjectionRepositoryInterface: '@App\Paying\Infrastructure\PaymentProjectionRepository'
+    App\Paying\RepositoryInterface\PaymentProjectionRepositoryInterface: '@App\Paying\Repository\PaymentProjectionRepository'
     App\Paying\ServiceInterface\PaymentProviderRouterInterface: '@App\Paying\Service\PaymentProviderRouter'
     App\Paying\ServiceInterface\PaymentProviderVocabularyServiceInterface: '@App\Paying\Service\PaymentProviderVocabularyService'
     App\Paying\ServiceInterface\PaymentMethodVocabularyServiceInterface: '@App\Paying\Service\PaymentMethodVocabularyService'
@@ -30,7 +30,7 @@ services:
     App\Paying\ServiceInterface\PaymentProjectionSyncServiceInterface: '@App\Paying\Service\PaymentProjectionSyncService'
     App\Paying\ServiceInterface\PaymentRefundServiceInterface: '@App\Paying\Service\PaymentRefundService'
     App\Paying\ServiceInterface\PaymentReconciliationServiceInterface: '@App\Paying\Service\PaymentReconciliationService'
-    App\Paying\InfrastructureInterface\PaymentOutboxPublisherInterface: '@App\Paying\Infrastructure\PaymentOutboxPublisher'
+    App\Paying\ServiceInterface\PaymentOutboxPublisherInterface: '@App\Paying\Service\PaymentOutboxPublisher'
     App\Paying\ServiceInterface\Outbox\PaymentOutboxProcessorInterface: '@App\Paying\Service\Outbox\PaymentOutboxProcessor'
     App\Paying\ServiceInterface\Order\OrderPaymentSyncInterface: '@App\Paying\Service\Order\PaymentNullOrderPaymentSync'
     App\Paying\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface: '@App\Paying\Service\Reconciliation\PaymentReconciliationService'

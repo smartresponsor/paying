@@ -7,7 +7,7 @@ namespace App\Paying\Controller;
 
 use App\Paying\Attribute\PaymentRequireScopeAttribute;
 use App\Paying\ControllerInterface\PaymentReadControllerInterface;
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use Nelmio\ApiDocBundle\Attribute\Security;
 use OpenApi\Attributes as OA;

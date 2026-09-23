@@ -8,7 +8,7 @@ namespace App\Paying\Controller;
 use App\Paying\Attribute\PaymentRequireScopeAttribute;
 use App\Paying\ControllerInterface\PaymentFinalizeControllerInterface;
 use App\Paying\Dto\Payment\PaymentFinalizeRequestDto;
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\ServiceInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;

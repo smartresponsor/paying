@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Entity\PaymentOutboxMessageEntity;
-use App\Paying\Infrastructure\PaymentOutboxPublisher;
+use App\Paying\Entity\Business\PaymentOutboxMessageEntity;
+use App\Paying\Service\PaymentOutboxPublisher;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;

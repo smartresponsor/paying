@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\PaymentOutboxMessageEntity;
-use App\Paying\Entity\PaymentWebhookLogEntity;
+use App\Paying\Entity\Business\PaymentOutboxMessageEntity;
+use App\Paying\Entity\Business\PaymentWebhookLogEntity;
 use App\Paying\ServiceInterface\PaymentWebhookIngestServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;

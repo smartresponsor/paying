@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Service\Outbox;
 
-use App\Paying\Entity\PaymentOutboxMessageEntity;
+use App\Paying\Entity\Business\PaymentOutboxMessageEntity;
 use App\Paying\Message\Event\PaymentTransportMessage;
 use App\Paying\ServiceInterface\Outbox\PaymentOutboxProcessorInterface;
 use Doctrine\ORM\EntityManagerInterface;

@@ -109,19 +109,19 @@ services:
         arguments:
             $em: '@doctrine.orm.entity_manager'
 
-    App\Paying\Infrastructure\PaymentProjectionRepository:
+    App\Paying\Repository\PaymentProjectionRepository:
         arguments:
             $infrastructure: '@doctrine.orm.infrastructure_entity_manager'
 
     App\Paying\Service\PaymentProjectionSyncService:
         arguments:
             $payments: '@App\Paying\Repository\PaymentRepository'
-            $paymentProjectionRepository: '@App\Paying\Infrastructure\PaymentProjectionRepository'
+            $paymentProjectionRepository: '@App\Paying\Repository\PaymentProjectionRepository'
 
     App\Paying\Service\PaymentProjectionLagService:
         arguments:
             $payments: '@App\Paying\Repository\PaymentRepository'
-            $paymentProjectionRepository: '@App\Paying\Infrastructure\PaymentProjectionRepository'
+            $paymentProjectionRepository: '@App\Paying\Repository\PaymentProjectionRepository'
 
     App\Paying\Service\PaymentSlaReporterService:
         arguments:
@@ -135,19 +135,19 @@ services:
         arguments:
             $data: '@doctrine.orm.infrastructure_entity_manager'
 
-    App\Paying\Infrastructure\PaymentDbalIdempotencyStore:
+    App\Paying\Service\PaymentDbalIdempotencyStore:
         arguments:
             $data: '@doctrine.orm.infrastructure_entity_manager'
 
-    App\Paying\Infrastructure\PaymentAuditLogger:
+    App\Paying\Service\PaymentAuditLogger:
         arguments:
             $data: '@doctrine.orm.infrastructure_entity_manager'
 
-    App\Paying\Infrastructure\PaymentOutboxPublisher:
+    App\Paying\Service\PaymentOutboxPublisher:
         arguments:
             $data: '@doctrine.orm.entity_manager'
 
-    App\Paying\Infrastructure\PaymentOutboxWorker:
+    App\Paying\Service\PaymentOutboxWorker:
         arguments:
             $data: '@doctrine.orm.entity_manager'
 

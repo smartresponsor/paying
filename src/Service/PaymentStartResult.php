@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 
 /**
  * Provides the payment start result service used by the payment lifecycle and operator-facing flows.

@@ -5,9 +5,9 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Functional\Cli;
 
-use App\Paying\Infrastructure\Console\PaymentDlqReplayCommand;
-use App\Paying\Infrastructure\Console\PaymentIdemPurgeCommand;
-use App\Paying\Infrastructure\Console\PaymentSlaReportCommand;
+use App\Paying\Command\PaymentDlqReplayCommand;
+use App\Paying\Command\PaymentIdemPurgeCommand;
+use App\Paying\Command\PaymentSlaReportCommand;
 use App\Paying\ServiceInterface\IdempotencyStoreInterface;
 use App\Paying\ServiceInterface\PaymentDlqServiceInterface;
 use App\Paying\ServiceInterface\PaymentSlaReporterServiceInterface;

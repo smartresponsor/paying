@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\PaymentEntity;
-use App\Paying\Entity\PaymentWebhookLogEntity;
+use App\Paying\Entity\Business\PaymentEntity;
+use App\Paying\Entity\Business\PaymentWebhookLogEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\ServiceInterface\PaymentConsoleReadModelInterface;
 use Doctrine\ORM\EntityManagerInterface;

@@ -112,3 +112,56 @@
 
 Что имеем? Paying now has no task-independent dirty artifact that should remain visible to Git; Canon037 is satisfied structurally rather than procedurally.
 Что осталось? Commit this canonical tracking cleanup, push the branch, and verify upstream synchronization.
+
+## 2026-09-20 — Canon019 technical-role topology closure
+
+### Reconnaissance baseline
+
+- Target boundary remains `Paying`; sibling repositories are read-only references.
+- Current Git state before mutation: branch `checkpoint/paying-release-audit-20260818`, HEAD `d435aef70bf4359fcdab042d9aef7c9e4cf7838c`, clean, tracking its origin branch with ahead/behind 0/0.
+- Read current Paying `README.md`, `composer.json`, PHPUnit/static-analysis configuration, prior CMCP journal, documentation inventory/headings, Composer script inventory, and relevant current source/config/test references.
+- Mandatory dependency contour verified in the Paying development manifest: `objecting/object`, `cruding/crud`, `collectioning/collection`, `tabling/table`, `viewing/view`, `interfacing/interface`, and EasyAdmin are direct runtime dependencies; local path repositories use symlinks and canonical `dev-master` identities.
+- Read current Objecting, Cruding, Viewing, Interfacing, Gating and Canonization contract material relevant to this pass. Normative Canonization rules consulted: Canon018 composer identity mapping, Canon019 no competing layer taxonomy, Canon020 typed Symfony role roots, Canon021 Cruding ownership of generic CRUD, Canon022 standalone dependency baseline, Canon037 generated reference artifact, Canon043 local development dependency identity, and Canon045 local repository closure.
+- Target-to-canon mapping: `paying/payment` maps to `App\\Paying\\` plus `Payment*` types (Canon018); generic CRUD remains owned by Cruding (Canon021); current dependency/package contour satisfies Canon022/043/045; `config/reference.php` remains non-source under Canon037.
+- Concrete RC defect selected: the current HEAD still contains 26 PHP declarations under the prohibited `src/Infrastructure/` root. This directly violates Canon019 even though the legacy Paying canonical-readiness aggregate is green. The stale local aggregate is therefore not authoritative for this rule.
+- RC-critical workstream: move infrastructure-bucket classes into their real Symfony technical roles (Command, Entity, Fixture, Repository, Service and corresponding interface roots), update FQCN/config/tests/docs, and prove zero active `src/Infrastructure` implementation remains.
+- Growth workstream (post-RC): provider parity, disputes/chargebacks, richer reconciliation evidence, customer checkout UX, and expanded observability remain separate capability work and do not block this topology correction.
+- Market benchmark: current Adyen guidance treats idempotent POST retries, authenticated/deduplicated webhooks, asynchronous event processing, and payment lifecycle state handling as baseline operational payment concerns; Payum similarly separates gateway behavior behind reusable handlers/contracts. Paying already owns these concerns, so this pass changes topology only, not payment semantics.
+- Material risks: namespace moves touch DI, Doctrine mapping, command tests, fixture tests and service wiring; semantic behavior must remain unchanged.
+- Planned gates: targeted forbidden-root/reference scans, strict Composer validation, canonical reports, lint/CS/PHPStan/PHPUnit, container/YAML/Doctrine/runtime smokes, then Git diff/status/branch review and integration.
+
+Что имеем? Current runtime/package baseline is mature, but `src/Infrastructure/` is a factual Canon019 violation that must be removed from active source topology.
+Что осталось? Perform the bounded technical-role migration, update all active references, run the full verification contour, repair any regressions, and integrate the verified change.
+
+### Implementation and verification
+
+- Migrated the active top-level `src/Infrastructure/` taxonomy into explicit technical roles without changing payment business semantics:
+  - console commands -> `src/Command/`;
+  - data entities -> `src/Entity/Business/`;
+  - operational entities -> `src/Entity/Operational/`;
+  - fixtures -> `src/Fixture/`;
+  - projection persistence -> `src/Repository/` + `src/RepositoryInterface/`;
+  - operational implementations/contracts -> `src/Service/` + `src/ServiceInterface/`.
+- Preserved the dual Doctrine-manager topology by mapping the data manager to `Entity/Business` and the infrastructure connection/entity manager to `Entity/Operational`; operational storage semantics were not merged into the business manager.
+- Updated all active PHP callers, DI service IDs/aliases, workflow config, Doctrine mapping, tests and fixture documentation. Workspace-level scans confirm no old `App\\Paying\\Infrastructure*` or `App\\Paying\\Entity\\Payment*` references remain in active `src/config/tests/docs`; residual old names exist only in generated local cache artifacts.
+- Hardened two local smoke guards that were stale after the topology move: Doctrine mapping smoke now discovers both entity subtrees and fails closed on zero entities; fixture sanity now scans `src/Fixture`.
+- Updated `PayingEntityFirstPersistenceReport` so local executable evidence matches the current Canon019-compliant Entity topology instead of permitting the obsolete Infrastructure taxonomy.
+- Verification after repairs:
+  - PHP lint PASS: 373 files.
+  - YAML lint PASS: 20 files.
+  - Symfony container lint PASS.
+  - Doctrine mapping smoke PASS: 16 entities (11 business, 5 operational).
+  - Fixture/runtime/container aggregate smoke PASS: 5 fixtures and all runtime/container checks green.
+  - PHP CS Fixer check PASS: 298 files, zero fixes required.
+  - PHPStan PASS on the repository's canonical PHP 8.4 runtime-target script.
+  - Unit PHPUnit PASS: 66 tests / 355 assertions.
+  - Full PHPUnit PASS: 123 tests / 583 assertions, 8 documented skips; existing PHPUnit notices/deprecation remain non-failing.
+  - Composer validate `--strict --check-lock` PASS.
+  - Composer audit PASS: no security vulnerability advisories.
+  - Paying canonical readiness PASS: 11/11 reports.
+  - RC-3 final closure PASS.
+- Concurrent/non-task drift appeared after the clean baseline and is intentionally excluded from this topology change: `composer.json`, `composer.lock`, `composer.prod.json` gained independent Gating/package-format changes, and `PRODUCT_CAPABILITY_AUDIT.adoc` appeared untracked. These are not attributed to this RC workstream and must not be folded into its commit.
+- Two temporary untracked `.gitkeep` files were used only to materialize new nested Entity directories. Console MCP policy forbids source-file deletion, so they remain local and will not be staged or committed.
+
+Что имеем? The Canon019 migration is implemented and verified across runtime, Doctrine, static analysis, tests, Composer integrity/security and the repository's canonical RC reports.
+Что осталось? Integrate only task-owned files into coherent signed commits, attempt guarded publication, then inspect final HEAD/upstream/worktree. Concurrent Composer/audit drift and untracked temporary placeholders remain outside the task-owned integration set.

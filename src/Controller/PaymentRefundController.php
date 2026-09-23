@@ -7,7 +7,7 @@ namespace App\Paying\Controller;
 
 use App\Paying\ControllerInterface\PaymentRefundControllerInterface;
 use App\Paying\Dto\Payment\PaymentRefundRequestDto;
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\Service\PaymentNotFoundException;
 use App\Paying\ServiceInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;

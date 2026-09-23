@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\ServiceInterface\PaymentConsoleCreateHandlerInterface;
 use App\Paying\ServiceInterface\PaymentServiceInterface;
 

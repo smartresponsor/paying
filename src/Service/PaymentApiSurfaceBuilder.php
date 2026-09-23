@@ -9,7 +9,7 @@ use App\Paying\Attribute\PaymentRequireScopeAttribute;
 use App\Paying\Dto\Payment\PaymentFinalizeRequestDto;
 use App\Paying\Dto\Payment\PaymentRefundRequestDto;
 use App\Paying\Dto\Payment\PaymentStartRequestDto;
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\ServiceInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;

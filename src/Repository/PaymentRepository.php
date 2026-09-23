@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Repository;
 
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\Exception\PaymentRepositoryReadException;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;

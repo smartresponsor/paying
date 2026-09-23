@@ -5,8 +5,6 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Infrastructure\PaymentDbalIdempotencyStore;
-use App\Paying\Infrastructure\PaymentRedisIdempotencyStore;
 use App\Paying\ServiceInterface\IdempotencyStoreInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;

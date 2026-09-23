@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Repository;
 
-use App\Paying\Entity\PaymentMethodEntity;
+use App\Paying\Entity\Business\PaymentMethodEntity;
 use App\Paying\RepositoryInterface\PaymentMethodRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Service\Api;
 
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;

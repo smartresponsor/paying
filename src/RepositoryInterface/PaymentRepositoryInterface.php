@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\RepositoryInterface;
 
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 
 /**
  * Defines the persistence contract for the payment repository interface payment read-write operations.

@@ -5,10 +5,10 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Functional\Fixture;
 
-use App\Paying\Infrastructure\Fixture\PaymentFixture;
-use App\Paying\Infrastructure\Fixture\PaymentGatewayFixture;
-use App\Paying\Infrastructure\Fixture\PaymentMethodFixture;
-use App\Paying\Infrastructure\Fixture\PaymentWebhookLogFixture;
+use App\Paying\Fixture\PaymentFixture;
+use App\Paying\Fixture\PaymentGatewayFixture;
+use App\Paying\Fixture\PaymentMethodFixture;
+use App\Paying\Fixture\PaymentWebhookLogFixture;
 use PHPUnit\Framework\TestCase;
 
 /**

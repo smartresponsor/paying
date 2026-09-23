@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Functional\Cli;
 
-use App\Paying\Entity\PaymentEntity;
-use App\Paying\Infrastructure\Console\PaymentLifecycleCommand;
+use App\Paying\Command\PaymentLifecycleCommand;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\Service\PaymentStartResult;
 use App\Paying\ServiceInterface\PaymentProviderGuardInterface;

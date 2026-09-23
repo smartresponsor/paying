@@ -5,10 +5,10 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Entity\PaymentOutboxMessageEntity;
-use App\Paying\Infrastructure\PaymentOutboxWorker;
-use App\Paying\InfrastructureInterface\PaymentOutboxPublisherInterface;
-use App\Paying\InfrastructureInterface\PaymentPublisherTransportInterface;
+use App\Paying\Entity\Business\PaymentOutboxMessageEntity;
+use App\Paying\Service\PaymentOutboxWorker;
+use App\Paying\ServiceInterface\PaymentOutboxPublisherInterface;
+use App\Paying\ServiceInterface\PaymentPublisherTransportInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;

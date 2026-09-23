@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\ServiceInterface\Reconciliation;
 
-use App\Paying\Entity\PaymentEntity;
-use App\Paying\Entity\PaymentRefundEntity;
+use App\Paying\Entity\Business\PaymentEntity;
+use App\Paying\Entity\Business\PaymentRefundEntity;
 
 /**
  * Defines the contract for the payment reconciliation service interface payment service boundary.

@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\InfrastructureInterface\PaymentProjectionRepositoryInterface;
+use App\Paying\RepositoryInterface\PaymentProjectionRepositoryInterface;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\ServiceInterface\PaymentProjectionSyncServiceInterface;
 

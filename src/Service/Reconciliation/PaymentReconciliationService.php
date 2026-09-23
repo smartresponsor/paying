@@ -5,9 +5,9 @@ declare(strict_types=1);
 
 namespace App\Paying\Service\Reconciliation;
 
-use App\Paying\Entity\PaymentEntity;
-use App\Paying\Entity\PaymentRefundEntity;
-use App\Paying\Entity\PaymentTransactionEntity;
+use App\Paying\Entity\Business\PaymentEntity;
+use App\Paying\Entity\Business\PaymentRefundEntity;
+use App\Paying\Entity\Business\PaymentTransactionEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;

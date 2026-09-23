@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\ServiceInterface\PaymentCircuitBreakerInterface;
 use App\Paying\ServiceInterface\PaymentMetricInterface;
 use App\Paying\ServiceInterface\PaymentProviderGuardInterface;

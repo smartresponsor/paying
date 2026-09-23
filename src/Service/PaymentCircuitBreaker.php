@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Infrastructure\Entity\PaymentCircuitEntity;
+use App\Paying\Entity\Operational\PaymentCircuitEntity;
 use App\Paying\ServiceInterface\PaymentCircuitBreakerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 

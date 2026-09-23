@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\InfrastructureInterface\PaymentProjectionRepositoryInterface;
+use App\Paying\RepositoryInterface\PaymentProjectionRepositoryInterface;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
 use App\Paying\Service\PaymentProjectionLagService;
 use PHPUnit\Framework\TestCase;

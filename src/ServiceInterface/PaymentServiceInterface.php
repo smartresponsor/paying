@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\ServiceInterface;
 
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 
 /**
  * Defines the contract for the payment service interface payment service boundary.

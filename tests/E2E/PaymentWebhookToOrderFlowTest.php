@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\E2E;
 
-use App\Paying\Entity\PaymentEntity;
-use App\Paying\Entity\PaymentOutboxMessageEntity;
+use App\Paying\Entity\Business\PaymentEntity;
+use App\Paying\Entity\Business\PaymentOutboxMessageEntity;
 use App\Paying\Message\Event\PaymentTransportMessage;
 use App\Paying\Message\Handler\PaymentEventConsumer;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\Service\PaymentApiStartHandler;
 use App\Paying\Service\PaymentStartResult;
 use App\Paying\ServiceInterface\PaymentIdempotencyServiceInterface;

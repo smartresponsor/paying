@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit\Message\Handler;
 
-use App\Paying\Entity\PaymentEntity;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\Message\Command\PaymentCreateCommand;
 use App\Paying\Message\Handler\PaymentCreateHandler;
 use App\Paying\Service\PaymentStartResult;
