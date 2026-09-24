@@ -97,6 +97,6 @@ class PaymentOutboxWorker
             throw new PaymentOutboxOperationException('Unable to load outbox messages.', 0, $e);
         }
 
-        return array_values(array_filter($rows, static fn (mixed $row): bool => $row instanceof PaymentOutboxMessageEntity));
+        return array_values($rows);
     }
 }

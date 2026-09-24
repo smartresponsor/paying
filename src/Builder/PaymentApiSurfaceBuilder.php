@@ -13,6 +13,7 @@ use App\Paying\DTO\PaymentStartRequestDTO;
 use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\FactoryInterface\PaymentApiErrorResponseFactoryInterface;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\Service\PaymentNotFoundException;
 use App\Paying\ServiceInterface\PaymentApiJsonBodyDecoderInterface;
 use App\Paying\ServiceInterface\PaymentApiRequestValidatorInterface;
 use App\Paying\ServiceInterface\PaymentApiStartHandlerInterface;
@@ -27,6 +28,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Ulid;
 
+/**
+ * Builds the public payment API lifecycle surface while delegating persistence and provider behavior to typed collaborators.
+ */
 final readonly class PaymentApiSurfaceBuilder
 {
     public function __construct(
@@ -41,6 +45,9 @@ final readonly class PaymentApiSurfaceBuilder
     ) {
     }
 
+    /**
+     * Validates and starts an idempotent provider-backed payment request.
+     */
     #[PaymentRequireScopeAttribute(['payment:write'])]
     #[OA\Post(
         path: '/payment/start',
@@ -87,6 +94,9 @@ final readonly class PaymentApiSurfaceBuilder
         return new JsonResponse($result, Response::HTTP_OK);
     }
 
+    /**
+     * Finalizes an existing payment aggregate with validated provider result data.
+     */
     #[PaymentRequireScopeAttribute(['payment:write'])]
     #[OA\Post(
         path: '/payment/finalize/{id}',
@@ -144,6 +154,9 @@ final readonly class PaymentApiSurfaceBuilder
         return new JsonResponse($this->buildFinalizePayload($existing), Response::HTTP_OK);
     }
 
+    /**
+     * Validates and executes a refund request for an existing payment aggregate.
+     */
     #[PaymentRequireScopeAttribute(['payment:write'])]
     #[OA\Post(
         path: '/api/payment/refund/{id}',

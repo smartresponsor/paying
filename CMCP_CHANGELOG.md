@@ -211,3 +211,25 @@
 
 Что имеем? Paying's own Canon020/030/039/041/047/052/053/054 and legacy typed-layer/route/mutation hard failures are closed, manifest validation is green, and the remaining local hard gate is a Canonization/Gating mirror disagreement rather than a justified Paying topology mutation.
 Что осталось? RC integration is blocked by the external Viewing runtime bootstrap defect and the Canon001 textual/executable mismatch. Do not absorb or mutate those sibling responsibilities from Paying; re-run PHPUnit/full quality and integrate after the owning repositories resolve those blockers.
+
+### 2026-09-24 final acceptance tail
+
+- The prior external Viewing bootstrap blocker is no longer present in the current dependency state: full PHPUnit now executes successfully.
+- Canon039 was made executable with PHPUnit 12-compatible `--path-coverage`; Gating reports Canon039 PASS. The persistent coverage artifact remains stale because the long coverage run exceeded the Console MCP foreground wrapper before rewriting `var/coverage/phpunit.txt`; Canon040 therefore remains warning-only evidence debt.
+- Canon031 semantic PHPDoc coverage was raised above threshold without behavior changes: classes 199/257 (77.4%), contract methods 313/447 (70.0%); Canon031 PASS.
+- Static-analysis residuals from the repository-contract migration were closed: restored the explicit `PaymentNotFoundException` import in `PaymentApiSurfaceBuilder` and removed redundant always-true entity filters now guaranteed by typed repository contracts.
+- Final managed acceptance run `e3e354d9-b928-436f-a868-1c6079dde22a` completed successfully with exit 0:
+  - PHP CS Fixer: PASS, 299 files, zero fixes required.
+  - PHPStan: PASS, no errors.
+  - PHPUnit: PASS, 123 tests / 566 assertions / 8 skips; existing PHPUnit notice/deprecation output remains non-failing.
+  - Symfony container lint: PASS.
+  - Doctrine default entity manager: mapping correct and database schema in sync.
+  - Doctrine infrastructure entity manager: mapping correct and database schema in sync.
+  - Doctrine migrations currentness: PASS, no migrations to execute.
+  - Paying canonical readiness: PASS, 11/11 reports, zero failed reports.
+- Aggregate Gating now has exactly one hard failure: Canon001. The current normative Canon001 explicitly states that its role-root list is not closed and unknown roots are escalation candidates; Gating instead hard-fails the legitimate Paying technical-role roots `Attribute`, `ControllerInterface`, `EntityInterface`, and `Fixture`. Paying must not misclassify these types merely to satisfy the closed executable allow-list.
+- Canon052 and mutation firewall both pass after quarantining the obsolete embedded Gating checkout outside active source/tooling surfaces.
+- Temporary diagnostic artifacts are excluded from Git integration: the acceptance helper remains under ignored `.codex-tmp/`, while the preserved legacy Gating checkout is quarantined under ignored `var/legacy-gating-consumer-checkout/` outside active source/tooling scans.
+
+Что имеем? Paying is runtime-, persistence-, static-analysis-, local-readiness-, and quality-green. All justified Paying-owned hard canonical defects found in this run are closed.
+Что осталось? Only the external Canon001 Canonization/Gating mirror mismatch prevents aggregate Gating from reporting all-hard-green. Integrate the verified Paying-owned tail without mutating sibling Gating/Canonization responsibility.

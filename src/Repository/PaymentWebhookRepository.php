@@ -24,7 +24,7 @@ final readonly class PaymentWebhookRepository implements PaymentWebhookRepositor
     {
         $logs = $this->em->getRepository(PaymentWebhookLogEntity::class)->findBy([], ['receivedAt' => 'DESC'], max(1, $limit));
 
-        return array_values(array_filter($logs, static fn (mixed $log): bool => $log instanceof PaymentWebhookLogEntity));
+        return array_values($logs);
     }
 
     public function ingest(string $provider, string $externalId, array $normalized, string $routingKey): array

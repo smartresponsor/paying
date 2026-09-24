@@ -15,6 +15,9 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Builds authenticated operational payment endpoints for metrics, projection status, and dead-letter recovery.
+ */
 final readonly class PaymentOpsSurfaceBuilder
 {
     public function __construct(
@@ -37,6 +40,9 @@ final readonly class PaymentOpsSurfaceBuilder
         ],
     )]
     #[Security(name: 'Bearer')]
+    /**
+     * Exposes payment metrics together with the current projection-lag measurement.
+     */
     public function metrics(): Response
     {
         $text = $this->metrics->export();
@@ -63,6 +69,9 @@ final readonly class PaymentOpsSurfaceBuilder
         ],
     )]
     #[Security(name: 'Bearer')]
+    /**
+     * Returns the current payment projection freshness snapshot.
+     */
     public function status(): JsonResponse
     {
         try {
@@ -90,6 +99,9 @@ final readonly class PaymentOpsSurfaceBuilder
         ],
     )]
     #[Security(name: 'Bearer')]
+    /**
+     * Lists dead-lettered payment messages visible to operational readers.
+     */
     public function dlqList(): JsonResponse
     {
         return new JsonResponse(['items' => $this->dlqService->list()], Response::HTTP_OK);
@@ -109,6 +121,9 @@ final readonly class PaymentOpsSurfaceBuilder
     )]
     #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))]
     #[Security(name: 'Bearer')]
+    /**
+     * Replays one dead-lettered payment message when it is still recoverable.
+     */
     public function dlqReplay(int $id): JsonResponse
     {
         if (!$this->dlqService->replay($id)) {

@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 namespace App\Paying\Service\Outbox;
 
-use App\Paying\Entity\Business\PaymentOutboxMessageEntity;
 use App\Paying\Message\Event\PaymentTransportMessage;
 use App\Paying\RepositoryInterface\PaymentOutboxRepositoryInterface;
 use App\Paying\ServiceInterface\Outbox\PaymentOutboxProcessorInterface;
@@ -35,10 +34,6 @@ final readonly class PaymentOutboxProcessor implements PaymentOutboxProcessorInt
         $count = 0;
 
         foreach ($messages as $message) {
-            if (!$message instanceof PaymentOutboxMessageEntity) {
-                continue;
-            }
-
             $message->incrementAttempts();
 
             try {

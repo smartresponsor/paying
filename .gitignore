@@ -135,6 +135,7 @@ Thumbs.db
 /var/report/local/
 /var/report/inspection/
 /var/payment-create-endpoint-error.txt
+/var/legacy-gating-consumer-checkout/
 
 /tools/runtime/doctum.phar
 /docs/generated/doctum/

@@ -185,7 +185,7 @@
     "test": "@php tools/php/php84.php vendor/bin/phpunit --configuration phpunit.xml.dist",
     "test:coverage": [
       "@php -r \"is_dir('var/coverage') || mkdir('var/coverage', 0777, true);\"",
-      "@php tools/php/php84.php -d memory_limit=2G -d xdebug.mode=coverage vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --coverage-text=var/coverage/phpunit.txt"
+      "@php tools/php/php84.php -d memory_limit=2G -d xdebug.mode=coverage vendor/bin/phpunit --configuration phpunit.xml.dist --testsuite unit --path-coverage --coverage-text=var/coverage/phpunit.txt"
     ],
     "test:bootstrap": [
       "@test:bootstrap:reset",

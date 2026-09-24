@@ -35,7 +35,7 @@ final readonly class PaymentDlqService implements PaymentDlqServiceInterface
                 'reason' => $row->reason(),
                 'created_at' => $row->createdAt()->format(DATE_ATOM),
             ],
-            array_values(array_filter($rows, static fn (mixed $row): bool => $row instanceof PaymentDlqEntity)),
+            array_values($rows),
         );
     }
 
