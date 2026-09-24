@@ -233,3 +233,12 @@
 
 Что имеем? Paying is runtime-, persistence-, static-analysis-, local-readiness-, and quality-green. All justified Paying-owned hard canonical defects found in this run are closed.
 Что осталось? Only the external Canon001 Canonization/Gating mirror mismatch prevents aggregate Gating from reporting all-hard-green. Integrate the verified Paying-owned tail without mutating sibling Gating/Canonization responsibility.
+
+### Integration completion
+
+- Signed commit `29e9eb41aafb22e7ed9be85124be6aed665bb4f8` (`Complete Paying RC acceptance tail`) captured the verified task-owned acceptance fixes and evidence.
+- Guarded push succeeded: `6f3bfa3..29e9eb4` published to `origin/checkpoint/paying-release-audit-20260818`.
+- Immediate post-push branch state was clean and synchronized: ahead 0 / behind 0.
+
+Что имеем? The verified Paying-owned RC acceptance tail is committed and published. Runtime, static analysis, persistence parity, local canonical readiness, and branch synchronization are green.
+Что осталось? Only the external Canon001 Canonization/Gating mirror mismatch remains outside the Paying responsibility boundary; no further justified Paying mutation is pending.
