@@ -1,16 +1,16 @@
-# Payment (Smartresponsor)
+# Payment
 
-[![Quality CI](https://github.com/smartresponsor/paying/actions/workflows/payment-quality.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-quality.yaml)
-[![Pages](https://github.com/smartresponsor/paying/actions/workflows/payment-pages.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-pages.yaml)
-[![Release](https://github.com/smartresponsor/paying/actions/workflows/payment-release.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-release.yaml)
-[![Latest Release](https://img.shields.io/github/v/release/smartresponsor/paying?display_name=tag)](https://github.com/smartresponsor/paying/releases)
+[![Quality CI](https://github.com/smartresponsor/paying/actions/workflows/payment-quality.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-quality.yaml) <!-- GitHub locator for the Smartresponsor consumer domain. -->
+[![Pages](https://github.com/smartresponsor/paying/actions/workflows/payment-pages.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-pages.yaml) <!-- GitHub locator for the Smartresponsor consumer domain. -->
+[![Release](https://github.com/smartresponsor/paying/actions/workflows/payment-release.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-release.yaml) <!-- GitHub locator for the Smartresponsor consumer domain. -->
+[![Latest Release](https://img.shields.io/github/v/release/smartresponsor/paying?display_name=tag)](https://github.com/smartresponsor/paying/releases) <!-- GitHub locator for the Smartresponsor consumer domain. -->
 
-Owner-facing GitHub entrypoints:
+Owner-facing GitHub entrypoints for the Smartresponsor consumer domain:
 
-- Actions: <https://github.com/smartresponsor/paying/actions>
-- Releases: <https://github.com/smartresponsor/paying/releases>
-- Tags: <https://github.com/smartresponsor/paying/tags>
-- Pages: <https://smartresponsor.github.io/paying/>
+- Actions for the Smartresponsor consumer domain: <https://github.com/smartresponsor/paying/actions>
+- Releases for the Smartresponsor consumer domain: <https://github.com/smartresponsor/paying/releases>
+- Tags for the Smartresponsor consumer domain: <https://github.com/smartresponsor/paying/tags>
+- Pages for the Smartresponsor consumer domain: <https://smartresponsor.github.io/paying/>
 
 Canonical documentation package:
 
@@ -114,7 +114,7 @@ runtime wiring.
 
 ## RC status
 
-- Internal Smart Responsor RC readiness: **ready**.
+- Internal RC readiness for the Smart Responsor consumer domain: **ready**.
 - Symfony runtime gates observed green in the working RC snapshot: `composer dump-autoload`, `about`, `lint:container`, `phpstan`, `phpunit`.
 - Reusable bundle contour: **near-ready**, but still positioned first for the internal ecosystem rather than as a fully polished public vendor package.
 - Main remaining refinement areas are installed-runtime proof closure, continued controller decomposition, and further documentation synchronization.

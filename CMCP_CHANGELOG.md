@@ -242,3 +242,39 @@
 
 Что имеем? The verified Paying-owned RC acceptance tail is committed and published. Runtime, static analysis, persistence parity, local canonical readiness, and branch synchronization are green.
 Что осталось? Only the external Canon001 Canonization/Gating mirror mismatch remains outside the Paying responsibility boundary; no further justified Paying mutation is pending.
+
+## 2026-09-26 — Canon055 platform-identity terminology closure
+
+### Reconnaissance baseline
+
+- Target boundary is Paying only; sibling repositories are read-only references.
+- Baseline branch is `checkpoint/paying-release-audit-20260818` at `9d126119825581aa4981b98ed3653c8b1e7fad21`, synchronized with its upstream at ahead/behind 0/0.
+- Pre-existing worktree drift is limited to `.gating/README.md`; its worktree content mirrors the Gating owner README instead of Paying's tracked artifact-only consumer README. It predates this pass and is preserved rather than overwritten or absorbed.
+- Read current Paying README, canonical Markdown/AsciiDoc entry documentation, Composer dev/prod dependency manifests, representative webhook/refund source and docblocks, the existing CMCP journal, and current Git state.
+- Mandatory dependency contour verified in development: Objecting, Cruding, Collectioning, Tabling, Viewing, and Interfacing are direct `dev-master` dependencies with local path/symlink repositories; Gating is a `dev-master` development dependency. Production metadata declares the six runtime component packages.
+- Read current Objecting, Cruding, Viewing, Interfacing, Gating, and Canonization contract material. Canonization rules consulted for this pass include Canon001, Canon019, Canon020, Canon021, Canon022, Canon039, Canon041, Canon043, Canon045, Canon047, Canon052, Canon053, Canon054, and the newly materialized Canon055 textual rule.
+- Target-to-canon mapping: Paying retains role-first `App\\Paying\\` source topology, repository-owned Doctrine manager access, Cruding-owned generic CRUD, the mandatory dependency baseline, and Gating integration. Canon055 additionally requires Smartresponsor aliases to be framed strictly as consumer/domain identity or technical locators, never as platform identity.
+- Market baseline remains aligned with the component boundary: idempotent payment mutations, authenticated/deduplicated webhooks, asynchronous delivery, reconciliation visibility, and operational diagnostics are RC-grade expectations. Provider/dispute/checkout expansion remains a separate growth track.
+- Initial deterministic gate: `composer gate` fails only on `canon.055.platform_identity_terminology`, with findings in `README.md` and `docs/architecture/payment-technical-portrait.md`.
+- RC-critical workstream: close Canon055 terminology ambiguity without changing payment runtime semantics; then rerun deterministic and runtime-relevant gates.
+- Growth workstream: provider parity, disputes/chargebacks, richer reconciliation evidence, and customer checkout UX stay post-RC.
+
+Что имеем? The repository is functionally mature, and the only newly reproduced Paying-owned hard gate is Canon055 documentation terminology.
+Что осталось? Apply the bounded documentation correction, rerun Gating plus relevant QA/runtime gates, then integrate only task-owned files while preserving the pre-existing `.gating/README.md` drift.
+
+### Implementation and verification
+
+- Neutralized the repository title so the payment component is not presented under a consumer identity.
+- Preserved historical Smartresponsor GitHub URLs as technical locators while qualifying every human-facing occurrence explicitly as belonging to the Smartresponsor consumer domain.
+- Updated the technical responsibility portrait and RC-status wording to keep the consumer/platform identity boundary explicit.
+- No PHP, Symfony configuration, routes, persistence, forms, browser behavior, or UI assets changed; behavioral/UI and visual regression evidence is therefore not applicable to this documentation-only RC correction.
+- Verification: `composer gate` PASS, 9 rules with 0 failed and 0 warnings; Canon055 is green.
+- Verification: development Composer manifest PASS under `composer validate --strict --check-lock`; production manifest PASS under `composer validate:prod`; Composer audit reports no vulnerability advisories.
+- Verification: PHP CS Fixer PASS on 299 files; PHPStan PASS; PHPUnit PASS with 123 tests / 566 assertions / 8 skips, retaining 19 notices and 1 PHPUnit deprecation as non-failing existing test-suite debt.
+- Verification: Paying canonical readiness PASS, 11/11 reports and zero failures.
+- The aggregate `quality` async wrapper was twice prevented from starting by Console MCP runtime-capacity pressure, but its four declared constituent gates were executed directly: `cs:check`, `stan`, `test`, and `gate`, all PASS.
+
+Что имеем? The newly materialized Canon055 hard failure is closed without changing payment runtime behavior, and all declared quality constituents plus Composer integrity/security and Paying canonical readiness are green.
+Что осталось? Inspect the exact diff/status, commit only the task-owned documentation/journal files, attempt guarded publication without absorbing `.gating/README.md`, and verify final HEAD/upstream state.
+
+

@@ -19,7 +19,7 @@ The component is no longer in a demolition/salvage phase. It has moved into a **
 This repository is not a pure CRUD payment store and not a provider SDK wrapper. Its factual responsibility is closer
 to:
 
-**payment execution and integration orchestration for Smartresponsor**
+**payment execution and integration orchestration for the Smartresponsor consumer domain**
 
 The component currently acts as a coordinator for:
 
