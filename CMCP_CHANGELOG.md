@@ -277,4 +277,14 @@
 Что имеем? The newly materialized Canon055 hard failure is closed without changing payment runtime behavior, and all declared quality constituents plus Composer integrity/security and Paying canonical readiness are green.
 Что осталось? Inspect the exact diff/status, commit only the task-owned documentation/journal files, attempt guarded publication without absorbing `.gating/README.md`, and verify final HEAD/upstream state.
 
+### Integration completion
+
+- Signed implementation/journal commit `41d70e7aa34e77fbea666c9c207a9f3ae73f8206` (`docs: align Paying terminology with Canon055`) contains only `README.md`, `docs/architecture/payment-technical-portrait.md`, and `CMCP_CHANGELOG.md`.
+- After `git fetch origin`, the branch was ahead 1 / behind 0; guarded push succeeded and published `9d12611..41d70e7` to `origin/checkpoint/paying-release-audit-20260818`.
+- The pre-existing `.gating/README.md` worktree modification remains preserved and excluded from the task-owned commit.
+
+Что имеем? Canon055 is closed, the verified Paying-owned documentation correction is published, and unrelated pre-existing Gating drift remains untouched.
+Что осталось? Record this integration closure in Git, republish the journal-only tail, and confirm final branch/upstream state.
+
+
 
