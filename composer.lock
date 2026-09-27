@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dd691e921927bac515105f71c8fd65d3",
+    "content-hash": "c1f2e5739610c13d091bcb8f1c9ccc63",
     "packages": [
         {
             "name": "administering/administration",
@@ -11457,7 +11457,8 @@
                 }
             ],
             "time": "2026-09-21T23:32:10+00:00"
-        }
+        },
+        {"name":"failing/failure","version":"dev-master","dist":{"type":"path","url":"../Failing","reference":"67a5cc6fd2c145954b04c4c51a8a5c415d893e50"},"require":{"php":"^8.4","symfony/event-dispatcher":"^8.1","symfony/http-foundation":"^8.1","symfony/http-kernel":"^8.1"},"require-dev":{"friendsofphp/php-cs-fixer":"^3.95","phpstan/phpstan":"^2.0","phpunit/phpunit":"^12.0"},"type":"library","autoload":{"psr-4":{"App\\Failing\\":"src/"}},"autoload-dev":{"psr-4":{"App\\Failing\\Tests\\":"tests/"}},"scripts":{"guard:architecture":["@php tools/guard/failing-anti-wheel-guard.php"],"cs:check":["@php vendor/bin/php-cs-fixer fix --dry-run --diff"],"cs:fix":["@php vendor/bin/php-cs-fixer fix"],"test":["phpunit"],"phpstan":["@php vendor/bin/phpstan analyse src tests --level=max"],"check:failing":["@guard:architecture","@cs:check","@phpstan","@test"]},"license":["PolyForm-Noncommercial-1.0.0"],"description":"Consumer-agnostic failure contract, runtime inventory, and RFC 9457 integration for Symfony applications.","transport-options":{"symlink":true,"relative":true}}
     ],
     "packages-dev": [
         {
