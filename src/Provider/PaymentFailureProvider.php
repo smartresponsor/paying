@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 final class PaymentFailureProvider implements FailureProviderInterface
 {
-    public const string PAYMENT_NOT_FOUND = 'payment.payment_not_found';
+    public const string PAYMENT_NOT_FOUND = 'payment-not-found';
 
     public function definitions(): iterable
     {
