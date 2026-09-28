@@ -65,6 +65,11 @@
   "repositories": [
     {
       "type": "vcs",
+      "url": "https://github.com/smartresponsor/failing.git",
+      "no-api": true
+    },
+    {
+      "type": "vcs",
       "url": "https://github.com/smartresponsor/gating.git",
       "no-api": true
     }

@@ -16,4 +16,5 @@ return [
     App\Paying\PayingBundle::class => ['all' => true],
     App\Objecting\ObjectBundle::class => ['all' => true],
     App\Viewing\ViewingBundle::class => ['all' => true],
+    App\Failing\FailingBundle::class => ['all' => true],
 ];
