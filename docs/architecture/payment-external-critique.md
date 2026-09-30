@@ -55,7 +55,7 @@
 
 ### Proposal B1: Expand OpenAPI to stable external contract
 
-Add to `docs/api/openapi.yaml`:
+Add to the canonical `config/openapi/payment_openapi.yaml`:
 
 - Reusable schemas: `ErrorResponse`, `ValidationError`, `IdempotencyError`, `PaymentState`.
 - Explicit non-2xx responses for each route (`400`, `401`, `403`, `404`, `409`, `422`, `429`, `500`).

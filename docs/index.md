@@ -14,5 +14,6 @@ Canonical narrative entry set:
 
 Generated surfaces stay separate:
 
-- OpenAPI: `docs/api/openapi.yaml`
+- Canonical OpenAPI source: `../config/openapi/payment_openapi.yaml`
+- Exported OpenAPI artifact: `api/openapi.yaml`
 - Doctum producer config: `doctum.php` (checked-in generated output is not included in the current slice)

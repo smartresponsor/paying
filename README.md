@@ -19,7 +19,8 @@ Documentation surfaces are intentionally split:
 - Antora producer pages: `docs/antora.yml` + `docs/modules/ROOT/pages/`
 - Nelmio/OpenAPI HTTP contract generation: runtime publication via `/api/doc`, `/api/doc/json`
 - Swagger UI: browser-facing viewer for the Nelmio/OpenAPI contract, not a separate documentation system
-- Exported OpenAPI artifact: `docs/api/openapi.yaml`
+- Canonical OpenAPI source: `config/openapi/payment_openapi.yaml`
+- Exported documentation artifact: `docs/api/openapi.yaml`
 - Doctum generated code reference: producer config via `doctum.php`; checked-in generated output is not included in the current slice
 
 Canonical narrative entry set:

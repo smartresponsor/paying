@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit\Provider;
 
-use App\Failing\Inventory\OperationFailureInventory;
+use App\Failing\Inventory\FailureOperationInventory;
 use App\Failing\Registry\FailureRegistry;
 use App\Paying\Provider\PaymentFailureProvider;
 use App\Paying\Provider\PaymentOperationFailureInventoryProvider;
@@ -15,7 +15,7 @@ final class PaymentFailureContractProviderTest extends TestCase
     public function testPaymentNotFoundProducesDeterministicOperationEvidence(): void
     {
         $registry = new FailureRegistry([new PaymentFailureProvider()]);
-        $inventory = new OperationFailureInventory(
+        $inventory = new FailureOperationInventory(
             [new PaymentOperationFailureInventoryProvider()],
             $registry,
         );

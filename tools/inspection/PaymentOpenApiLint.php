@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-$file = 'docs/api/openapi.yaml';
+$file = 'config/openapi/payment_openapi.yaml';
 if (!file_exists($file)) {
     fwrite(STDERR, $file.' not found'.PHP_EOL);
     exit(1);

@@ -6,7 +6,7 @@ $proof = [
     'kernel' => file_exists('src/Kernel.php'),
     'services_yaml' => file_exists('config/services.yaml'),
     'phpunit' => file_exists('phpunit.xml.dist'),
-    'openapi' => file_exists('docs/api/openapi.yaml'),
+    'openapi' => file_exists('config/openapi/payment_openapi.yaml'),
     'pipeline_runner_ps1' => file_exists('tools/ci/run-payment-local-pipeline.ps1'),
 ];
 $targetDir = 'var/report/inspection';

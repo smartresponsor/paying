@@ -286,5 +286,39 @@
 Что имеем? Canon055 is closed, the verified Paying-owned documentation correction is published, and unrelated pre-existing Gating drift remains untouched.
 Что осталось? Record this integration closure in Git, republish the journal-only tail, and confirm final branch/upstream state.
 
+## 2026-09-29 — CanonScanning remediation and OpenAPI source closure
+
+### Reconnaissance baseline
+
+- Task: `engine-20260930035809-paying-e9a1c2`; target boundary is Paying only. Sibling repositories are read-only contract sources for this run.
+- Git baseline: branch `checkpoint/paying-release-audit-20260818` at `db8d0d98abdad0b1abdebed95e0fcec5bcb2167f`, tracking the matching origin branch at 0 ahead / 0 behind. The only pre-existing worktree drift is `.gating/README.md`; its local contents must be preserved.
+- Consumed upstream CanonScanning evidence for fingerprint `9e103c0b242a80ff6bba91763873b14ef272496323d210ed64d68b54cda06f77`: 68 canon checks, 42 passed, 6 failed, 15 skipped, 5 warnings. The six hard failures are Canon001, Canon052, Canon056, Canon058, Canon059, and Canon063. Fresh Inspecting evidence contains six medium structural findings and no hard failure.
+- Canonization textual rules consulted directly: `Canon001TechnicalRoleFirstRule.md`, `Canon052GatingIntegrationRule.md`, and `Canon056ExternalApiOpenApiParityRule.md` through `Canon063ExternalApiMethodParityRule.md`, plus the architecture guard matrix. Gating owner boundary and canon-rule contract were also read.
+- Target mapping: `PaymentFixtureFaker` is a generator-like technical type and must not live directly under the Fixture source role; consumer `.gating/` may contain generated artifacts only and must not track the Gating engine/policy tree; the canonical Paying OpenAPI source belongs at `config/openapi/payment_openapi.yaml`; path/method parity must mirror the external runtime `/api/**` inventory; Paying already directly requires `nelmio/api-doc-bundle`.
+- Mandatory dependency contour verified in Paying Composer metadata: `objecting/object`, `cruding/crud`, `viewing/view`, and `interfacing/interface` are direct `dev-master` dependencies with local path repositories. Their current README/Composer/AGENTS contracts were read. Generic CRUD remains Cruding-owned; Objecting owns reusable system-field packs; Viewing/Interfacing own presentation/rendering boundaries, not payment lifecycle semantics.
+- Documentation/runtime reconnaissance covered the canonical Paying README/API/architecture/install/operations/limits/proof surfaces, Antora entry pages, RC handoff material, current route config, OpenAPI artifact, test/tooling manifests, and existing quality scripts. No browser-visible behavior change is selected.
+- RC-critical workstream: (1) canonicalize the misplaced fixture helper without losing the local legacy file, (2) remove tracked Gating-engine contamination from the consumer Git surface while preserving local files, (3) materialize a Canon058-compatible OpenAPI source with exact runtime path/method parity, then rerun canon and deterministic runtime gates.
+- Growth workstream, explicitly non-blocking for this RC pass: payment provider parity, disputes/chargebacks, richer reconciliation evidence, public API version migration, and customer checkout UX.
+- Material risks: destructive operations are forbidden, so legacy local files must be preserved while repository tracking is corrected; adding a canonical OpenAPI source can activate Canon060-Canon062, so post-mutation Gating is mandatory.
+- Planned acceptance: Composer validation, Gating/canon, OpenAPI lint, PHP lint/style/static analysis, PHPUnit, Symfony container/YAML and Doctrine smokes, Inspecting after mutation, then exact Git diff/status/upstream review and coherent publication.
+
+Что имеем? The RED state is reduced to three concrete ownership/topology causes with explicit textual canon support and no need to change payment business behavior.
+Что осталось? Implement the non-destructive repository migration, rerun the activated canon/OpenAPI/runtime gates, repair any resulting in-scope failure, and publish the verified branch.
+
+### Implementation and verification
+
+- Materialized the Canon058 source at `config/openapi/payment_openapi.yaml` and synchronized the checked-in `docs/api/openapi.yaml` publication artifact. The canonical document now mirrors the eight external `/api/**` operations supplied by the upstream RED evidence, including explicit HTTP methods.
+- Updated OpenAPI lint/runtime-proof tooling and current README/API/Antora documentation to identify `config/openapi/payment_openapi.yaml` as the source of truth and the docs copy as an export.
+- Rehomed `PaymentFixtureFaker` to the role-first `src/Generator/Fixture/` tree and updated the fixture caller plus unit coverage.
+- Used index-only untracking for the legacy `.gating/README.md` and old `src/Fixture/PaymentFixtureFaker.php`, then moved the preserved local bytes under ignored `var/backups/cmcp-engine-e9a1c2/`. No file was physically deleted; the prior local Gating mirror and fixture source remain recoverable outside canonical source roots.
+- Unit verification exposed an adjacent linked-dependency drift: Paying still referenced pre-rename Failing `OperationFailureInventory*` public types. Updated Paying's provider/test to the current `FailureOperationInventory*` contract from the linked Failing repository. Unit rerun then passed.
+- Verification GREEN: `composer validate`; `composer gate` (9 active rules, 0 failed / 0 warnings); `docs:openapi:lint`; PHP lint (377 files); PHP-CS-Fixer dry run (302 files); PHPStan; `lint:container`; `lint:yaml` (21 files); Doctrine mapping smoke (16 entities); fixture smoke (4 fixtures); Paying canonical readiness (11/11 reports); unit PHPUnit (67 tests / 339 assertions); full PHPUnit (124 tests / 567 assertions / 8 skips). Existing PHPUnit debt remains 1 deprecation and 19 notices on the full suite.
+- Runtime proof reports `kernel`, `services_yaml`, `phpunit`, canonical `openapi`, and pipeline runner present. Route inventory reports 2 Nelmio-doc routes and 24 payment routes.
+- Post-mutation standalone Inspecting was requested three times through the dedicated Console MCP capability. Each invocation exceeded the Code Mode execution window before returning a persisted report, even after the local `.gating/` mirror was relocated. Inspecting availability itself is GREEN (`INSPECTING_READY`), but fresh post-mutation findings are therefore not yet available.
+- No browser/mobile/UI behavior or visual asset changed; Panther/Playwright screenshots are not applicable to this remediation.
+
+Что имеем? The Paying-owned remediation is implemented and green across available deterministic, static, Symfony, Doctrine, fixture, unit, full-test, and canonical-readiness gates; preserved legacy local bytes are outside canonical source roots.
+Что осталось? Integrate and publish this coherent change. Fresh post-mutation Inspecting evidence remains unavailable because the dedicated verifier call times out before returning a report.
+
 
 

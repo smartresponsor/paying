@@ -3,7 +3,7 @@
 // Copyright (c) 2025 Oleksandr Tishchenko / Marketing America Corp
 declare(strict_types=1);
 
-namespace App\Paying\Fixture;
+namespace App\Paying\Generator\Fixture;
 
 use Random\Engine\Mt19937;
 use Random\Randomizer;

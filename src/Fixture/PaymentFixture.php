@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace App\Paying\Fixture;
 
 use App\Paying\Entity\Business\PaymentEntity;
+use App\Paying\Generator\Fixture\PaymentFixtureFaker;
 use App\Paying\ValueObject\PaymentStatus;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
