@@ -44,7 +44,7 @@ The current Payment slice is no longer a cleanup candidate. It is now an App-own
 ### Runtime/documentation
 
 - post-API-Platform controller-owned runtime contour;
-- Nelmio/OpenAPI routes at `/api/docs` and `/api/docs.json`;
+- Nelmio/OpenAPI routes at `/api/doc` and `/api/doc/json`;
 - repo-owned engineering docs for dependency audit, vertical matrix, access matrix, CLI ownership, and CLI execution
   smoke.
 

@@ -1,0 +1,25 @@
+{
+  "component": "Paying",
+  "wave": "wave4-api-boundary-name-form",
+  "namespace": "App\\\\Paying",
+  "strategy": "touched-files overlay; exact-hash retiring for legacy API/security boundary names",
+  "legacy_retirements": [
+    "src/Service/ApiErrorResponseFactory.php",
+    "src/Service/ApiJsonBodyDecoder.php",
+    "src/Service/ApiRequestValidator.php",
+    "src/Service/OidcJwksCache.php",
+    "src/Service/TokenVerifier.php",
+    "src/Service/ValidationErrorMapper.php",
+    "src/ServiceInterface/ApiErrorResponseFactoryInterface.php",
+    "src/ServiceInterface/ApiJsonBodyDecoderInterface.php",
+    "src/ServiceInterface/ApiRequestValidatorInterface.php",
+    "src/ServiceInterface/OidcJwksCacheInterface.php",
+    "src/ServiceInterface/TokenVerifierInterface.php",
+    "src/ServiceInterface/ValidationErrorMapperInterface.php",
+    "tests/Unit/ApiErrorResponseFactoryTest.php",
+    "tests/Unit/ApiJsonBodyDecoderTest.php",
+    "tests/Unit/ApiRequestValidatorTest.php",
+    "tests/Unit/TokenVerifierTest.php",
+    "tests/Unit/ValidationErrorMapperTest.php"
+  ]
+}

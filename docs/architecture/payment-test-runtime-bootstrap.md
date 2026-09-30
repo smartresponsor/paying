@@ -74,7 +74,7 @@ It does **not** by itself prove a completed installed-runtime execution with res
 
 ## Wave 007
 
-- Removed Doctrine entity `repositoryClass` binding from `App\Paying\Entity\Payment` so Doctrine no longer
+- Removed Doctrine entity `repositoryClass` binding from `App\Paying\Entity\Business\Payment` so Doctrine no longer
   expects `App\Paying\Repository\PaymentRepository` to be an `ObjectRepository`.
 - Hardened generic webhook controller to return `400` for verifier exceptions or non-object JSON payloads during smoke
   routing.
@@ -100,11 +100,11 @@ It does **not** by itself prove a completed installed-runtime execution with res
 
 ## Wave 010
 
-- Marked `App\Paying\Controller\WebhookController` as a public controller service with `controller.service_arguments`
+- Marked `App\Paying\Controller\PaymentGenericWebhookProcessor` as a public controller service with `controller.service_arguments`
   so `/payment/webhook/{provider}` no longer fails before controller execution.
 - Simplified `PaymentConsoleRefundType::amount` to `TextType` so the refund console flow keeps DTO decimal validation
   instead of brittle `MoneyType` transformation behavior in functional tests.
-- Hardened `WebhookVerifier` env loading to flow through explicit Symfony DI arguments where practical so Stripe signature validation
+- Hardened `PaymentWebhookVerifierService` env loading to flow through explicit Symfony DI arguments where practical so Stripe signature validation
   works consistently in PHPUnit and Symfony test kernel runs.
 
 - Wave 011: repository find now refreshes managed Payment aggregates before returning them, so multi-request functional
@@ -151,7 +151,7 @@ It does **not** by itself prove a completed installed-runtime execution with res
 
 ## Wave 007
 
-- Removed Doctrine entity `repositoryClass` binding from `App\Paying\Entity\Payment` so Doctrine no longer
+- Removed Doctrine entity `repositoryClass` binding from `App\Paying\Entity\Business\Payment` so Doctrine no longer
   expects `App\Paying\Repository\PaymentRepository` to be an `ObjectRepository`.
 - Hardened generic webhook controller to return `400` for verifier exceptions or non-object JSON payloads during smoke
   routing.
@@ -177,11 +177,11 @@ It does **not** by itself prove a completed installed-runtime execution with res
 
 ## Wave 010
 
-- Marked `App\Paying\Controller\WebhookController` as a public controller service with `controller.service_arguments`
+- Marked `App\Paying\Controller\PaymentGenericWebhookProcessor` as a public controller service with `controller.service_arguments`
   so `/payment/webhook/{provider}` no longer fails before controller execution.
 - Simplified `PaymentConsoleRefundType::amount` to `TextType` so the refund console flow keeps DTO decimal validation
   instead of brittle `MoneyType` transformation behavior in functional tests.
-- Hardened `WebhookVerifier` env loading to flow through explicit Symfony DI arguments where practical so Stripe signature validation
+- Hardened `PaymentWebhookVerifierService` env loading to flow through explicit Symfony DI arguments where practical so Stripe signature validation
   works consistently in PHPUnit and Symfony test kernel runs.
 
 - Wave 011: repository find now refreshes managed Payment aggregates before returning them, so multi-request functional

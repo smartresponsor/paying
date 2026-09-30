@@ -6,9 +6,9 @@ doctrine:
         # User data storage; expected to be PostgreSQL.
         url: '%env(resolve:DATABASE_URL)%'
         server_version: '%paying.storage.data_server_version%'
-      infra:
+      infrastructure:
         # Application/infrastructure data storage; expected to be SQLite.
-        url: '%env(resolve:INFRA_URL)%'
+        url: '%env(resolve:INFRASTRUCTURE_URL)%'
         server_version: '%paying.storage.infra_server_version%'
   orm:
     controller_resolver:
@@ -21,6 +21,22 @@ doctrine:
           App\Paying:
             is_bundle: false
             type: attribute
-            dir: '%kernel.project_dir%/src/Entity'
-            prefix: 'App\Paying\Entity'
+            dir: '%kernel.project_dir%/src/Entity/Business'
+            prefix: 'App\Paying\Entity\Business'
             alias: App
+          App\Objecting\Embeddable:
+            is_bundle: false
+            type: attribute
+            dir: '%kernel.project_dir%/../Objecting/src/Embeddable'
+            prefix: 'App\Objecting\Embeddable'
+            alias: ObjectingEmbeddable
+      infrastructure:
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        connection: infrastructure
+        mappings:
+          App\Paying\Operational:
+            is_bundle: false
+            type: attribute
+            dir: '%kernel.project_dir%/src/Entity/Operational'
+            prefix: 'App\Paying\Entity\Operational'
+            alias: Operational

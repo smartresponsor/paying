@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit\Infrastructure\Fixture;
 
-use App\Paying\Infrastructure\Fixture\PaymentFixtureFaker;
+use App\Paying\Generator\Fixture\PaymentFixtureFaker;
 use PHPUnit\Framework\TestCase;
 
 /**

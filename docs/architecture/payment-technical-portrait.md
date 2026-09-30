@@ -19,7 +19,7 @@ The component is no longer in a demolition/salvage phase. It has moved into a **
 This repository is not a pure CRUD payment store and not a provider SDK wrapper. Its factual responsibility is closer
 to:
 
-**payment execution and integration orchestration for Smartresponsor**
+**payment execution and integration orchestration for the Smartresponsor consumer domain**
 
 The component currently acts as a coordinator for:
 
@@ -39,9 +39,9 @@ The following seams show an already recognisable payment process:
 
 - `src/Entity/Payment.php`
 - payment lifecycle state/value handling in the current `src/Service` + entity contour
-- `src/Controller/StartController.php`
-- `src/Controller/FinalizeController.php`
-- `src/Service/RefundService.php`
+- `src/Controller/PaymentStartController.php`
+- `src/Controller/PaymentFinalizeController.php`
+- `src/Service/PaymentRefundService.php`
 - `src/Service/PaymentService.php`
 - `src/Service/PaymentApiStartHandler.php`
 

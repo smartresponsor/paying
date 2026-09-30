@@ -5,3 +5,5 @@ framework:
     log: true
   session:
     enabled: true
+  asset_mapper:
+    enabled: true

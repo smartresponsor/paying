@@ -20,10 +20,10 @@ What this proof does establish:
 
 The following fixture classes belong to the `payment` group:
 
-- `App\Paying\Infrastructure\Fixture\PaymentFixture`
-- `App\Paying\Infrastructure\Fixture\PaymentGatewayFixture`
-- `App\Paying\Infrastructure\Fixture\PaymentMethodFixture`
-- `App\Paying\Infrastructure\Fixture\PaymentWebhookLogFixture`
+- `App\Paying\Fixture\PaymentFixture`
+- `App\Paying\Fixture\PaymentGatewayFixture`
+- `App\Paying\Fixture\PaymentMethodFixture`
+- `App\Paying\Fixture\PaymentWebhookLogFixture`
 
 ## Owned Composer entry points
 

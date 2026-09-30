@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace App\Paying\Message\Handler;
 
 use App\Paying\Message\Event\PaymentTransportMessage;
-use App\Paying\ServiceInterface\Order\OrderPaymentSyncInterface;
+use App\Paying\ServiceInterface\Order\PaymentOrderPaymentSyncInterface;
 use App\Paying\ServiceInterface\Reconciliation\PaymentReconciliationServiceInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -21,7 +21,7 @@ final readonly class PaymentEventConsumer
 {
     public function __construct(
         private PaymentReconciliationServiceInterface $svc,
-        private ?OrderPaymentSyncInterface $orderPaymentSync = null,
+        private ?PaymentOrderPaymentSyncInterface $orderPaymentSync = null,
     ) {
     }
 

@@ -1,0 +1,34 @@
+{
+  "wave": 24,
+  "component": "Paying",
+  "title": "test legacy duplicate retirement",
+  "type": "touched-files patch",
+  "runtime_contract_changes": false,
+  "retired_files": [
+    "tests/Unit/ApiErrorResponseFactoryTest.php",
+    "tests/Unit/ApiJsonBodyDecoderTest.php",
+    "tests/Unit/ApiRequestValidatorTest.php",
+    "tests/Unit/FinalizeControllerTest.php",
+    "tests/Unit/ProjectionLagServiceTest.php",
+    "tests/Unit/ProviderGuardTest.php",
+    "tests/Unit/RefundServiceTest.php",
+    "tests/Unit/ResponseHeaderSubscriberTest.php",
+    "tests/Unit/RetryExecutorTest.php",
+    "tests/Unit/ScopeGuardSubscriberTest.php",
+    "tests/Unit/TokenVerifierTest.php",
+    "tests/Unit/ValidationErrorMapperTest.php",
+    "tests/Unit/ValueObject/MoneyTest.php"
+  ],
+  "added_or_updated_files": [
+    "composer.json",
+    "tools/inspection/PayingTestLegacyDuplicateRetirementReport.php",
+    "docs/architecture/paying-wave24-test-legacy-duplicate-retirement.md",
+    "docs/architecture/paying-wave24-patch-manifest.json",
+    "docs/architecture/paying-canonicalization-milestone.md"
+  ],
+  "validation": [
+    "composer report:test-legacy-duplicate-retirement",
+    "composer report:test-residual-name-form",
+    "composer report:canonical-structure-closure"
+  ]
+}

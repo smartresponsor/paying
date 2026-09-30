@@ -1,11 +1,11 @@
 payment_api_doc_json:
-  path: /api/docs.json
+  path: /api/payment/doc/json
   methods: [ GET ]
   defaults:
     _controller: nelmio_api_doc.controller.swagger
 
 payment_api_doc_ui:
-  path: /api/docs
+  path: /api/payment/doc
   methods: [ GET ]
   defaults:
     _controller: nelmio_api_doc.controller.swagger_ui

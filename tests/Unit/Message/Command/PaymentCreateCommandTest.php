@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit\Message\Handler;
 
-use App\Paying\Message\Command\PaymentCreateCommand;
+use App\Paying\Command\PaymentCreateCommand;
 use PHPUnit\Framework\TestCase;
 
 /**

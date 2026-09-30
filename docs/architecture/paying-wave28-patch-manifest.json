@@ -1,0 +1,21 @@
+{
+  "component": "Paying",
+  "wave": 28,
+  "name": "release-candidate-structure-guard",
+  "type": "report-only",
+  "runtime_contracts_changed": false,
+  "routes_changed": false,
+  "provider_keys_changed": false,
+  "database_tables_changed": false,
+  "files_retired": [],
+  "touched_files": [
+    "composer.json",
+    "docs/architecture/paying-wave28-release-candidate-structure.md",
+    "docs/architecture/paying-wave28-patch-manifest.json",
+    "docs/architecture/paying-canonicalization-milestone.md",
+    "tools/inspection/PayingReleaseCandidateStructureReport.php"
+  ],
+  "composer_scripts_added": [
+    "report:release-candidate-structure"
+  ]
+}

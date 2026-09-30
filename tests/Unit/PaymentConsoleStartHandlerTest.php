@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Entity\Payment;
-use App\Paying\Service\PaymentConsoleStartHandler;
+use App\Paying\Entity\Business\PaymentEntity;
+use App\Paying\Handler\PaymentConsoleStartHandler;
 use App\Paying\Service\PaymentStartResult;
 use App\Paying\ServiceInterface\PaymentStartServiceInterface;
 use App\Paying\ValueObject\PaymentStatus;
@@ -24,7 +24,7 @@ final class PaymentConsoleStartHandlerTest extends TestCase
      */
     public function testStartReturnsPaymentFromStartService(): void
     {
-        $payment = new Payment(new Ulid(), PaymentStatus::processing, '12.50', 'USD');
+        $payment = new PaymentEntity(new Ulid(), PaymentStatus::processing, '12.50', 'USD');
 
         try {
             $startService = $this->createMock(PaymentStartServiceInterface::class);

@@ -1,0 +1,17 @@
+{
+  "wave": "22",
+  "component": "Paying",
+  "scope": "source residual name-form report-only guard",
+  "runtime_contract_changes": false,
+  "routes_changed": false,
+  "provider_keys_changed": false,
+  "doctrine_tables_changed": false,
+  "files_retired": [],
+  "touched_files": [
+    "composer.json",
+    "tools/inspection/PayingSourceResidualNameFormReport.php",
+    "docs/architecture/paying-wave22-source-residual-name-form.md",
+    "docs/architecture/paying-wave22-patch-manifest.json",
+    "docs/architecture/paying-canonicalization-milestone.md"
+  ]
+}

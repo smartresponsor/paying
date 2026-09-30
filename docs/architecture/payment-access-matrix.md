@@ -9,7 +9,7 @@ The intended minimum matrix is:
 |---------|----------------------------------|-----------------|
 | API     | `POST /api/payments`             | `payment:write` |
 | API     | `GET /api/payments/{id}`         | `payment:read`  |
-| API     | `POST /api/payments/{id}/refund` | `payment:write` |
+| API     | `POST /api/payment/refund/{id}` | `payment:write` |
 | API     | `POST /payment/start`            | `payment:write` |
 | API     | `POST /payment/finalize/{id}`    | `payment:write` |
 | UI      | `GET /payment/console`           | `payment:read`  |
@@ -24,7 +24,7 @@ The intended minimum matrix is:
 | Webhook | `POST /payment/webhook/{provider}` | public ingress + signature verification |
 | Webhook | `POST /webhook/stripe`           | public ingress + signature verification |
 | Webhook | `POST /webhook/paypal`           | public ingress + signature verification |
-| Docs    | `/api/docs`, `/api/docs.json`    | public          |
+| Docs    | `/api/doc`, `/api/doc/json`    | public          |
 
 ## CLI operational ownership
 

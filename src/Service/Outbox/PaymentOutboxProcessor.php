@@ -5,10 +5,9 @@ declare(strict_types=1);
 
 namespace App\Paying\Service\Outbox;
 
-use App\Paying\Entity\PaymentOutboxMessage;
 use App\Paying\Message\Event\PaymentTransportMessage;
+use App\Paying\RepositoryInterface\PaymentOutboxRepositoryInterface;
 use App\Paying\ServiceInterface\Outbox\PaymentOutboxProcessorInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Stamp\TransportNamesStamp;
@@ -20,7 +19,7 @@ use Symfony\Component\Messenger\Transport\TransportInterface;
 final readonly class PaymentOutboxProcessor implements PaymentOutboxProcessorInterface
 {
     public function __construct(
-        private EntityManagerInterface $em,
+        private PaymentOutboxRepositoryInterface $outbox,
         private TransportInterface $transport,
         private LoggerInterface $logger,
     ) {
@@ -31,24 +30,10 @@ final readonly class PaymentOutboxProcessor implements PaymentOutboxProcessorInt
      */
     public function process(int $limit = 50, bool $retryFailed = false): int
     {
-        $repo = $this->em->getRepository(PaymentOutboxMessage::class);
-        $qb = $repo->createQueryBuilder('o')
-            ->where('o.status = :pending')
-            ->setParameter('pending', 'pending');
-
-        if ($retryFailed) {
-            $qb->orWhere('o.status = :failed')
-                ->setParameter('failed', 'failed');
-        }
-
-        $messages = $qb->setMaxResults($limit)->getQuery()->getResult();
+        $messages = $this->outbox->listProcessable($limit, $retryFailed);
         $count = 0;
 
         foreach ($messages as $message) {
-            if (!$message instanceof PaymentOutboxMessage) {
-                continue;
-            }
-
             $message->incrementAttempts();
 
             try {
@@ -73,7 +58,7 @@ final readonly class PaymentOutboxProcessor implements PaymentOutboxProcessorInt
             }
         }
 
-        $this->em->flush();
+        $this->outbox->flush();
 
         return $count;
     }

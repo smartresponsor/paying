@@ -1,25 +1,26 @@
-# Payment (Smartresponsor)
+# Payment
 
-[![Quality CI](https://github.com/smartresponsor/paying/actions/workflows/payment-quality.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-quality.yaml)
-[![Pages](https://github.com/smartresponsor/paying/actions/workflows/payment-pages.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-pages.yaml)
-[![Release](https://github.com/smartresponsor/paying/actions/workflows/payment-release.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-release.yaml)
-[![Latest Release](https://img.shields.io/github/v/release/smartresponsor/paying?display_name=tag)](https://github.com/smartresponsor/paying/releases)
+[![Quality CI](https://github.com/smartresponsor/paying/actions/workflows/payment-quality.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-quality.yaml) <!-- GitHub locator for the Smartresponsor consumer domain. -->
+[![Pages](https://github.com/smartresponsor/paying/actions/workflows/payment-pages.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-pages.yaml) <!-- GitHub locator for the Smartresponsor consumer domain. -->
+[![Release](https://github.com/smartresponsor/paying/actions/workflows/payment-release.yaml/badge.svg)](https://github.com/smartresponsor/paying/actions/workflows/payment-release.yaml) <!-- GitHub locator for the Smartresponsor consumer domain. -->
+[![Latest Release](https://img.shields.io/github/v/release/smartresponsor/paying?display_name=tag)](https://github.com/smartresponsor/paying/releases) <!-- GitHub locator for the Smartresponsor consumer domain. -->
 
-Owner-facing GitHub entrypoints:
+Owner-facing GitHub entrypoints for the Smartresponsor consumer domain:
 
-- Actions: <https://github.com/smartresponsor/paying/actions>
-- Releases: <https://github.com/smartresponsor/paying/releases>
-- Tags: <https://github.com/smartresponsor/paying/tags>
-- Pages: <https://smartresponsor.github.io/paying/>
+- Actions for the Smartresponsor consumer domain: <https://github.com/smartresponsor/paying/actions>
+- Releases for the Smartresponsor consumer domain: <https://github.com/smartresponsor/paying/releases>
+- Tags for the Smartresponsor consumer domain: <https://github.com/smartresponsor/paying/tags>
+- Pages for the Smartresponsor consumer domain: <https://smartresponsor.github.io/paying/>
 
 Canonical documentation package:
 
 Documentation surfaces are intentionally split:
 
 - Antora producer pages: `docs/antora.yml` + `docs/modules/ROOT/pages/`
-- Nelmio/OpenAPI HTTP contract generation: runtime publication via `/api/docs`, `/api/docs.json`
+- Nelmio/OpenAPI HTTP contract generation: runtime publication via `/api/doc`, `/api/doc/json`
 - Swagger UI: browser-facing viewer for the Nelmio/OpenAPI contract, not a separate documentation system
-- Exported OpenAPI artifact: `docs/api/openapi.yaml`
+- Canonical OpenAPI source: `config/openapi/payment_openapi.yaml`
+- Exported documentation artifact: `docs/api/openapi.yaml`
 - Doctum generated code reference: producer config via `doctum.php`; checked-in generated output is not included in the current slice
 
 Canonical narrative entry set:
@@ -73,7 +74,7 @@ Antora producer entry pages mirror that split and stay intentionally thin:
 - **Canonical UI**: `/payment/console` (payment list + card, create/start/finalize/refund actions, webhook visibility,
   filter/search, links to OpenAPI/status/metrics).
 - **Canonical API
-  **: `/api/payments`, `/api/payments/{id}`, `/api/payments/{id}/refund`, `/payment/start`, `/payment/finalize/{id}`, `/payment/webhook/{provider}`, `/webhook/stripe`, `/webhook/paypal`, `/status`, `/metrics`, `/payment/dlq`.
+  **: `/api/payments`, `/api/payments/{id}`, `/api/payment/refund/{id}`, `/payment/start`, `/payment/finalize/{id}`, `/payment/webhook/{provider}`, `/webhook/stripe`, `/webhook/paypal`, `/status`, `/metrics`, `/payment/dlq`.
 - **Canonical CLI**: `payment:outbox:process`, `payment:e2e:demo`.
 
 ## Runtime story (short)
@@ -114,7 +115,7 @@ runtime wiring.
 
 ## RC status
 
-- Internal Smart Responsor RC readiness: **ready**.
+- Internal RC readiness for the Smart Responsor consumer domain: **ready**.
 - Symfony runtime gates observed green in the working RC snapshot: `composer dump-autoload`, `about`, `lint:container`, `phpstan`, `phpunit`.
 - Reusable bundle contour: **near-ready**, but still positioned first for the internal ecosystem rather than as a fully polished public vendor package.
 - Main remaining refinement areas are installed-runtime proof closure, continued controller decomposition, and further documentation synchronization.

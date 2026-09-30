@@ -1,0 +1,34 @@
+{
+  "wave": 17,
+  "component": "Paying",
+  "scope": "subscriber-layer-name-form",
+  "touched": [
+    "composer.json",
+    "config/services.yaml",
+    "src/Subscriber/PaymentMetricSubscriber.php",
+    "src/Subscriber/PaymentRateLimitSubscriber.php",
+    "src/Subscriber/PaymentResponseHeaderSubscriber.php",
+    "src/Subscriber/PaymentScopeGuardSubscriber.php",
+    "tests/Unit/PaymentResponseHeaderSubscriberTest.php",
+    "tests/Unit/PaymentScopeGuardSubscriberTest.php",
+    "tools/inspection/PayingSubscriberLayerNameFormReport.php",
+    "docs/architecture/paying-wave17-subscriber-layer-name-form.md",
+    "docs/architecture/paying-wave17-patch-manifest.json",
+    "docs/architecture/paying-canonicalization-milestone.md"
+  ],
+  "retired": [
+    "src/Infrastructure/PaymentMetricSubscriber.php",
+    "src/Infrastructure/PaymentRateLimitSubscriber.php",
+    "src/Infrastructure/PaymentResponseHeaderSubscriber.php",
+    "src/Infrastructure/ScopeGuardSubscriber.php",
+    "tests/Unit/ResponseHeaderSubscriberTest.php",
+    "tests/Unit/ScopeGuardSubscriberTest.php"
+  ],
+  "unchanged_contracts": [
+    "routes",
+    "provider keys",
+    "scope strings",
+    "Doctrine tables",
+    "event names"
+  ]
+}

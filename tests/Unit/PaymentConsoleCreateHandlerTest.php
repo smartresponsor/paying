@@ -5,8 +5,8 @@ declare(strict_types=1);
 
 namespace App\Paying\Tests\Unit;
 
-use App\Paying\Entity\Payment;
-use App\Paying\Service\PaymentConsoleCreateHandler;
+use App\Paying\Entity\Business\PaymentEntity;
+use App\Paying\Handler\PaymentConsoleCreateHandler;
 use App\Paying\ServiceInterface\PaymentServiceInterface;
 use App\Paying\ValueObject\PaymentStatus;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +27,7 @@ final class PaymentConsoleCreateHandlerTest extends TestCase
      */
     public function testCreateDelegatesToPaymentService(): void
     {
-        $payment = new Payment(new Ulid(), PaymentStatus::new, '10.00', 'USD');
+        $payment = new PaymentEntity(new Ulid(), PaymentStatus::new, '10.00', 'USD');
 
         $service = $this->createMock(PaymentServiceInterface::class);
         $service

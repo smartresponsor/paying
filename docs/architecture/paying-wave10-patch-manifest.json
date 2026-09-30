@@ -1,0 +1,36 @@
+{
+  "component": "Paying",
+  "wave": 10,
+  "title": "value-object and exception name-form canonicalization",
+  "namespace": "App\\Paying",
+  "delivery": "touched-files patch only",
+  "non_destructive": true,
+  "retirement_policy": "backup plus SHA-256 verification before deleting touched legacy files",
+  "renames": [
+    {
+      "from": "src/ValueObject/Money.php",
+      "to": "src/ValueObject/PaymentMoney.php"
+    },
+    {
+      "from": "src/ValueObject/GatewayCode.php",
+      "to": "src/ValueObject/PaymentGatewayCode.php"
+    },
+    {
+      "from": "src/ValueObject/TransactionId.php",
+      "to": "src/ValueObject/PaymentTransactionId.php"
+    },
+    {
+      "from": "src/Exception/OutboxOperationException.php",
+      "to": "src/Exception/PaymentOutboxOperationException.php"
+    },
+    {
+      "from": "tests/Unit/ValueObject/MoneyTest.php",
+      "to": "tests/Unit/ValueObject/PaymentMoneyTest.php"
+    }
+  ],
+  "verification": [
+    "composer report:value-object-exception-name-form",
+    "composer report:legacy-duplicate-retirement",
+    "composer test:unit"
+  ]
+}

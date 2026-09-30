@@ -1,0 +1,20 @@
+{
+  "component": "Paying",
+  "wave": "15",
+  "name": "canonical-name-form-summary-guard",
+  "namespace": "App\\Paying",
+  "scope": "report-only summary guard for name-form and residual legacy duplicate state",
+  "touched_files": [
+    "composer.json",
+    "docs/architecture/paying-canonicalization-milestone.md",
+    "docs/architecture/paying-wave15-canonical-name-form-summary.md",
+    "docs/architecture/paying-wave15-patch-manifest.json",
+    "tools/inspection/PayingCanonicalNameFormSummaryReport.php"
+  ],
+  "non_scope": [
+    "runtime route changes",
+    "provider key changes",
+    "database schema changes",
+    "repository-wide overwrite"
+  ]
+}

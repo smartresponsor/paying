@@ -6,7 +6,7 @@ declare(strict_types=1);
 namespace App\Paying\Service;
 
 /**
- * Provides the payment not found exception service used by the payment lifecycle and operator-facing flows.
+ * arovides the payment not found exception service used by the payment lifecycle and operator-facing flows.
  */
 final class PaymentNotFoundException extends \RuntimeException
 {
@@ -15,6 +15,6 @@ final class PaymentNotFoundException extends \RuntimeException
      */
     public static function byId(string $paymentId): self
     {
-        return new self('Payment not found: '.$paymentId);
+        return new self('PaymentEntity not found: '.$paymentId);
     }
 }

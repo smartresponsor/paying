@@ -26,6 +26,6 @@ final class PaymentTestRuntimeBootstrapConfigSmokeTest extends KernelTestCase
         );
 
         self::assertStringContainsString('payment.test.data.sqlite', $config);
-        self::assertStringContainsString('payment.test.infra.sqlite', $config);
+        self::assertStringContainsString('payment.test.infrastructure.sqlite', $config);
     }
 }

@@ -1,0 +1,448 @@
+{
+  "wave": "12",
+  "component": "Paying",
+  "scope": "residual legacy duplicate retirement",
+  "retirements": [
+    {
+      "path": "src/Controller/DlqController.php",
+      "canonical": "src/Controller/PaymentDlqController.php",
+      "sha256": "46970ab77baefbc54e61e684a840faec1e9b4fa6ec16ccb82a64c27e078e1494"
+    },
+    {
+      "path": "src/Controller/FinalizeController.php",
+      "canonical": "src/Controller/PaymentFinalizeController.php",
+      "sha256": "652315d001c8a8e3ab09878a04eee40f7188c9cb3281beabd1bdec19d804e079"
+    },
+    {
+      "path": "src/Controller/MetricController.php",
+      "canonical": "src/Controller/PaymentMetricController.php",
+      "sha256": "65c7102f15308ebc0a96e753bc068a5cd107a1c849f4f428a300a00f90d1ed53"
+    },
+    {
+      "path": "src/Controller/StartController.php",
+      "canonical": "src/Controller/PaymentStartController.php",
+      "sha256": "a5c544ce7f601343d169d1dea88e77c4956aabef039fae270904cc6e1dd63257"
+    },
+    {
+      "path": "src/Controller/StatusController.php",
+      "canonical": "src/Controller/PaymentStatusController.php",
+      "sha256": "db0b97673939d86705d3c8aa8b0856dfdaa044a43fb511565c464dacb383b6a7"
+    },
+    {
+      "path": "src/Controller/WebhookController.php",
+      "canonical": "src/Service/Webhook/PaymentGenericWebhookProcessor.php",
+      "sha256": "a51fee292560115f66c81f802f8e97893c8845d3c5ecf14bf0caac0ce2243b18"
+    },
+    {
+      "path": "src/ControllerInterface/DlqControllerInterface.php",
+      "canonical": "src/ControllerInterface/PaymentDlqControllerInterface.php",
+      "sha256": "cc5277031a69bae370489a5f74f2896c42ef44ebeefab64bc3c3647309e189ab"
+    },
+    {
+      "path": "src/ControllerInterface/FinalizeControllerInterface.php",
+      "canonical": "src/ControllerInterface/PaymentFinalizeControllerInterface.php",
+      "sha256": "c8f59fed85f5315634e4b26756de176f702394b92a461d4be73ece016a60f2a6"
+    },
+    {
+      "path": "src/ControllerInterface/MetricControllerInterface.php",
+      "canonical": "src/ControllerInterface/PaymentMetricControllerInterface.php",
+      "sha256": "2df75069546c94f6b68a7ca1edcd4f2631993bfb4aa5945d89b7c89104b99a10"
+    },
+    {
+      "path": "src/ControllerInterface/StartControllerInterface.php",
+      "canonical": "src/ControllerInterface/PaymentStartControllerInterface.php",
+      "sha256": "babe18acf7dc52fc39c7c30644a6f820c74e35d4bde7c76ce1c7018720dbc991"
+    },
+    {
+      "path": "src/ControllerInterface/StatusControllerInterface.php",
+      "canonical": "src/ControllerInterface/PaymentStatusControllerInterface.php",
+      "sha256": "6ea0c497b419028b274569afdf4ed8279707a63d1bb788890d720906809b96a8"
+    },
+    {
+      "path": "src/ControllerInterface/WebhookControllerInterface.php",
+      "canonical": "src/ControllerInterface/PaymentGenericWebhookProcessorInterface.php",
+      "sha256": "2ae222ce35150774534abb7105d90397da3cf9593886d39aad914927d92bdf38"
+    },
+    {
+      "path": "src/Exception/OutboxOperationException.php",
+      "canonical": "src/Exception/PaymentOutboxOperationException.php",
+      "sha256": "a3726b818d64c0c27f4d8f2f90fca5cb1adef4d55ff364e58a7a77f02ee11cc2"
+    },
+    {
+      "path": "src/Infrastructure/AuditLogger.php",
+      "canonical": "src/Infrastructure/PaymentAuditLogger.php",
+      "sha256": "e787073fdc4f3f762f6fcd8c0a871194ce59b4912007acaaf9fafb3fa71088f7"
+    },
+    {
+      "path": "src/Infrastructure/Console/DlqReplayCommand.php",
+      "canonical": "src/Infrastructure/Console/PaymentDlqReplayCommand.php",
+      "sha256": "b15c8bf28e59e8ad34161854f3bbaed01bc154fefc97553850f7734d9d76abc3"
+    },
+    {
+      "path": "src/Infrastructure/Console/GateSloCommand.php",
+      "canonical": "src/Infrastructure/Console/PaymentGateSloCommand.php",
+      "sha256": "99fb493caecf8998dee9bed354a0ba7afb79e746ee1b3b24d5d2c46fbcd0ec0b"
+    },
+    {
+      "path": "src/Infrastructure/Console/IdemPurgeCommand.php",
+      "canonical": "src/Infrastructure/Console/PaymentIdemPurgeCommand.php",
+      "sha256": "913859bff74a34362b43caa819266f68d7bd5ffffbb3ab0ffca15ebfc72e71c1"
+    },
+    {
+      "path": "src/Infrastructure/Console/OutboxRunCommand.php",
+      "canonical": "src/Infrastructure/Console/PaymentOutboxRunCommand.php",
+      "sha256": "55d81be9b26de182f40a608dda9b8b3d23787bf6835323a6314338bb92ac7d18"
+    },
+    {
+      "path": "src/Infrastructure/Console/ProjectionRebuildCommand.php",
+      "canonical": "src/Infrastructure/Console/PaymentProjectionRebuildCommand.php",
+      "sha256": "dc0822f2b19c81facca46972642fe0ab21f7050592cc49a38ce4f010962261e6"
+    },
+    {
+      "path": "src/Infrastructure/Console/ProjectionSyncCommand.php",
+      "canonical": "src/Infrastructure/Console/PaymentProjectionSyncCommand.php",
+      "sha256": "a6c5ecd6fd0f17b3cf1c64474a5662653256fbcdc8cbd0afa649c4da0019a368"
+    },
+    {
+      "path": "src/Infrastructure/Console/ReconcileRunCommand.php",
+      "canonical": "src/Infrastructure/Console/PaymentReconcileRunCommand.php",
+      "sha256": "3535b4b50de69110bbcdf9f63d5991784511432cbdc7306dfb1eb5002952e48d"
+    },
+    {
+      "path": "src/Infrastructure/Console/SlaReportCommand.php",
+      "canonical": "src/Infrastructure/Console/PaymentSlaReportCommand.php",
+      "sha256": "98f0696f9f3f14e7a8be71f81a18927e2d39290b40c4a5a569d93a5a1e799ae7"
+    },
+    {
+      "path": "src/Infrastructure/DbalIdempotencyStore.php",
+      "canonical": "src/Infrastructure/PaymentDbalIdempotencyStore.php",
+      "sha256": "b42b7ccb884a9d8f04026fa036085689417fe8e9f0543846d75d7bdec005ea69"
+    },
+    {
+      "path": "src/Infrastructure/MetricSubscriber.php",
+      "canonical": "src/Infrastructure/PaymentMetricSubscriber.php",
+      "sha256": "d06c964b0118b9f61b090235e5969ef084be4bceeee3e0927b9101d8934eedce"
+    },
+    {
+      "path": "src/Infrastructure/OutboxPublisher.php",
+      "canonical": "src/Infrastructure/PaymentOutboxPublisher.php",
+      "sha256": "358d76e8629d9ea17c9bf50ce5c4d2f636a296866f9126ec176c78b60306c8c0"
+    },
+    {
+      "path": "src/Infrastructure/OutboxWorker.php",
+      "canonical": "src/Infrastructure/PaymentOutboxWorker.php",
+      "sha256": "1aca11277aaa49babcade039510d3ce54334fceb69e9fd5d2607503f4ba758e5"
+    },
+    {
+      "path": "src/Infrastructure/PublisherTransportLog.php",
+      "canonical": "src/Infrastructure/PaymentPublisherTransportLog.php",
+      "sha256": "789254065d2cb3431c116cb8d4b2b8ecae84b65d08c6fed63d5a15de3feee9f8"
+    },
+    {
+      "path": "src/Infrastructure/RateLimitSubscriber.php",
+      "canonical": "src/Infrastructure/PaymentRateLimitSubscriber.php",
+      "sha256": "f8fcf5a6287d8e8b8a430ab3d9d5e56376a26d7879063e41ac7291348e16a17c"
+    },
+    {
+      "path": "src/Infrastructure/RedisIdempotencyStore.php",
+      "canonical": "src/Infrastructure/PaymentRedisIdempotencyStore.php",
+      "sha256": "0c54ca8265cbc8f798984d97d5174806d55ee3c3d1658d487ce5ddb46c832897"
+    },
+    {
+      "path": "src/Infrastructure/ResponseHeaderSubscriber.php",
+      "canonical": "src/Infrastructure/PaymentResponseHeaderSubscriber.php",
+      "sha256": "be49dd9056fefbcc3bb29ab8847d2b5af27a632e9c2755d4ca316f64acfe398d"
+    },
+    {
+      "path": "src/InfrastructureInterface/AuditLoggerInterface.php",
+      "canonical": "src/InfrastructureInterface/PaymentAuditLoggerInterface.php",
+      "sha256": "7b5281650f1ab32dbc2b155835b4f6cda252ff7b9b754a8820e5a6e357a0d4cc"
+    },
+    {
+      "path": "src/InfrastructureInterface/OutboxPublisherInterface.php",
+      "canonical": "src/InfrastructureInterface/PaymentOutboxPublisherInterface.php",
+      "sha256": "6487cf5dd2fa29e9ae370760ce25d37846f30a6805367a60f0a2e75866c7906a"
+    },
+    {
+      "path": "src/InfrastructureInterface/PublisherTransportInterface.php",
+      "canonical": "src/InfrastructureInterface/PaymentPublisherTransportInterface.php",
+      "sha256": "4665e404ce070375d0ecf1e8a38d9632161a600444c2e56306f5f47125f394bb"
+    },
+    {
+      "path": "src/Service/ApiErrorResponseFactory.php",
+      "canonical": "src/Service/PaymentApiErrorResponseFactory.php",
+      "sha256": "1ea457022bfe19b401aa71a2ba89c6c74607bd1b5fc93abaed732998f20bba90"
+    },
+    {
+      "path": "src/Service/ApiJsonBodyDecoder.php",
+      "canonical": "src/Service/PaymentApiJsonBodyDecoder.php",
+      "sha256": "f5563ed08146f83d43ec676595aad779279961076411acb1e6cc89830523b30d"
+    },
+    {
+      "path": "src/Service/ApiRequestValidator.php",
+      "canonical": "src/Service/PaymentApiRequestValidator.php",
+      "sha256": "dbd91b731a1fb063d2b9b48a219f1f1ee1086eb822db4a0abd01e5c46b773a70"
+    },
+    {
+      "path": "src/Service/CircuitBreaker.php",
+      "canonical": "src/Service/PaymentCircuitBreaker.php",
+      "sha256": "0e20ae1a044ca721f21be96053702e16c5b4df40a3d32ac3d0109000d0e789a5"
+    },
+    {
+      "path": "src/Service/DlqService.php",
+      "canonical": "src/Service/PaymentDlqService.php",
+      "sha256": "29738c36cf91d3b51a6e2c41b43aaad4e8f4e52753d50416ec57c116cda83415"
+    },
+    {
+      "path": "src/Service/Gateway/PayPalGateway.php",
+      "canonical": "src/Service/Gateway/PaymentPayPalGateway.php",
+      "sha256": "6e13a3772d517748b80d38f46cf02954b55093fbcfccf3f16dbe0e0e2765e8c6"
+    },
+    {
+      "path": "src/Service/Gateway/StripeGateway.php",
+      "canonical": "src/Service/Gateway/PaymentStripeGateway.php",
+      "sha256": "ba27c00d79aa26a07b2846606a532d9d35d91e957898deef9e66a5bda38975af"
+    },
+    {
+      "path": "src/Service/IdempotencyService.php",
+      "canonical": "src/Service/PaymentIdempotencyService.php",
+      "sha256": "ed69d760171d3fb99661075e2a14258f9c1910ba8dff73a6144a03ea579110f9"
+    },
+    {
+      "path": "src/Service/IdempotencyStoreFactory.php",
+      "canonical": "src/Service/PaymentIdempotencyStoreFactory.php",
+      "sha256": "75d2c7ef4d836b36a66144bd5870ed819ca95074d5c08c0ab9c4771534efa7d5"
+    },
+    {
+      "path": "src/Service/Mapper/AdyenEventMapper.php",
+      "canonical": "src/Service/Mapper/PaymentAdyenEventMapper.php",
+      "sha256": "4368d3cbc0e80ce077913a3fe8aa820ad2cc0854f105ccf9372b7ba977d92176"
+    },
+    {
+      "path": "src/Service/Mapper/StripeEventMapper.php",
+      "canonical": "src/Service/Mapper/PaymentStripeEventMapper.php",
+      "sha256": "5444fe39aef9a681f9770c2227ba09cc7aa3149c0b9265b3e0b551d1ca302bb7"
+    },
+    {
+      "path": "src/Service/Metric.php",
+      "canonical": "src/Service/PaymentMetric.php",
+      "sha256": "7f0152a9143193f0425d2daaa197771d2a2edfeb4e4a46370a59aaed365355a7"
+    },
+    {
+      "path": "src/Service/OidcJwksCache.php",
+      "canonical": "src/Service/PaymentOidcJwksCache.php",
+      "sha256": "7de739b49ab61e3a690b6ab1fd243bcd969f2ce7d09bd905dc6e17c2b52b539d"
+    },
+    {
+      "path": "src/Service/Order/NullOrderPaymentSync.php",
+      "canonical": "src/Service/Order/PaymentNullOrderPaymentSync.php",
+      "sha256": "618fb86ef225d26dedf19a6435a5c318aaf00de50414d48c9c079dd7514ace02"
+    },
+    {
+      "path": "src/Service/ProjectionLagService.php",
+      "canonical": "src/Service/PaymentProjectionLagService.php",
+      "sha256": "1f230f2813b88bcf00651dc9306da1e625b66dc9e3bc2416c0ca59bbc786aad9"
+    },
+    {
+      "path": "src/Service/ProjectionSync.php",
+      "canonical": "src/Service/PaymentProjectionSyncService.php",
+      "sha256": "755f37a025d0077a0622fb36c48ea1f5db459fadedebabb2a841ddd7f4859593"
+    },
+    {
+      "path": "src/Service/ProviderGuard.php",
+      "canonical": "src/Service/PaymentProviderGuard.php",
+      "sha256": "619a939a658987f9c8b79c05ba730fd601f158c10bf9adff38334da48aface50"
+    },
+    {
+      "path": "src/Service/ProviderRouter.php",
+      "canonical": "src/Service/PaymentProviderRouter.php",
+      "sha256": "2e52a1f7e380a7817db84581dc3b4e0089723b25476c4eef00bce0e92c89a33d"
+    },
+    {
+      "path": "src/Service/ReconciliationService.php",
+      "canonical": "src/Service/PaymentReconciliationService.php",
+      "sha256": "d2e5aceff8fb6c36d5c7d12af2c8c8d234569d8a0d016159d504b3022181d268"
+    },
+    {
+      "path": "src/Service/RefundService.php",
+      "canonical": "src/Service/PaymentRefundService.php",
+      "sha256": "399a122421c81902bf758b613d641208f1903946f51f60c191f98f5179d23ab7"
+    },
+    {
+      "path": "src/Service/RetryExecutor.php",
+      "canonical": "src/Service/PaymentRetryExecutor.php",
+      "sha256": "913e44a8fbb9fc6d0f650da71e0a745bb356a8f018c8a6b936019b96112a4ac0"
+    },
+    {
+      "path": "src/Service/SlaReporter.php",
+      "canonical": "src/Service/PaymentSlaReporterService.php",
+      "sha256": "835c46fd474998e7466fbb8cfe23affc63021462fb7a7554cc2717a65343b822"
+    },
+    {
+      "path": "src/Service/TokenVerifier.php",
+      "canonical": "src/Service/PaymentTokenVerifier.php",
+      "sha256": "87b5607d84f6a79a69a9ec710fe2873c1f0c435297fb6d650d99bb384bc7d133"
+    },
+    {
+      "path": "src/Service/ValidationErrorMapper.php",
+      "canonical": "src/Service/PaymentValidationErrorMapper.php",
+      "sha256": "90f9b047aa478e63533670a54a0c3751cd92a3f4c2121e4b837393aaed6109ce"
+    },
+    {
+      "path": "src/Service/Webhook/JsonSchemaValidator.php",
+      "canonical": "src/Service/Webhook/PaymentJsonSchemaValidator.php",
+      "sha256": "0ea187a6a1c5b1586ef4cf9685bca101deb27c028f681e0b7ad549a816d71bd6"
+    },
+    {
+      "path": "src/Service/Webhook/PayPalEventNormalizer.php",
+      "canonical": "src/Service/Webhook/PaymentPayPalEventNormalizer.php",
+      "sha256": "06f4625c1c6889e6448e304c7f61d31e9a55e67cfaedc80bd8d1c8fe87a3c928"
+    },
+    {
+      "path": "src/Service/Webhook/PayPalSignatureValidator.php",
+      "canonical": "src/Service/Webhook/PaymentPayPalSignatureValidator.php",
+      "sha256": "783066150992f2570d49a2f9ee26a1fa772575d38a2fed5c37c40f4b71f0e7f9"
+    },
+    {
+      "path": "src/Service/Webhook/StripeEventNormalizer.php",
+      "canonical": "src/Service/Webhook/PaymentStripeEventNormalizer.php",
+      "sha256": "31d351a3a4a556ee1207409848fed3d318e9d68a76722a5a203f70ded9f0afa1"
+    },
+    {
+      "path": "src/Service/Webhook/StripeSignatureValidator.php",
+      "canonical": "src/Service/Webhook/PaymentStripeSignatureValidator.php",
+      "sha256": "c507894199e21d7f95c6b317654e358ca33b2624694159efb9f73595020eb206"
+    },
+    {
+      "path": "src/Service/WebhookIngestService.php",
+      "canonical": "src/Service/PaymentWebhookIngestService.php",
+      "sha256": "c0929d52f69e2264cde2a2f8954d11d5071380377527c59b0052721ce41283f6"
+    },
+    {
+      "path": "src/Service/WebhookVerifier.php",
+      "canonical": "src/Service/PaymentWebhookVerifierService.php",
+      "sha256": "7197f3a7b8b265d956d48ab9805eea5ecf4aea5635ec20e0e14780a2c9594654"
+    },
+    {
+      "path": "src/ServiceInterface/ApiErrorResponseFactoryInterface.php",
+      "canonical": "src/ServiceInterface/PaymentApiErrorResponseFactoryInterface.php",
+      "sha256": "1c153bc39a18f97ea57cb307041dd3ae70cb401cdcc10049a19ca168e059c582"
+    },
+    {
+      "path": "src/ServiceInterface/ApiJsonBodyDecoderInterface.php",
+      "canonical": "src/ServiceInterface/PaymentApiJsonBodyDecoderInterface.php",
+      "sha256": "69cb3da28822638c50a7949e9a9c6e436e3eedcad308a8b4b3d1b503b5a2f74a"
+    },
+    {
+      "path": "src/ServiceInterface/ApiRequestValidatorInterface.php",
+      "canonical": "src/ServiceInterface/PaymentApiRequestValidatorInterface.php",
+      "sha256": "0a59167b45cfe1a46a9cff3e51ccbdd3bba077f4f4bcd63895a01c8c86305872"
+    },
+    {
+      "path": "src/ServiceInterface/CircuitBreakerInterface.php",
+      "canonical": "src/ServiceInterface/PaymentCircuitBreakerInterface.php",
+      "sha256": "fe47f4fcdeb6102c33293898655c1e64767e5cc438bf9be969c329d5c228ba0d"
+    },
+    {
+      "path": "src/ServiceInterface/DlqServiceInterface.php",
+      "canonical": "src/ServiceInterface/PaymentDlqServiceInterface.php",
+      "sha256": "5606288a2028a027ffdbbd02e3816548d7e6119f4fae7a33f950086bd326996a"
+    },
+    {
+      "path": "src/ServiceInterface/IdempotencyServiceInterface.php",
+      "canonical": "src/ServiceInterface/PaymentIdempotencyServiceInterface.php",
+      "sha256": "4333f7e57adc3b1f85e087b98d75fadb35215188f13a00b964383cf1484473f3"
+    },
+    {
+      "path": "src/ServiceInterface/MetricInterface.php",
+      "canonical": "src/ServiceInterface/PaymentMetricInterface.php",
+      "sha256": "6b8754918d96fd5380ba43e254a3c82b911dcd6d3f9b6984493af25efa3bcd42"
+    },
+    {
+      "path": "src/ServiceInterface/OidcJwksCacheInterface.php",
+      "canonical": "src/ServiceInterface/PaymentOidcJwksCacheInterface.php",
+      "sha256": "2dbbe38f3b813b731c2224ae07f4ca56196484dac5ef46e55c1399c6c90426a0"
+    },
+    {
+      "path": "src/ServiceInterface/ProjectionLagServiceInterface.php",
+      "canonical": "src/ServiceInterface/PaymentProjectionLagServiceInterface.php",
+      "sha256": "0ec6ce21f89f755ad648034d168dce0d6b7be15b4550407bd278ad2dffbc8873"
+    },
+    {
+      "path": "src/ServiceInterface/ProjectionSyncInterface.php",
+      "canonical": "src/ServiceInterface/PaymentProjectionSyncServiceInterface.php",
+      "sha256": "aad08b466a46b4c7b5f8bd2bb2356f5f0cbb6b6eff63a76a2d4c628a2c932c98"
+    },
+    {
+      "path": "src/ServiceInterface/ProviderGuardInterface.php",
+      "canonical": "src/ServiceInterface/PaymentProviderGuardInterface.php",
+      "sha256": "51ec38c1a7135ba53793330bc84f92b16dd22a713d28189e142f9b0445648625"
+    },
+    {
+      "path": "src/ServiceInterface/ProviderRouterInterface.php",
+      "canonical": "src/ServiceInterface/PaymentProviderRouterInterface.php",
+      "sha256": "d16a217b2ba0699d8d84d9471fdc11e5b410cd0ad213c2654e1d870f323e0467"
+    },
+    {
+      "path": "src/ServiceInterface/ReconciliationServiceInterface.php",
+      "canonical": "src/ServiceInterface/PaymentReconciliationServiceInterface.php",
+      "sha256": "8a8cb48310f75187249add8fc7da3f296768b208c3a6659183e9009e34174b0d"
+    },
+    {
+      "path": "src/ServiceInterface/RefundServiceInterface.php",
+      "canonical": "src/ServiceInterface/PaymentRefundServiceInterface.php",
+      "sha256": "6fd0508e2de5feb60a8db7ee7d373e049a617f8aa8e5b8d5e4738f06cd12be9e"
+    },
+    {
+      "path": "src/ServiceInterface/RetryExecutorInterface.php",
+      "canonical": "src/ServiceInterface/PaymentRetryExecutorInterface.php",
+      "sha256": "847cc2fd2450bd6915052c5e7af849a5a10029d293a6dde973bbb85d3150e191"
+    },
+    {
+      "path": "src/ServiceInterface/SlaReporterInterface.php",
+      "canonical": "src/ServiceInterface/PaymentSlaReporterServiceInterface.php",
+      "sha256": "6584e51d29f6f5bb9980eee846839cd0b9842582468a6a9c34ef9c8eddde3ba6"
+    },
+    {
+      "path": "src/ServiceInterface/TokenVerifierInterface.php",
+      "canonical": "src/ServiceInterface/PaymentTokenVerifierInterface.php",
+      "sha256": "873ceb5dc8c40bce29ea4a95e41872c626b13fa1a56d1d8c231ef588b8adb522"
+    },
+    {
+      "path": "src/ServiceInterface/ValidationErrorMapperInterface.php",
+      "canonical": "src/ServiceInterface/PaymentValidationErrorMapperInterface.php",
+      "sha256": "7c6b529112eb5a8019785881868d28a7190b5d95cf21e7fc63fa57cbd7024d2b"
+    },
+    {
+      "path": "src/ServiceInterface/WebhookIngestServiceInterface.php",
+      "canonical": "src/ServiceInterface/PaymentWebhookIngestServiceInterface.php",
+      "sha256": "f671080d4371bb459f98afe7163b8a07435a3823cec95726726d42502226eb0a"
+    },
+    {
+      "path": "src/ServiceInterface/WebhookVerifierInterface.php",
+      "canonical": "src/ServiceInterface/PaymentWebhookVerifierServiceInterface.php",
+      "sha256": "8007fbe9f3069611e413de32f8dcdb26b9677c630c2c911d75aea564ac794e9d"
+    },
+    {
+      "path": "src/ValueObject/GatewayCode.php",
+      "canonical": "src/ValueObject/PaymentGatewayCode.php",
+      "sha256": "f559906a801e54accda789865164caed2229028cc7573b938452fa6140a5476f"
+    },
+    {
+      "path": "src/ValueObject/Money.php",
+      "canonical": "src/ValueObject/PaymentMoney.php",
+      "sha256": "d29dfc946bc2583cf4af5647068f510544587e73a8f46a4621c5af5c396f92b6"
+    },
+    {
+      "path": "src/ValueObject/TransactionId.php",
+      "canonical": "src/ValueObject/PaymentTransactionId.php",
+      "sha256": "69306726644205ba4f8968b702d47ec162cba6934832399bb5a794d7a4d325bc"
+    }
+  ],
+  "notes": [
+    "touched-files only",
+    "no cumulative snapshot",
+    "no repository overwrite",
+    "legacy files retired only after backup and SHA256 match"
+  ]
+}

@@ -5,11 +5,10 @@ declare(strict_types=1);
 
 namespace App\Paying\Service;
 
-use App\Paying\Entity\Payment;
-use App\Paying\Entity\PaymentWebhookLog;
+use App\Paying\Entity\Business\PaymentEntity;
 use App\Paying\RepositoryInterface\PaymentRepositoryInterface;
+use App\Paying\RepositoryInterface\PaymentWebhookRepositoryInterface;
 use App\Paying\ServiceInterface\PaymentConsoleReadModelInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Provides the payment console read model service used by the payment lifecycle and operator-facing flows.
@@ -18,7 +17,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
 {
     public function __construct(
         private PaymentRepositoryInterface $payments,
-        private EntityManagerInterface $em,
+        private PaymentWebhookRepositoryInterface $webhooks,
     ) {
     }
 
@@ -36,7 +35,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
         $normalizedStatus = strtolower(trim($status));
         $normalizedStatus = '' === $normalizedStatus ? 'all' : $normalizedStatus;
 
-        $paymentRows = array_map(fn (Payment $payment): array => $this->toPaymentRow($payment), $this->payments->listRecent(100));
+        $paymentRows = array_map(fn (PaymentEntity $payment): array => $this->toPaymentRow($payment), $this->payments->listRecent(100));
 
         $filteredPayments = array_values(array_filter(
             $paymentRows,
@@ -106,7 +105,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
     /** @return list<array{id: string, provider: string, externalEventId: string, status: string, receivedAt: string}> */
     private function listWebhookEvents(string $paymentId): array
     {
-        $logs = $this->em->getRepository(PaymentWebhookLog::class)->findBy([], ['receivedAt' => 'DESC'], 50);
+        $logs = $this->webhooks->listRecent(50);
 
         $events = [];
         foreach ($logs as $log) {
@@ -117,7 +116,7 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
             }
 
             $events[] = [
-                'id' => $log->id(),
+                'id' => (string) $log->id(),
                 'provider' => $log->provider(),
                 'externalEventId' => $log->externalEventId(),
                 'status' => $log->status(),
@@ -133,10 +132,10 @@ final readonly class PaymentConsoleReadModel implements PaymentConsoleReadModelI
     }
 
     /** @return array{id: string, orderId: string, status: string, amount: string, currency: string, providerRef: ?string, updatedAt: string} */
-    private function toPaymentRow(Payment $payment): array
+    private function toPaymentRow(PaymentEntity $payment): array
     {
         return [
-            'id' => (string) $payment->id(),
+            'id' => $payment->slug(),
             'orderId' => $payment->orderId(),
             'status' => $payment->status()->value,
             'amount' => $payment->amount(),
